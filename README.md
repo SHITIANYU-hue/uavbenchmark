@@ -39,19 +39,7 @@ Task Instance、Ground Truth、SUT Trace 与 Grader Result 的数据合同已经
 
 ## 系统架构
 
-```mermaid
-flowchart LR
-    A[业务场景描述] --> B[Config Agent]
-    K[受审 GAL / JD 目录] --> B
-    B --> C[结构化候选]
-    C --> D[确定性校验]
-    D --> E[人工复核]
-    E --> F[Task Template]
-    F -. 后续实现 .-> G[Task Instance]
-    G -.-> H[Fixture / Harness + SUT]
-    H -.-> I[GT / Trace]
-    I -.-> J[Grader Result]
-```
+![UAV Benchmark Pipeline 系统架构](docs/assets/uav_benchmark_pipeline_architecture.png)
 
 Config Agent 负责候选生成，不负责批准业务规则。确定性校验与人工复核共同构成模板进入后续运行链之前的质量门。
 
