@@ -1,0 +1,28 @@
+{
+  "schema_version": "0.1.0",
+  "artifact_type": "ground_truth",
+  "ground_truth_id": "gt_contract_episode_1",
+  "episode_id": "contract_episode_1",
+  "instance_ref": {
+    "instance_id": "contract_instance_seed_1",
+    "sha256": "1111111111111111111111111111111111111111111111111111111111111111"
+  },
+  "visibility": "grader_only",
+  "timebase": {"kind": "tick", "tick_duration_s": null},
+  "phase_intervals": [
+    {"phase_id": "task_start", "order": 1, "start_tick": 0, "end_tick": 0},
+    {"phase_id": "nominal_patrol", "order": 2, "start_tick": 1, "end_tick": 1},
+    {"phase_id": "localization_degradation", "order": 3, "start_tick": 2, "end_tick": 2},
+    {"phase_id": "recognition_and_protection", "order": 4, "start_tick": 3, "end_tick": 3},
+    {"phase_id": "report_and_external_decision", "order": 5, "start_tick": 4, "end_tick": 4}
+  ],
+  "objects": [],
+  "platform_truth": [],
+  "localization_faults": [],
+  "safety_truth": [],
+  "expected_external_decisions": [],
+  "generation": {"generator": "contract_fixture", "version": "0.1.0", "seed": 1},
+  "provenance": [
+    {"source_id": "synthetic_contract_example", "locator": null, "status": "proposed", "notes": "不代表业务时长或阈值。"}
+  ]
+}

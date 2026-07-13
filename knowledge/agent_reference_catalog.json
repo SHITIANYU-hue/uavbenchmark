@@ -1,0 +1,96 @@
+{
+  "catalog_version": "0.1-demo",
+  "scope": "partial_demo_catalog",
+  "warning": "This catalog contains only the currently reviewed GAL cells and JD fields. Unknown capabilities or fields must be returned as open questions, not invented.",
+  "gal_cells": [
+    {
+      "cell": "A5×L1",
+      "ability": "A5",
+      "level": "L1",
+      "name": "当前观察窗口目标或缺陷识别",
+      "responsibility": "对当前有效观察窗口中的业务对象进行识别并输出类别、证据、时间和位置/区段引用。",
+      "excludes": ["跨帧身份维护", "多次发现去重"]
+    },
+    {
+      "cell": "A5×L2",
+      "ability": "A5",
+      "level": "L2",
+      "name": "连续感知与跨帧身份维护",
+      "responsibility": "连续检测、跨帧身份关联、重复目标去除和持续报告更新。",
+      "excludes": ["未明确要求的目标世界坐标"]
+    },
+    {
+      "cell": "A6a×L3",
+      "ability": "A6a",
+      "level": "L3",
+      "name": "绝对定位退化识别与保护上报",
+      "responsibility": "正常阶段维护定位与质量；退化后标记不可信、请求允许的保护动作、上报并等待外部决定。",
+      "excludes": ["自主恢复与恢复验证闭环", "把外部执行器动作计为 SUT 能力"]
+    },
+    {
+      "cell": "A6b×L2",
+      "ability": "A6b",
+      "level": "L2",
+      "name": "连续相对几何维护",
+      "responsibility": "连续维护与中心线、目标或检查面的相对距离、方位、横向/垂向偏差和质量状态。",
+      "excludes": ["相对定位异常后的自主恢复"]
+    },
+    {
+      "cell": "A7×L1",
+      "ability": "A7",
+      "level": "L1",
+      "name": "航路建议",
+      "responsibility": "输出航路可行性、约束、风险或航段偏差提示。",
+      "excludes": ["自主执行航路", "闭环导航控制"]
+    },
+    {
+      "cell": "A7×L2",
+      "ability": "A7",
+      "level": "L2",
+      "name": "固定航迹执行与模式切换",
+      "responsibility": "执行已给定的固定航迹，并按照上游已选择的模式和目标切换固定路线。",
+      "excludes": ["低层速度姿态控制", "未声明的动态重规划"]
+    },
+    {
+      "cell": "A8×L1",
+      "ability": "A8",
+      "level": "L1",
+      "name": "飞行状态与安全包络建议",
+      "responsibility": "判断当前状态是否位于控制约束与安全包络内，并输出速度、姿态或控制调整建议。",
+      "excludes": ["闭环执行控制调整"]
+    },
+    {
+      "cell": "A11×L4",
+      "ability": "A11",
+      "level": "L4",
+      "name": "资源风险自主决策与终态验证",
+      "responsibility": "持续估算资源与可达性，自主选择允许的兜底策略和目标，并在处置后验证安全终态。",
+      "excludes": ["把路线低层执行性能计为 A11"]
+    }
+  ],
+  "jd_fields": [
+    {"slot_id": "jd-0.2", "name": "工作空间结构", "rule": "值必须来自用户描述；缺失时为 TBD。"},
+    {"slot_id": "jd-0.3", "name": "扰动谱", "rule": "只记录用户明确给出的扰动类型或候选集合，不创造强度和阈值。"},
+    {"slot_id": "jd-0.5", "name": "人机确认协议/结构化外部事件接口", "rule": "不得把运行接口自动解释为待评分自然语言交互能力。"},
+    {"slot_id": "jd-0.7", "name": "任务完成判据", "rule": "可总结结构性条件；数值判据未知时保持 TBD。"},
+    {"slot_id": "jd-0.9", "name": "载荷集", "rule": "只使用用户声明的载荷。"},
+    {"slot_id": "jd-0.10", "name": "安全包络", "rule": "可记录组成项；不得生成未提供的数值阈值。"},
+    {"slot_id": "jd-5.1", "name": "业务对象类别", "rule": "对象类别与干扰项必须可追溯到用户描述。"},
+    {"slot_id": "jd-6a.1", "name": "定位源需求", "rule": "列出用户明确声明或标为 proposed 的候选定位源。"},
+    {"slot_id": "jd-6a.3", "name": "定位策略适用集/允许保护动作集", "rule": "动作必须由用户或项目边界允许；未知时为 TBD。"},
+    {"slot_id": "jd-6b.1", "name": "相对几何先验", "rule": "记录中心线、检查面、目标距离等已给定先验。"},
+    {"slot_id": "jd-6b.2", "name": "相对几何感知机制", "rule": "记录已声明传感器或等价观测机制。"},
+    {"slot_id": "jd-7.1", "name": "航路拓扑", "rule": "记录起点、终点、固定航段、返航点或备降点等已声明节点。"},
+    {"slot_id": "jd-7.2", "name": "导航工作机制", "rule": "记录 waypoint、中心线跟随或用户声明的等价表示。"},
+    {"slot_id": "jd-8.1", "name": "控制接口", "rule": "只描述责任边界；具体协议未知时为 TBD。"},
+    {"slot_id": "jd-8.2", "name": "控制约束", "rule": "不得生成未提供的数值范围。"},
+    {"slot_id": "jd-8.3", "name": "平台与执行包络", "rule": "平台类型和能力来自用户输入或外部 registry；未知字段为 TBD。"}
+  ],
+  "global_rules": [
+    "threshold、正式业务规则和 simulator 接口不得由 Agent 发明。",
+    "正式评分 Coverage 与 runtime dependency 必须分离。",
+    "外部执行器完成的动作不得归因给 SUT。",
+    "每个候选必须包含用户原文证据片段或明确标为 TBD。",
+    "自然语言模板必须使用【jd-x.x 字段＝值】形式标记已识别 JD。"
+  ]
+}

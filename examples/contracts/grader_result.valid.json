@@ -1,0 +1,51 @@
+{
+  "schema_version": "0.1.0",
+  "artifact_type": "grader_result",
+  "result_id": "grader_result_contract_episode_1",
+  "episode_id": "contract_episode_1",
+  "inputs": {
+    "instance_sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+    "ground_truth_sha256": "2222222222222222222222222222222222222222222222222222222222222222",
+    "trace_sha256": "3333333333333333333333333333333333333333333333333333333333333333"
+  },
+  "grader": {"name": "contract_grader", "version": "0.1.0"},
+  "run_status": "complete",
+  "schema_checks": [
+    {"check_id": "input_schema", "status": "pass", "message": "Input artifacts are structurally valid.", "evidence": ["instance", "ground_truth", "trace"]}
+  ],
+  "phase_check": {"check_id": "phase_order", "status": "pass", "message": "Five phases are present in order.", "evidence": ["ground_truth#/phase_intervals"]},
+  "coverage_accounting_mode": "explicit_only",
+  "coverage_results": [
+    {
+      "coverage_id": "a5_l2",
+      "group": "G2",
+      "ability": "A5",
+      "level": "L2",
+      "role": "primary",
+      "status": "indeterminate",
+      "gates": [],
+      "metrics": [
+        {
+          "metric_id": "hota",
+          "name": "HOTA",
+          "value": null,
+          "unit": null,
+          "parameters": {},
+          "direction": "maximize",
+          "threshold": {"value": null, "status": "TBD", "rationale": "内部阈值尚未标定。"},
+          "status": "not_computed",
+          "evidence": []
+        }
+      ],
+      "violations": []
+    }
+  ],
+  "reproducibility": {
+    "seed": 1,
+    "schema_versions": {"grader_result": "0.1.0"},
+    "environment": {"kind": "contract_example"}
+  },
+  "provenance": [
+    {"source_id": "synthetic_contract_example", "locator": null, "status": "proposed", "notes": "不代表正式评分结果。"}
+  ]
+}

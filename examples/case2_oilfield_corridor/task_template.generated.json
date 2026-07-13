@@ -1,0 +1,566 @@
+{
+  "schema_version": "0.2.0",
+  "artifact_type": "task_template",
+  "template_id": "case2_oilfield_corridor_template",
+  "template_version": "0.1.0",
+  "title": "油田管廊缺陷巡检",
+  "scenario": {
+    "summary": "沿固定管廊航段识别缺陷并持续维护相对几何；资源偏差后自主选择资源兜底策略并验证安全终态。",
+    "fixed_boundaries": [
+      "油田地面管廊或油气集输管线走廊",
+      "指定固定巡检、返航和安全备降路线",
+      "资源偏差发生前必须存在正常巡检阶段",
+      "A11 负责资源决策，A7 负责路线执行，A8 低层控制由外部飞控提供"
+    ],
+    "out_of_scope": [
+      "A6a 定位异常识别与恢复",
+      "A8 低层飞行控制评分",
+      "A9 载荷动作评分",
+      "自然语言交互、人工批准和人工接管评分",
+      "动态障碍自主重规划"
+    ]
+  },
+  "coverage": [
+    {
+      "coverage_id": "a5_l1",
+      "group": "G2",
+      "ability": "A5",
+      "level": "L1",
+      "role": "auxiliary",
+      "sut_responsibilities": [
+        "在当前观察窗口识别缺陷类别并输出证据、时间和管廊区段"
+      ],
+      "out_of_scope": [
+        "跨帧身份维护与重复缺陷去重"
+      ],
+      "provenance": [
+        {
+          "source_id": "case2_oilfield_corridor_md",
+          "locator": "案例二全文",
+          "status": "proposed",
+          "notes": "正式 A×L、业务规则和 threshold 尚待项目组确认。"
+        }
+      ]
+    },
+    {
+      "coverage_id": "a6b_l2",
+      "group": "G2",
+      "ability": "A6b",
+      "level": "L2",
+      "role": "auxiliary",
+      "sut_responsibilities": [
+        "持续维护与管廊中心线或检查面的相对距离、方位、偏差和质量状态"
+      ],
+      "out_of_scope": [
+        "相对定位失效后的自主恢复"
+      ],
+      "provenance": [
+        {
+          "source_id": "case2_oilfield_corridor_md",
+          "locator": "案例二全文",
+          "status": "proposed",
+          "notes": "正式 A×L、业务规则和 threshold 尚待项目组确认。"
+        }
+      ]
+    },
+    {
+      "coverage_id": "a7_l2",
+      "group": "G3",
+      "ability": "A7",
+      "level": "L2",
+      "role": "auxiliary",
+      "sut_responsibilities": [
+        "持续执行固定巡检路线",
+        "根据 A11 的模式和目标切换并执行返航或备降路线"
+      ],
+      "out_of_scope": [
+        "低层速度、姿态和着陆控制",
+        "动态障碍自主重规划"
+      ],
+      "provenance": [
+        {
+          "source_id": "case2_oilfield_corridor_md",
+          "locator": "案例二全文",
+          "status": "proposed",
+          "notes": "正式 A×L、业务规则和 threshold 尚待项目组确认。"
+        }
+      ]
+    },
+    {
+      "coverage_id": "a11_l4",
+      "group": "G2",
+      "ability": "A11",
+      "level": "L4",
+      "role": "primary",
+      "sut_responsibilities": [
+        "持续维护资源状态、任务成本、返航或备降成本和安全余量",
+        "识别资源风险并自主选择继续、缩短、返航或备降策略",
+        "选择可达目标并在处置后验证安全终态"
+      ],
+      "out_of_scope": [
+        "返航或备降路线的低层执行性能"
+      ],
+      "provenance": [
+        {
+          "source_id": "case2_oilfield_corridor_md",
+          "locator": "案例二全文",
+          "status": "proposed",
+          "notes": "正式 A×L、业务规则和 threshold 尚待项目组确认。"
+        }
+      ]
+    }
+  ],
+  "runtime_dependencies": [
+    {
+      "dependency_id": "external_absolute_localization",
+      "provider": "external_system",
+      "responsibilities": [
+        "提供基础绝对位姿和航向，不注入定位异常"
+      ],
+      "scored": false,
+      "status": "proposed",
+      "provenance": [
+        {
+          "source_id": "case2_oilfield_corridor_md",
+          "locator": "案例二全文",
+          "status": "proposed",
+          "notes": "正式 A×L、业务规则和 threshold 尚待项目组确认。"
+        }
+      ],
+      "ability": "A6a",
+      "group": "G2"
+    },
+    {
+      "dependency_id": "external_low_level_flight_control",
+      "provider": "executor",
+      "responsibilities": [
+        "执行速度、姿态、航向、位置和着陆闭环控制"
+      ],
+      "scored": false,
+      "status": "proposed",
+      "provenance": [
+        {
+          "source_id": "case2_oilfield_corridor_md",
+          "locator": "案例二全文",
+          "status": "proposed",
+          "notes": "正式 A×L、业务规则和 threshold 尚待项目组确认。"
+        }
+      ],
+      "ability": "A8",
+      "group": "G3"
+    },
+    {
+      "dependency_id": "external_payload_scheduler",
+      "provider": "external_system",
+      "responsibilities": [
+        "执行图像采集、云台或载荷调度"
+      ],
+      "scored": false,
+      "status": "proposed",
+      "provenance": [
+        {
+          "source_id": "case2_oilfield_corridor_md",
+          "locator": "案例二全文",
+          "status": "proposed",
+          "notes": "正式 A×L、业务规则和 threshold 尚待项目组确认。"
+        }
+      ]
+    }
+  ],
+  "attribution_rules": [
+    {
+      "rule_id": "a11_decision_a7_execution_split",
+      "description": "A11 评价资源决策和终态验证，A7 评价已选路线的切换与执行；双方结果不得互相补偿。",
+      "applies_to": [
+        "a11_l4",
+        "a7_l2"
+      ],
+      "shared_outcome_handling": "no_double_count",
+      "status": "proposed"
+    },
+    {
+      "rule_id": "safe_terminal_single_gate",
+      "description": "安全返航、备降或安全完成是任务级共享终态，只统计一次。",
+      "applies_to": [
+        "a11_l4",
+        "a7_l2"
+      ],
+      "shared_outcome_handling": "single_task_gate",
+      "status": "proposed"
+    }
+  ],
+  "task_level_gates": [
+    {
+      "gate_id": "safe_terminal",
+      "description": "episode 是否在允许决策窗口内进入声明的安全终态。",
+      "evidence_required": [
+        "ground_truth#/safety_truth",
+        "sut_trace route and resource verification events",
+        "executor terminal state"
+      ],
+      "status": "proposed"
+    }
+  ],
+  "coverage_accounting_mode": "explicit_only",
+  "jd_slots": [
+    {
+      "slot_id": "jd-0.2",
+      "description": "油田管廊工作空间和几何 profile",
+      "visibility": "compiler_only",
+      "binding": {
+        "mode": "enum",
+        "status": "proposed",
+        "allowed_values": [
+          "corridor_profile_a",
+          "corridor_profile_b",
+          "corridor_profile_c"
+        ]
+      },
+      "provenance": [
+        {
+          "source_id": "case2_oilfield_corridor_md",
+          "locator": "案例二全文",
+          "status": "proposed",
+          "notes": "正式 A×L、业务规则和 threshold 尚待项目组确认。"
+        }
+      ]
+    },
+    {
+      "slot_id": "jd-8.3",
+      "description": "与返航和安全备降策略兼容的平台 profile",
+      "visibility": "compiler_only",
+      "binding": {
+        "mode": "reference",
+        "status": "TBD",
+        "reference": "platform_profile_registry"
+      },
+      "provenance": [
+        {
+          "source_id": "case2_oilfield_corridor_md",
+          "locator": "案例二全文",
+          "status": "proposed",
+          "notes": "正式 A×L、业务规则和 threshold 尚待项目组确认。"
+        }
+      ]
+    },
+    {
+      "slot_id": "defect_profile",
+      "description": "缺陷类别、分布、干扰项和有效观察窗口 profile",
+      "visibility": "compiler_only",
+      "binding": {
+        "mode": "enum",
+        "status": "proposed",
+        "allowed_values": [
+          "defect_profile_a",
+          "defect_profile_b",
+          "defect_profile_c"
+        ]
+      },
+      "provenance": [
+        {
+          "source_id": "case2_oilfield_corridor_md",
+          "locator": "案例二全文",
+          "status": "proposed",
+          "notes": "正式 A×L、业务规则和 threshold 尚待项目组确认。"
+        }
+      ]
+    },
+    {
+      "slot_id": "relative_geometry_profile",
+      "description": "相对几何先验、观测机制和质量表达 profile",
+      "visibility": "compiler_only",
+      "binding": {
+        "mode": "enum",
+        "status": "proposed",
+        "allowed_values": [
+          "relative_geometry_a",
+          "relative_geometry_b"
+        ]
+      },
+      "provenance": [
+        {
+          "source_id": "case2_oilfield_corridor_md",
+          "locator": "案例二全文",
+          "status": "proposed",
+          "notes": "正式 A×L、业务规则和 threshold 尚待项目组确认。"
+        }
+      ]
+    },
+    {
+      "slot_id": "resource_deviation_profile",
+      "description": "正常巡检之后注入的资源消耗偏差 profile",
+      "visibility": "grader_only",
+      "binding": {
+        "mode": "enum",
+        "status": "proposed",
+        "allowed_values": [
+          "deviation_profile_a",
+          "deviation_profile_b",
+          "deviation_profile_c"
+        ]
+      },
+      "provenance": [
+        {
+          "source_id": "case2_oilfield_corridor_md",
+          "locator": "案例二全文",
+          "status": "proposed",
+          "notes": "正式 A×L、业务规则和 threshold 尚待项目组确认。"
+        }
+      ]
+    },
+    {
+      "slot_id": "fallback_branch",
+      "description": "用于覆盖不同自主决策分支的 episode profile",
+      "visibility": "grader_only",
+      "binding": {
+        "mode": "enum",
+        "status": "proposed",
+        "allowed_values": [
+          "continue_safe",
+          "shorten_and_return",
+          "safe_landing"
+        ]
+      },
+      "provenance": [
+        {
+          "source_id": "case2_oilfield_corridor_md",
+          "locator": "案例二全文",
+          "status": "proposed",
+          "notes": "正式 A×L、业务规则和 threshold 尚待项目组确认。"
+        }
+      ]
+    },
+    {
+      "slot_id": "safety_threshold_profile",
+      "description": "最低储备、可达性和终态条件；数值由平台和 baseline 校准后提供",
+      "visibility": "grader_only",
+      "binding": {
+        "mode": "reference",
+        "status": "TBD",
+        "reference": "safety_threshold_profile_TBD"
+      },
+      "provenance": [
+        {
+          "source_id": "case2_oilfield_corridor_md",
+          "locator": "案例二全文",
+          "status": "proposed",
+          "notes": "正式 A×L、业务规则和 threshold 尚待项目组确认。"
+        }
+      ]
+    }
+  ],
+  "phases": [
+    {
+      "phase_id": "task_start",
+      "order": 1,
+      "entry_conditions": [
+        "episode_started"
+      ],
+      "exit_conditions": [
+        "task_and_resource_models_initialized"
+      ],
+      "minimum_duration": {
+        "value": null,
+        "unit": "TBD",
+        "status": "TBD"
+      }
+    },
+    {
+      "phase_id": "nominal_corridor_inspection",
+      "order": 2,
+      "entry_conditions": [
+        "task_initialized"
+      ],
+      "exit_conditions": [
+        "nominal_evidence_complete"
+      ],
+      "minimum_duration": {
+        "value": null,
+        "unit": "TBD",
+        "status": "TBD"
+      }
+    },
+    {
+      "phase_id": "resource_deviation",
+      "order": 3,
+      "entry_conditions": [
+        "nominal_evidence_complete"
+      ],
+      "exit_conditions": [
+        "resource_deviation_injected"
+      ],
+      "minimum_duration": {
+        "value": null,
+        "unit": "TBD",
+        "status": "TBD"
+      }
+    },
+    {
+      "phase_id": "autonomous_resource_decision",
+      "order": 4,
+      "entry_conditions": [
+        "resource_deviation_injected"
+      ],
+      "exit_conditions": [
+        "strategy_and_target_selected"
+      ],
+      "minimum_duration": {
+        "value": null,
+        "unit": "TBD",
+        "status": "TBD"
+      }
+    },
+    {
+      "phase_id": "route_execution_and_terminal_verification",
+      "order": 5,
+      "entry_conditions": [
+        "strategy_and_target_selected"
+      ],
+      "exit_conditions": [
+        "terminal_state_verified"
+      ],
+      "minimum_duration": {
+        "value": null,
+        "unit": "TBD",
+        "status": "TBD"
+      }
+    }
+  ],
+  "disturbances": [
+    {
+      "disturbance_id": "resource_consumption_deviation",
+      "kind": "resource_consumption_deviation",
+      "injection_phase": "resource_deviation",
+      "parameters": {},
+      "status": "proposed"
+    }
+  ],
+  "interfaces": {
+    "sut_visible_inputs": [
+      {
+        "name": "corridor_observations",
+        "description": "RGB/可选热红外、相对几何观测、外部基础位姿和时间/区段信息。",
+        "schema_ref": null
+      },
+      {
+        "name": "resource_telemetry",
+        "description": "可见电池、功耗、任务进度、环境观测和路线候选信息，不含未来真实能耗或正确策略。",
+        "schema_ref": null
+      }
+    ],
+    "sut_outputs": [
+      {
+        "name": "observable_event",
+        "description": "A5/A6b/A7/A11 的结构化可观察事件。",
+        "schema_ref": "../../schemas/sut_trace.schema.json"
+      }
+    ],
+    "hidden_ground_truth": [
+      {
+        "name": "episode_ground_truth",
+        "description": "缺陷、真实相对几何、真实资源、决策窗口、可达性和安全终态真值。",
+        "schema_ref": "../../schemas/ground_truth.schema.json"
+      }
+    ],
+    "executor_responsibilities": [
+      "执行 A7 输出的导航目标",
+      "提供低层速度、姿态、位置和着陆控制",
+      "记录 executor 状态和终端执行结果"
+    ],
+    "external_decision_port": {
+      "description": "本案例不等待人工批准；接口仅记录自主决策和任务状态。",
+      "status": "proposed",
+      "protocol": null
+    }
+  },
+  "metrics": [
+    {
+      "metric_id": "defect_detection_metrics",
+      "coverage_id": "a5_l1",
+      "name": "缺陷识别与证据指标组",
+      "parameters": {},
+      "direction": "TBD",
+      "threshold": {
+        "value": null,
+        "status": "TBD",
+        "rationale": "待数据与 baseline 校准"
+      },
+      "provenance": [
+        {
+          "source_id": "case2_oilfield_corridor_md",
+          "locator": "案例二全文",
+          "status": "proposed",
+          "notes": "正式 A×L、业务规则和 threshold 尚待项目组确认。"
+        }
+      ]
+    },
+    {
+      "metric_id": "relative_geometry_metrics",
+      "coverage_id": "a6b_l2",
+      "name": "相对几何误差与连续可用性指标组",
+      "parameters": {},
+      "direction": "TBD",
+      "threshold": {
+        "value": null,
+        "status": "TBD",
+        "rationale": "待平台与观测 profile 校准"
+      },
+      "provenance": [
+        {
+          "source_id": "case2_oilfield_corridor_md",
+          "locator": "案例二全文",
+          "status": "proposed",
+          "notes": "正式 A×L、业务规则和 threshold 尚待项目组确认。"
+        }
+      ]
+    },
+    {
+      "metric_id": "route_execution_metrics",
+      "coverage_id": "a7_l2",
+      "name": "路线完成、走廊合规与切换指标组",
+      "parameters": {},
+      "direction": "TBD",
+      "threshold": {
+        "value": null,
+        "status": "TBD",
+        "rationale": "待路线与 executor 基线校准"
+      },
+      "provenance": [
+        {
+          "source_id": "case2_oilfield_corridor_md",
+          "locator": "案例二全文",
+          "status": "proposed",
+          "notes": "正式 A×L、业务规则和 threshold 尚待项目组确认。"
+        }
+      ]
+    },
+    {
+      "metric_id": "resource_fallback_gates",
+      "coverage_id": "a11_l4",
+      "name": "资源估计、风险、策略和终态验证 gate",
+      "parameters": {},
+      "direction": "TBD",
+      "threshold": {
+        "value": null,
+        "status": "TBD",
+        "rationale": "待安全策略与 baseline 校准"
+      },
+      "provenance": [
+        {
+          "source_id": "case2_oilfield_corridor_md",
+          "locator": "案例二全文",
+          "status": "proposed",
+          "notes": "正式 A×L、业务规则和 threshold 尚待项目组确认。"
+        }
+      ]
+    }
+  ],
+  "provenance": [
+    {
+      "source_id": "case2_oilfield_corridor_md",
+      "locator": "案例二全文",
+      "status": "proposed",
+      "notes": "正式 A×L、业务规则和 threshold 尚待项目组确认。"
+    }
+  ]
+}

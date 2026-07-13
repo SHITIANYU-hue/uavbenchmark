@@ -1,0 +1,90 @@
+# 复制本文件并填写。尖括号内容必须替换；不确定的数值/规则用 null + TBD。
+case_id: <case_id>
+template_version: 0.1.0
+title: <案例名称>
+summary: <一句话任务>
+status: proposed
+
+source:
+  source_id: <来源文件或会议记录>
+  locator: null
+  status: proposed
+  notes: null
+
+fixed_boundaries:
+  - <不会随实例变化的场景边界>
+
+out_of_scope:
+  - <明确不评价的能力或行为>
+
+coverage:
+  - ability: A5
+    level: L1
+    role: primary             # primary / anomaly / auxiliary / non_scored
+    responsibilities:
+      - <SUT 必须输出或完成的责任>
+    out_of_scope:
+      - <该能力在本案例中不负责什么>
+
+# 外部定位、飞控、执行器等写这里，不要写成 L0 coverage。
+runtime_dependencies:
+  - dependency_id: <dependency_id>
+    ability: A8               # 可省略
+    provider: executor        # fixture / harness / executor / external_system
+    responsibilities:
+      - <外部系统承担的责任>
+    status: proposed
+
+attribution_rules: []
+task_level_gates: []
+coverage_accounting_mode: explicit_only
+
+# Config Agent 将从这些 slot 的允许域中遍历/采样。
+variables:
+  - slot_id: <slot_id>
+    description: <变量含义>
+    visibility: compiler_only # sut_visible / grader_only / compiler_only
+    binding:
+      mode: enum              # fixed / enum / range / reference / TBD
+      allowed_values: [<候选值1>, <候选值2>]
+      status: proposed
+
+phases:
+  - phase_id: task_start
+    order: 1
+    entry_conditions: [episode_started]
+    exit_conditions: [task_initialized]
+    minimum_duration: {value: null, unit: TBD, status: TBD}
+
+disturbances: []
+
+interfaces:
+  sut_visible_inputs:
+    - name: observation
+      description: <SUT 可以看到的原始或准原始输入>
+      schema_ref: null
+  sut_outputs:
+    - name: observable_event
+      description: <SUT 必须输出的结构化事件>
+      schema_ref: ../../schemas/sut_trace.schema.json
+  hidden_ground_truth:
+    - name: episode_ground_truth
+      description: <只供 Grader 使用的真值>
+      schema_ref: ../../schemas/ground_truth.schema.json
+  executor_responsibilities:
+    - <外部执行器责任>
+  external_decision_port:
+    description: <是否需要外部决定；接口未确定时写 TBD>
+    status: TBD
+    protocol: null
+
+metrics:
+  - metric_id: <metric_id>
+    coverage_id: a5_l1
+    name: <指标名称>
+    parameters: {}
+    direction: TBD
+    threshold:
+      value: null
+      status: TBD
+      rationale: 尚未标定

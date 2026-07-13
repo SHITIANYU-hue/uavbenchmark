@@ -1,0 +1,294 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uav-benchmark.local/schemas/task_template.schema.json",
+  "title": "UAV Benchmark Task Template",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact_type",
+    "template_id",
+    "template_version",
+    "scenario",
+    "coverage",
+    "jd_slots",
+    "phases",
+    "disturbances",
+    "interfaces",
+    "metrics",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "artifact_type": {"const": "task_template"},
+    "template_id": {"$ref": "#/$defs/id"},
+    "template_version": {"type": "string", "minLength": 1},
+    "title": {"type": "string", "minLength": 1},
+    "scenario": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["summary", "fixed_boundaries", "out_of_scope"],
+      "properties": {
+        "summary": {"type": "string", "minLength": 1},
+        "fixed_boundaries": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "out_of_scope": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "extensions": {"type": "object"}
+      }
+    },
+    "coverage": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/coverage"}
+    },
+    "runtime_dependencies": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/runtime_dependency"}
+    },
+    "attribution_rules": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/attribution_rule"}
+    },
+    "task_level_gates": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/task_level_gate"}
+    },
+    "coverage_accounting_mode": {
+      "enum": ["explicit_only", "hierarchical", "configured"],
+      "default": "explicit_only"
+    },
+    "jd_slots": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/jd_slot"}
+    },
+    "phases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/phase"}
+    },
+    "disturbances": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/disturbance"}
+    },
+    "interfaces": {"$ref": "#/$defs/interfaces"},
+    "metrics": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/metric_spec"}
+    },
+    "provenance": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/provenance"}
+    },
+    "extensions": {"type": "object"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+    "evidence_status": {"enum": ["verified", "proposed", "TBD"]},
+    "ability": {
+      "enum": ["A1", "A2", "A3", "A4", "A5", "A6a", "A6b", "A7", "A8", "A9a", "A9b", "A10", "A11", "A12", "A13", "A14", "A15"]
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "status"],
+      "properties": {
+        "source_id": {"type": "string", "minLength": 1},
+        "locator": {"type": ["string", "null"]},
+        "status": {"$ref": "#/$defs/evidence_status"},
+        "notes": {"type": ["string", "null"]}
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["coverage_id", "group", "ability", "level", "role", "sut_responsibilities", "out_of_scope"],
+      "properties": {
+        "coverage_id": {"$ref": "#/$defs/id"},
+        "group": {"enum": ["G1", "G2", "G3", "G4", "G5", "G6"]},
+        "ability": {"$ref": "#/$defs/ability"},
+        "level": {"enum": ["L1", "L2", "L3", "L4"]},
+        "role": {"enum": ["primary", "anomaly", "auxiliary", "non_scored"]},
+        "sut_responsibilities": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "out_of_scope": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "provenance": {"type": "array", "items": {"$ref": "#/$defs/provenance"}},
+        "extensions": {"type": "object"}
+      }
+    },
+    "runtime_dependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dependency_id", "provider", "responsibilities", "scored", "status"],
+      "properties": {
+        "dependency_id": {"$ref": "#/$defs/id"},
+        "group": {"enum": ["G1", "G2", "G3", "G4", "G5", "G6"]},
+        "ability": {"$ref": "#/$defs/ability"},
+        "provider": {"enum": ["fixture", "harness", "executor", "external_system"]},
+        "responsibilities": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "scored": {"const": false},
+        "status": {"$ref": "#/$defs/evidence_status"},
+        "provenance": {"type": "array", "items": {"$ref": "#/$defs/provenance"}},
+        "extensions": {"type": "object"}
+      }
+    },
+    "attribution_rule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rule_id", "description", "applies_to", "shared_outcome_handling", "status"],
+      "properties": {
+        "rule_id": {"$ref": "#/$defs/id"},
+        "description": {"type": "string", "minLength": 1},
+        "applies_to": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/id"}},
+        "shared_outcome_handling": {"enum": ["independent_results", "single_task_gate", "no_double_count"]},
+        "status": {"$ref": "#/$defs/evidence_status"},
+        "extensions": {"type": "object"}
+      }
+    },
+    "task_level_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gate_id", "description", "evidence_required", "status"],
+      "properties": {
+        "gate_id": {"$ref": "#/$defs/id"},
+        "description": {"type": "string", "minLength": 1},
+        "evidence_required": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "status": {"$ref": "#/$defs/evidence_status"},
+        "extensions": {"type": "object"}
+      }
+    },
+    "binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "status"],
+      "properties": {
+        "mode": {"enum": ["fixed", "enum", "range", "reference", "TBD"]},
+        "value": {},
+        "allowed_values": {"type": "array"},
+        "minimum": {"type": ["number", "null"]},
+        "maximum": {"type": ["number", "null"]},
+        "reference": {"type": ["string", "null"]},
+        "status": {"$ref": "#/$defs/evidence_status"}
+      }
+    },
+    "jd_slot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slot_id", "description", "visibility", "binding", "provenance"],
+      "properties": {
+        "slot_id": {"$ref": "#/$defs/id"},
+        "description": {"type": "string", "minLength": 1},
+        "visibility": {"enum": ["sut_visible", "grader_only", "compiler_only"]},
+        "binding": {"$ref": "#/$defs/binding"},
+        "provenance": {"type": "array", "items": {"$ref": "#/$defs/provenance"}},
+        "extensions": {"type": "object"}
+      }
+    },
+    "duration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "unit", "status"],
+      "properties": {
+        "value": {"type": ["number", "null"], "minimum": 0},
+        "unit": {"enum": ["tick", "s", "TBD"]},
+        "status": {"$ref": "#/$defs/evidence_status"}
+      },
+      "allOf": [
+        {"if": {"properties": {"status": {"const": "TBD"}}}, "then": {"properties": {"value": {"const": null}}}}
+      ]
+    },
+    "phase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["phase_id", "order", "entry_conditions", "exit_conditions", "minimum_duration"],
+      "properties": {
+        "phase_id": {"$ref": "#/$defs/id"},
+        "order": {"type": "integer", "minimum": 0},
+        "entry_conditions": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "exit_conditions": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "minimum_duration": {"$ref": "#/$defs/duration"},
+        "extensions": {"type": "object"}
+      }
+    },
+    "disturbance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["disturbance_id", "kind", "injection_phase", "parameters", "status"],
+      "properties": {
+        "disturbance_id": {"$ref": "#/$defs/id"},
+        "kind": {"type": "string", "minLength": 1},
+        "injection_phase": {"$ref": "#/$defs/id"},
+        "parameters": {"type": "object"},
+        "status": {"$ref": "#/$defs/evidence_status"},
+        "extensions": {"type": "object"}
+      }
+    },
+    "named_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "description"],
+      "properties": {
+        "name": {"$ref": "#/$defs/id"},
+        "description": {"type": "string", "minLength": 1},
+        "schema_ref": {"type": ["string", "null"]},
+        "extensions": {"type": "object"}
+      }
+    },
+    "interfaces": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sut_visible_inputs", "sut_outputs", "hidden_ground_truth", "executor_responsibilities", "external_decision_port"],
+      "properties": {
+        "sut_visible_inputs": {"type": "array", "items": {"$ref": "#/$defs/named_contract"}},
+        "sut_outputs": {"type": "array", "items": {"$ref": "#/$defs/named_contract"}},
+        "hidden_ground_truth": {"type": "array", "items": {"$ref": "#/$defs/named_contract"}},
+        "executor_responsibilities": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "external_decision_port": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["description", "status"],
+          "properties": {
+            "description": {"type": "string", "minLength": 1},
+            "status": {"$ref": "#/$defs/evidence_status"},
+            "protocol": {"type": ["string", "null"]}
+          }
+        },
+        "extensions": {"type": "object"}
+      }
+    },
+    "threshold": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "status"],
+      "properties": {
+        "value": {"type": ["number", "string", "null"]},
+        "status": {"$ref": "#/$defs/evidence_status"},
+        "rationale": {"type": ["string", "null"]}
+      },
+      "allOf": [
+        {"if": {"properties": {"status": {"const": "TBD"}}}, "then": {"properties": {"value": {"const": null}}}}
+      ]
+    },
+    "metric_spec": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metric_id", "coverage_id", "name", "parameters", "direction", "threshold", "provenance"],
+      "properties": {
+        "metric_id": {"$ref": "#/$defs/id"},
+        "coverage_id": {"$ref": "#/$defs/id"},
+        "name": {"type": "string", "minLength": 1},
+        "parameters": {"type": "object"},
+        "direction": {"enum": ["maximize", "minimize", "target", "none", "TBD"]},
+        "threshold": {"$ref": "#/$defs/threshold"},
+        "provenance": {"type": "array", "items": {"$ref": "#/$defs/provenance"}},
+        "extensions": {"type": "object"}
+      }
+    }
+  }
+}

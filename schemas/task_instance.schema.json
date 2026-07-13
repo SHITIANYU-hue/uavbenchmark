@@ -1,0 +1,196 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uav-benchmark.local/schemas/task_instance.schema.json",
+  "title": "UAV Benchmark Task Instance",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact_type",
+    "instance_id",
+    "template_ref",
+    "seed",
+    "timebase",
+    "slot_bindings",
+    "platform_profile",
+    "executor_profile",
+    "phase_schedule",
+    "disturbance_schedule",
+    "fixture_references",
+    "compiler",
+    "validation_audit",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "artifact_type": {"const": "task_instance"},
+    "instance_id": {"$ref": "#/$defs/id"},
+    "template_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["template_id", "template_version", "sha256"],
+      "properties": {
+        "template_id": {"$ref": "#/$defs/id"},
+        "template_version": {"type": "string", "minLength": 1},
+        "sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "seed": {"type": "integer", "minimum": 0},
+    "timebase": {"$ref": "#/$defs/timebase"},
+    "slot_bindings": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/slot_binding"}
+    },
+    "platform_profile": {"$ref": "#/$defs/platform_profile"},
+    "executor_profile": {"$ref": "#/$defs/executor_profile"},
+    "phase_schedule": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/phase_schedule"}
+    },
+    "disturbance_schedule": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/disturbance_schedule"}
+    },
+    "fixture_references": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["sut_visible_input", "hidden_ground_truth_output"],
+      "properties": {
+        "sut_visible_input": {"type": "string", "minLength": 1},
+        "hidden_ground_truth_output": {"type": "string", "minLength": 1},
+        "extensions": {"type": "object"}
+      }
+    },
+    "compiler": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version", "deterministic"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1},
+        "deterministic": {"const": true},
+        "extensions": {"type": "object"}
+      }
+    },
+    "validation_audit": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/audit_item"}
+    },
+    "provenance": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/provenance"}
+    },
+    "extensions": {"type": "object"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "evidence_status": {"enum": ["verified", "proposed", "TBD"]},
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "status"],
+      "properties": {
+        "source_id": {"type": "string", "minLength": 1},
+        "locator": {"type": ["string", "null"]},
+        "status": {"$ref": "#/$defs/evidence_status"},
+        "notes": {"type": ["string", "null"]}
+      }
+    },
+    "timebase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "tick_duration_s", "status"],
+      "properties": {
+        "kind": {"enum": ["tick", "simulation_time", "wall_clock", "TBD"]},
+        "tick_duration_s": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "status": {"$ref": "#/$defs/evidence_status"}
+      },
+      "allOf": [
+        {"if": {"properties": {"status": {"const": "TBD"}}}, "then": {"properties": {"tick_duration_s": {"const": null}}}}
+      ]
+    },
+    "slot_binding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slot_id", "value", "status", "provenance"],
+      "properties": {
+        "slot_id": {"$ref": "#/$defs/id"},
+        "value": {},
+        "status": {"$ref": "#/$defs/evidence_status"},
+        "provenance": {"type": "array", "items": {"$ref": "#/$defs/provenance"}},
+        "extensions": {"type": "object"}
+      }
+    },
+    "platform_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile_id", "platform_type", "allowed_protection_actions", "status"],
+      "properties": {
+        "profile_id": {"$ref": "#/$defs/id"},
+        "platform_type": {"type": "string", "minLength": 1},
+        "allowed_protection_actions": {"type": "array", "items": {"$ref": "#/$defs/id"}},
+        "status": {"$ref": "#/$defs/evidence_status"},
+        "extensions": {"type": "object"}
+      }
+    },
+    "executor_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile_id", "responsibilities", "status"],
+      "properties": {
+        "profile_id": {"$ref": "#/$defs/id"},
+        "responsibilities": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "status": {"$ref": "#/$defs/evidence_status"},
+        "extensions": {"type": "object"}
+      }
+    },
+    "phase_schedule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["phase_id", "order", "start_tick", "end_tick", "timing_status"],
+      "properties": {
+        "phase_id": {"$ref": "#/$defs/id"},
+        "order": {"type": "integer", "minimum": 0},
+        "start_tick": {"type": ["integer", "null"], "minimum": 0},
+        "end_tick": {"type": ["integer", "null"], "minimum": 0},
+        "timing_status": {"$ref": "#/$defs/evidence_status"},
+        "extensions": {"type": "object"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"timing_status": {"const": "TBD"}}},
+          "then": {"properties": {"start_tick": {"const": null}, "end_tick": {"const": null}}}
+        }
+      ]
+    },
+    "disturbance_schedule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["disturbance_id", "kind", "phase_id", "start_tick", "parameters", "status"],
+      "properties": {
+        "disturbance_id": {"$ref": "#/$defs/id"},
+        "kind": {"type": "string", "minLength": 1},
+        "phase_id": {"$ref": "#/$defs/id"},
+        "start_tick": {"type": ["integer", "null"], "minimum": 0},
+        "parameters": {"type": "object"},
+        "status": {"$ref": "#/$defs/evidence_status"},
+        "extensions": {"type": "object"}
+      }
+    },
+    "audit_item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["check_id", "status", "message"],
+      "properties": {
+        "check_id": {"$ref": "#/$defs/id"},
+        "status": {"enum": ["pass", "fail", "TBD"]},
+        "message": {"type": "string", "minLength": 1},
+        "evidence": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "extensions": {"type": "object"}
+      }
+    }
+  }
+}

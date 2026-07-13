@@ -1,0 +1,1745 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <link rel="icon" href="data:,">
+  <title>UAV Benchmark Pipeline Console</title>
+  <style>
+    :root {
+      --bg: #f3f6f8;
+      --panel: #ffffff;
+      --panel-soft: #f8fafb;
+      --line: #dbe3e8;
+      --line-strong: #c5d1d8;
+      --text: #162837;
+      --muted: #657786;
+      --teal: #087d79;
+      --teal-soft: #e3f3f1;
+      --blue: #315fa3;
+      --blue-soft: #eaf0f8;
+      --green: #52771a;
+      --green-soft: #edf4df;
+      --amber: #9a5b08;
+      --amber-soft: #fff3df;
+      --red: #ae3e49;
+      --red-soft: #fae9eb;
+      --shadow: 0 14px 38px rgba(29, 54, 70, .09);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-width: 320px; min-height: 100%; }
+    body {
+      color: var(--text);
+      background:
+        radial-gradient(circle at 85% 0%, rgba(8,125,121,.08), transparent 28rem),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, textarea, input { font: inherit; }
+    button { cursor: pointer; }
+    button:disabled { cursor: not-allowed; opacity: .48; }
+    :focus-visible { outline: 3px solid rgba(8,125,121,.28); outline-offset: 2px; }
+
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 64px;
+      padding: 0 24px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.94);
+      backdrop-filter: blur(16px);
+    }
+    .brand { display: flex; align-items: center; gap: 11px; min-width: 0; }
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      display: grid;
+      place-items: center;
+      color: var(--teal);
+      border: 1px solid rgba(8,125,121,.24);
+      border-radius: 11px;
+      background: var(--teal-soft);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: .08em;
+    }
+    .brand b { display: block; font-size: 14px; }
+    .brand span { display: block; color: var(--muted); font-size: 10px; }
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+    .case-select {
+      min-height: 38px;
+      max-width: 245px;
+      padding: 7px 30px 7px 10px;
+      color: var(--text);
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: #ffffff;
+      font-size: 11px;
+      font-weight: 720;
+    }
+    .mode-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 5px 10px;
+      color: var(--amber);
+      border: 1px solid #ecd3a8;
+      border-radius: 999px;
+      background: var(--amber-soft);
+      font-size: 10px;
+      font-weight: 850;
+      letter-spacing: .08em;
+    }
+    .btn {
+      min-height: 38px;
+      padding: 8px 13px;
+      color: var(--text);
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      background: #ffffff;
+      font-size: 12px;
+      font-weight: 750;
+    }
+    .btn:hover:not(:disabled) { border-color: rgba(8,125,121,.48); background: var(--teal-soft); }
+    .btn.primary { color: #ffffff; border-color: var(--teal); background: var(--teal); }
+    .btn.primary:hover:not(:disabled) { background: #066d69; }
+    .btn.danger { color: var(--red); border-color: #ebc3c8; background: var(--red-soft); }
+    .btn.small { min-height: 31px; padding: 5px 9px; font-size: 10px; }
+
+    .stage-shell {
+      position: sticky;
+      top: 64px;
+      z-index: 20;
+      padding: 12px 24px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(243,246,248,.95);
+      backdrop-filter: blur(12px);
+    }
+    .stage-rail {
+      display: grid;
+      grid-template-columns: repeat(9, minmax(92px, 1fr));
+      gap: 7px;
+      max-width: 1500px;
+      margin: 0 auto;
+      overflow-x: auto;
+    }
+    .stage-node {
+      position: relative;
+      min-width: 92px;
+      min-height: 58px;
+      padding: 8px 9px;
+      text-align: left;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: rgba(255,255,255,.78);
+    }
+    .stage-node span { display: block; font-size: 9px; font-weight: 850; letter-spacing: .08em; }
+    .stage-node b { display: block; margin-top: 3px; color: inherit; font-size: 10px; }
+    .stage-node.current { color: var(--teal); border-color: rgba(8,125,121,.42); background: var(--teal-soft); }
+    .stage-node.done { color: var(--green); border-color: #d4e3b6; background: var(--green-soft); }
+    .stage-node.locked { color: #9aa7af; background: #f1f4f5; }
+    .stage-node::after {
+      content: "";
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      z-index: 2;
+      width: 8px;
+      height: 1px;
+      background: var(--line-strong);
+    }
+    .stage-node:last-child::after { display: none; }
+
+    .console {
+      display: grid;
+      grid-template-columns: 250px minmax(520px, 1fr) 290px;
+      gap: 16px;
+      width: min(calc(100% - 32px), 1500px);
+      margin: 18px auto 30px;
+      align-items: start;
+    }
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .side-panel { position: sticky; top: 150px; overflow: hidden; }
+    .side-head { padding: 17px 18px 12px; border-bottom: 1px solid var(--line); }
+    .side-head .eyebrow, .workspace-head .eyebrow {
+      color: var(--teal);
+      font-size: 9px;
+      font-weight: 850;
+      letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .side-head h2 { margin: 5px 0 0; font-size: 16px; }
+    .side-body { padding: 15px 18px 18px; }
+    .context-block + .context-block { margin-top: 17px; padding-top: 15px; border-top: 1px solid var(--line); }
+    .context-label { color: var(--muted); font-size: 9px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+    .context-value { margin-top: 5px; font-size: 12px; font-weight: 720; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    .mini-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+    .mini-tag {
+      padding: 3px 6px;
+      color: #425b6c;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--panel-soft);
+      font-size: 9px;
+    }
+    .mini-tag.scored { color: var(--teal); border-color: #b9dcd9; background: var(--teal-soft); }
+    .mini-tag.dep { color: var(--blue); border-color: #c8d5e7; background: var(--blue-soft); }
+    .pending-count { color: var(--amber); font-size: 23px; font-weight: 850; }
+    .progress-track { height: 7px; overflow: hidden; margin-top: 8px; border-radius: 999px; background: #edf1f3; }
+    .progress-fill { height: 100%; border-radius: inherit; background: var(--teal); transition: width .25s ease; }
+
+    .workspace { min-height: 650px; overflow: hidden; }
+    .workspace-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 22px 24px 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .workspace-head h1 { margin: 5px 0 0; font-size: clamp(22px, 3vw, 32px); line-height: 1.18; letter-spacing: -.035em; }
+    .stage-state { color: var(--muted); font-size: 10px; font-weight: 800; }
+    .workspace-body { padding: 22px 24px 25px; }
+    .intro { margin: 0 0 18px; color: var(--muted); font-size: 12px; }
+    .field-label { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 7px; color: #42596a; font-size: 11px; font-weight: 750; }
+    .field-label span { color: var(--muted); font-size: 9px; font-weight: 600; }
+    .task-input {
+      width: 100%;
+      min-height: 330px;
+      resize: vertical;
+      padding: 15px;
+      color: var(--text);
+      border: 1px solid var(--line-strong);
+      border-radius: 13px;
+      background: var(--panel-soft);
+      font-size: 12px;
+      line-height: 1.75;
+    }
+    .action-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px; margin-top: 16px; }
+    .action-note { color: var(--muted); font-size: 10px; }
+
+    .choice-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .choice-card {
+      position: relative;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel-soft);
+    }
+    .choice-card.selected { border-color: rgba(8,125,121,.42); background: var(--teal-soft); }
+    .choice-card.dependency.selected { border-color: #b8cbe2; background: var(--blue-soft); }
+    .choice-card input { position: absolute; top: 14px; right: 14px; accent-color: var(--teal); }
+    .choice-code { color: var(--teal); font-size: 18px; font-weight: 850; letter-spacing: -.025em; }
+    .choice-card.dependency .choice-code { color: var(--blue); }
+    .choice-card b { display: block; margin-top: 4px; font-size: 12px; }
+    .choice-card p { margin: 7px 0 0; color: var(--muted); font-size: 10px; }
+    .group-label { margin: 18px 0 9px; color: var(--muted); font-size: 9px; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
+
+    .data-table { width: 100%; border-collapse: collapse; font-size: 10px; }
+    .data-table th, .data-table td { padding: 10px 8px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+    .data-table th { color: var(--muted); font-size: 9px; letter-spacing: .07em; text-transform: uppercase; }
+    .status-pill {
+      display: inline-flex;
+      padding: 3px 7px;
+      border-radius: 999px;
+      font-size: 8px;
+      font-weight: 850;
+      letter-spacing: .05em;
+      white-space: nowrap;
+    }
+    .status-pill.given, .status-pill.valid, .status-pill.observed { color: var(--green); background: var(--green-soft); }
+    .status-pill.proposed, .status-pill.current { color: var(--teal); background: var(--teal-soft); }
+    .status-pill.tbd, .status-pill.indeterminate { color: var(--amber); background: var(--amber-soft); }
+    .status-pill.risk, .status-pill.failed { color: var(--red); background: var(--red-soft); }
+    .status-pill.dep { color: var(--blue); background: var(--blue-soft); }
+
+    .validation-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 14px 0; }
+    .validation-card { padding: 11px; border: 1px solid #d7e4c0; border-radius: 10px; background: var(--green-soft); }
+    .validation-card b { display: block; color: var(--green); font-size: 9px; }
+    .validation-card span { display: block; margin-top: 3px; color: #4c625a; font-size: 8px; }
+    .code-preview {
+      max-height: 340px;
+      overflow: auto;
+      margin: 0;
+      padding: 15px;
+      color: #304b5d;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #f1f5f7;
+      font: 10px/1.65 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      white-space: pre-wrap;
+    }
+    .template-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
+    .template-tab { padding: 7px 10px; color: var(--muted); border: 1px solid var(--line); border-radius: 8px; background: #ffffff; font-size: 9px; font-weight: 760; }
+    .template-tab.active { color: var(--teal); border-color: #b7d9d6; background: var(--teal-soft); }
+    .natural-template {
+      max-height: 430px;
+      overflow: auto;
+      padding: 18px;
+      color: #294354;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fbfcfd;
+      font-size: 11px;
+      line-height: 1.85;
+      white-space: pre-wrap;
+    }
+    .natural-template mark { color: #075d5a; background: var(--teal-soft); border-radius: 4px; }
+
+    .instance-tools { display: grid; grid-template-columns: 130px 140px 1fr; gap: 9px; align-items: end; margin-bottom: 14px; }
+    .control label { display: block; margin-bottom: 5px; color: var(--muted); font-size: 9px; font-weight: 750; }
+    .control input, .control select {
+      width: 100%;
+      height: 38px;
+      padding: 0 10px;
+      color: var(--text);
+      border: 1px solid var(--line-strong);
+      border-radius: 9px;
+      background: #ffffff;
+    }
+    .instance-list { display: grid; gap: 8px; }
+    .instance-card {
+      display: grid;
+      grid-template-columns: 135px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 13px;
+      text-align: left;
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #ffffff;
+    }
+    .instance-card.selected { border-color: rgba(8,125,121,.46); background: var(--teal-soft); }
+    .instance-id { color: var(--teal); font-size: 10px; font-weight: 800; }
+    .binding-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+    .binding-tags span { padding: 3px 6px; border: 1px solid var(--line); border-radius: 6px; background: rgba(255,255,255,.66); font-size: 8px; }
+
+    .sut-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .sut-card {
+      min-height: 180px;
+      padding: 15px;
+      text-align: left;
+      color: var(--text);
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--panel-soft);
+    }
+    .sut-card.selected { border-color: rgba(8,125,121,.45); background: var(--teal-soft); }
+    .sut-card .sut-type { color: var(--teal); font-size: 8px; font-weight: 850; letter-spacing: .08em; }
+    .sut-card b { display: block; margin: 10px 0 7px; font-size: 12px; }
+    .sut-card p { margin: 0; color: var(--muted); font-size: 10px; }
+    .sut-card .expected { margin-top: 13px; padding-top: 10px; border-top: 1px solid var(--line); color: #40596a; font-size: 9px; }
+
+    .run-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 15px; }
+    .summary-card { padding: 11px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel-soft); }
+    .summary-card span { display: block; color: var(--muted); font-size: 8px; text-transform: uppercase; }
+    .summary-card b { display: block; margin-top: 4px; font-size: 10px; }
+    .run-progress { height: 8px; overflow: hidden; margin: 12px 0 17px; border-radius: 999px; background: #e8edef; }
+    .run-progress div { height: 100%; width: 0; border-radius: inherit; background: var(--teal); transition: width .35s ease; }
+    .phase-list { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; }
+    .phase {
+      min-height: 126px;
+      padding: 11px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: #ffffff;
+    }
+    .phase.active { border-color: #e7c890; background: var(--amber-soft); }
+    .phase.done { border-color: #d5e3bb; background: var(--green-soft); }
+    .phase-index { color: var(--muted); font-size: 8px; font-weight: 850; }
+    .phase b { display: block; margin: 7px 0 5px; font-size: 10px; }
+    .phase p { margin: 0; color: var(--muted); font-size: 8px; }
+    .actor { display: inline-flex; margin-top: 8px; padding: 2px 5px; border-radius: 5px; color: var(--blue); background: var(--blue-soft); font-size: 7px; font-weight: 800; }
+    .run-log { max-height: 155px; overflow: auto; margin-top: 13px; padding: 11px; border: 1px solid var(--line); border-radius: 10px; background: #172733; color: #d7e6ed; font: 9px/1.7 ui-monospace, monospace; }
+
+    .filter-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 13px; }
+    .filter-button { padding: 6px 9px; color: var(--muted); border: 1px solid var(--line); border-radius: 8px; background: #ffffff; font-size: 9px; font-weight: 750; }
+    .filter-button.active { color: var(--teal); border-color: #b7d9d6; background: var(--teal-soft); }
+    .evidence-list { display: grid; gap: 7px; }
+    .evidence-event {
+      display: grid;
+      grid-template-columns: 64px 82px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 11px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #ffffff;
+    }
+    .evidence-event.gt { border-left: 3px solid var(--amber); background: #fffbf4; }
+    .evidence-event.trace { border-left: 3px solid var(--teal); }
+    .event-time { color: var(--muted); font: 9px ui-monospace, monospace; }
+    .event-lane { font-size: 8px; font-weight: 850; letter-spacing: .06em; }
+    .evidence-event.gt .event-lane { color: var(--amber); }
+    .evidence-event.trace .event-lane { color: var(--teal); }
+    .event-body b { display: block; font-size: 10px; }
+    .event-body span { display: block; margin-top: 3px; color: var(--muted); font-size: 8px; }
+
+    .grader-banner { display: grid; grid-template-columns: 1fr auto; gap: 15px; align-items: center; padding: 15px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel-soft); }
+    .grader-banner h3 { margin: 0; font-size: 15px; }
+    .grader-banner p { margin: 5px 0 0; color: var(--muted); font-size: 9px; }
+    .grader-table { width: 100%; margin-top: 14px; border-collapse: collapse; font-size: 10px; }
+    .grader-table th, .grader-table td { padding: 11px 8px; text-align: left; border-bottom: 1px solid var(--line); }
+    .grader-table th { color: var(--muted); font-size: 8px; text-transform: uppercase; }
+    .gate-card { margin-top: 15px; padding: 14px; border: 1px solid #d7e4c0; border-radius: 12px; background: var(--green-soft); }
+    .gate-card.failed { border-color: #ecc5ca; background: var(--red-soft); }
+    .gate-card .gate-label { color: var(--green); font-size: 8px; font-weight: 850; letter-spacing: .08em; }
+    .gate-card.failed .gate-label { color: var(--red); }
+    .gate-card b { display: block; margin-top: 6px; font-size: 12px; }
+    .gate-card p { margin: 5px 0 0; color: #4c625a; font-size: 9px; }
+
+    .review-list { display: grid; gap: 8px; }
+    .review-item { padding: 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--panel-soft); }
+    .review-item .review-type { font-size: 8px; font-weight: 850; letter-spacing: .07em; }
+    .review-item.valid .review-type { color: var(--green); }
+    .review-item.pending .review-type { color: var(--amber); }
+    .review-item.info .review-type { color: var(--blue); }
+    .review-item b { display: block; margin-top: 4px; font-size: 10px; }
+    .review-item p { margin: 4px 0 0; color: var(--muted); font-size: 8px; }
+    .review-item-foot { display: flex; justify-content: space-between; gap: 10px; align-items: end; margin-top: 7px; }
+    .review-item-foot .artifact-link { margin-top: 0; }
+    .artifact-link { display: block; margin-top: 5px; color: var(--teal); font: 8px ui-monospace, monospace; overflow-wrap: anywhere; }
+    .disclaimer {
+      margin-top: 14px;
+      padding: 10px;
+      color: #6e4c1f;
+      border: 1px solid #ecd3a8;
+      border-radius: 9px;
+      background: var(--amber-soft);
+      font-size: 8px;
+    }
+
+    .review-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: rgba(18, 35, 46, .48);
+      backdrop-filter: blur(4px);
+    }
+    .review-workspace {
+      width: min(980px, 100%);
+      max-height: min(88vh, 860px);
+      overflow: hidden;
+      border: 1px solid var(--line-strong);
+      border-radius: 18px;
+      background: #ffffff;
+      box-shadow: 0 24px 70px rgba(18, 35, 46, .24);
+    }
+    .review-workspace-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: start;
+      padding: 20px 22px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+    .review-workspace-head h2 { margin: 3px 0 0; font-size: 20px; }
+    .review-workspace-head p { margin: 6px 0 0; color: var(--muted); font-size: 10px; }
+    .review-tabs { display: flex; gap: 6px; padding: 12px 22px 0; }
+    .review-tab { padding: 8px 11px; color: var(--muted); border: 1px solid var(--line); border-radius: 9px; background: #fff; font-size: 9px; font-weight: 800; }
+    .review-tab.active { color: var(--teal); border-color: #add5d1; background: var(--teal-soft); }
+    .review-workspace-body { max-height: calc(88vh - 205px); overflow: auto; padding: 16px 22px 22px; }
+    .review-workspace-foot { display: flex; justify-content: space-between; gap: 12px; align-items: center; padding: 14px 22px; border-top: 1px solid var(--line); background: var(--panel-soft); }
+    .review-workspace-foot .action-note { max-width: 58%; }
+    .review-section-title { margin: 0 0 10px; font-size: 12px; }
+    .review-help { margin: -4px 0 14px; color: var(--muted); font-size: 9px; }
+    .review-form-list { display: grid; gap: 10px; }
+    .review-form-card { padding: 13px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel-soft); }
+    .review-form-card.pending { border-color: #ebcea1; background: var(--amber-soft); }
+    .review-form-card-head { display: flex; justify-content: space-between; gap: 12px; align-items: center; margin-bottom: 9px; }
+    .review-form-card-head b { font-size: 11px; }
+    .review-form-card-head span { color: var(--muted); font: 8px ui-monospace, monospace; }
+    .review-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+    .review-field label { display: block; margin-bottom: 5px; color: var(--muted); font-size: 8px; font-weight: 800; }
+    .review-field input, .review-field select, .review-field textarea {
+      width: 100%;
+      padding: 9px 10px;
+      color: var(--text);
+      border: 1px solid var(--line-strong);
+      border-radius: 9px;
+      background: #fff;
+      font: inherit;
+    }
+    .review-field textarea { min-height: 76px; resize: vertical; }
+    .review-template-editor { min-height: 430px !important; line-height: 1.75; }
+    .review-empty { padding: 24px; text-align: center; color: var(--muted); border: 1px dashed var(--line-strong); border-radius: 12px; }
+    .review-dependency-list { display: grid; gap: 7px; margin-bottom: 14px; }
+    .review-dependency { display: flex; justify-content: space-between; gap: 12px; padding: 10px; border: 1px solid var(--line); border-radius: 10px; }
+    .review-dependency b { display: block; font-size: 10px; }
+    .review-dependency span { color: var(--muted); font-size: 8px; }
+    .revision-badge { display: inline-flex; padding: 4px 7px; color: var(--blue); background: var(--blue-soft); border-radius: 6px; font-size: 8px; font-weight: 800; }
+
+    @media (max-width: 1120px) {
+      .console { grid-template-columns: 220px minmax(480px, 1fr); }
+      .review-panel { position: static; grid-column: 1 / -1; }
+      .review-panel .side-body { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    }
+    @media (max-width: 820px) {
+      .app-header { padding: 0 12px; }
+      .header-actions .print-label, .brand span { display: none; }
+      .stage-shell { padding: 10px 12px; }
+      .stage-rail { display: flex; }
+      .stage-node { flex: 0 0 102px; }
+      .console { grid-template-columns: 1fr; width: min(calc(100% - 20px), 720px); }
+      .side-panel { position: static; }
+      .context-panel .side-body { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+      .context-block + .context-block { margin: 0; padding: 0; border: 0; }
+      .choice-grid, .sut-grid { grid-template-columns: 1fr; }
+      .phase-list { grid-template-columns: 1fr; }
+      .review-panel .side-body { grid-template-columns: 1fr; }
+      .review-overlay { padding: 8px; }
+      .review-fields { grid-template-columns: 1fr; }
+      .review-workspace-foot { align-items: stretch; flex-direction: column; }
+      .review-workspace-foot .action-note { max-width: none; }
+    }
+    @media (max-width: 540px) {
+      .mode-badge { display: none; }
+      .case-select { max-width: 150px; }
+      .workspace-head { align-items: start; flex-direction: column; }
+      .workspace-body { padding: 18px 16px; }
+      .context-panel .side-body, .validation-grid, .run-summary { grid-template-columns: 1fr; }
+      .instance-tools { grid-template-columns: 1fr 1fr; }
+      .instance-tools .btn { grid-column: 1 / -1; }
+      .instance-card { grid-template-columns: 1fr; }
+      .evidence-event { grid-template-columns: 54px 1fr; }
+      .event-body { grid-column: 1 / -1; }
+    }
+    @media print {
+      .app-header, .stage-shell, .context-panel, .workspace .action-row, .filter-row { display: none !important; }
+      body { background: #ffffff; }
+      .console { display: block; width: 100%; margin: 0; }
+      .workspace, .review-panel { box-shadow: none; border: 0; }
+      .review-panel { margin-top: 20px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-mark">UAV</div>
+      <div><b>Benchmark Pipeline Console</b><span id="headerCaseTitle">案例加载中 · 浏览器演示</span></div>
+    </div>
+    <div class="header-actions">
+      <span class="mode-badge">当前重点 · AGENT → TEMPLATE</span>
+      <select class="case-select" id="caseSelect" aria-label="选择案例">
+        <option value="custom">新任务 · 自由输入</option>
+        <option value="case1">案例一 · 城市违停巡检</option>
+        <option value="case2">案例二 · 油田管廊巡检</option>
+      </select>
+      <button class="btn" id="resetButton" type="button">重新开始</button>
+      <button class="btn" type="button" onclick="window.print()"><span class="print-label">打印摘要</span></button>
+    </div>
+  </header>
+
+  <div class="stage-shell">
+    <nav class="stage-rail" id="stageRail" aria-label="Pipeline 阶段"></nav>
+  </div>
+
+  <main class="console">
+    <aside class="panel side-panel context-panel">
+      <div class="side-head"><div class="eyebrow">Run Context</div><h2>本次运行</h2></div>
+      <div class="side-body" id="contextPanel"></div>
+    </aside>
+
+    <section class="panel workspace">
+      <div class="workspace-head">
+        <div><div class="eyebrow" id="workspaceEyebrow"></div><h1 id="workspaceTitle"></h1></div>
+        <div class="stage-state" id="workspaceState"></div>
+      </div>
+      <div class="workspace-body" id="workspaceBody"></div>
+    </section>
+
+    <aside class="panel side-panel review-panel">
+      <div class="side-head"><div class="eyebrow">Evidence & Review</div><h2>证据与审核</h2></div>
+      <div class="side-body" id="reviewPanel"></div>
+    </aside>
+  </main>
+
+  <div id="reviewWorkspaceHost"></div>
+
+  <script>
+    const OILFIELD_PROMPT = [
+      "在油田长距离管廊环境中，一架满足既定执行包络的无人机沿指定管廊巡检航段实际执行缺陷巡检任务。系统在正常巡检阶段持续维护无人机与管廊中心线、管线或指定检查面的相对距离、方位、横向/垂向偏差和观测质量，并对当前观察窗口中的腐蚀、泄漏、保温层破损、结构破损或异物侵入等缺陷进行识别，输出缺陷类别、置信度、图像或热成像证据、管廊区段 ID 和发现时间。",
+      "任务运行至中段后，世界侧通过持续逆风、可用电池容量下降、载荷功耗增加或其他资源消耗偏差，使实际能源消耗逐步偏离初始预算。系统需持续估算剩余电量、剩余飞行时间、返航或备降所需资源和安全储备；当继续完成原巡检任务已无法满足安全储备或可达性约束时，系统应自主决定继续、缩短巡检、返航或前往预定义安全备降点。",
+      "A11 负责判断何时应停止或缩短巡检、选择哪一种资源兜底策略，并验证处置后的资源与终态是否安全；A7 负责执行已选定的固定巡检、返航或备降航迹；A8 底层速度、姿态和稳定控制由外部飞控或仿真执行器提供。本案例不等待人工批准后再处置，不评价自然语言交互或人工接管能力。"
+    ].join("\n\n");
+
+    const STAGES = [
+      ["INPUT", "业务描述"],
+      ["COVERAGE", "能力确认"],
+      ["JD", "变量提取"],
+      ["TEMPLATE", "任务模板"]
+    ];
+
+    const CITY_PROMPT = [
+      "在城市高楼峡谷道路环境中，一架具备悬停或等效安全保持能力、满足既定速度范围、转弯约束和起降约束的无人机，从指定起飞点进入道路巡检区域，沿包含巡检起点、巡检终点和航点的固定道路航段执行违停车辆巡检。",
+      "无人机搭载 RGB 相机。道路中包含违停车辆、正常停放车辆和相似干扰目标，车辆可出现、离开、交错、短时遮挡或重新出现。系统持续处理多帧 RGB 观测，完成车辆连续检测、跨帧身份维护、重复目标去除和巡检报告更新，输出目标 ID、类别、图像证据、发现时间和道路巡检段记录。",
+      "正常任务阶段由外部 waypoint executor 或仿真执行器推进固定航段，外部飞控负责基础速度保持、姿态稳定和位置保持。系统可获得 GNSS/RTK、VIO、IMU、磁力计和气压计等定位观测，以及当前航路、禁飞区、障碍物、速度、姿态、偏航、风况和飞行状态。具体平台参数、控制约束数值和安全包络阈值尚未确定。",
+      "A5×L2 负责连续感知和身份维护；A6a×L3 负责正常阶段持续维护位姿与定位质量，并在退化后完成不可信标记、保护请求、异常上报和等待；A7×L1 只输出航路可行性、约束、风险或航段偏差提示；A8×L1 只判断当前飞行状态是否在控制约束和安全包络内并输出调整建议。SUT 不自主执行航路调整或闭环飞行控制。",
+      "在系统完成足够长的正常巡检和车辆连续观测后，Fixture 注入 GNSS 多径、位置跳变、连续失锁或定位源不一致等定位退化。SUT 判断位姿不可信后，应停止依赖该位姿进行高风险推进，并请求外部 Executor 执行暂停推进、悬停或等效安全保持。真实车辆身份、违停标签、真实位姿、故障类型和故障开始时间不直接提供给 SUT。",
+      "SUT 通过结构化异常事件接口输出异常类型、定位可信状态、当前任务状态和已执行保护动作。外部决定接口返回继续、返航或终止等后续动作；该接口只用于完成运行闭环，不评价自然语言理解、协认或控制权交接能力。",
+      "任务在以下结构性条件满足时结束：正常阶段已完成连续违停车辆识别、跨帧身份保持、去重和报告更新；定位退化发生后，系统已标记定位不可信、触发允许的保护动作并输出异常事件。具体观测时长、定位可信阈值和安全包络数值仍待业务方确认。"
+    ].join("\n\n");
+
+    const OILFIELD_COVERAGE = [
+      { id: "a5_l1", code: "A5×L1", name: "缺陷识别", detail: "当前观察窗口内输出缺陷类别、证据、区段与时间。", kind: "scored" },
+      { id: "a6b_l2", code: "A6b×L2", name: "相对几何维护", detail: "连续维护距离、方位、横向/垂向偏差和观测质量。", kind: "scored" },
+      { id: "a7_l2", code: "A7×L2", name: "航迹执行与切换", detail: "执行固定巡检航迹，并按 A11 指令切换返航或备降路线。", kind: "scored" },
+      { id: "a11_l4", code: "A11×L4", name: "资源兜底决策", detail: "持续估算资源，自主选择策略与目标，并验证安全终态。", kind: "scored" },
+      { id: "a6a_dep", code: "A6a", name: "外部基础位姿", detail: "由外部系统提供基础绝对位姿和航向；本案例不评分。", kind: "dependency" },
+      { id: "a8_dep", code: "A8", name: "外部低层飞控", detail: "由外部执行器完成速度、姿态、位置与着陆控制；本案例不评分。", kind: "dependency" }
+    ];
+
+    const CITY_COVERAGE = [
+      { id: "a5_l2", code: "A5×L2", name: "连续车辆感知", detail: "连续检测、跨帧身份保持、去重并持续更新巡检报告。", kind: "scored" },
+      { id: "a6a_l3", code: "A6a×L3", name: "定位退化责任", detail: "识别退化、标记不可信、请求保护、上报并等待外部决定。", kind: "scored" },
+      { id: "a7_l1", code: "A7×L1", name: "航路建议", detail: "输出航路可行性、约束、风险与偏差提示；不自主执行。", kind: "scored" },
+      { id: "a8_l1", code: "A8×L1", name: "包络建议", detail: "评估状态与安全包络并输出调整建议；不闭环控制。", kind: "scored" },
+      { id: "executor_dep", code: "Executor", name: "外部保护执行", detail: "推进固定航段，执行暂停或等效安全保持；不计 SUT coverage。", kind: "dependency" },
+      { id: "decision_dep", code: "External Decision", name: "外部决定接口", detail: "接收异常上报并返回继续、返航或终止等外部决定；协议 TBD。", kind: "dependency" }
+    ];
+
+    const OILFIELD_JD_ROWS = [
+      ["jd-0.2", "工作空间结构", "油田线性或分段线性管廊", "原始任务 + 案例二文档", "given"],
+      ["jd-8.3", "平台与执行包络", "platform_profile_registry", "平台 profile 待项目组提供", "tbd"],
+      ["jd-7.1", "航路拓扑", "固定巡检、返航与安全备降路线", "原始任务", "proposed"],
+      ["jd-0.9", "载荷集", "RGB；可选热红外/深度/测距", "原始任务", "proposed"],
+      ["jd-5.1", "业务对象类别", "腐蚀、泄漏、破损、异物侵入", "原始任务", "given"],
+      ["jd-6b.1", "相对几何先验", "中心线、检查面、目标观察距离", "案例二文档", "proposed"],
+      ["jd-0.3", "资源偏差窗口", "resource_deviation_profile", "Fixture profile 待确认", "tbd"],
+      ["jd-0.10", "安全包络", "最低储备与可达性规则", "不得由 Agent 编造", "tbd"],
+      ["jd-0.7", "任务完成判据", "结构已定义；业务数值未标定", "案例二文档", "proposed"]
+    ];
+
+    const CITY_JD_ROWS = [
+      ["jd-0.2", "工作空间结构", "城市高楼峡谷与固定道路航段", "交接文件当前确认边界", "given"],
+      ["jd-5.1", "业务对象类别", "车辆与违停标签", "案例一合同示例", "given"],
+      ["vehicle_layout", "车辆布局", "vehicle_layout_profile", "实例变量域待确认", "proposed"],
+      ["occlusion_profile", "遮挡配置", "occlusion_profile", "实例变量域待确认", "proposed"],
+      ["localization_fault", "定位退化", "localization_degradation_profile", "异常窗口与强度待确认", "tbd"],
+      ["platform_profile", "平台与保护动作兼容性", "platform_profile_registry", "平台 profile 待项目组提供", "tbd"],
+      ["external_decision_port", "外部决定接口", "协议与返回枚举未定义", "不得由 Agent 编造", "tbd"],
+      ["jd-0.7", "任务完成判据", "五段责任链结构已定义", "交接文件当前确认边界", "proposed"]
+    ];
+
+    const OILFIELD_SUTS = [
+      { id: "good_resource_sut", name: "good_resource_sut", label: "正确责任链", description: "持续估算资源，在合理窗口选择可达策略，A7 完成路线后由 A11 验证终态。", expected: "预期：责任链完整；未标定指标仍为 TBD。" },
+      { id: "always_return_sut", name: "always_return_sut", label: "过早返航", description: "不考虑当前安全余量，无论偏差强度都立即返航。", expected: "预期：EARLY_TERMINATION / UNNECESSARY_ABORT。" },
+      { id: "late_decision_sut", name: "late_decision_sut", label: "延迟决策", description: "资源风险已经可见后仍继续巡检，超过安全窗口才切换模式。", expected: "预期：LATE_DECISION / LATE_MODE_SWITCH。" }
+    ];
+
+    const CITY_SUTS = [
+      { id: "good_sut", name: "good_sut", label: "正确责任链", description: "持续维护车辆身份，定位退化后标记不可信、请求保护、上报并等待外部决定。", expected: "预期：A5/A6a 责任链完整；阈值项保持 TBD。" },
+      { id: "identity_switch_sut", name: "identity_switch_sut", label: "身份切换", description: "同一车辆发生 ID switch 并被重复计入巡检报告。", expected: "预期：IDENTITY_SWITCH / DUPLICATE_COUNT。" },
+      { id: "unsafe_continue_sut", name: "unsafe_continue_sut", label: "异常后继续", description: "已识别定位异常，但不请求保护并继续沿固定航段推进。", expected: "预期：UNSAFE_CONTINUATION / MISSING_PROTECTION_REQUEST。" }
+    ];
+
+    const OILFIELD_PHASES = [
+      ["INIT", "初始化", "加载任务、路线、外部位姿与资源初始状态", "Harness"],
+      ["NOMINAL", "正常巡检", "缺陷识别、相对几何、航迹与资源估算持续输出", "SUT"],
+      ["DEVIATION", "资源偏差", "Fixture 注入可观察遥测偏差；隐藏真值不暴露", "Fixture"],
+      ["DECIDE", "自主决策", "A11 选择策略和目标，向 A7 发出模式切换", "SUT"],
+      ["VERIFY", "执行与验证", "A7 路线执行、外部飞控闭环、A11 验证终态", "Executor + SUT"]
+    ];
+
+    const CITY_PHASES = [
+      ["TASK START", "任务启动", "加载固定航段、车辆场景与外部执行端口", "Harness"],
+      ["NOMINAL", "正常巡检", "持续车辆检测、身份维护、定位质量与辅助建议", "SUT"],
+      ["FAULT", "定位退化", "Fixture 在正常巡检后注入隐藏 fault window", "Fixture"],
+      ["PROTECT", "识别与保护", "A6a 标记不可信并请求外部暂停或安全保持", "SUT + Executor"],
+      ["REPORT", "上报与等待", "异常上报、进入等待并记录外部决定", "SUT + External"]
+    ];
+
+    const CASES = {
+      custom: {
+        key: "custom",
+        label: "新任务",
+        title: "自由业务描述",
+        status: "等待 Agent 分析",
+        prompt: "",
+        naturalTemplate: "",
+        coverage: [],
+        jdRows: [],
+        suts: [],
+        phases: [],
+        pendingCount: 0,
+        templateId: "agent_generated_template",
+        variables: {},
+        attributionRules: [],
+        taskGates: []
+      },
+      case1: {
+        key: "case1",
+        label: "案例一",
+        title: "城市高楼峡谷违停车辆巡检",
+        status: "当前确认边界",
+        prompt: CITY_PROMPT,
+        naturalTemplate: "",
+        coverage: CITY_COVERAGE,
+        jdRows: CITY_JD_ROWS,
+        suts: CITY_SUTS,
+        phases: CITY_PHASES,
+        pendingCount: 3,
+        templateId: "case1_illegal_parking_template",
+        variables: {
+          vehicle_layout: ["layout-A", "layout-B", "layout-C"],
+          occlusion: ["occlusion-A", "occlusion-B", "occlusion-C"],
+          localization_fault: ["drift", "source-disagreement", "intermittent-loss"],
+          decision_branch: ["continue", "return", "terminate"]
+        },
+        attributionRules: ["sut_executor_action_split", "a6a_report_wait_chain"],
+        taskGates: ["protection_report_external_decision_chain"]
+      },
+      case2: {
+        key: "case2",
+        label: "案例二",
+        title: "油田管廊缺陷巡检",
+        status: "候选 · 待确认",
+        prompt: OILFIELD_PROMPT,
+        naturalTemplate: "",
+        coverage: OILFIELD_COVERAGE,
+        jdRows: OILFIELD_JD_ROWS,
+        suts: OILFIELD_SUTS,
+        phases: OILFIELD_PHASES,
+        pendingCount: 3,
+        templateId: "case2_oilfield_corridor_template",
+        variables: {
+          corridor: ["corridor-A", "corridor-B", "corridor-C"],
+          defect: ["corrosion-window", "leak-window", "insulation-damage"],
+          deviation: ["headwind-drift", "capacity-drop", "payload-power-rise"],
+          branch: ["continue-safe", "shorten-return", "safe-divert"]
+        },
+        attributionRules: ["a11_decision_a7_execution_split", "safe_terminal_single_gate"],
+        taskGates: ["safe_terminal"]
+      }
+    };
+
+    function activeCase() { return CASES[state.caseKey]; }
+
+    const initialState = (caseKey = "case1") => ({
+      caseKey,
+      currentStage: 0,
+      maxUnlocked: 0,
+      completed: new Set(),
+      runId: caseKey + "-demo-001",
+      prompt: CASES[caseKey].prompt,
+      inputVersion: null,
+      selectedCoverage: new Set(),
+      modelTier: "flash",
+      serverStatus: "checking",
+      serverModels: null,
+      agentStatus: "idle",
+      agentEvent: null,
+      agentEventDetails: null,
+      agentResult: null,
+      agentError: null,
+      baseRunId: null,
+      revisionId: null,
+      revisionNumber: 0,
+      revisionHistory: [],
+      reviewOpen: false,
+      reviewTab: "tbd",
+      reviewDraft: null,
+      reviewNote: "",
+      reviewSaveError: null,
+      jdConfirmed: false,
+      template: null,
+      templateView: "natural",
+      templateValidated: false,
+      instances: [],
+      selectedInstance: null,
+      selectedSut: null,
+      runStatus: "not_started",
+      runPhase: -1,
+      runLog: [],
+      evidenceFilter: "all",
+      evidence: [],
+      grader: null
+    });
+
+    const STORAGE_KEY = "uav_benchmark_pipeline_state_v1";
+
+    function loadStoredState() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
+        if (!saved || !CASES[saved.caseKey]) return initialState("case1");
+        const restored = Object.assign(initialState(saved.caseKey), saved);
+        restored.completed = new Set(saved.completed || []);
+        restored.selectedCoverage = new Set(saved.selectedCoverage || []);
+        restored.serverStatus = "checking";
+        return restored;
+      } catch (error) {
+        return initialState("case1");
+      }
+    }
+
+    function persistState() {
+      const snapshot = Object.assign({}, state, {
+        completed: Array.from(state.completed),
+        selectedCoverage: Array.from(state.selectedCoverage)
+      });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+    }
+
+    let state = loadStoredState();
+    let runTimer = null;
+    let pendingPollTimer = null;
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, char => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+      })[char]);
+    }
+
+    function statusPill(text, style) {
+      return '<span class="status-pill ' + style + '">' + escapeHtml(text) + "</span>";
+    }
+
+    function agentCandidate() {
+      return state.agentResult ? state.agentResult.candidate : null;
+    }
+
+    function coverageItems() {
+      const candidate = agentCandidate();
+      if (!candidate) return [];
+      const scored = (candidate.coverage_candidates || []).map((item, index) => ({
+        id: "scored_" + index,
+        code: item.cell,
+        name: item.role === "primary" ? "主要评分能力" : item.role === "anomaly" ? "异常处置能力" : "辅助评分能力",
+        detail: (item.responsibilities || []).join("；") + (item.status === "TBD" ? "（TBD）" : ""),
+        evidence: item.evidence_quote,
+        kind: "scored"
+      }));
+      const dependencies = (candidate.runtime_dependencies || []).map((item, index) => ({
+        id: "dependency_" + index,
+        code: item.dependency_id,
+        name: item.provider,
+        detail: (item.responsibilities || []).join("；") + (item.status === "TBD" ? "（TBD）" : ""),
+        evidence: item.evidence_quote,
+        kind: "dependency"
+      }));
+      return scored.concat(dependencies);
+    }
+
+    function jdRows() {
+      const candidate = agentCandidate();
+      if (!candidate) return [];
+      return (candidate.jd_candidates || []).map(item => [
+        item.slot_id,
+        item.name,
+        item.value || "TBD",
+        item.source_note || item.evidence_quote || "等待人工补充",
+        item.status === "given" ? "given" : item.status === "TBD" ? "tbd" : "proposed"
+      ]);
+    }
+
+    function currentTitle() {
+      return agentCandidate() ? agentCandidate().task_title : activeCase().title;
+    }
+
+    const RUN_EVENT_LABELS = {
+      request_submitted: "请求已提交，等待本地服务接收",
+      request_received: "本地服务已接收任务",
+      tool_called: "正在读取受审目录",
+      tool_completed: "受审目录读取完成",
+      model_request_started: "GAL / JD 已就绪，等待 Gemini 返回",
+      model_response_received: "Gemini 已返回，正在解析候选",
+      candidate_validated: "候选已完成确定性校验",
+      run_saved: "运行结果已保存"
+    };
+
+    const JD_DISPLAY_NAMES = {
+      "jd-0.2": "工作空间结构", "jd-0.3": "扰动谱", "jd-0.5": "人机确认协议/结构化外部事件接口",
+      "jd-0.7": "任务完成判据", "jd-0.9": "载荷集", "jd-0.10": "安全包络", "jd-5.1": "业务对象类别",
+      "jd-6a.1": "定位源需求", "jd-6a.3": "定位策略适用集/允许保护动作集", "jd-6b.1": "相对几何先验",
+      "jd-6b.2": "相对几何感知机制", "jd-7.1": "航路拓扑", "jd-7.2": "导航工作机制",
+      "jd-8.1": "控制接口", "jd-8.2": "控制约束", "jd-8.3": "平台与执行包络"
+    };
+
+    const ISSUE_COPY = {
+      MISSING_REQUIRED_JD_SLOT: ["JD 表缺少必需字段", "把缺失字段补入 JD 表；未知值可以继续保留 TBD。"],
+      MISSING_REQUIRED_JD_IN_TEMPLATE: ["模板正文缺少 JD 标注", "在自然语言模板相应位置加入标准【jd-x.x 字段＝值】标注。"],
+      HUMAN_VALUE_MISSING_SOURCE: ["人工填写值缺少确认依据", "填写业务确认人、会议纪要、文档章节或其他可追溯来源。"],
+      EVIDENCE_NOT_VERBATIM: ["Agent 证据不是原文片段", "核对候选值与原始业务描述，必要时改为人工补充并记录来源。"],
+      INCOMPLETE_TEMPLATE_STRUCTURE: ["自然语言模板结构不完整", "按七段式模板骨架补全任务环境、责任、异常和完成条件。"],
+      MISSING_COVERAGE_IN_TEMPLATE: ["模板未写明已选 A×L", "在正文中明确能力编号、责任和不测项。"],
+      RUNTIME_DEPENDENCY_MARKED_SCORED: ["外部依赖被错误计分", "Runtime Dependency 必须保持 scored=false。"]
+    };
+
+    function issueCopy(issue) {
+      const copy = ISSUE_COPY[issue.code] || [issue.code, issue.message];
+      const slot = (issue.message || "").match(/jd-[0-9a-z.]+/i);
+      return { title: copy[0] + (slot ? " · " + slot[0] : ""), detail: copy[1] };
+    }
+
+    function issueReviewTab(issue) {
+      if ((issue.path || "").startsWith("runtime_dependencies")) return "dependencies";
+      if (["MISSING_REQUIRED_JD_IN_TEMPLATE", "INCOMPLETE_TEMPLATE_STRUCTURE", "MISSING_COVERAGE_IN_TEMPLATE", "MISSING_JD_ANNOTATION", "UNKNOWN_JD_IN_TEMPLATE"].includes(issue.code)) return "template";
+      return "tbd";
+    }
+
+    function currentRunLabel() {
+      const label = RUN_EVENT_LABELS[state.agentEvent] || "正在准备 Config Agent";
+      const tool = state.agentEventDetails && state.agentEventDetails.tool;
+      return tool ? label + " · " + tool : label;
+    }
+
+    function applyAgentResult(result) {
+      state.agentResult = result;
+      state.runId = result.run_id;
+      state.agentStatus = "done";
+      state.agentEvent = "run_saved";
+      state.inputVersion = "input-v1";
+      state.template = result.candidate;
+      state.baseRunId = result.run_id;
+      state.revisionId = null;
+      state.revisionNumber = 0;
+      state.revisionHistory = [];
+      state.reviewDraft = null;
+      state.selectedCoverage = new Set(coverageItems().map(item => item.id));
+    }
+
+    async function pollRunStatus() {
+      if (state.agentStatus !== "running" || !state.runId.startsWith("agent-")) return;
+      try {
+        const response = await fetch("/api/config-agent/status?run_id=" + encodeURIComponent(state.runId), { cache: "no-store" });
+        if (response.ok) {
+          const status = await response.json();
+          state.agentEvent = status.event || state.agentEvent;
+          state.agentEventDetails = status.details || null;
+          if (status.status === "completed" && status.result) {
+            applyAgentResult(status.result);
+            state.completed.add(0);
+            state.maxUnlocked = Math.max(state.maxUnlocked, 1);
+            state.currentStage = 1;
+          } else if (status.status === "failed") {
+            state.agentStatus = "error";
+            state.agentError = (status.details && status.details.error) || "Agent 运行失败，请查看终端日志。";
+          }
+          render();
+        }
+      } catch (error) {
+        // A transient polling error does not cancel the model request.
+      }
+      if (state.agentStatus === "running") {
+        pendingPollTimer = setTimeout(pollRunStatus, 1500);
+      }
+    }
+
+    function startRunPolling() {
+      if (pendingPollTimer) clearTimeout(pendingPollTimer);
+      pendingPollTimer = setTimeout(pollRunStatus, 300);
+    }
+
+    function cloneCandidate() {
+      return JSON.parse(JSON.stringify(agentCandidate()));
+    }
+
+    function openReviewWorkspace(tab) {
+      if (!agentCandidate()) return;
+      state.reviewOpen = true;
+      state.reviewTab = tab || "tbd";
+      state.reviewDraft = cloneCandidate();
+      state.reviewNote = "";
+      state.reviewSaveError = null;
+      render();
+    }
+
+    function missingRequiredSlots() {
+      const issues = (state.agentResult && state.agentResult.validation_issues) || [];
+      return Array.from(new Set(issues.filter(item => item.code === "MISSING_REQUIRED_JD_SLOT").map(item => {
+        const match = (item.message || "").match(/jd-[0-9a-z.]+/i);
+        return match ? match[0] : null;
+      }).filter(Boolean)));
+    }
+
+    function autoAddMissingSlots() {
+      const existing = new Set((state.reviewDraft.jd_candidates || []).map(item => item.slot_id));
+      missingRequiredSlots().forEach(slot => {
+        if (!existing.has(slot)) {
+          state.reviewDraft.jd_candidates.push({
+            slot_id: slot,
+            name: JD_DISPLAY_NAMES[slot] || slot,
+            value: null,
+            status: "TBD",
+            evidence_quote: "",
+            provenance: "auto_fixed",
+            source_note: "DOCX task-template backbone required slot"
+          });
+        }
+      });
+      renderReviewWorkspace();
+      persistState();
+    }
+
+    function renderTbdReview() {
+      const missing = missingRequiredSlots().filter(slot => !(state.reviewDraft.jd_candidates || []).some(item => item.slot_id === slot));
+      const tbd = (state.reviewDraft.jd_candidates || []).filter(item => item.status === "TBD" || item.value === null);
+      const missingHtml = missing.length ?
+        '<div class="review-form-card pending"><div class="review-form-card-head"><div><b>JD 表还缺 ' + missing.length + ' 个骨架字段</b><span>' + missing.join(" · ") + '</span></div><button class="btn" id="autoAddMissingSlots" type="button">全部补为 TBD</button></div><p class="review-help">这里只补字段和名称，不生成任何业务值或阈值。</p></div>' : "";
+      const rows = tbd.map(item => '<div class="review-form-card"><div class="review-form-card-head"><div><b>' +
+        escapeHtml(item.name) + '</b><span>' + escapeHtml(item.slot_id) + ' · ' + escapeHtml(item.provenance || "agent_extracted") + '</span></div>' +
+        statusPill("TBD", "tbd") + '</div><div class="review-fields"><div class="review-field"><label>人工确认值（留空则继续 TBD）</label>' +
+        '<input data-review-jd-value="' + item.slot_id + '" value="' + escapeHtml(item.value || "") + '" placeholder="例如：平台类型仍待确认"></div>' +
+        '<div class="review-field"><label>确认依据（填写值时必填）</label><input data-review-jd-source="' + item.slot_id + '" value="' +
+        escapeHtml(item.source_note || "") + '" placeholder="例如：7月13日项目会议纪要 / 业务负责人确认"></div></div></div>').join("");
+      return '<h3 class="review-section-title">统一补录 TBD</h3><p class="review-help">能确认的值统一填写；不能确认的继续留空。保存不会调用 Gemini。</p>' +
+        '<div class="review-form-list">' + missingHtml + (rows || '<div class="review-empty">当前没有 TBD 字段。</div>') + '</div>';
+    }
+
+    function renderDependencyReview() {
+      const items = (state.reviewDraft.runtime_dependencies || []).map((item, index) => '<div class="review-dependency"><div><b>' +
+        escapeHtml(item.dependency_id) + '</b><span>' + escapeHtml(item.provider) + ' · 不评分 · ' + escapeHtml((item.responsibilities || []).join("；")) +
+        '</span></div><button class="btn" data-remove-dependency="' + index + '" type="button">移除</button></div>').join("");
+      return '<h3 class="review-section-title">Runtime Dependencies · 人工补充</h3><p class="review-help">补充任务运行需要、但不计入 SUT 评分的执行器、外部系统或外部决定接口。</p>' +
+        '<div class="review-dependency-list">' + (items || '<div class="review-empty">尚无外部依赖。</div>') + '</div>' +
+        '<div class="review-form-card"><div class="review-fields"><div class="review-field"><label>Dependency ID</label><input id="newDependencyId" placeholder="例如：external_decision_port"></div>' +
+        '<div class="review-field"><label>提供者</label><select id="newDependencyProvider"><option value="human_or_external_decision">外部决定接口</option><option value="executor">外部执行器</option><option value="external_system">外部系统</option></select></div>' +
+        '<div class="review-field"><label>责任（用分号分隔）</label><textarea id="newDependencyResponsibilities" placeholder="接收结构化异常事件；返回继续、返航或终止"></textarea></div>' +
+        '<div class="review-field"><label>人工确认依据</label><textarea id="newDependencySource" placeholder="任务原文、会议纪要或业务负责人确认"></textarea></div></div>' +
+        '<div class="action-row"><span class="action-note">新增项固定 scored=false，并记录为 human_added。</span><button class="btn" id="addDependency" type="button">添加外部依赖</button></div></div>';
+    }
+
+    function renderTemplateReview() {
+      return '<h3 class="review-section-title">编辑自然语言 Task Template</h3><p class="review-help">可修正 JD 标注、责任归因和语义表述。未知数值仍使用 TBD。</p>' +
+        '<div class="review-field"><label>模板正文</label><textarea class="review-template-editor" id="reviewTemplateEditor">' +
+        escapeHtml(state.reviewDraft.natural_language_template || "") + '</textarea></div>';
+    }
+
+    function bindReviewWorkspace() {
+      document.querySelectorAll("[data-review-tab]").forEach(button => button.addEventListener("click", () => {
+        state.reviewTab = button.dataset.reviewTab;
+        renderReviewWorkspace();
+        persistState();
+      }));
+      const close = document.getElementById("closeReviewWorkspace");
+      if (close) close.addEventListener("click", () => { state.reviewOpen = false; state.reviewDraft = null; render(); });
+      const auto = document.getElementById("autoAddMissingSlots");
+      if (auto) auto.addEventListener("click", autoAddMissingSlots);
+      document.querySelectorAll("[data-review-jd-value]").forEach(input => input.addEventListener("input", () => {
+        const item = state.reviewDraft.jd_candidates.find(row => row.slot_id === input.dataset.reviewJdValue);
+        const value = input.value.trim();
+        item.value = value || null;
+        item.status = value ? "proposed" : "TBD";
+        item.provenance = value ? "human_edited" : item.provenance;
+      }));
+      document.querySelectorAll("[data-review-jd-source]").forEach(input => input.addEventListener("input", () => {
+        const item = state.reviewDraft.jd_candidates.find(row => row.slot_id === input.dataset.reviewJdSource);
+        item.source_note = input.value.trim() || null;
+      }));
+      document.querySelectorAll("[data-remove-dependency]").forEach(button => button.addEventListener("click", () => {
+        state.reviewDraft.runtime_dependencies.splice(Number(button.dataset.removeDependency), 1);
+        renderReviewWorkspace();
+      }));
+      const add = document.getElementById("addDependency");
+      if (add) add.addEventListener("click", () => {
+        const id = document.getElementById("newDependencyId").value.trim();
+        const responsibilities = document.getElementById("newDependencyResponsibilities").value.split(/[；;\n]/).map(item => item.trim()).filter(Boolean);
+        const source = document.getElementById("newDependencySource").value.trim();
+        if (!id || !responsibilities.length || !source) {
+          state.reviewSaveError = "新增外部依赖需要填写 ID、责任和人工确认依据。";
+          renderReviewWorkspace();
+          return;
+        }
+        state.reviewDraft.runtime_dependencies.push({
+          dependency_id: id,
+          provider: document.getElementById("newDependencyProvider").value,
+          responsibilities,
+          evidence_quote: "",
+          scored: false,
+          status: "proposed",
+          provenance: "human_added",
+          source_note: source
+        });
+        state.reviewSaveError = null;
+        renderReviewWorkspace();
+      });
+      const editor = document.getElementById("reviewTemplateEditor");
+      if (editor) editor.addEventListener("input", () => { state.reviewDraft.natural_language_template = editor.value; });
+      const note = document.getElementById("reviewNote");
+      if (note) note.addEventListener("input", () => { state.reviewNote = note.value; });
+      const save = document.getElementById("saveHumanRevision");
+      if (save) save.addEventListener("click", saveHumanRevision);
+    }
+
+    function renderReviewWorkspace() {
+      const host = document.getElementById("reviewWorkspaceHost");
+      if (!state.reviewOpen || !state.reviewDraft) { host.innerHTML = ""; return; }
+      const tabBody = state.reviewTab === "dependencies" ? renderDependencyReview() : state.reviewTab === "template" ? renderTemplateReview() : renderTbdReview();
+      host.innerHTML = '<div class="review-overlay"><section class="review-workspace" role="dialog" aria-modal="true" aria-label="人工审核工作台">' +
+        '<div class="review-workspace-head"><div><span class="revision-badge">Draft v' + (state.revisionNumber + 2) + ' · HUMAN REVIEW</span><h2>人工审核工作台</h2>' +
+        '<p>所有修改形成新版本；Agent 原始输出保持不变。</p></div><button class="btn" id="closeReviewWorkspace" type="button">关闭</button></div>' +
+        '<div class="review-tabs"><button class="review-tab ' + (state.reviewTab === "tbd" ? "active" : "") + '" data-review-tab="tbd" type="button">统一补录 TBD</button>' +
+        '<button class="review-tab ' + (state.reviewTab === "dependencies" ? "active" : "") + '" data-review-tab="dependencies" type="button">外部依赖</button>' +
+        '<button class="review-tab ' + (state.reviewTab === "template" ? "active" : "") + '" data-review-tab="template" type="button">模板编辑</button></div>' +
+        '<div class="review-workspace-body">' + tabBody + (state.reviewSaveError ? '<div class="disclaimer">' + escapeHtml(state.reviewSaveError) + '</div>' : "") +
+        '<div class="review-field" style="margin-top:14px"><label>本次修改说明</label><input id="reviewNote" value="' + escapeHtml(state.reviewNote || "") + '" placeholder="例如：补充控制接口与外部决定端口，保留安全阈值 TBD"></div></div>' +
+        '<div class="review-workspace-foot"><span class="action-note">保存后本地重新校验，不调用 Gemini，不消耗 RPM。</span><button class="btn primary" id="saveHumanRevision" type="button">保存为新版本并重新校验</button></div>' +
+        '</section></div>';
+      bindReviewWorkspace();
+    }
+
+    async function saveHumanRevision() {
+      state.reviewSaveError = null;
+      try {
+        const response = await fetch("/api/config-agent/revise", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            parent_run_id: state.baseRunId || state.agentResult.run_id,
+            revision_number: state.revisionNumber + 1,
+            task_description: state.prompt,
+            candidate: state.reviewDraft,
+            change_summary: [state.reviewNote || "人工审核修改"]
+          })
+        });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.message || "人工修订保存失败。");
+        state.agentResult.candidate = payload.candidate;
+        state.agentResult.validation_status = payload.validation_status;
+        state.agentResult.validation_issues = payload.validation_issues;
+        state.revisionNumber += 1;
+        state.revisionId = payload.revision_id;
+        state.revisionHistory.push({ revision_id: payload.revision_id, note: state.reviewNote || "人工审核修改", status: payload.validation_status });
+        state.template = payload.candidate;
+        state.selectedCoverage = new Set(coverageItems().map(item => item.id));
+        state.reviewOpen = false;
+        state.reviewDraft = null;
+        state.reviewNote = "";
+        render();
+      } catch (error) {
+        state.reviewSaveError = error.message || String(error);
+        renderReviewWorkspace();
+      }
+    }
+
+    function completeStage(index) {
+      state.completed.add(index);
+      state.maxUnlocked = Math.max(state.maxUnlocked, Math.min(index + 1, STAGES.length - 1));
+      state.currentStage = Math.min(index + 1, STAGES.length - 1);
+      render();
+    }
+
+    function goToStage(index) {
+      if (index <= state.maxUnlocked) {
+        state.currentStage = index;
+        render();
+      }
+    }
+
+    function renderStageRail() {
+      const rail = document.getElementById("stageRail");
+      rail.innerHTML = STAGES.map((stage, index) => {
+        const done = state.completed.has(index);
+        const current = state.currentStage === index;
+        const locked = index > state.maxUnlocked;
+        const cls = done ? "done" : current ? "current" : locked ? "locked" : "";
+        const marker = done ? "✓ DONE" : current ? "● CURRENT" : locked ? "LOCKED" : "READY";
+        return '<button class="stage-node ' + cls + '" type="button" data-stage="' + index + '"' +
+          (locked ? " disabled" : "") + '><span>' + marker + '</span><b>' +
+          String(index + 1).padStart(2, "0") + " · " + stage[1] + "</b></button>";
+      }).join("");
+      rail.querySelectorAll("[data-stage]").forEach(button => {
+        button.addEventListener("click", () => goToStage(Number(button.dataset.stage)));
+      });
+    }
+
+    function renderContext() {
+      const profile = activeCase();
+      const items = coverageItems();
+      const scored = items.filter(item => item.kind === "scored" && state.selectedCoverage.has(item.id));
+      const deps = items.filter(item => item.kind === "dependency" && state.selectedCoverage.has(item.id));
+      const pending = agentCandidate() ? (agentCandidate().open_questions || []).length : 0;
+      const progress = Math.round((state.completed.size / STAGES.length) * 100);
+      document.getElementById("contextPanel").innerHTML =
+        '<div class="context-block"><div class="context-label">Task</div><div class="context-value">' + escapeHtml(currentTitle()) + '</div>' +
+        '<div class="mini-tags"><span class="mini-tag">' + escapeHtml(profile.label) + '</span><span class="mini-tag">' +
+        escapeHtml(state.agentStatus === "done" ? "Agent 已返回" : state.agentStatus === "running" ? "Agent 运行中" : profile.status) + '</span></div></div>' +
+        '<div class="context-block"><div class="context-label">Run ID</div><div class="context-value mono">' + state.runId + "</div></div>" +
+        '<div class="context-block"><div class="context-label">Model</div><div class="context-value mono">' +
+        escapeHtml(state.agentResult ? state.agentResult.model : state.modelTier === "pro" ? "Gemini Pro" : state.modelTier === "lite" ? "Gemini 3.1 Flash-Lite" : "Gemini 3.5 Flash") + '</div></div>' +
+        '<div class="context-block"><div class="context-label">Scored Coverage</div><div class="mini-tags">' +
+        (scored.length ? scored.map(item => '<span class="mini-tag scored">' + item.code + "</span>").join("") : '<span class="mini-tag">未确认</span>') +
+        '</div></div><div class="context-block"><div class="context-label">Runtime Dependencies</div><div class="mini-tags">' +
+        (deps.length ? deps.map(item => '<span class="mini-tag dep">' + item.code + " · external</span>").join("") : '<span class="mini-tag">未确认</span>') +
+        '</div></div><div class="context-block"><div class="context-label">Open Questions</div><div class="pending-count">' + pending +
+        '</div><div class="action-note">缺失信息保留 TBD，等待人工确认</div></div>' +
+        '<div class="context-block"><div class="context-label">Pipeline Progress</div><div class="context-value">' + progress +
+        '%</div><div class="progress-track"><div class="progress-fill" style="width:' + progress + '%"></div></div></div>';
+    }
+
+    function reviewItems(items) {
+      return '<div class="review-list">' + items.map(item =>
+        '<div class="review-item ' + item[0] + '"><div class="review-type">' + item[1] + '</div><b>' +
+        item[2] + "</b><p>" + item[3] + "</p>" + (item[4] ? '<span class="artifact-link">' + item[4] + "</span>" : "") + "</div>"
+      ).join("") + '</div><div class="disclaimer">本页运行结果均为浏览器内 synthetic fixture。结构通过不代表业务阈值或 simulator 接口已经确认。</div>';
+    }
+
+    function renderReview() {
+      let items;
+      const result = state.agentResult;
+      const toolNames = result ? (result.tool_trace || []).filter(item => item.status === "called").map(item => item.tool) : [];
+      const issueCount = result ? (result.validation_issues || []).length : 0;
+      switch (state.currentStage) {
+        case 0:
+          items = [
+            [state.serverStatus === "ready" ? "valid" : "pending", "LOCAL SERVICE", state.serverStatus === "ready" ? "Config Agent 已就绪" : "等待本地服务", state.serverStatus === "ready" ? "API Key 只保存在本地服务进程中。" : "请通过启动脚本打开页面，不要直接双击 HTML。", "/api/health"],
+            ["info", "INPUT", "案例只是示例输入", "Agent 不读取两个案例的现成 Task Template 作为答案。", "task_description"]
+          ]; break;
+        case 1:
+          items = [
+            [toolNames.includes("lookup_gal_catalog") ? "valid" : "pending", "TOOL TRACE", "GAL 目录查询", toolNames.includes("lookup_gal_catalog") ? "Agent 已实际查询受审 GAL 候选目录。" : "未观察到必需工具调用。", "lookup_gal_catalog"],
+            ["info", "HUMAN GATE", "A×L 仍需人工确认", "Agent 只提出候选，不把推断自动升级为正式覆盖边界。", "coverage_candidates"]
+          ]; break;
+        case 2:
+          items = [
+            [toolNames.includes("lookup_jd_catalog") ? "valid" : "pending", "TOOL TRACE", "JD 目录查询", toolNames.includes("lookup_jd_catalog") ? "Agent 已实际查询受审 JD 字段目录。" : "未观察到必需工具调用。", "lookup_jd_catalog"],
+            [issueCount ? "pending" : "valid", "VALIDATOR", issueCount ? issueCount + " 个问题待复核" : "确定性校验通过", issueCount ? "查看模板页中的校验问题；不可静默忽略。" : "字段 ID 与原文证据已通过本地规则检查。", "validation_issues"]
+          ]; break;
+        case 3:
+          items = [
+            ["valid", "PRIMARY ARTIFACT", "自然语言 Task Template", "JD 插槽、责任边界和完成条件作为默认交付正文。", "natural_language_template"],
+            [issueCount ? "pending" : "valid", "NO INVENTION", issueCount ? "需要人工复核" : "本地规则未发现越界字段", "阈值、业务规则和 simulator 接口仍不能由 Agent 编造。", "validation_status"]
+          ]; break;
+      }
+      document.getElementById("reviewPanel").innerHTML = reviewItems(items);
+    }
+
+    function setWorkspaceHeader(index, stateText) {
+      document.getElementById("workspaceEyebrow").textContent = "STAGE " + String(index + 1).padStart(2, "0") + " · " + STAGES[index][0];
+      document.getElementById("workspaceTitle").textContent = STAGES[index][1];
+      document.getElementById("workspaceState").textContent = stateText;
+    }
+
+    function renderInputStage() {
+      const locked = state.completed.has(0);
+      const busy = state.agentStatus === "running";
+      const serverReady = state.serverStatus === "ready";
+      setWorkspaceHeader(0, busy ? "Config Agent 分析中" : state.inputVersion ? "Agent 分析完成" : serverReady ? "Agent 已就绪" : "等待本地服务");
+      document.getElementById("workspaceBody").innerHTML =
+        '<p class="intro">输入任意无人机业务任务。Gemini Config Agent 会查询受审 GAL/JD 目录，提出候选能力、变量和自然语言模板；不会读取两个示例案例的现成模板作为答案。</p>' +
+        '<div class="field-label"><label for="taskPrompt">' + activeCase().title + '</label><span>原始输入 · 可编辑</span></div>' +
+        '<textarea class="task-input" id="taskPrompt" placeholder="粘贴业务场景、任务责任、外部执行责任和完成条件……"' + (locked || busy ? " disabled" : "") + '>' + escapeHtml(state.prompt) + "</textarea>" +
+        '<div class="instance-tools"><div class="control"><label for="modelTier">Agent 模型</label><select id="modelTier"' + (locked || busy ? " disabled" : "") + '>' +
+        '<option value="flash"' + (state.modelTier === "flash" ? " selected" : "") + '>Gemini 3.5 Flash · 推荐演示</option>' +
+        '<option value="lite"' + (state.modelTier === "lite" ? " selected" : "") + '>Gemini 3.1 Flash-Lite · 高负载备用</option>' +
+        '<option value="pro"' + (state.modelTier === "pro" ? " selected" : "") + '>Gemini Pro · 复核型</option></select></div></div>' +
+        (busy ? '<div class="choice-card selected"><div class="choice-code">LIVE AGENT RUN · 可刷新恢复</div><b>' + escapeHtml(currentRunLabel()) + '</b><p>页面每 1.5 秒读取本地运行状态；刷新后会使用同一 Run ID 恢复。模型请求最长等待 90 秒。</p></div>' : "") +
+        (state.agentError ? '<div class="choice-card dependency selected"><div class="choice-code">AGENT ERROR</div><b>本次未生成候选</b><p>' + escapeHtml(state.agentError) + '</p></div>' : "") +
+        '<div class="action-row"><span class="action-note">' + (locked ? "输入快照已锁定；修改请重新开始一次 run。" : serverReady ? "Key 只由本机服务读取，不会进入浏览器。" : "请先运行 scripts/start_agent_demo.sh，再从本地地址打开页面。") + '</span>' +
+        '<button class="btn primary" id="saveInput" type="button"' + (busy ? " disabled" : "") + '>' + (locked ? "查看能力确认 →" : busy ? "Agent 运行中…" : "运行 Config Agent →") + '</button></div>';
+      const modelSelect = document.getElementById("modelTier");
+      if (modelSelect) modelSelect.addEventListener("change", event => { state.modelTier = event.target.value; persistState(); });
+      const promptInput = document.getElementById("taskPrompt");
+      if (promptInput) promptInput.addEventListener("input", event => { state.prompt = event.target.value; persistState(); });
+      document.getElementById("saveInput").addEventListener("click", async () => {
+        if (locked) { goToStage(1); return; }
+        const value = document.getElementById("taskPrompt").value.trim();
+        if (value.length < 80) {
+          state.agentError = "任务描述至少需要 80 个字符，并应包含环境、任务责任、外部依赖或完成条件。";
+          render();
+          return;
+        }
+        state.prompt = value;
+        state.runId = "agent-ui-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
+        state.agentStatus = "running";
+        state.agentEvent = "request_submitted";
+        state.agentEventDetails = null;
+        state.agentError = null;
+        render();
+        startRunPolling();
+        try {
+          const response = await fetch("/api/config-agent/analyze", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ task_description: value, model_tier: state.modelTier, run_id: state.runId })
+          });
+          const payload = await response.json();
+          if (!response.ok) throw new Error(payload.message || "Config Agent 调用失败（HTTP " + response.status + "）。");
+          applyAgentResult(payload.result);
+          completeStage(0);
+        } catch (error) {
+          if (state.agentStatus === "done") return;
+          state.agentStatus = "error";
+          state.agentError = error.message || String(error);
+          render();
+        }
+      });
+    }
+
+    function renderCoverageStage() {
+      const locked = state.completed.has(1);
+      setWorkspaceHeader(1, locked ? "候选边界已确认" : "需要人工确认");
+      const scored = coverageItems().filter(item => item.kind === "scored");
+      const deps = coverageItems().filter(item => item.kind === "dependency");
+      const cards = items => items.map(item =>
+        '<label class="choice-card ' + item.kind + (state.selectedCoverage.has(item.id) ? " selected" : "") + '">' +
+        '<input type="checkbox" data-coverage="' + item.id + '"' + (state.selectedCoverage.has(item.id) ? " checked" : "") + (locked ? " disabled" : "") + '>' +
+        '<div class="choice-code">' + item.code + "</div><b>" + item.name + "</b><p>" + item.detail + "</p></label>"
+      ).join("");
+      document.getElementById("workspaceBody").innerHTML =
+        '<p class="intro">以下内容来自本次 Agent 运行。正式评分能力与外部运行依赖分开显示，并由人确认。</p>' +
+        '<div class="group-label">Scored Coverage · 正式评分候选</div><div class="choice-grid">' + cards(scored) + "</div>" +
+        '<div class="group-label">Runtime Dependencies · 外部提供且不评分</div><div class="choice-grid">' + (deps.length ? cards(deps) : '<div class="choice-card"><b>未提取到外部依赖</b><p>请人工检查原文是否缺少执行器或外部决策责任。</p></div>') + "</div>" +
+        '<div class="action-row"><span class="action-note">确认仅作用于本次候选，不自动改写 GAL 权威定义。</span>' +
+        '<div><button class="btn" id="editDependencies" type="button">人工补充外部依赖</button> <button class="btn primary" id="confirmCoverage" type="button">' + (locked ? "查看 JD 提取 →" : "确认能力边界 →") + '</button></div></div>';
+      document.querySelectorAll("[data-coverage]").forEach(input => {
+        input.addEventListener("change", () => {
+          if (input.checked) state.selectedCoverage.add(input.dataset.coverage);
+          else state.selectedCoverage.delete(input.dataset.coverage);
+          render();
+        });
+      });
+      document.getElementById("confirmCoverage").addEventListener("click", () => {
+        if (locked) { goToStage(2); return; }
+        const hasScored = scored.some(item => state.selectedCoverage.has(item.id));
+        if (!hasScored) return;
+        completeStage(1);
+      });
+      document.getElementById("editDependencies").addEventListener("click", () => openReviewWorkspace("dependencies"));
+    }
+
+    function renderJdStage() {
+      const rowsData = jdRows();
+      const tbdCount = rowsData.filter(row => row[4] === "tbd").length;
+      setWorkspaceHeader(2, state.jdConfirmed ? "字段已确认 · " + tbdCount + " 项 TBD" : "字段提取完成 · 等待确认");
+      const label = { given: "原文给定", proposed: "候选", tbd: "TBD" };
+      const rows = rowsData.map(row => '<tr><td class="mono">' + escapeHtml(row[0]) + "</td><td><b>" + escapeHtml(row[1]) +
+        "</b></td><td>" + escapeHtml(row[2]) + "</td><td>" + escapeHtml(row[3]) + "</td><td>" +
+        statusPill(label[row[4]], row[4]) + "</td></tr>").join("");
+      document.getElementById("workspaceBody").innerHTML =
+        '<p class="intro">JD 字段按来源和确定性分层。缺失项保留 TBD，不静默补值。</p>' +
+        '<table class="data-table"><thead><tr><th>JD</th><th>字段</th><th>候选值</th><th>来源</th><th>状态</th></tr></thead><tbody>' +
+        rows + '</tbody></table><div class="action-row"><span class="action-note">TBD 将进入模板的开放问题，不会成为评分阈值。</span>' +
+        '<div><button class="btn" id="openTbdReview" type="button">统一补录 TBD / 缺失 JD</button> <button class="btn primary" id="confirmJd" type="button">确认 JD 与待办 →</button></div></div>';
+      document.getElementById("openTbdReview").addEventListener("click", () => openReviewWorkspace("tbd"));
+      document.getElementById("confirmJd").addEventListener("click", () => {
+        state.jdConfirmed = true;
+        completeStage(2);
+      });
+    }
+
+    function buildTemplate() {
+      const profile = activeCase();
+      return {
+        schema_version: "0.2.0",
+        artifact_type: "template_manifest_preview",
+        template_id: profile.templateId,
+        template_version: "0.1.0",
+        title: profile.title,
+        boundary_status: profile.key === "case1" ? "verified" : "proposed",
+        coverage: profile.coverage.filter(item => item.kind === "scored" && state.selectedCoverage.has(item.id)).map(item => ({
+          coverage_id: item.id, ability: item.code.split("×")[0], level: item.code.split("×")[1], scored: true
+        })),
+        runtime_dependencies: profile.coverage.filter(item => item.kind === "dependency" && state.selectedCoverage.has(item.id)).map(item => ({
+          dependency_id: item.id, ability: item.code, provider: item.id.includes("executor") || item.id === "a8_dep" ? "executor" : "external_system", scored: false
+        })),
+        attribution_rules: profile.attributionRules,
+        task_level_gates: profile.taskGates,
+        jd_slots: profile.jdRows.map(row => ({ slot_id: row[0], status: row[4] === "tbd" ? "TBD" : "proposed" })),
+        thresholds: null,
+        simulator_interface: null
+      };
+    }
+
+    function renderTemplateStage() {
+      const result = state.agentResult;
+      const issueCount = result ? (result.validation_issues || []).length : 0;
+      setWorkspaceHeader(3, state.templateValidated ? "自然语言模板已确认" : issueCount ? "候选模板 · 需要复核" : "候选模板 · 校验通过");
+      const naturalActive = state.templateView === "natural";
+      const preview = naturalActive ?
+        '<div class="natural-template">' + escapeHtml(agentCandidate().natural_language_template) + '</div>' :
+        '<pre class="code-preview">' + escapeHtml(JSON.stringify(agentCandidate(), null, 2)) + "</pre>";
+      const issues = issueCount ? '<div class="group-label">确定性校验 · ' + issueCount + ' 项待复核</div><div class="review-list">' +
+        result.validation_issues.map((item, index) => { const copy = issueCopy(item); return '<div class="review-item pending"><div class="review-type">需要处理</div><b>' + escapeHtml(copy.title) + '</b><p>' + escapeHtml(copy.detail) + '</p><div class="review-item-foot"><span class="artifact-link">' + escapeHtml(item.code) + '</span><button class="btn" data-fix-issue="' + index + '" type="button">去处理</button></div></div>'; }).join("") + '</div>' : "";
+      const revision = state.revisionId ? '<span class="revision-badge">Human Revision v' + (state.revisionNumber + 1) + '</span>' : "";
+      document.getElementById("workspaceBody").innerHTML =
+        '<div class="validation-grid"><div class="validation-card"><b>' + (issueCount ? "△" : "✓") + ' JD ANNOTATION</b><span>模板插槽与来源可追踪</span></div>' +
+        '<div class="validation-card"><b>✓ BOUNDARY</b><span>Coverage 与依赖分离</span></div>' +
+        '<div class="validation-card"><b>' + (issueCount ? "△ REVIEW" : "✓ NO INVENTION") + '</b><span>未知 threshold / interface 必须保持 TBD</span></div></div>' +
+        '<div class="template-tabs"><button class="template-tab ' + (naturalActive ? "active" : "") +
+        '" type="button" data-template-view="natural">自然语言 Task Template</button><button class="template-tab ' +
+        (!naturalActive ? "active" : "") + '" type="button" data-template-view="manifest">机器 Manifest 摘要</button></div>' +
+        revision + preview + issues + '<div class="action-row"><span class="action-note">' + (issueCount ? "请先在人工审核工作台解决结构问题，再确认本轮。" : "模板结构校验通过；TBD 仍作为待业务确认项保留。") + '</span>' +
+        '<div><button class="btn" id="openHumanReview" type="button">打开人工审核工作台</button> <button class="btn primary" id="validateTemplate" type="button"' + (issueCount ? " disabled" : "") + '>确认并完成本轮</button></div></div>';
+      document.querySelectorAll("[data-template-view]").forEach(button => {
+        button.addEventListener("click", () => {
+          state.templateView = button.dataset.templateView;
+          render();
+        });
+      });
+      document.getElementById("validateTemplate").addEventListener("click", () => {
+        if (issueCount) return;
+        state.templateValidated = true;
+        completeStage(3);
+      });
+      document.querySelectorAll("[data-fix-issue]").forEach(button => button.addEventListener("click", () => {
+        openReviewWorkspace(issueReviewTab(result.validation_issues[Number(button.dataset.fixIssue)]));
+      }));
+      document.getElementById("openHumanReview").addEventListener("click", () => {
+        openReviewWorkspace(issueCount ? issueReviewTab(result.validation_issues[0]) : "tbd");
+      });
+    }
+
+    function seeded(seed) {
+      let value = Number(seed) || 0;
+      return () => {
+        value = (value * 1664525 + 1013904223) >>> 0;
+        return value / 4294967296;
+      };
+    }
+
+    function createInstances(seed, count) {
+      const random = seeded(seed);
+      const pools = activeCase().variables;
+      state.instances = Array.from({ length: count }, (_, index) => {
+        const bindings = {};
+        Object.keys(pools).forEach(key => {
+          const pool = pools[key];
+          bindings[key] = pool[Math.floor(random() * pool.length)];
+        });
+        return {
+          instance_id: activeCase().key + "-" + String(seed + index).padStart(3, "0"),
+          seed: seed + index,
+          bindings,
+          validation: "valid",
+          gt_visibility: "grader_only"
+        };
+      });
+      state.selectedInstance = state.instances[0].instance_id;
+    }
+
+    function renderInstancesStage() {
+      const locked = state.completed.has(4);
+      setWorkspaceHeader(4, state.instances.length ? state.instances.length + " 个实例已生成" : "等待生成");
+      const cards = state.instances.map(instance =>
+        '<button class="instance-card ' + (state.selectedInstance === instance.instance_id ? "selected" : "") +
+        '" type="button" data-instance="' + instance.instance_id + '"><span class="instance-id">' + instance.instance_id +
+        '</span><span class="binding-tags">' + Object.values(instance.bindings).map(value => "<span>" + value + "</span>").join("") +
+        '</span><span class="status-pill valid">VALID</span></button>'
+      ).join("");
+      document.getElementById("workspaceBody").innerHTML =
+        '<p class="intro">Deterministic Compiler 使用固定 seed 在允许变量域中生成可复现 episode 配置。</p>' +
+        '<div class="instance-tools"><div class="control"><label for="seedInput">Seed</label><input id="seedInput" type="number" value="17" min="0"></div>' +
+        '<div class="control"><label for="countInput">实例数量</label><select id="countInput"><option value="3">3 个</option><option value="5">5 个</option></select></div>' +
+        '<button class="btn primary" id="generateInstances" type="button"' + (locked ? " disabled" : "") + '>生成实例</button></div>' +
+        '<div class="instance-list">' + (cards || '<div class="choice-card"><b>尚未生成实例</b><p>设置 seed 和数量后开始。</p></div>') + "</div>" +
+        (state.instances.length ? '<div class="action-row"><span class="action-note">已选择 ' + state.selectedInstance +
+          '；Hidden GT 保持 grader_only。</span><button class="btn primary" id="confirmInstance" type="button">' + (locked ? "查看 Mock SUT →" : "使用选中实例 →") + '</button></div>' : "");
+      document.getElementById("generateInstances").addEventListener("click", () => {
+        createInstances(Number(document.getElementById("seedInput").value), Number(document.getElementById("countInput").value));
+        render();
+      });
+      document.querySelectorAll("[data-instance]").forEach(button => {
+        button.addEventListener("click", () => {
+          if (locked) return;
+          state.selectedInstance = button.dataset.instance;
+          render();
+        });
+      });
+      const confirm = document.getElementById("confirmInstance");
+      if (confirm) confirm.addEventListener("click", () => locked ? goToStage(5) : completeStage(4));
+    }
+
+    function renderSutStage() {
+      const locked = state.completed.has(5);
+      setWorkspaceHeader(5, state.selectedSut ? "Mock SUT 已绑定" : "选择一个可控行为");
+      document.getElementById("workspaceBody").innerHTML =
+        '<p class="intro">Mock SUT 用于证明 Harness 和 Grader 能区分正确链路与特定错误，不代表真实系统性能。</p>' +
+        '<div class="sut-grid">' + activeCase().suts.map(sut =>
+          '<button class="sut-card ' + (state.selectedSut === sut.id ? "selected" : "") + '" type="button" data-sut="' + sut.id +
+          '"><span class="sut-type">' + sut.label.toUpperCase() + "</span><b>" + sut.name + "</b><p>" + sut.description +
+          '</p><div class="expected">' + sut.expected + "</div></button>"
+        ).join("") + '</div><div class="action-row"><span class="action-note">' +
+        (state.selectedSut ? "Target：" + state.selectedInstance + " × " + state.selectedSut : "请选择 Mock SUT。") +
+        '</span><button class="btn primary" id="confirmSut" type="button"' + (state.selectedSut ? "" : " disabled") +
+        '>' + (locked ? "查看运行链路 →" : "绑定运行目标 →") + '</button></div>';
+      document.querySelectorAll("[data-sut]").forEach(button => {
+        button.addEventListener("click", () => {
+          if (locked) return;
+          state.selectedSut = button.dataset.sut;
+          render();
+        });
+      });
+      document.getElementById("confirmSut").addEventListener("click", () => locked ? goToStage(6) : completeStage(5));
+    }
+
+    function buildRunEvidence() {
+      const behavior = state.selectedSut;
+      if (activeCase().key === "case1") {
+        const identityBad = behavior === "identity_switch_sut";
+        const unsafe = behavior === "unsafe_continue_sut";
+        state.evidence = [
+          ["00:00.000", "trace", "Harness", "episode_started", "加载 " + state.selectedInstance],
+          ["00:05.200", "gt", "Fixture", "vehicle_entity_truth", "车辆实体与违停标签；grader_only"],
+          ["00:06.400", "trace", "SUT", "perception_update", identityBad ? "同一车辆产生新 ID" : "车辆身份连续维护"],
+          ["00:11.800", "trace", "SUT", "report_update", identityBad ? "同一车辆重复计入报告" : "报告去重并持续更新"],
+          ["00:18.000", "gt", "Fixture", "localization_fault_window", "定位退化真实起点；grader_only"],
+          ["00:18.300", "trace", "Fixture", "localization_observation", "可见定位源出现漂移与不一致"],
+          ["00:20.100", "trace", "SUT", "trust_state", "位姿标记为不可信"],
+          ["00:20.400", "trace", "SUT", "protection_request", unsafe ? "未发出保护请求" : "请求暂停或安全保持"],
+          ["00:20.600", "trace", "Executor", "protection_execution", unsafe ? "未收到请求，固定航段继续推进" : "执行暂停或等效安全保持"],
+          ["00:21.100", "trace", "SUT", "anomaly_report", unsafe ? "无异常上报" : "向外部接口上报定位退化"],
+          ["00:21.300", "trace", "SUT", "wait_state", unsafe ? "未进入等待" : "等待外部决定"],
+          ["00:21.800", "trace", "External", "external_decision", unsafe ? "无有效请求可处理" : "外部决定已记录"],
+          ["00:22.000", "gt", "Fixture", "external_decision_truth", "外部决定分支；grader_only"]
+        ];
+        return;
+      }
+      const decisionDetail = behavior === "good_resource_sut" ? "选择 shorten-return，目标可达" :
+        behavior === "always_return_sut" ? "资源仍充足时固定选择 return" : "超过安全窗口后才选择 return";
+      const terminalDetail = behavior === "late_decision_sut" ? "所选安全目标已不可达" : "到达固定返航点并停止";
+      state.evidence = [
+        ["00:00.000", "trace", "Harness", "episode_started", "加载 " + state.selectedInstance],
+        ["00:06.400", "trace", "SUT", "defect_observation", "输出缺陷类别、证据和管廊区段"],
+        ["00:12.100", "trace", "SUT", "relative_geometry", "连续距离、方位和观测质量"],
+        ["00:18.000", "gt", "Fixture", "resource_deviation_truth", "真实偏差窗口开始；grader_only"],
+        ["00:18.200", "trace", "Fixture", "telemetry_update", "可见功耗与剩余航时趋势变化"],
+        ["00:25.100", "trace", "SUT", "resource_decision", decisionDetail],
+        ["00:25.300", "trace", "SUT", "mode_switch", "A11 向 A7 输出路线模式和目标"],
+        ["00:26.500", "gt", "Fixture", "latest_safe_decision", "隐藏安全决策窗口边界；grader_only"],
+        ["00:34.800", "trace", "Executor", "route_complete", terminalDetail],
+        ["00:35.000", "gt", "Fixture", "terminal_safety_truth", behavior === "late_decision_sut" ? "unsafe" : "safe"],
+        ["00:35.100", "trace", "SUT", "terminal_verification", behavior === "late_decision_sut" ? "安全验证失败" : "声明进入安全终态"]
+      ];
+    }
+
+    function buildGrader() {
+      const oilfieldResults = {
+        good_resource_sut: [
+          ["A5×L1", "观察到缺陷证据链", "指标阈值未标定", "indeterminate"],
+          ["A6b×L2", "观察到连续相对几何", "指标阈值未标定", "indeterminate"],
+          ["A7×L2", "路线切换与完成事件齐全", "—", "observed"],
+          ["A11×L4", "资源决策与终态验证链完整", "—", "observed"]
+        ],
+        always_return_sut: [
+          ["A5×L1", "正常观察阶段过短", "EARLY_TERMINATION", "risk"],
+          ["A6b×L2", "连续维护片段不足", "EARLY_TERMINATION", "risk"],
+          ["A7×L2", "返航路线执行事件齐全", "—", "observed"],
+          ["A11×L4", "资源充足时无条件终止", "UNNECESSARY_ABORT", "risk"]
+        ],
+        late_decision_sut: [
+          ["A5×L1", "缺陷证据事件已记录", "指标阈值未标定", "indeterminate"],
+          ["A6b×L2", "相对几何事件已记录", "指标阈值未标定", "indeterminate"],
+          ["A7×L2", "路线切换发生过晚", "LATE_MODE_SWITCH", "risk"],
+          ["A11×L4", "超过安全窗口仍继续", "LATE_DECISION", "risk"]
+        ]
+      };
+      const cityResults = {
+        good_sut: [
+          ["A5×L2", "身份维护与报告更新链完整", "HOTA threshold 未标定", "indeterminate"],
+          ["A6a×L3", "退化识别、保护、上报、等待链完整", "时延 threshold 未标定", "indeterminate"],
+          ["A7×L1", "航路约束与风险提示已记录", "业务判据未标定", "indeterminate"],
+          ["A8×L1", "包络评估与调整建议已记录", "业务判据未标定", "indeterminate"]
+        ],
+        identity_switch_sut: [
+          ["A5×L2", "同一车辆发生身份切换与重复计数", "IDENTITY_SWITCH / DUPLICATE_COUNT", "risk"],
+          ["A6a×L3", "异常责任链完整", "时延 threshold 未标定", "indeterminate"],
+          ["A7×L1", "辅助建议事件已记录", "业务判据未标定", "indeterminate"],
+          ["A8×L1", "包络建议事件已记录", "业务判据未标定", "indeterminate"]
+        ],
+        unsafe_continue_sut: [
+          ["A5×L2", "车辆事件已记录", "HOTA threshold 未标定", "indeterminate"],
+          ["A6a×L3", "识别异常但未完成保护上报链", "UNSAFE_CONTINUATION", "risk"],
+          ["A7×L1", "辅助建议不能替代外部保护执行", "—", "observed"],
+          ["A8×L1", "包络建议不能替代闭环保持", "—", "observed"]
+        ]
+      };
+      if (activeCase().key === "case1") {
+        const failed = state.selectedSut === "unsafe_continue_sut";
+        state.grader = {
+          results: cityResults[state.selectedSut],
+          gate: failed ? "not_satisfied" : "satisfied",
+          gateLabel: "PROTECTION · REPORT · EXTERNAL DECISION",
+          gateDetail: failed ?
+            "保护请求、异常上报或等待外部决定链缺失。" :
+            "Synthetic episode 完成保护请求、Executor 执行、异常上报和等待链；共享链只统计一次。"
+        };
+        return;
+      }
+      state.grader = {
+        results: oilfieldResults[state.selectedSut],
+        gate: state.selectedSut === "late_decision_sut" ? "not_satisfied" : "satisfied",
+        gateLabel: "SAFE TERMINAL",
+        gateDetail: state.selectedSut === "late_decision_sut" ?
+          "未在隐藏安全窗口内进入可达安全终态。" :
+          "Synthetic episode 到达声明的安全终态；共享结果只统计一次。"
+      };
+    }
+
+    function advanceRun() {
+      state.runPhase += 1;
+      if (state.runPhase < activeCase().phases.length) {
+        const phase = activeCase().phases[state.runPhase];
+        state.runLog.push("[" + new Date().toLocaleTimeString("zh-CN", { hour12: false }) + "] " + phase[0] + " · " + phase[3] + " · " + phase[2]);
+        render();
+        return;
+      }
+      clearInterval(runTimer);
+      runTimer = null;
+      state.runStatus = "complete";
+      buildRunEvidence();
+      buildGrader();
+      state.completed.add(6);
+      state.maxUnlocked = Math.max(state.maxUnlocked, 7);
+      render();
+    }
+
+    function startRun() {
+      if (runTimer) return;
+      state.runStatus = "running";
+      state.runPhase = -1;
+      state.runLog = [];
+      render();
+      advanceRun();
+      runTimer = setInterval(advanceRun, 650);
+    }
+
+    function renderRunStage() {
+      const running = state.runStatus === "running";
+      const complete = state.runStatus === "complete";
+      setWorkspaceHeader(6, complete ? "运行完成 · Trace 已生成" : running ? "Harness 正在推进" : "等待运行");
+      const phases = activeCase().phases.map((phase, index) => {
+        const cls = index < state.runPhase || complete ? "done" : index === state.runPhase ? "active" : "";
+        return '<div class="phase ' + cls + '"><div class="phase-index">' + String(index + 1).padStart(2, "0") +
+          " · " + phase[0] + "</div><b>" + phase[1] + "</b><p>" + phase[2] + '</p><span class="actor">' + phase[3] + "</span></div>";
+      }).join("");
+      const progress = complete ? 100 : Math.max(0, ((state.runPhase + 1) / activeCase().phases.length) * 100);
+      document.getElementById("workspaceBody").innerHTML =
+        '<div class="run-summary"><div class="summary-card"><span>Instance</span><b class="mono">' + state.selectedInstance +
+        '</b></div><div class="summary-card"><span>Mock SUT</span><b class="mono">' + state.selectedSut +
+        '</b></div><div class="summary-card"><span>GT Visibility</span><b>grader_only</b></div></div>' +
+        '<div class="run-progress"><div style="width:' + progress + '%"></div></div><div class="phase-list">' + phases + "</div>" +
+        '<div class="run-log">' + (state.runLog.length ? state.runLog.map(line => escapeHtml(line)).join("<br>") : "等待启动 Mock Harness...") + "</div>" +
+        '<div class="action-row"><span class="action-note">' + (activeCase().key === "case1" ?
+          "Fixture 注入定位退化；Executor 只执行固定航段推进和保护动作。" :
+          "Fixture 产生世界状态；Executor 只执行 A7 已选择的路线和 A8 低层控制。") + '</span>' +
+        (complete ? '<button class="btn primary" id="openEvidence" type="button">查看 Trace / GT →</button>' :
+          '<button class="btn primary" id="runButton" type="button"' + (running ? " disabled" : "") + ">" +
+          (running ? "运行中…" : "运行 Mock Pipeline") + "</button>") + "</div>";
+      const runButton = document.getElementById("runButton");
+      if (runButton) runButton.addEventListener("click", startRun);
+      const openEvidence = document.getElementById("openEvidence");
+      if (openEvidence) openEvidence.addEventListener("click", () => {
+        completeStage(6);
+      });
+    }
+
+    function renderEvidenceStage() {
+      setWorkspaceHeader(7, "Trace / GT 已对齐");
+      const events = state.evidence.filter(event => state.evidenceFilter === "all" || event[1] === state.evidenceFilter);
+      document.getElementById("workspaceBody").innerHTML =
+        '<p class="intro">Observable Trace 与 grader-only GT 使用同一 episode 时间轴。SUT 不可读取黄色 GT 事件。</p>' +
+        '<div class="filter-row"><button class="filter-button ' + (state.evidenceFilter === "all" ? "active" : "") +
+        '" data-filter="all" type="button">全部事件</button><button class="filter-button ' + (state.evidenceFilter === "trace" ? "active" : "") +
+        '" data-filter="trace" type="button">Observable Trace</button><button class="filter-button ' + (state.evidenceFilter === "gt" ? "active" : "") +
+        '" data-filter="gt" type="button">Hidden GT</button></div><div class="evidence-list">' +
+        events.map(event => '<div class="evidence-event ' + event[1] + '"><span class="event-time">' + event[0] +
+          '</span><span class="event-lane">' + (event[1] === "gt" ? "GT · GRADER ONLY" : "TRACE · " + event[2].toUpperCase()) +
+          '</span><div class="event-body"><b>' + event[3] + "</b><span>" + event[4] + "</span></div></div>").join("") +
+        '</div><div class="action-row"><span class="action-note">证据完整性：决策、模式切换、路线执行和终态事件均已记录。</span>' +
+        '<button class="btn primary" id="openGrader" type="button">运行 Grader →</button></div>';
+      document.querySelectorAll("[data-filter]").forEach(button => {
+        button.addEventListener("click", () => {
+          state.evidenceFilter = button.dataset.filter;
+          render();
+        });
+      });
+      document.getElementById("openGrader").addEventListener("click", () => completeStage(7));
+    }
+
+    function renderGraderStage() {
+      setWorkspaceHeader(8, "Grader Result 已形成");
+      const grader = state.grader;
+      const resultRows = grader.results.map(row => '<tr><td><b>' + row[0] + "</b></td><td>" + row[1] +
+        "</td><td class=\"mono\">" + row[2] + "</td><td>" + statusPill(row[3].toUpperCase(), row[3]) + "</td></tr>").join("");
+      const failed = grader.gate === "not_satisfied";
+      document.getElementById("workspaceBody").innerHTML =
+        '<div class="grader-banner"><div><h3>' + state.selectedInstance + " × " + state.selectedSut +
+        '</h3><p>能力归因与 task-level shared gate 分开输出；没有总分互相补偿。</p></div>' +
+        statusPill("SYNTHETIC RESULT", "proposed") + '</div><table class="grader-table"><thead><tr><th>Coverage</th><th>观察结论</th><th>Reason</th><th>Status</th></tr></thead><tbody>' +
+        resultRows + '</tbody></table><div class="gate-card ' + (failed ? "failed" : "") +
+        '"><div class="gate-label">TASK-LEVEL GATE · ' + grader.gateLabel + '</div><b>' +
+        (failed ? "NOT SATISFIED" : "SATISFIED · SYNTHETIC") + "</b><p>" + grader.gateDetail +
+        '</p></div><div class="action-row"><span class="action-note">未标定指标保持 indeterminate；正式结果仍需业务规则确认。</span>' +
+        '<button class="btn primary" id="finishDemo" type="button">完成本次演示</button></div>';
+      document.getElementById("finishDemo").addEventListener("click", () => {
+        state.completed.add(8);
+        render();
+      });
+    }
+
+    function renderWorkspace() {
+      const renderers = [
+        renderInputStage, renderCoverageStage, renderJdStage, renderTemplateStage
+      ];
+      renderers[state.currentStage]();
+    }
+
+    function render() {
+      document.getElementById("caseSelect").value = state.caseKey;
+      document.getElementById("headerCaseTitle").textContent = currentTitle() + " · 本地 Config Agent";
+      renderStageRail();
+      renderContext();
+      renderReview();
+      renderWorkspace();
+      renderReviewWorkspace();
+      persistState();
+    }
+
+    document.getElementById("resetButton").addEventListener("click", () => {
+      if (runTimer) clearInterval(runTimer);
+      if (pendingPollTimer) clearTimeout(pendingPollTimer);
+      runTimer = null;
+      state = initialState(state.caseKey);
+      render();
+    });
+
+    document.getElementById("caseSelect").addEventListener("change", event => {
+      if (runTimer) clearInterval(runTimer);
+      if (pendingPollTimer) clearTimeout(pendingPollTimer);
+      runTimer = null;
+      state = initialState(event.target.value);
+      render();
+      checkAgentHealth();
+    });
+
+    async function checkAgentHealth() {
+      try {
+        const response = await fetch("/api/health", { cache: "no-store" });
+        const health = await response.json();
+        state.serverStatus = health.agent_ready ? "ready" : "missing_api_key";
+        state.serverModels = health;
+      } catch (error) {
+        state.serverStatus = "offline";
+      }
+      render();
+      if (state.agentStatus === "running") startRunPolling();
+    }
+
+    render();
+    checkAgentHealth();
+  </script>
+</body>
+</html>

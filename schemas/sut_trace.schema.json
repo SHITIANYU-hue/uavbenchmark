@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uav-benchmark.local/schemas/sut_trace.schema.json",
+  "title": "UAV Benchmark Observable Trace JSONL Record",
+  "description": "Validates one JSON Lines record. A trace starts with one header record followed by ordered event records.",
+  "oneOf": [
+    {"$ref": "#/$defs/header"},
+    {"$ref": "#/$defs/event"}
+  ],
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "evidence_status": {"enum": ["verified", "proposed", "TBD"]},
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "status"],
+      "properties": {
+        "source_id": {"type": "string", "minLength": 1},
+        "locator": {"type": ["string", "null"]},
+        "status": {"$ref": "#/$defs/evidence_status"},
+        "notes": {"type": ["string", "null"]}
+      }
+    },
+    "timebase": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "tick_duration_s"],
+      "properties": {
+        "kind": {"enum": ["tick", "simulation_time", "wall_clock"]},
+        "tick_duration_s": {"type": ["number", "null"], "exclusiveMinimum": 0}
+      }
+    },
+    "header": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "record_type",
+        "episode_id",
+        "instance_ref",
+        "sut",
+        "timebase",
+        "content_policy",
+        "provenance"
+      ],
+      "properties": {
+        "schema_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "artifact_type": {"const": "sut_trace"},
+        "record_type": {"const": "header"},
+        "episode_id": {"$ref": "#/$defs/id"},
+        "instance_ref": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["instance_id", "sha256"],
+          "properties": {
+            "instance_id": {"$ref": "#/$defs/id"},
+            "sha256": {"$ref": "#/$defs/sha256"}
+          }
+        },
+        "sut": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["sut_id", "version", "adapter_kind"],
+          "properties": {
+            "sut_id": {"$ref": "#/$defs/id"},
+            "version": {"type": "string", "minLength": 1},
+            "adapter_kind": {"type": "string", "minLength": 1},
+            "extensions": {"type": "object"}
+          }
+        },
+        "timebase": {"$ref": "#/$defs/timebase"},
+        "content_policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["observable_outputs_only", "private_reasoning_included"],
+          "properties": {
+            "observable_outputs_only": {"const": true},
+            "private_reasoning_included": {"const": false}
+          }
+        },
+        "provenance": {"type": "array", "items": {"$ref": "#/$defs/provenance"}},
+        "extensions": {"type": "object"}
+      }
+    },
+    "event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "artifact_type",
+        "record_type",
+        "episode_id",
+        "seq",
+        "tick",
+        "timestamp_s",
+        "phase_id",
+        "actor",
+        "event_type",
+        "correlation_id",
+        "payload"
+      ],
+      "properties": {
+        "schema_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "artifact_type": {"const": "sut_trace"},
+        "record_type": {"const": "event"},
+        "episode_id": {"$ref": "#/$defs/id"},
+        "seq": {"type": "integer", "minimum": 0},
+        "tick": {"type": "integer", "minimum": 0},
+        "timestamp_s": {"type": ["number", "null"], "minimum": 0},
+        "phase_id": {"$ref": "#/$defs/id"},
+        "actor": {"enum": ["sut", "harness", "fixture", "executor", "external_decision_interface"]},
+        "event_type": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "correlation_id": {"type": ["string", "null"]},
+        "payload": {"type": "object"},
+        "extensions": {"type": "object"}
+      }
+    }
+  }
+}

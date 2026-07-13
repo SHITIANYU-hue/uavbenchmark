@@ -1,0 +1,114 @@
+{
+  "schema_version": "0.1.0",
+  "artifact_type": "task_template",
+  "template_id": "case1_illegal_parking_contract_example",
+  "template_version": "0.1.0",
+  "title": "城市高楼峡谷违停车辆巡检（合同示例）",
+  "scenario": {
+    "summary": "固定道路巡检中持续识别违停车辆，并在定位退化时请求外部保护和决策。",
+    "fixed_boundaries": [
+      "城市高楼峡谷",
+      "指定固定巡检航段",
+      "定位退化发生在正常巡检之后"
+    ],
+    "out_of_scope": [
+      "真实飞行动力学",
+      "A6b、A11、A12 正式评分"
+    ]
+  },
+  "coverage": [
+    {
+      "coverage_id": "a5_l2",
+      "group": "G2",
+      "ability": "A5",
+      "level": "L2",
+      "role": "primary",
+      "sut_responsibilities": ["连续检测", "跨帧身份保持", "去重", "持续更新巡检报告"],
+      "out_of_scope": ["目标世界坐标"]
+    },
+    {
+      "coverage_id": "a6a_l3",
+      "group": "G2",
+      "ability": "A6a",
+      "level": "L3",
+      "role": "anomaly",
+      "sut_responsibilities": ["正常定位与质量监测", "识别退化并标记不可信", "请求预授权保护", "上报并等待外部决定"],
+      "out_of_scope": ["自主恢复与验证闭环", "执行保护动作"]
+    },
+    {
+      "coverage_id": "a7_l1",
+      "group": "G3",
+      "ability": "A7",
+      "level": "L1",
+      "role": "auxiliary",
+      "sut_responsibilities": ["输出航路约束、风险和偏差提示"],
+      "out_of_scope": ["自主执行航路", "SPL", "collision rate"]
+    },
+    {
+      "coverage_id": "a8_l1",
+      "group": "G3",
+      "ability": "A8",
+      "level": "L1",
+      "role": "auxiliary",
+      "sut_responsibilities": ["评估当前飞行状态与安全包络", "输出控制调整建议"],
+      "out_of_scope": ["闭环控制", "自主执行调整"]
+    }
+  ],
+  "coverage_accounting_mode": "explicit_only",
+  "jd_slots": [
+    {
+      "slot_id": "platform_profile",
+      "description": "平台与保护动作兼容性 profile；具体枚举待确认。",
+      "visibility": "compiler_only",
+      "binding": {"mode": "TBD", "status": "TBD"},
+      "provenance": [
+        {"source_id": "handoff_current_boundary", "locator": "§3–§5", "status": "verified", "notes": null}
+      ]
+    }
+  ],
+  "phases": [
+    {"phase_id": "task_start", "order": 1, "entry_conditions": ["episode_started"], "exit_conditions": ["task_acknowledged"], "minimum_duration": {"value": null, "unit": "TBD", "status": "TBD"}},
+    {"phase_id": "nominal_patrol", "order": 2, "entry_conditions": ["task_start_complete"], "exit_conditions": ["nominal_phase_complete"], "minimum_duration": {"value": null, "unit": "TBD", "status": "TBD"}},
+    {"phase_id": "localization_degradation", "order": 3, "entry_conditions": ["nominal_patrol_complete"], "exit_conditions": ["fault_injected"], "minimum_duration": {"value": null, "unit": "TBD", "status": "TBD"}},
+    {"phase_id": "recognition_and_protection", "order": 4, "entry_conditions": ["fault_injected"], "exit_conditions": ["protection_request_observed"], "minimum_duration": {"value": null, "unit": "TBD", "status": "TBD"}},
+    {"phase_id": "report_and_external_decision", "order": 5, "entry_conditions": ["protection_request_observed"], "exit_conditions": ["external_decision_recorded"], "minimum_duration": {"value": null, "unit": "TBD", "status": "TBD"}}
+  ],
+  "disturbances": [
+    {
+      "disturbance_id": "localization_degradation_1",
+      "kind": "localization_degradation",
+      "injection_phase": "localization_degradation",
+      "parameters": {},
+      "status": "proposed"
+    }
+  ],
+  "interfaces": {
+    "sut_visible_inputs": [
+      {"name": "observation", "description": "Fixture 产生的原始或准原始可见观测。", "schema_ref": null}
+    ],
+    "sut_outputs": [
+      {"name": "observable_event", "description": "SUT 的结构化可观察输出。", "schema_ref": "../../schemas/sut_trace.schema.json"}
+    ],
+    "hidden_ground_truth": [
+      {"name": "episode_ground_truth", "description": "仅供 grader 使用的隐藏真值。", "schema_ref": "../../schemas/ground_truth.schema.json"}
+    ],
+    "executor_responsibilities": ["固定航段推进", "基础速度、姿态和位置保持", "执行暂停或等效安全保持"],
+    "external_decision_port": {"description": "接收异常上报并返回外部决定；具体协议待确认。", "status": "TBD", "protocol": null}
+  },
+  "metrics": [
+    {
+      "metric_id": "hota",
+      "coverage_id": "a5_l2",
+      "name": "HOTA",
+      "parameters": {},
+      "direction": "maximize",
+      "threshold": {"value": null, "status": "TBD", "rationale": "内部阈值尚未标定。"},
+      "provenance": [
+        {"source_id": "handoff_current_boundary", "locator": "§5.6", "status": "verified", "notes": "仅确认 schema 应承载该指标。"}
+      ]
+    }
+  ],
+  "provenance": [
+    {"source_id": "handoff_current_boundary", "locator": "§4–§5", "status": "verified", "notes": null}
+  ]
+}

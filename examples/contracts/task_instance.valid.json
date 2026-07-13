@@ -1,0 +1,60 @@
+{
+  "schema_version": "0.1.0",
+  "artifact_type": "task_instance",
+  "instance_id": "contract_instance_seed_1",
+  "template_ref": {
+    "template_id": "case1_illegal_parking_contract_example",
+    "template_version": "0.1.0",
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "seed": 1,
+  "timebase": {"kind": "TBD", "tick_duration_s": null, "status": "TBD"},
+  "slot_bindings": [
+    {
+      "slot_id": "platform_profile",
+      "value": null,
+      "status": "TBD",
+      "provenance": [{"source_id": "human_confirmation_required", "locator": "OQ-003", "status": "TBD", "notes": null}]
+    }
+  ],
+  "platform_profile": {
+    "profile_id": "platform_profile_tbd",
+    "platform_type": "TBD",
+    "allowed_protection_actions": [],
+    "status": "TBD"
+  },
+  "executor_profile": {
+    "profile_id": "external_executor_contract",
+    "responsibilities": ["固定航段推进", "基础状态保持", "执行预授权保护请求"],
+    "status": "verified"
+  },
+  "phase_schedule": [
+    {"phase_id": "task_start", "order": 1, "start_tick": null, "end_tick": null, "timing_status": "TBD"},
+    {"phase_id": "nominal_patrol", "order": 2, "start_tick": null, "end_tick": null, "timing_status": "TBD"},
+    {"phase_id": "localization_degradation", "order": 3, "start_tick": null, "end_tick": null, "timing_status": "TBD"},
+    {"phase_id": "recognition_and_protection", "order": 4, "start_tick": null, "end_tick": null, "timing_status": "TBD"},
+    {"phase_id": "report_and_external_decision", "order": 5, "start_tick": null, "end_tick": null, "timing_status": "TBD"}
+  ],
+  "disturbance_schedule": [
+    {
+      "disturbance_id": "localization_degradation_1",
+      "kind": "localization_degradation",
+      "phase_id": "localization_degradation",
+      "start_tick": null,
+      "parameters": {},
+      "status": "proposed"
+    }
+  ],
+  "fixture_references": {
+    "sut_visible_input": "outputs/episode/observations.jsonl",
+    "hidden_ground_truth_output": "outputs/episode/ground_truth.json"
+  },
+  "compiler": {"name": "deterministic_contract_example", "version": "0.1.0", "deterministic": true},
+  "validation_audit": [
+    {"check_id": "coverage_boundary", "status": "pass", "message": "合同示例未改变四个确认 A×L。", "evidence": ["template_ref"]},
+    {"check_id": "platform_action_compatibility", "status": "TBD", "message": "等待平台与保护动作清单。", "evidence": ["OQ-003", "OQ-008"]}
+  ],
+  "provenance": [
+    {"source_id": "task_template_contract_example", "locator": null, "status": "proposed", "notes": "仅用于 schema 校验。"}
+  ]
+}

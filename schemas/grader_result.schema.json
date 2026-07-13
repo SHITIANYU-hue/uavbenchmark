@@ -1,0 +1,181 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uav-benchmark.local/schemas/grader_result.schema.json",
+  "title": "UAV Benchmark Grader Result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact_type",
+    "result_id",
+    "episode_id",
+    "inputs",
+    "grader",
+    "run_status",
+    "schema_checks",
+    "phase_check",
+    "coverage_accounting_mode",
+    "coverage_results",
+    "reproducibility",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+    "artifact_type": {"const": "grader_result"},
+    "result_id": {"$ref": "#/$defs/id"},
+    "episode_id": {"$ref": "#/$defs/id"},
+    "inputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["instance_sha256", "ground_truth_sha256", "trace_sha256"],
+      "properties": {
+        "instance_sha256": {"$ref": "#/$defs/sha256"},
+        "ground_truth_sha256": {"$ref": "#/$defs/sha256"},
+        "trace_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "grader": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "version"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1},
+        "extensions": {"type": "object"}
+      }
+    },
+    "run_status": {"enum": ["complete", "incomplete", "invalid"]},
+    "schema_checks": {"type": "array", "items": {"$ref": "#/$defs/check"}},
+    "phase_check": {"$ref": "#/$defs/check"},
+    "coverage_accounting_mode": {"enum": ["explicit_only", "hierarchical", "configured"]},
+    "coverage_results": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/coverage_result"}
+    },
+    "task_level_results": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/task_level_result"}
+    },
+    "reproducibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["seed", "schema_versions", "environment"],
+      "properties": {
+        "seed": {"type": "integer", "minimum": 0},
+        "schema_versions": {"type": "object", "additionalProperties": {"type": "string"}},
+        "environment": {"type": "object"},
+        "extensions": {"type": "object"}
+      }
+    },
+    "provenance": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/provenance"}
+    },
+    "extensions": {"type": "object"}
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
+    "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "evidence_status": {"enum": ["verified", "proposed", "TBD"]},
+    "ability": {
+      "enum": ["A1", "A2", "A3", "A4", "A5", "A6a", "A6b", "A7", "A8", "A9a", "A9b", "A10", "A11", "A12", "A13", "A14", "A15"]
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_id", "status"],
+      "properties": {
+        "source_id": {"type": "string", "minLength": 1},
+        "locator": {"type": ["string", "null"]},
+        "status": {"$ref": "#/$defs/evidence_status"},
+        "notes": {"type": ["string", "null"]}
+      }
+    },
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["check_id", "status", "message", "evidence"],
+      "properties": {
+        "check_id": {"$ref": "#/$defs/id"},
+        "status": {"enum": ["pass", "fail", "indeterminate", "not_run"]},
+        "message": {"type": "string", "minLength": 1},
+        "evidence": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "extensions": {"type": "object"}
+      }
+    },
+    "threshold": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["value", "status"],
+      "properties": {
+        "value": {"type": ["number", "string", "null"]},
+        "status": {"$ref": "#/$defs/evidence_status"},
+        "rationale": {"type": ["string", "null"]}
+      },
+      "allOf": [
+        {"if": {"properties": {"status": {"const": "TBD"}}}, "then": {"properties": {"value": {"const": null}}}}
+      ]
+    },
+    "metric_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metric_id", "name", "value", "unit", "parameters", "direction", "threshold", "status", "evidence"],
+      "properties": {
+        "metric_id": {"$ref": "#/$defs/id"},
+        "name": {"type": "string", "minLength": 1},
+        "value": {"type": ["number", "string", "boolean", "null"]},
+        "unit": {"type": ["string", "null"]},
+        "parameters": {"type": "object"},
+        "direction": {"enum": ["maximize", "minimize", "target", "none", "TBD"]},
+        "threshold": {"$ref": "#/$defs/threshold"},
+        "status": {"enum": ["observed", "pass", "fail", "indeterminate", "not_computed"]},
+        "evidence": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "extensions": {"type": "object"}
+      }
+    },
+    "violation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reason_code", "severity", "message", "evidence"],
+      "properties": {
+        "reason_code": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]*$"},
+        "severity": {"enum": ["info", "warning", "error", "critical"]},
+        "message": {"type": "string", "minLength": 1},
+        "evidence": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "extensions": {"type": "object"}
+      }
+    },
+    "coverage_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["coverage_id", "group", "ability", "level", "role", "status", "gates", "metrics", "violations"],
+      "properties": {
+        "coverage_id": {"$ref": "#/$defs/id"},
+        "group": {"enum": ["G1", "G2", "G3", "G4", "G5", "G6"]},
+        "ability": {"$ref": "#/$defs/ability"},
+        "level": {"enum": ["L1", "L2", "L3", "L4"]},
+        "role": {"enum": ["primary", "anomaly", "auxiliary", "non_scored"]},
+        "status": {"enum": ["observed", "pass", "fail", "indeterminate", "not_scored"]},
+        "gates": {"type": "array", "items": {"$ref": "#/$defs/check"}},
+        "metrics": {"type": "array", "items": {"$ref": "#/$defs/metric_result"}},
+        "violations": {"type": "array", "items": {"$ref": "#/$defs/violation"}},
+        "extensions": {"type": "object"}
+      }
+    },
+    "task_level_result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["gate_id", "status", "message", "evidence", "violations"],
+      "properties": {
+        "gate_id": {"$ref": "#/$defs/id"},
+        "status": {"enum": ["pass", "fail", "indeterminate", "not_run"]},
+        "message": {"type": "string", "minLength": 1},
+        "evidence": {"type": "array", "items": {"type": "string", "minLength": 1}},
+        "violations": {"type": "array", "items": {"$ref": "#/$defs/violation"}},
+        "extensions": {"type": "object"}
+      }
+    }
+  }
+}

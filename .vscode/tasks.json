@@ -1,0 +1,40 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "UAV: 校验案例二 Intake",
+      "type": "shell",
+      "command": "python3",
+      "args": [
+        "-m",
+        "uav_benchmark.compiler",
+        "--input",
+        "examples/intake/case2_oilfield_intake.yaml",
+        "--check"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {"PYTHONPATH": "${workspaceFolder}/src"}
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "UAV: 生成案例二 Task Template",
+      "type": "shell",
+      "command": "python3",
+      "args": [
+        "-m",
+        "uav_benchmark.compiler",
+        "--input",
+        "examples/intake/case2_oilfield_intake.yaml",
+        "--output",
+        "examples/case2_oilfield_corridor/task_template.generated.json"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}",
+        "env": {"PYTHONPATH": "${workspaceFolder}/src"}
+      },
+      "problemMatcher": []
+    }
+  ]
+}
