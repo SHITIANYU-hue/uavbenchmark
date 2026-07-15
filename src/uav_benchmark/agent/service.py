@@ -285,19 +285,22 @@ def _extract_json(raw_text: str) -> str:
     return text
 
 
-def _save_debug_response(run_id: str, operation: str, raw_text: str, finish_reason: str | None) -> Path:
+def _save_debug_response(run_id: str, operation: str, raw_text: str, finish_reason: str | None,
+                         reasoning: str | None = None) -> Path:
     output_dir = ROOT / ".agent_runs"
     output_dir.mkdir(exist_ok=True)
     debug_path = output_dir / f"{run_id}_raw_{operation}.txt"
-    debug_path.write_text(
-        f"run_id: {run_id}\n"
-        f"operation: {operation}\n"
-        f"finish_reason: {finish_reason}\n"
-        f"content_length: {len(raw_text)}\n"
-        f"---raw---\n"
-        f"{raw_text}",
-        encoding="utf-8",
-    )
+    lines = [
+        f"run_id: {run_id}",
+        f"operation: {operation}",
+        f"finish_reason: {finish_reason}",
+        f"content_length: {len(raw_text)}",
+    ]
+    if reasoning:
+        lines.append(f"reasoning_length: {len(reasoning)}")
+        lines.append(f"---reasoning---\n{reasoning[:2000]}")
+    lines.append(f"---raw---\n{raw_text}")
+    debug_path.write_text("\n".join(lines), encoding="utf-8")
     return debug_path
 
 
@@ -308,6 +311,7 @@ def _parse_model_json(
     run_id: str,
     operation: str,
     finish_reason: str | None,
+    reasoning: str | None = None,
     emit: Callable[[str, dict[str, Any]], None] | None = None,
 ):
     """Parse a JSON response into *model_cls*, saving a debug dump on failure."""
@@ -316,7 +320,7 @@ def _parse_model_json(
     try:
         return model_cls.model_validate_json(text)
     except Exception as exc:
-        debug_path = _save_debug_response(run_id, operation, raw_text, finish_reason)
+        debug_path = _save_debug_response(run_id, operation, raw_text, finish_reason, reasoning)
         snippet = raw_text[:300].replace("\n", "\\n")
         detail = str(exc)[:500]
         if finish_reason == "length":
@@ -728,7 +732,7 @@ class ConfigAgent:
                 model=self.model,
                 messages=cov_messages,
                 temperature=0.15,
-                max_tokens=4096,
+                max_tokens=8192,
                 response_format={"type": "json_object"},
             )
         except Exception as exc:
@@ -739,11 +743,13 @@ class ConfigAgent:
 
         cov_raw = cov_response.choices[0].message.content or ""
         cov_finish = getattr(cov_response.choices[0], "finish_reason", None) if cov_response.choices else None
+        cov_reasoning = getattr(cov_response.choices[0].message, "reasoning_content", None) or ""
         coverage_result = _parse_model_json(
             cov_raw, CoverageResult,
             run_id=run_id or "unknown",
             operation="coverage",
             finish_reason=cov_finish,
+            reasoning=cov_reasoning,
             emit=emit,
         )
 
@@ -772,7 +778,7 @@ class ConfigAgent:
                 model=self.model,
                 messages=ext_messages,
                 temperature=0.15,
-                max_tokens=4096,
+                max_tokens=8192,
                 response_format={"type": "json_object"},
             )
         except Exception as exc:
@@ -783,11 +789,13 @@ class ConfigAgent:
 
         ext_raw = ext_response.choices[0].message.content or ""
         ext_finish = getattr(ext_response.choices[0], "finish_reason", None) if ext_response.choices else None
+        ext_reasoning = getattr(ext_response.choices[0].message, "reasoning_content", None) or ""
         extraction_result = _parse_model_json(
             ext_raw, ExtractionResult,
             run_id=run_id or "unknown",
             operation="extraction",
             finish_reason=ext_finish,
+            reasoning=ext_reasoning,
             emit=emit,
         )
 

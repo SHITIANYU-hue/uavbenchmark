@@ -799,6 +799,7 @@
       instanceResults: null,
       instanceError: null,
       instanceLoading: false,
+      templateSavedNotice: null,
       instances: [],
       selectedInstance: null,
       selectedSut: null,
@@ -2108,7 +2109,10 @@
       }
       document.getElementById("workspaceBody").innerHTML =
         '<p class="intro">从已确认的 Task Template 和 Seed 生成具体的任务实例。同一个 (template, seed) 组合始终产生相同的实例。</p>' +
-        (tpl ? '<table class="jd-table"><thead><tr><th>Slot</th><th>Description</th><th>Mode</th><th>Value</th></tr></thead><tbody>' + bindingRows + '</tbody></table>' :
+        (state.templateSavedNotice ? '<div class="choice-card"><span class="action-note">' + escapeHtml(state.templateSavedNotice) + '</span></div>' : '') +
+        '<div class="action-row" style="margin-bottom:14px"><span class="action-note">保存后重启服务也能直接加载，不需要重新调 API</span>' +
+        '<button class="btn" id="saveTemplateBtn" type="button"' + (tpl ? '' : ' disabled') + '>保存模板</button></div>' +
+        (tpl ? '<table class="jd-table"><thead><tr><th>Slot</th><th>Description</th><th>Mode</th><th>Domain</th></tr></thead><tbody>' + bindingRows + '</tbody></table>' :
           '<div class="choice-card"><b>请先完成 Stage 0–5</b><p>需要先通过 Config Agent 生成 Task Template。</p></div>') +
         (tpl ? '<div class="field-label" style="margin-top:18px"><label>生成模式</label></div>' +
           '<div class="control" style="margin-bottom:10px"><select id="instanceMode">' +
@@ -2135,6 +2139,8 @@
       if (batchInput) batchInput.addEventListener("change", () => { state.instanceBatchSeeds = batchInput.value; });
       const genBtn = document.getElementById("generateInstanceBtn");
       if (genBtn) genBtn.addEventListener("click", generateInstancePreview);
+      const saveBtn = document.getElementById("saveTemplateBtn");
+      if (saveBtn) saveBtn.addEventListener("click", saveCurrentTemplate);
     }
 
     function renderWorkspace() {
@@ -2182,12 +2188,47 @@
           state.fixedScenario = selected || state.scenarioRegistry.scenarios.find(item => item.scenario_id === state.scenarioRegistry.default_scenario_id);
           state.selectedScenarioId = state.fixedScenario.scenario_id;
         }
+        const savedResponse = await fetch("/api/template/saved", { cache: "no-store" });
+        if (savedResponse.ok) {
+          const saved = await savedResponse.json();
+          if (saved.candidate && !state.agentResult) {
+            state.agentResult = {candidate: saved.candidate, model: "saved"};
+            state.narrativeDraft = saved.task_description || "";
+            state.narrativeStatus = "done";
+            state.agentStatus = "done";
+            state.completed = new Set([0, 1, 2, 3, 4, 5]);
+            state.maxUnlocked = 6;
+            state.templateSavedNotice = "已加载保存的模板（" + (saved.saved_at || "").substring(0, 10) + "），可直接进入实例化";
+          }
+        }
       } catch (error) {
         state.serverStatus = "offline";
       }
       render();
       if (state.narrativeStatus === "running") startRunPolling("narrative");
       else if (state.agentStatus === "running") startRunPolling("classification");
+    }
+
+    async function saveCurrentTemplate() {
+      if (!state.agentResult || !state.agentResult.candidate) return;
+      try {
+        const resp = await fetch("/api/template/save", {
+          method: "POST", headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({
+            candidate: state.agentResult.candidate,
+            task_description: state.narrativeDraft || "",
+          })
+        });
+        const data = await resp.json();
+        if (resp.ok) {
+          state.templateSavedNotice = "已保存到 " + data.path;
+        } else {
+          state.templateSavedNotice = "保存失败: " + (data.error || "");
+        }
+      } catch (err) {
+        state.templateSavedNotice = "保存失败: " + err;
+      }
+      render();
     }
 
     render();
