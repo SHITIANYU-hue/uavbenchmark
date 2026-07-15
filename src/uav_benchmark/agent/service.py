@@ -142,14 +142,29 @@ coverage_cells (with their required_jd_ids), and the compact JD catalog
 Rules:
 - Emit every JD slot required by the selected coverage's required_jd_ids AND
   the base backbone slots ["jd-0.2", "jd-0.7"].
-- If a required slot has no task evidence, emit value=null, status="TBD",
-  evidence_quote="" — never omit the slot.
+- NEVER omit a required slot. Always emit it.
+- FILL IN VALUES AGGRESSIVELY using task context, scenario context, and UAV
+  domain knowledge. Do not leave slots as TBD when a reasonable value can be
+  inferred. Use these status levels:
+    status="given"     — value is directly stated in the narrative (evidence_quote
+                          MUST be an exact narrative substring)
+    status="proposed"  — value is inferred from context/domain knowledge
+                          (evidence_quote = closest relevant narrative text or "")
+    status="TBD"       — truly cannot be inferred at all (value=null, evidence_quote="")
+- Examples of proactive inference:
+    jd-5.1 业务对象类目: highway → "车辆、道路设施、异常停车"
+    jd-5.2 典型场景特征: highway → "高速车流、多车道、匝道、桥梁路段"
+    jd-1.1 指称对象目录: infer from task objects mentioned in narrative
+    jd-1.2 指称方式集: infer standard naming conventions for the scenario
+    jd-2.1 任务参数表: extract any mentioned parameters (altitude, speed, range)
+    jd-10.2 地面站拓扑: "标准单地面站、C2链路、差分定位" (standard UAV setup)
+    jd-0.10 安全包络: infer minimum safety rules from scenario type
 - Use canonical JD names exactly as given in the catalog.
-- JD value copied from fixed_scenario: provenance="scenario_fixed" and an exact
-  scenario substring. Task-specific value: provenance="agent_extracted" and an
-  exact narrative substring.
+- JD value from fixed_scenario: provenance="scenario_fixed". Inferred from
+  task/domain: provenance="agent_extracted".
 - runtime_dependencies must have scored=false.
-- Do not invent thresholds, numeric business rules, simulator APIs, or levels.
+- Do not invent specific numeric thresholds, but DO infer qualitative domains
+  and categorical values (e.g., object types, scene characteristics, sensor modes).
 - Express content in plain business Chinese except fixed IDs.
 """.strip()
 
@@ -468,16 +483,16 @@ def validate_candidate(
                 message="Human-added or edited JD values require a source note.",
                 path=f"jd_candidates[{index}].source_note",
             ))
-        elif item.provenance == "scenario_fixed" and item.status != "TBD" and item.evidence_quote not in scenario_evidence:
+        elif item.provenance == "scenario_fixed" and item.status == "given" and item.evidence_quote not in scenario_evidence:
             issues.append(ValidationIssue(
                 code="EVIDENCE_NOT_VERBATIM",
-                message="Scenario-fixed JD evidence is not an exact fixed-scenario substring.",
+                message="Scenario-fixed JD with status=given requires an exact fixed-scenario substring.",
                 path=f"jd_candidates[{index}].evidence_quote",
             ))
-        elif item.provenance == "agent_extracted" and item.status != "TBD" and item.evidence_quote not in task_description:
+        elif item.provenance == "agent_extracted" and item.status == "given" and item.evidence_quote not in task_description:
             issues.append(ValidationIssue(
                 code="EVIDENCE_NOT_VERBATIM",
-                message="JD evidence is not an exact input substring.",
+                message="JD with status=given requires an exact input substring; use status=proposed for inferred values.",
                 path=f"jd_candidates[{index}].evidence_quote",
             ))
         canonical = jd_fields.get(item.slot_id)
