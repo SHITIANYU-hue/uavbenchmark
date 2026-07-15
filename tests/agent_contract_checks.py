@@ -271,18 +271,38 @@ class AgentContractChecks(unittest.TestCase):
         self.assertEqual([item.tool for item in trace], ["lookup_gal_catalog"])
         self.assertNotIn("lookup_jd_catalog", [item.tool for item in trace])
 
-    def test_orchestrator_uses_one_model_request_after_two_local_tools(self) -> None:
-        from uav_benchmark.agent.service import ConfigAgent
+    def test_orchestrator_uses_two_model_requests_after_two_local_tools(self) -> None:
+        from uav_benchmark.agent.service import ConfigAgent, CoverageResult, ExtractionResult
 
-        calls: list[tuple[str, object]] = []
+        calls: list[str] = []
 
         class FakeCompletions:
+            def __init__(self) -> None:
+                self._call = 0
+
             def create(self, *, model: str, messages: object, **kwargs: object) -> object:
-                calls.append((model, kwargs))
+                self._call += 1
+                calls.append(f"call_{self._call}")
                 cand = candidate("持续识别车辆并维护跨帧身份")
+                if self._call == 1:
+                    cov = CoverageResult(
+                        task_title=cand.task_title,
+                        scenario_summary=cand.scenario_summary,
+                        coverage_candidates=cand.coverage_candidates,
+                        responsibility_boundaries=cand.responsibility_boundaries,
+                    )
+                    payload = cov.model_dump_json()
+                else:
+                    ext = ExtractionResult(
+                        jd_candidates=cand.jd_candidates,
+                        runtime_dependencies=cand.runtime_dependencies,
+                        open_questions=cand.open_questions,
+                        warnings=cand.warnings,
+                    )
+                    payload = ext.model_dump_json()
                 return SimpleNamespace(
-                    choices=[SimpleNamespace(message=SimpleNamespace(content=cand.model_dump_json()))],
-                    usage=None,
+                    choices=[SimpleNamespace(message=SimpleNamespace(content=payload))],
+                    usage=SimpleNamespace(prompt_tokens=100, completion_tokens=50, total_tokens=150),
                 )
 
         agent = ConfigAgent.__new__(ConfigAgent)
@@ -292,7 +312,7 @@ class AgentContractChecks(unittest.TestCase):
         confirmed_narrative = candidate("持续识别车辆并维护跨帧身份").natural_language_template
         result = agent.analyze(confirmed_narrative, progress=lambda event, _details: events.append(event))
 
-        self.assertEqual(len(calls), 1)
+        self.assertEqual(calls, ["call_1", "call_2"])
         self.assertEqual(
             [item.tool for item in result.tool_trace if item.status == "completed"],
             ["lookup_gal_catalog", "lookup_jd_catalog"],
@@ -303,6 +323,8 @@ class AgentContractChecks(unittest.TestCase):
             load_reference_catalog()["source_versions"],
         )
         self.assertEqual(result.candidate.natural_language_template, confirmed_narrative)
+        self.assertEqual(result.candidate.task_title, "城市道路车辆巡检")
+        self.assertTrue(len(result.candidate.jd_candidates) > 0)
 
 
 if __name__ == "__main__":

@@ -24,6 +24,8 @@ from .catalog import (
 from .models import (
     AgentCandidate,
     AgentRunResult,
+    CoverageResult,
+    ExtractionResult,
     NarrativeDraft,
     NarrativeRunResult,
     ToolTrace,
@@ -95,13 +97,60 @@ Mandatory rules:
 - A JD or runtime dependency copied from fixed_scenario uses provenance=scenario_fixed
   and an exact scenario substring; task-specific values use provenance=agent_extracted
   and exact human task evidence.
-- The natural-language template will be overwritten by the orchestrator after
-  this call returns. Set natural_language_template to the literal string
-  "见确认稿" — do NOT copy or rewrite the narrative.
-- Keep A×L and JD identifiers in the structured fields only. The natural-language
-  template must not contain A×L labels, GAL labels, jd-x.x identifiers, or schema names.
 - Express selected responsibilities and non-responsibilities in plain business Chinese.
 - Return Chinese content except fixed IDs and reason codes.
+""".strip()
+
+
+COVERAGE_INSTRUCTION = """
+You are the CoverageClassification sub-agent in a UAV benchmark pipeline.
+
+Your ONLY job is to classify A×L coverage and responsibility boundaries from
+one confirmed task narrative. A later sub-call will extract JD candidates; do
+not emit any jd_candidates.
+
+Input contains: fixed_scenario, confirmed_task_narrative, and the compact GAL
+catalog (cell IDs, ability names, required JD IDs per cell, cumulative level
+count).
+
+Rules:
+- Infer A and L from behavioral verbs, continuity, anomaly response, human
+  decision role, and requested outputs in the confirmed narrative.
+- A×L responsibility is cumulative. For L2/L3/L4 emit one responsibility per
+  inherited level (the catalog tells you cumulative_level_count).
+- coverage_candidates[].evidence_quote MUST be an exact substring of
+  confirmed_task_narrative.
+- Use only cell IDs from the provided GAL catalog.
+- Separate SUT responsibility from external executor / external system / human
+  responsibility using responsibility_boundaries.
+- Express responsibilities in plain business Chinese.
+- Return Chinese content except fixed IDs.
+""".strip()
+
+
+EXTRACTION_INSTRUCTION = """
+You are the JDExtraction sub-agent in a UAV benchmark pipeline.
+
+Your ONLY job is to extract JD candidates and runtime dependencies from one
+confirmed task narrative, given the already-classified coverage. Do not emit
+any coverage_candidates.
+
+Input contains: fixed_scenario, confirmed_task_narrative, the selected
+coverage_cells (with their required_jd_ids), and the compact JD catalog
+(slot IDs and canonical names).
+
+Rules:
+- Emit every JD slot required by the selected coverage's required_jd_ids AND
+  the base backbone slots ["jd-0.2", "jd-0.7"].
+- If a required slot has no task evidence, emit value=null, status="TBD",
+  evidence_quote="" — never omit the slot.
+- Use canonical JD names exactly as given in the catalog.
+- JD value copied from fixed_scenario: provenance="scenario_fixed" and an exact
+  scenario substring. Task-specific value: provenance="agent_extracted" and an
+  exact narrative substring.
+- runtime_dependencies must have scored=false.
+- Do not invent thresholds, numeric business rules, simulator APIs, or levels.
+- Express content in plain business Chinese except fixed IDs.
 """.strip()
 
 
@@ -255,6 +304,21 @@ def _parse_model_json(
             f"原始响应已保存到 {debug_path.name}。\n"
             f"响应片段（前300字符）：{snippet}"
         ) from exc
+
+
+def _merge_usage(base: dict[str, Any], extra: dict[str, Any]) -> dict[str, Any]:
+    for key in ("prompt_tokens", "completion_tokens", "total_tokens"):
+        val = extra.get(key)
+        if isinstance(val, (int, float)):
+            base[key] = base.get(key, 0) + val
+    return base
+
+
+def _lookup_required_jds(cell_id: str, gal_catalog: dict[str, Any]) -> list[str]:
+    for c in gal_catalog.get("cells", []):
+        if c.get("cell") == cell_id:
+            return c.get("required_jd_ids", [])
+    return []
 
 
 def _condensed_gal_catalog() -> dict[str, Any]:
@@ -602,9 +666,11 @@ class ConfigAgent:
             raise ConfigAgentError("确认后的任务文案过短；请先完成第一次文案扩充，并在人工复核后再进行能力分类。")
 
         fixed_scenario = fixed_scenario or load_fixed_scenario()
-
         emit = progress or (lambda _event, _details: None)
         trace: list[ToolTrace] = []
+        total_usage: dict[str, int | float | str | None] = {}
+
+        # --- Local tool calls (deterministic, no model) ------------------- #
         emit("tool_called", {"tool": "lookup_gal_catalog"})
         trace.append(ToolTrace(tool="lookup_gal_catalog", status="called"))
         gal_catalog = _condensed_gal_catalog()
@@ -617,56 +683,101 @@ class ConfigAgent:
         trace.append(ToolTrace(tool="lookup_jd_catalog", status="completed"))
         emit("tool_completed", {"tool": "lookup_jd_catalog"})
 
-        agent_input = json.dumps({
+        # --- Sub-call 2a: coverage classification ------------------------- #
+        coverage_input = json.dumps({
             "fixed_scenario": fixed_scenario,
             "confirmed_task_narrative": task_description,
-            "task_template_backbone": load_template_backbone(),
-            "tool_results": {
-                "lookup_gal_catalog": gal_catalog,
-                "lookup_jd_catalog": jd_catalog,
-            },
+            "gal_catalog": gal_catalog,
         }, ensure_ascii=False)
 
-        system_content = SYSTEM_INSTRUCTION + _schema_instruction(AgentCandidate)
-        messages = [
-            {"role": "system", "content": system_content},
-            {"role": "user", "content": agent_input},
+        cov_sys = COVERAGE_INSTRUCTION + _schema_instruction(CoverageResult)
+        cov_messages = [
+            {"role": "system", "content": cov_sys},
+            {"role": "user", "content": coverage_input},
         ]
-        _save_raw_request(run_id or "unknown", "classification", messages)
-        emit("model_request_started", {
-            "model": self.model,
-            "timeout_seconds": 90,
-            "input_chars": len(system_content) + len(agent_input),
-        })
+        _save_raw_request(run_id or "unknown", "coverage", cov_messages)
+        emit("model_request_started", {"model": self.model, "operation": "coverage", "timeout_seconds": 90})
         try:
-            response = self.client.chat.completions.create(
+            cov_response = self.client.chat.completions.create(
                 model=self.model,
-                messages=messages,
+                messages=cov_messages,
                 temperature=0.15,
-                max_tokens=8192,
+                max_tokens=4096,
                 response_format={"type": "json_object"},
             )
         except Exception as exc:
             emit("model_request_failed", {"error": str(exc)[:500]})
             raise _model_error(exc) from exc
-        emit("model_response_received", {"model": self.model})
+        emit("model_response_received", {"model": self.model, "operation": "coverage"})
+        total_usage = _merge_usage(total_usage, _usage_dict(cov_response))
 
-        raw_text = response.choices[0].message.content or ""
-        finish_reason = getattr(response.choices[0], "finish_reason", None) if response.choices else None
-        candidate = _parse_model_json(
-            raw_text, AgentCandidate,
+        cov_raw = cov_response.choices[0].message.content or ""
+        cov_finish = getattr(cov_response.choices[0], "finish_reason", None) if cov_response.choices else None
+        coverage_result = _parse_model_json(
+            cov_raw, CoverageResult,
             run_id=run_id or "unknown",
-            operation="classification",
-            finish_reason=finish_reason,
+            operation="coverage",
+            finish_reason=cov_finish,
             emit=emit,
         )
 
-        # Catalog provenance and the reviewed prose are deterministic local
-        # metadata. Call 2 may classify the prose but may never rewrite it.
-        candidate = candidate.model_copy(update={
-            "catalog_versions": load_reference_catalog()["source_versions"].copy(),
-            "natural_language_template": task_description,
-        })
+        # --- Sub-call 2b: JD / dependency extraction ---------------------- #
+        coverage_summary = [
+            {"cell": c.cell, "required_jd_ids": _lookup_required_jds(c.cell, gal_catalog)}
+            for c in coverage_result.coverage_candidates
+        ]
+        extraction_input = json.dumps({
+            "fixed_scenario": fixed_scenario,
+            "confirmed_task_narrative": task_description,
+            "coverage_cells": coverage_summary,
+            "base_backbone_slots": load_template_backbone().get("base_slots", ["jd-0.2", "jd-0.7"]),
+            "jd_catalog": jd_catalog,
+        }, ensure_ascii=False)
+
+        ext_sys = EXTRACTION_INSTRUCTION + _schema_instruction(ExtractionResult)
+        ext_messages = [
+            {"role": "system", "content": ext_sys},
+            {"role": "user", "content": extraction_input},
+        ]
+        _save_raw_request(run_id or "unknown", "extraction", ext_messages)
+        emit("model_request_started", {"model": self.model, "operation": "extraction", "timeout_seconds": 90})
+        try:
+            ext_response = self.client.chat.completions.create(
+                model=self.model,
+                messages=ext_messages,
+                temperature=0.15,
+                max_tokens=4096,
+                response_format={"type": "json_object"},
+            )
+        except Exception as exc:
+            emit("model_request_failed", {"error": str(exc)[:500]})
+            raise _model_error(exc) from exc
+        emit("model_response_received", {"model": self.model, "operation": "extraction"})
+        total_usage = _merge_usage(total_usage, _usage_dict(ext_response))
+
+        ext_raw = ext_response.choices[0].message.content or ""
+        ext_finish = getattr(ext_response.choices[0], "finish_reason", None) if ext_response.choices else None
+        extraction_result = _parse_model_json(
+            ext_raw, ExtractionResult,
+            run_id=run_id or "unknown",
+            operation="extraction",
+            finish_reason=ext_finish,
+            emit=emit,
+        )
+
+        # --- Merge sub-results into AgentCandidate ------------------------ #
+        candidate = AgentCandidate(
+            catalog_versions=load_reference_catalog()["source_versions"].copy(),
+            task_title=coverage_result.task_title,
+            scenario_summary=coverage_result.scenario_summary,
+            coverage_candidates=coverage_result.coverage_candidates,
+            responsibility_boundaries=coverage_result.responsibility_boundaries,
+            jd_candidates=extraction_result.jd_candidates,
+            runtime_dependencies=extraction_result.runtime_dependencies,
+            open_questions=extraction_result.open_questions,
+            warnings=extraction_result.warnings,
+            natural_language_template=task_description,
+        )
 
         issues = validate_candidate(candidate, task_description, fixed_scenario)
         emit("candidate_validated", {"issue_count": len(issues)})
@@ -677,7 +788,7 @@ class ConfigAgent:
             validation_status="needs_review" if issues else "pass",
             validation_issues=issues,
             tool_trace=trace,
-            usage=_usage_dict(response),
+            usage=total_usage,
         )
 
 

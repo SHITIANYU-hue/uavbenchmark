@@ -87,6 +87,24 @@ class AgentCandidate(StrictModel):
     warnings: list[str] = Field(default_factory=list)
 
 
+class CoverageResult(StrictModel):
+    """Sub-call 2a output: A×L coverage classification only."""
+
+    task_title: str
+    scenario_summary: str
+    coverage_candidates: list[CoverageCandidate] = Field(min_length=1)
+    responsibility_boundaries: list[ResponsibilityBoundary] = Field(default_factory=list)
+
+
+class ExtractionResult(StrictModel):
+    """Sub-call 2b output: JD and dependency extraction only."""
+
+    jd_candidates: list[JDCandidate] = Field(default_factory=list)
+    runtime_dependencies: list[RuntimeDependencyCandidate] = Field(default_factory=list)
+    open_questions: list[OpenQuestion] = Field(default_factory=list)
+    warnings: list[str] = Field(default_factory=list)
+
+
 class ValidationIssue(StrictModel):
     code: str
     message: str

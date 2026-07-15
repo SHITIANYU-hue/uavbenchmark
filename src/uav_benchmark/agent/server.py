@@ -65,10 +65,10 @@ def _log_event(run_id: str, event: str, details: dict[str, Any] | None = None) -
 
 def _model_for_tier(tier: str) -> str:
     if tier == "pro":
-        return os.environ.get("DEEPSEEK_PRO_MODEL", "deepseek-chat")
+        return os.environ.get("DEEPSEEK_PRO_MODEL", "deepseek-v4-flash")
     if tier == "lite":
-        return os.environ.get("DEEPSEEK_LITE_MODEL", "deepseek-chat")
-    return os.environ.get("DEEPSEEK_FLASH_MODEL", "deepseek-chat")
+        return os.environ.get("DEEPSEEK_LITE_MODEL", "deepseek-v4-flash")
+    return os.environ.get("DEEPSEEK_FLASH_MODEL", "deepseek-v4-flash")
 
 
 class PipelineRequestHandler(SimpleHTTPRequestHandler):
