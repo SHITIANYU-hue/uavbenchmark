@@ -1996,14 +1996,16 @@
       const cand = state.agentResult ? state.agentResult.candidate : null;
       if (!cand) return null;
       const jdSlots = (cand.jd_candidates || []).map(jd => {
-        const hasValue = jd.value !== null && jd.value !== undefined && jd.value !== "";
+        const bm = jd.binding_mode || "fixed";
+        const binding = {mode: bm, status: jd.status === "TBD" ? "TBD" : "verified"};
+        if (bm === "fixed") binding.value = jd.value;
+        else if (bm === "enum") { binding.allowed_values = jd.allowed_values || []; binding.value = jd.value; }
+        else if (bm === "range") { binding.minimum = jd.minimum; binding.maximum = jd.maximum; }
         return {
           slot_id: jd.slot_id,
           description: jd.name || jd.slot_id,
           visibility: "sut_visible",
-          binding: hasValue
-            ? {mode: "fixed", value: jd.value, status: "verified"}
-            : {mode: "TBD", status: "TBD"},
+          binding: binding,
           provenance: []
         };
       });
@@ -2074,7 +2076,10 @@
       if (tpl && tpl.jd_slots) {
         bindingRows = tpl.jd_slots.map(s => {
           const mode = s.binding.mode;
-          const val = mode === "fixed" ? escapeHtml(String(s.binding.value)) : mode === "TBD" ? "—" : escapeHtml(mode);
+          let val = "—";
+          if (mode === "fixed") val = escapeHtml(String(s.binding.value));
+          else if (mode === "enum") val = escapeHtml((s.binding.allowed_values || []).join(" | ")) + (s.binding.value ? ' <span class="action-note">默认: ' + escapeHtml(s.binding.value) + '</span>' : "");
+          else if (mode === "range") val = "[" + s.binding.minimum + ", " + s.binding.maximum + "]";
           const tag = mode === "fixed" ? "fixed" : mode === "TBD" ? "tbd" : "proposed";
           return '<tr><td class="mono">' + escapeHtml(s.slot_id) + '</td><td>' + escapeHtml(s.description) +
             '</td><td>' + statusPill(mode, tag) + '</td><td>' + val + '</td></tr>';

@@ -46,6 +46,10 @@ class JDCandidate(StrictModel):
     slot_id: SupportedJD
     name: str
     value: str | None
+    binding_mode: Literal["fixed", "enum", "range", "TBD"] = "fixed"
+    allowed_values: list[str] = Field(default_factory=list)
+    minimum: float | None = None
+    maximum: float | None = None
     status: Literal["given", "proposed", "TBD"]
     evidence_quote: str
     provenance: Literal["agent_extracted", "scenario_fixed", "human_added", "human_edited", "auto_fixed"] = "agent_extracted"
@@ -97,7 +101,7 @@ class CoverageResult(StrictModel):
 
 
 class ExtractionResult(StrictModel):
-    """Sub-call 2b output: JD and dependency extraction only."""
+    """Sub-call 2b output: JD domains and dependency extraction."""
 
     jd_candidates: list[JDCandidate] = Field(default_factory=list)
     runtime_dependencies: list[RuntimeDependencyCandidate] = Field(default_factory=list)

@@ -131,41 +131,52 @@ Rules:
 EXTRACTION_INSTRUCTION = """
 You are the JDExtraction sub-agent in a UAV benchmark pipeline.
 
-Your ONLY job is to extract JD candidates and runtime dependencies from one
-confirmed task narrative, given the already-classified coverage. Do not emit
-any coverage_candidates.
+Your job is to define VARIABLE DOMAINS for each required JD slot — not to fill
+in a single concrete value. One template will later be instantiated many times
+with different seeds, and each seed picks a concrete value from the domain you
+define here.
 
 Input contains: fixed_scenario, confirmed_task_narrative, the selected
 coverage_cells (with their required_jd_ids), and the compact JD catalog
 (slot IDs and canonical names).
 
+For EACH required JD slot, choose a binding_mode and define its domain:
+
+1. binding_mode="fixed"   — the value is determined by the scenario or task
+   and should NOT vary across instances. Use for fixed facts.
+   Set value to the single confirmed value. Example:
+   jd-0.2: binding_mode="fixed", value="高速公路巡检走廊"
+
+2. binding_mode="enum"    — there is a closed set of meaningful options.
+   Set allowed_values to the full list. Set value to the recommended default.
+   Example:
+   jd-5.1: binding_mode="enum", allowed_values=["车辆","行人","非机动车","道路设施"],
+           value="车辆"
+
+3. binding_mode="range"   — the variable is numeric and varies continuously.
+   Set minimum and maximum. Set value to null.
+   Example:
+   jd-0.1: binding_mode="range", minimum=60, maximum=300, value=null
+
+4. binding_mode="TBD"     — truly cannot determine the domain.
+   Set value=null, allowed_values=[], minimum=null, maximum=null.
+
 Rules:
-- Emit every JD slot required by the selected coverage's required_jd_ids AND
-  the base backbone slots ["jd-0.2", "jd-0.7"].
-- NEVER omit a required slot. Always emit it.
-- FILL IN VALUES AGGRESSIVELY using task context, scenario context, and UAV
-  domain knowledge. Do not leave slots as TBD when a reasonable value can be
-  inferred. Use these status levels:
-    status="given"     — value is directly stated in the narrative (evidence_quote
-                          MUST be an exact narrative substring)
-    status="proposed"  — value is inferred from context/domain knowledge
-                          (evidence_quote = closest relevant narrative text or "")
-    status="TBD"       — truly cannot be inferred at all (value=null, evidence_quote="")
-- Examples of proactive inference:
-    jd-5.1 业务对象类目: highway → "车辆、道路设施、异常停车"
-    jd-5.2 典型场景特征: highway → "高速车流、多车道、匝道、桥梁路段"
-    jd-1.1 指称对象目录: infer from task objects mentioned in narrative
-    jd-1.2 指称方式集: infer standard naming conventions for the scenario
-    jd-2.1 任务参数表: extract any mentioned parameters (altitude, speed, range)
-    jd-10.2 地面站拓扑: "标准单地面站、C2链路、差分定位" (standard UAV setup)
-    jd-0.10 安全包络: infer minimum safety rules from scenario type
+- Emit every required JD slot (from coverage required_jd_ids AND base backbone
+  ["jd-0.2", "jd-0.7"]). Never omit a slot.
+- PREFER enum or range over fixed when the variable could legitimately vary
+  across benchmark instances. The more variables have non-trivial domains,
+  the more diverse instances the benchmark can generate.
+- PREFER fixed or enum over TBD. Infer reasonable domains from task context,
+  scenario, and UAV domain knowledge. Only use TBD when truly nothing can be
+  inferred.
+- For scenario-fixed facts (workspace, object types from scenario): use
+  provenance="scenario_fixed". For task-inferred domains: provenance="agent_extracted".
 - Use canonical JD names exactly as given in the catalog.
-- JD value from fixed_scenario: provenance="scenario_fixed". Inferred from
-  task/domain: provenance="agent_extracted".
+- status: "given" if directly stated in narrative; "proposed" if inferred; "TBD" if unknown.
+- evidence_quote: exact narrative substring for status="given"; closest text or "" for "proposed".
 - runtime_dependencies must have scored=false.
-- Do not invent specific numeric thresholds, but DO infer qualitative domains
-  and categorical values (e.g., object types, scene characteristics, sensor modes).
-- Express content in plain business Chinese except fixed IDs.
+- Express domains and values in Chinese except fixed IDs and numeric ranges.
 """.strip()
 
 
