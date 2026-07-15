@@ -1,96 +1,3464 @@
 {
-  "catalog_version": "0.1-demo",
-  "scope": "partial_demo_catalog",
-  "warning": "This catalog contains only the currently reviewed GAL cells and JD fields. Unknown capabilities or fields must be returned as open questions, not invented.",
+  "catalog_version": "full-17A-68AxL-66JD-2026-07-14",
+  "scope": "full_17A_L1_L4_66JD_catalog",
+  "source_versions": {
+    "axl": "png-17-abilities-68-cells-2026-07-14",
+    "jd": "png-66-slots-2026-07-14"
+  },
+  "source_sha256": {
+    "AxL责任定义字典_17A_68单元_机读版.md": "76b43babfc28c46b9fe51e5c59dd8c1f033a85711b8bb7bc824cec5eab14c905",
+    "JD业务变量字典_66槽位_机读版.md": "42cefb36ab64176a45b61ed39bcead3c254f3f54417963d5b0f28ca90b16ff99"
+  },
+  "warning": "A×L 责任定义为累计式；目标等级必须包含全部低等级责任。未知 threshold、业务规则、平台能力和 simulator 接口必须返回 TBD。",
+  "counts": {
+    "g_groups": 6,
+    "abilities": 17,
+    "levels": 4,
+    "gal_cells": 68,
+    "jd_fields": 66,
+    "global_jd": 10,
+    "local_jd": 56
+  },
+  "level_policy": {
+    "cumulative": true,
+    "selection_rule": "target A×L 的期望责任 = 当前级责任 + inherits_levels 中全部低等级责任。",
+    "levels": {
+      "L1": {
+        "label": "域内潜在自主",
+        "general_boundary": "人在任务回路中主导；系统提供局部理解、状态呈现、提示或单点建议。",
+        "inherits": []
+      },
+      "L2": {
+        "label": "域内受令自主",
+        "general_boundary": "人给出明确命令、结构或协议；系统负责一个执行片段或声明范围内的持续执行与维护。",
+        "inherits": [
+          "L1"
+        ]
+      },
+      "L3": {
+        "label": "域内监督自主",
+        "general_boundary": "系统负责名义任务过程的持续维护和异常识别；人在监督回路中承担确认、批准、纠偏或兜底。",
+        "inherits": [
+          "L1",
+          "L2"
+        ]
+      },
+      "L4": {
+        "label": "域内主导自主",
+        "general_boundary": "系统在声明域内自主选择处置、完成恢复并验证结果；运行时兜底责任不再由人承担。",
+        "inherits": [
+          "L1",
+          "L2",
+          "L3"
+        ]
+      }
+    }
+  },
+  "same_case_leveling_rule": {
+    "keep_fixed": [
+      "业务案例身份与核心目标",
+      "目标 A 域",
+      "案例中的主要业务对象与基本场景"
+    ],
+    "vary_by_level": [
+      "系统承担的责任边界",
+      "人类在运行时的角色",
+      "需要暴露的 JD 变量与异常条件",
+      "期望的 SUT 行为、Trace 与 GT 证据"
+    ],
+    "do_not_infer": [
+      "threshold",
+      "具体业务规则",
+      "simulator 接口",
+      "未在案例或 JD 中声明的平台能力"
+    ]
+  },
+  "abilities": [
+    {
+      "a_id": "A1",
+      "g_group": "G1",
+      "ability": "意图 / 交互入口",
+      "global_jd": [
+        "jd-0.4"
+      ],
+      "local_jd": [
+        "jd-1.1",
+        "jd-1.2",
+        "jd-1.3"
+      ]
+    },
+    {
+      "a_id": "A2",
+      "g_group": "G1",
+      "ability": "任务规范 / 约束模型",
+      "global_jd": [
+        "jd-0.6",
+        "jd-0.10"
+      ],
+      "local_jd": [
+        "jd-2.1",
+        "jd-2.2",
+        "jd-2.3"
+      ]
+    },
+    {
+      "a_id": "A3",
+      "g_group": "G1",
+      "ability": "意图推理 / 任务解释",
+      "global_jd": [
+        "jd-0.4"
+      ],
+      "local_jd": [
+        "jd-3.1",
+        "jd-3.2"
+      ]
+    },
+    {
+      "a_id": "A4",
+      "g_group": "G1",
+      "ability": "交互到执行编排",
+      "global_jd": [
+        "jd-0.1",
+        "jd-0.7"
+      ],
+      "local_jd": [
+        "jd-4.1",
+        "jd-4.2",
+        "jd-4.3",
+        "jd-4.4",
+        "jd-4.5"
+      ]
+    },
+    {
+      "a_id": "A14",
+      "g_group": "G1",
+      "ability": "监督 / 请求 / 交接",
+      "global_jd": [
+        "jd-0.4",
+        "jd-0.5"
+      ],
+      "local_jd": [
+        "jd-14.1",
+        "jd-14.2",
+        "jd-14.3"
+      ]
+    },
+    {
+      "a_id": "A5",
+      "g_group": "G2",
+      "ability": "环境感知 / 态势感知",
+      "global_jd": [
+        "jd-0.2",
+        "jd-0.3",
+        "jd-0.5",
+        "jd-0.9"
+      ],
+      "local_jd": [
+        "jd-5.1",
+        "jd-5.2",
+        "jd-5.3",
+        "jd-5.4"
+      ]
+    },
+    {
+      "a_id": "A6a",
+      "g_group": "G2",
+      "ability": "自定位 / 姿态航向估计",
+      "global_jd": [
+        "jd-0.2",
+        "jd-0.3",
+        "jd-0.5"
+      ],
+      "local_jd": [
+        "jd-6a.1",
+        "jd-6a.2",
+        "jd-6a.3"
+      ]
+    },
+    {
+      "a_id": "A6b",
+      "g_group": "G2",
+      "ability": "相对定位 / 方位关系估计",
+      "global_jd": [
+        "jd-0.2",
+        "jd-0.3",
+        "jd-0.5"
+      ],
+      "local_jd": [
+        "jd-6b.1",
+        "jd-6b.2",
+        "jd-6b.3"
+      ]
+    },
+    {
+      "a_id": "A11",
+      "g_group": "G2",
+      "ability": "健康 / 能源 / 资源管理",
+      "global_jd": [
+        "jd-0.9",
+        "jd-0.1",
+        "jd-0.5"
+      ],
+      "local_jd": [
+        "jd-11.1",
+        "jd-11.2",
+        "jd-11.3"
+      ]
+    },
+    {
+      "a_id": "A7",
+      "g_group": "G3",
+      "ability": "导航 / 航迹 / 轨迹管理",
+      "global_jd": [
+        "jd-0.2",
+        "jd-0.6",
+        "jd-0.3",
+        "jd-0.5"
+      ],
+      "local_jd": [
+        "jd-7.1",
+        "jd-7.2",
+        "jd-7.3",
+        "jd-7.4"
+      ]
+    },
+    {
+      "a_id": "A8",
+      "g_group": "G3",
+      "ability": "飞行控制 / 执行机构",
+      "global_jd": [
+        "jd-0.3",
+        "jd-0.9",
+        "jd-0.5"
+      ],
+      "local_jd": [
+        "jd-8.1",
+        "jd-8.2",
+        "jd-8.3"
+      ]
+    },
+    {
+      "a_id": "A9a",
+      "g_group": "G4",
+      "ability": "载荷动作执行",
+      "global_jd": [
+        "jd-0.9",
+        "jd-0.5"
+      ],
+      "local_jd": [
+        "jd-9a.1",
+        "jd-9a.2",
+        "jd-9a.3"
+      ]
+    },
+    {
+      "a_id": "A9b",
+      "g_group": "G4",
+      "ability": "载荷成果生成 / 远端呈现",
+      "global_jd": [
+        "jd-0.7",
+        "jd-0.4",
+        "jd-0.5"
+      ],
+      "local_jd": [
+        "jd-9b.1",
+        "jd-9b.2",
+        "jd-9b.3"
+      ]
+    },
+    {
+      "a_id": "A10",
+      "g_group": "G5",
+      "ability": "通信 / C2 / 遥测",
+      "global_jd": [
+        "jd-0.8",
+        "jd-0.5"
+      ],
+      "local_jd": [
+        "jd-10.1",
+        "jd-10.2",
+        "jd-10.3"
+      ]
+    },
+    {
+      "a_id": "A13",
+      "g_group": "G5",
+      "ability": "空域 / 交通 / 合规接入",
+      "global_jd": [
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "local_jd": [
+        "jd-13.1",
+        "jd-13.2",
+        "jd-13.3",
+        "jd-13.4",
+        "jd-13.5"
+      ]
+    },
+    {
+      "a_id": "A12",
+      "g_group": "G6",
+      "ability": "安全包络 / 运行保证 / 处置建议",
+      "global_jd": [
+        "jd-0.10",
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "local_jd": [
+        "jd-12.1",
+        "jd-12.2",
+        "jd-12.3"
+      ]
+    },
+    {
+      "a_id": "A15",
+      "g_group": "G6",
+      "ability": "日志 / 审计 / 保证证据",
+      "global_jd": [
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "local_jd": [
+        "jd-15.1",
+        "jd-15.2",
+        "jd-15.3"
+      ]
+    }
+  ],
   "gal_cells": [
     {
-      "cell": "A5×L1",
-      "ability": "A5",
+      "cell": "A1×L1",
+      "a_id": "A1",
       "level": "L1",
-      "name": "当前观察窗口目标或缺陷识别",
-      "responsibility": "对当前有效观察窗口中的业务对象进行识别并输出类别、证据、时间和位置/区段引用。",
-      "excludes": ["跨帧身份维护", "多次发现去重"]
+      "g_group": "G1",
+      "ability": "意图 / 交互入口",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能通过{jd-1.2 指称方式集}和{jd-1.3 业务术语表}理解来自{jd-0.4 在场人角色}的飞控输入。",
+      "jd_refs": [
+        "jd-1.2",
+        "jd-1.3",
+        "jd-0.4"
+      ],
+      "cumulative_levels": [
+        "L1"
+      ],
+      "cumulative_responsibilities": [
+        "能通过{jd-1.2 指称方式集}和{jd-1.3 业务术语表}理解来自{jd-0.4 在场人角色}的飞控输入。"
+      ],
+      "required_jd_ids": [
+        "jd-1.2",
+        "jd-1.3",
+        "jd-0.4"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:877"
+    },
+    {
+      "cell": "A1×L2",
+      "a_id": "A1",
+      "level": "L2",
+      "g_group": "G1",
+      "ability": "意图 / 交互入口",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能理解用{jd-1.3 业务术语表}表达的局部结构化命令、航线或等价输入，识别其中{jd-1.1 指称对象目录}的指称。",
+      "jd_refs": [
+        "jd-1.3",
+        "jd-1.1"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2"
+      ],
+      "cumulative_responsibilities": [
+        "能通过{jd-1.2 指称方式集}和{jd-1.3 业务术语表}理解来自{jd-0.4 在场人角色}的飞控输入。",
+        "能理解用{jd-1.3 业务术语表}表达的局部结构化命令、航线或等价输入，识别其中{jd-1.1 指称对象目录}的指称。"
+      ],
+      "required_jd_ids": [
+        "jd-1.2",
+        "jd-1.3",
+        "jd-0.4",
+        "jd-1.1"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:889"
+    },
+    {
+      "cell": "A1×L3",
+      "a_id": "A1",
+      "level": "L3",
+      "g_group": "G1",
+      "ability": "意图 / 交互入口",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能理解高阶目标（目标对象依{jd-1.1 指称对象目录}，指称方式覆盖{jd-1.2 指称方式集}，词汇使用{jd-1.3 业务术语表}），并识别其中的限制、确认规则和异常偏好。",
+      "jd_refs": [
+        "jd-1.1",
+        "jd-1.2",
+        "jd-1.3"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "cumulative_responsibilities": [
+        "能通过{jd-1.2 指称方式集}和{jd-1.3 业务术语表}理解来自{jd-0.4 在场人角色}的飞控输入。",
+        "能理解用{jd-1.3 业务术语表}表达的局部结构化命令、航线或等价输入，识别其中{jd-1.1 指称对象目录}的指称。",
+        "能理解高阶目标（目标对象依{jd-1.1 指称对象目录}，指称方式覆盖{jd-1.2 指称方式集}，词汇使用{jd-1.3 业务术语表}），并识别其中的限制、确认规则和异常偏好。"
+      ],
+      "required_jd_ids": [
+        "jd-1.2",
+        "jd-1.3",
+        "jd-0.4",
+        "jd-1.1"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:901"
+    },
+    {
+      "cell": "A1×L4",
+      "a_id": "A1",
+      "level": "L4",
+      "g_group": "G1",
+      "ability": "意图 / 交互入口",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能接收{jd-0.4 在场人角色}的高层目标、偏好或审计请求，自动消解{jd-1.2 指称方式集}中的 deictic / 上下文承接歧义，并关联{jd-1.1 指称对象目录}。",
+      "jd_refs": [
+        "jd-0.4",
+        "jd-1.2",
+        "jd-1.1"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3",
+        "L4"
+      ],
+      "cumulative_responsibilities": [
+        "能通过{jd-1.2 指称方式集}和{jd-1.3 业务术语表}理解来自{jd-0.4 在场人角色}的飞控输入。",
+        "能理解用{jd-1.3 业务术语表}表达的局部结构化命令、航线或等价输入，识别其中{jd-1.1 指称对象目录}的指称。",
+        "能理解高阶目标（目标对象依{jd-1.1 指称对象目录}，指称方式覆盖{jd-1.2 指称方式集}，词汇使用{jd-1.3 业务术语表}），并识别其中的限制、确认规则和异常偏好。",
+        "能接收{jd-0.4 在场人角色}的高层目标、偏好或审计请求，自动消解{jd-1.2 指称方式集}中的 deictic / 上下文承接歧义，并关联{jd-1.1 指称对象目录}。"
+      ],
+      "required_jd_ids": [
+        "jd-1.2",
+        "jd-1.3",
+        "jd-0.4",
+        "jd-1.1"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:915"
+    },
+    {
+      "cell": "A2×L1",
+      "a_id": "A2",
+      "level": "L1",
+      "g_group": "G1",
+      "ability": "任务规范 / 约束模型",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能理解{jd-2.1 任务参数表}和{jd-2.2 平台参数表}中由人显式给定的参数，例如方向、距离、速度和高度。",
+      "jd_refs": [
+        "jd-2.1",
+        "jd-2.2"
+      ],
+      "cumulative_levels": [
+        "L1"
+      ],
+      "cumulative_responsibilities": [
+        "能理解{jd-2.1 任务参数表}和{jd-2.2 平台参数表}中由人显式给定的参数，例如方向、距离、速度和高度。"
+      ],
+      "required_jd_ids": [
+        "jd-2.1",
+        "jd-2.2"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:930"
+    },
+    {
+      "cell": "A2×L2",
+      "a_id": "A2",
+      "level": "L2",
+      "g_group": "G1",
+      "ability": "任务规范 / 约束模型",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能按{jd-2.1 任务参数表}的 schema 和默认值，必要时引用{jd-2.2 平台参数表}，补全局部动作的参数配置。",
+      "jd_refs": [
+        "jd-2.1",
+        "jd-2.2"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2"
+      ],
+      "cumulative_responsibilities": [
+        "能理解{jd-2.1 任务参数表}和{jd-2.2 平台参数表}中由人显式给定的参数，例如方向、距离、速度和高度。",
+        "能按{jd-2.1 任务参数表}的 schema 和默认值，必要时引用{jd-2.2 平台参数表}，补全局部动作的参数配置。"
+      ],
+      "required_jd_ids": [
+        "jd-2.1",
+        "jd-2.2"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:941"
+    },
+    {
+      "cell": "A2×L3",
+      "a_id": "A2",
+      "level": "L3",
+      "g_group": "G1",
+      "ability": "任务规范 / 约束模型",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能从上下文、{jd-2.1 任务参数表}、{jd-0.6 合规域}和{jd-0.10 安全包络先验}补全任务规范，包括运行限制和上报 / 确认条件。",
+      "jd_refs": [
+        "jd-2.1",
+        "jd-0.6",
+        "jd-0.10"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "cumulative_responsibilities": [
+        "能理解{jd-2.1 任务参数表}和{jd-2.2 平台参数表}中由人显式给定的参数，例如方向、距离、速度和高度。",
+        "能按{jd-2.1 任务参数表}的 schema 和默认值，必要时引用{jd-2.2 平台参数表}，补全局部动作的参数配置。",
+        "能从上下文、{jd-2.1 任务参数表}、{jd-0.6 合规域}和{jd-0.10 安全包络先验}补全任务规范，包括运行限制和上报 / 确认条件。"
+      ],
+      "required_jd_ids": [
+        "jd-2.1",
+        "jd-2.2",
+        "jd-0.6",
+        "jd-0.10"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:953"
+    },
+    {
+      "cell": "A2×L4",
+      "a_id": "A2",
+      "level": "L4",
+      "g_group": "G1",
+      "ability": "任务规范 / 约束模型",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能基于{jd-2.3 隐式参数规则}中的专家默认知识，并结合{jd-2.2 平台参数表}内化运行设计域，自主补全必要约束及兜底规则。",
+      "jd_refs": [
+        "jd-2.3",
+        "jd-2.2"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3",
+        "L4"
+      ],
+      "cumulative_responsibilities": [
+        "能理解{jd-2.1 任务参数表}和{jd-2.2 平台参数表}中由人显式给定的参数，例如方向、距离、速度和高度。",
+        "能按{jd-2.1 任务参数表}的 schema 和默认值，必要时引用{jd-2.2 平台参数表}，补全局部动作的参数配置。",
+        "能从上下文、{jd-2.1 任务参数表}、{jd-0.6 合规域}和{jd-0.10 安全包络先验}补全任务规范，包括运行限制和上报 / 确认条件。",
+        "能基于{jd-2.3 隐式参数规则}中的专家默认知识，并结合{jd-2.2 平台参数表}内化运行设计域，自主补全必要约束及兜底规则。"
+      ],
+      "required_jd_ids": [
+        "jd-2.1",
+        "jd-2.2",
+        "jd-0.6",
+        "jd-0.10",
+        "jd-2.3"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:967"
+    },
+    {
+      "cell": "A3×L1",
+      "a_id": "A3",
+      "level": "L1",
+      "g_group": "G1",
+      "ability": "意图推理 / 任务解释",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能理解{jd-3.1 任务技能库}中单个技能的动作含义、参数和局部影响。",
+      "jd_refs": [
+        "jd-3.1"
+      ],
+      "cumulative_levels": [
+        "L1"
+      ],
+      "cumulative_responsibilities": [
+        "能理解{jd-3.1 任务技能库}中单个技能的动作含义、参数和局部影响。"
+      ],
+      "required_jd_ids": [
+        "jd-3.1"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:981"
+    },
+    {
+      "cell": "A3×L2",
+      "a_id": "A3",
+      "level": "L2",
+      "g_group": "G1",
+      "ability": "意图推理 / 任务解释",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能将命令映射到{jd-3.1 任务技能库}中已知的技能或局部技能片段。",
+      "jd_refs": [
+        "jd-3.1"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2"
+      ],
+      "cumulative_responsibilities": [
+        "能理解{jd-3.1 任务技能库}中单个技能的动作含义、参数和局部影响。",
+        "能将命令映射到{jd-3.1 任务技能库}中已知的技能或局部技能片段。"
+      ],
+      "required_jd_ids": [
+        "jd-3.1"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:991"
+    },
+    {
+      "cell": "A3×L3",
+      "a_id": "A3",
+      "level": "L3",
+      "g_group": "G1",
+      "ability": "意图推理 / 任务解释",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能按{jd-3.2 任务完成语义}分析任务全程的上下文（基于{jd-3.1 任务技能库}），识别需要{jd-0.4 在场人角色}确认的覆盖缺口。",
+      "jd_refs": [
+        "jd-3.2",
+        "jd-3.1",
+        "jd-0.4"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "cumulative_responsibilities": [
+        "能理解{jd-3.1 任务技能库}中单个技能的动作含义、参数和局部影响。",
+        "能将命令映射到{jd-3.1 任务技能库}中已知的技能或局部技能片段。",
+        "能按{jd-3.2 任务完成语义}分析任务全程的上下文（基于{jd-3.1 任务技能库}），识别需要{jd-0.4 在场人角色}确认的覆盖缺口。"
+      ],
+      "required_jd_ids": [
+        "jd-3.1",
+        "jd-3.2",
+        "jd-0.4"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1002"
+    },
+    {
+      "cell": "A3×L4",
+      "a_id": "A3",
+      "level": "L4",
+      "g_group": "G1",
+      "ability": "意图推理 / 任务解释",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能将{jd-3.1 任务技能库}展开成跨任务的全程编排，并按{jd-3.2 任务完成语义}自主敲定细节。",
+      "jd_refs": [
+        "jd-3.1",
+        "jd-3.2"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3",
+        "L4"
+      ],
+      "cumulative_responsibilities": [
+        "能理解{jd-3.1 任务技能库}中单个技能的动作含义、参数和局部影响。",
+        "能将命令映射到{jd-3.1 任务技能库}中已知的技能或局部技能片段。",
+        "能按{jd-3.2 任务完成语义}分析任务全程的上下文（基于{jd-3.1 任务技能库}），识别需要{jd-0.4 在场人角色}确认的覆盖缺口。",
+        "能将{jd-3.1 任务技能库}展开成跨任务的全程编排，并按{jd-3.2 任务完成语义}自主敲定细节。"
+      ],
+      "required_jd_ids": [
+        "jd-3.1",
+        "jd-3.2",
+        "jd-0.4"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1016"
+    },
+    {
+      "cell": "A4×L1",
+      "a_id": "A4",
+      "level": "L1",
+      "g_group": "G1",
+      "ability": "交互到执行编排",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能通过{jd-4.5 编排输出机制}发出单点动作，并理解其局部后续效果。",
+      "jd_refs": [
+        "jd-4.5"
+      ],
+      "cumulative_levels": [
+        "L1"
+      ],
+      "cumulative_responsibilities": [
+        "能通过{jd-4.5 编排输出机制}发出单点动作，并理解其局部后续效果。"
+      ],
+      "required_jd_ids": [
+        "jd-4.5"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1030"
+    },
+    {
+      "cell": "A4×L2",
+      "a_id": "A4",
+      "level": "L2",
+      "g_group": "G1",
+      "ability": "交互到执行编排",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能按{jd-4.1 任务结构}把局部命令接入执行片段并闭环，输出通过{jd-4.5 编排输出机制}下发。",
+      "jd_refs": [
+        "jd-4.1",
+        "jd-4.5"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2"
+      ],
+      "cumulative_responsibilities": [
+        "能通过{jd-4.5 编排输出机制}发出单点动作，并理解其局部后续效果。",
+        "能按{jd-4.1 任务结构}把局部命令接入执行片段并闭环，输出通过{jd-4.5 编排输出机制}下发。"
+      ],
+      "required_jd_ids": [
+        "jd-4.5",
+        "jd-4.1"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1040"
+    },
+    {
+      "cell": "A4×L3",
+      "a_id": "A4",
+      "level": "L3",
+      "g_group": "G1",
+      "ability": "交互到执行编排",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能按{jd-4.1 任务结构}完成覆盖全{jd-0.1 任务时长}的编排，并在{jd-4.2 人机交接点}提出人工判断需求。",
+      "jd_refs": [
+        "jd-4.1",
+        "jd-0.1",
+        "jd-4.2"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "cumulative_responsibilities": [
+        "能通过{jd-4.5 编排输出机制}发出单点动作，并理解其局部后续效果。",
+        "能按{jd-4.1 任务结构}把局部命令接入执行片段并闭环，输出通过{jd-4.5 编排输出机制}下发。",
+        "能按{jd-4.1 任务结构}完成覆盖全{jd-0.1 任务时长}的编排，并在{jd-4.2 人机交接点}提出人工判断需求。"
+      ],
+      "required_jd_ids": [
+        "jd-4.5",
+        "jd-4.1",
+        "jd-0.1",
+        "jd-4.2"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1052"
+    },
+    {
+      "cell": "A4×L4",
+      "a_id": "A4",
+      "level": "L4",
+      "g_group": "G1",
+      "ability": "交互到执行编排",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能由{jd-4.3 重编排触发}触发，按{jd-4.4 任务级重规划策略}完成多步重编排，推动{jd-0.7 任务完成判据}达成。",
+      "jd_refs": [
+        "jd-4.3",
+        "jd-4.4",
+        "jd-0.7"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3",
+        "L4"
+      ],
+      "cumulative_responsibilities": [
+        "能通过{jd-4.5 编排输出机制}发出单点动作，并理解其局部后续效果。",
+        "能按{jd-4.1 任务结构}把局部命令接入执行片段并闭环，输出通过{jd-4.5 编排输出机制}下发。",
+        "能按{jd-4.1 任务结构}完成覆盖全{jd-0.1 任务时长}的编排，并在{jd-4.2 人机交接点}提出人工判断需求。",
+        "能由{jd-4.3 重编排触发}触发，按{jd-4.4 任务级重规划策略}完成多步重编排，推动{jd-0.7 任务完成判据}达成。"
+      ],
+      "required_jd_ids": [
+        "jd-4.5",
+        "jd-4.1",
+        "jd-0.1",
+        "jd-4.2",
+        "jd-4.3",
+        "jd-4.4",
+        "jd-0.7"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1066"
+    },
+    {
+      "cell": "A14×L1",
+      "a_id": "A14",
+      "level": "L1",
+      "g_group": "G1",
+      "ability": "监督 / 请求 / 交接",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能向{jd-0.4 在场人角色}围绕局部动作及时提示状态、风险和操作建议。",
+      "jd_refs": [
+        "jd-0.4"
+      ],
+      "cumulative_levels": [
+        "L1"
+      ],
+      "cumulative_responsibilities": [
+        "能向{jd-0.4 在场人角色}围绕局部动作及时提示状态、风险和操作建议。"
+      ],
+      "required_jd_ids": [
+        "jd-0.4"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1081"
+    },
+    {
+      "cell": "A14×L2",
+      "a_id": "A14",
+      "level": "L2",
+      "g_group": "G1",
+      "ability": "监督 / 请求 / 交接",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能即时反馈失败信息，并按{jd-14.1 交接协议表}提供暂停、取消或接管入口。",
+      "jd_refs": [
+        "jd-14.1"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2"
+      ],
+      "cumulative_responsibilities": [
+        "能向{jd-0.4 在场人角色}围绕局部动作及时提示状态、风险和操作建议。",
+        "能即时反馈失败信息，并按{jd-14.1 交接协议表}提供暂停、取消或接管入口。"
+      ],
+      "required_jd_ids": [
+        "jd-0.4",
+        "jd-14.1"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1091"
+    },
+    {
+      "cell": "A14×L3",
+      "a_id": "A14",
+      "level": "L3",
+      "g_group": "G1",
+      "ability": "监督 / 请求 / 交接",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能按{jd-14.1 交接协议表}中的类型、优先级和延迟预算，依据{jd-0.5 人机确认协议}向{jd-0.4 在场人角色}请求确认、风险批准、纠偏或交接。",
+      "jd_refs": [
+        "jd-14.1",
+        "jd-0.5",
+        "jd-0.4"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "cumulative_responsibilities": [
+        "能向{jd-0.4 在场人角色}围绕局部动作及时提示状态、风险和操作建议。",
+        "能即时反馈失败信息，并按{jd-14.1 交接协议表}提供暂停、取消或接管入口。",
+        "能按{jd-14.1 交接协议表}中的类型、优先级和延迟预算，依据{jd-0.5 人机确认协议}向{jd-0.4 在场人角色}请求确认、风险批准、纠偏或交接。"
+      ],
+      "required_jd_ids": [
+        "jd-0.4",
+        "jd-14.1",
+        "jd-0.5"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1102"
+    },
+    {
+      "cell": "A14×L4",
+      "a_id": "A14",
+      "level": "L4",
+      "g_group": "G1",
+      "ability": "监督 / 请求 / 交接",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能按{jd-14.2 偏好对齐协议}提供偏好对齐，并按{jd-14.3 高层通知规则}完成纠偏审计总结和高层通知。",
+      "jd_refs": [
+        "jd-14.2",
+        "jd-14.3"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3",
+        "L4"
+      ],
+      "cumulative_responsibilities": [
+        "能向{jd-0.4 在场人角色}围绕局部动作及时提示状态、风险和操作建议。",
+        "能即时反馈失败信息，并按{jd-14.1 交接协议表}提供暂停、取消或接管入口。",
+        "能按{jd-14.1 交接协议表}中的类型、优先级和延迟预算，依据{jd-0.5 人机确认协议}向{jd-0.4 在场人角色}请求确认、风险批准、纠偏或交接。",
+        "能按{jd-14.2 偏好对齐协议}提供偏好对齐，并按{jd-14.3 高层通知规则}完成纠偏审计总结和高层通知。"
+      ],
+      "required_jd_ids": [
+        "jd-0.4",
+        "jd-14.1",
+        "jd-0.5",
+        "jd-14.2",
+        "jd-14.3"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1116"
+    },
+    {
+      "cell": "A5×L1",
+      "a_id": "A5",
+      "level": "L1",
+      "g_group": "G2",
+      "ability": "环境感知 / 态势感知",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能使用{jd-5.3 感知模态集}中的可用模态作业，识别{jd-5.1 业务对象类目}中的对象（target / confuser / obstacle / risk）并提示。",
+      "jd_refs": [
+        "jd-5.3",
+        "jd-5.1"
+      ],
+      "cumulative_levels": [
+        "L1"
+      ],
+      "cumulative_responsibilities": [
+        "能使用{jd-5.3 感知模态集}中的可用模态作业，识别{jd-5.1 业务对象类目}中的对象（target / confuser / obstacle / risk）并提示。"
+      ],
+      "required_jd_ids": [
+        "jd-5.3",
+        "jd-5.1"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1130"
     },
     {
       "cell": "A5×L2",
-      "ability": "A5",
+      "a_id": "A5",
       "level": "L2",
-      "name": "连续感知与跨帧身份维护",
-      "responsibility": "连续检测、跨帧身份关联、重复目标去除和持续报告更新。",
-      "excludes": ["未明确要求的目标世界坐标"]
+      "g_group": "G2",
+      "ability": "环境感知 / 态势感知",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能在执行片段内持续观测{jd-5.1 业务对象类目}相关对象，按{jd-5.2 典型场景特征}的密度和动态维护可见、丢失与遮挡状态，并提示漏检或误检。",
+      "jd_refs": [
+        "jd-5.1",
+        "jd-5.2"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2"
+      ],
+      "cumulative_responsibilities": [
+        "能使用{jd-5.3 感知模态集}中的可用模态作业，识别{jd-5.1 业务对象类目}中的对象（target / confuser / obstacle / risk）并提示。",
+        "能在执行片段内持续观测{jd-5.1 业务对象类目}相关对象，按{jd-5.2 典型场景特征}的密度和动态维护可见、丢失与遮挡状态，并提示漏检或误检。"
+      ],
+      "required_jd_ids": [
+        "jd-5.3",
+        "jd-5.1",
+        "jd-5.2"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1141"
+    },
+    {
+      "cell": "A5×L3",
+      "a_id": "A5",
+      "level": "L3",
+      "g_group": "G2",
+      "ability": "环境感知 / 态势感知",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能在{jd-0.2 工作空间结构}中全程维护态势，在{jd-0.3 扰动谱}影响下按{jd-5.2 典型场景特征}识别 ID 混淆、低置信或域外场景，并按{jd-0.5 人机确认协议}请人确认是否继续或重观测。",
+      "jd_refs": [
+        "jd-0.2",
+        "jd-0.3",
+        "jd-5.2",
+        "jd-0.5"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "cumulative_responsibilities": [
+        "能使用{jd-5.3 感知模态集}中的可用模态作业，识别{jd-5.1 业务对象类目}中的对象（target / confuser / obstacle / risk）并提示。",
+        "能在执行片段内持续观测{jd-5.1 业务对象类目}相关对象，按{jd-5.2 典型场景特征}的密度和动态维护可见、丢失与遮挡状态，并提示漏检或误检。",
+        "能在{jd-0.2 工作空间结构}中全程维护态势，在{jd-0.3 扰动谱}影响下按{jd-5.2 典型场景特征}识别 ID 混淆、低置信或域外场景，并按{jd-0.5 人机确认协议}请人确认是否继续或重观测。"
+      ],
+      "required_jd_ids": [
+        "jd-5.3",
+        "jd-5.1",
+        "jd-5.2",
+        "jd-0.2",
+        "jd-0.3",
+        "jd-0.5"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1153"
+    },
+    {
+      "cell": "A5×L4",
+      "a_id": "A5",
+      "level": "L4",
+      "g_group": "G2",
+      "ability": "环境感知 / 态势感知",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能在感知异常时自主从{jd-5.4 感知策略适用集}中选择并执行有效策略（重观测 / 换视角 / 切模态 / 扩搜 / 等待），验证态势可信度恢复；必要时按{jd-0.5 人机确认协议}请人决断。",
+      "jd_refs": [
+        "jd-5.4",
+        "jd-0.5"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3",
+        "L4"
+      ],
+      "cumulative_responsibilities": [
+        "能使用{jd-5.3 感知模态集}中的可用模态作业，识别{jd-5.1 业务对象类目}中的对象（target / confuser / obstacle / risk）并提示。",
+        "能在执行片段内持续观测{jd-5.1 业务对象类目}相关对象，按{jd-5.2 典型场景特征}的密度和动态维护可见、丢失与遮挡状态，并提示漏检或误检。",
+        "能在{jd-0.2 工作空间结构}中全程维护态势，在{jd-0.3 扰动谱}影响下按{jd-5.2 典型场景特征}识别 ID 混淆、低置信或域外场景，并按{jd-0.5 人机确认协议}请人确认是否继续或重观测。",
+        "能在感知异常时自主从{jd-5.4 感知策略适用集}中选择并执行有效策略（重观测 / 换视角 / 切模态 / 扩搜 / 等待），验证态势可信度恢复；必要时按{jd-0.5 人机确认协议}请人决断。"
+      ],
+      "required_jd_ids": [
+        "jd-5.3",
+        "jd-5.1",
+        "jd-5.2",
+        "jd-0.2",
+        "jd-0.3",
+        "jd-0.5",
+        "jd-5.4"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1168"
+    },
+    {
+      "cell": "A6a×L1",
+      "a_id": "A6a",
+      "level": "L1",
+      "g_group": "G2",
+      "ability": "自定位 / 姿态航向估计",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能基于{jd-6a.1 定位源需求}中的可用源，按{jd-6a.2 位姿质量先验}上报自身位置、高度、姿态、航向及定位质量。",
+      "jd_refs": [
+        "jd-6a.1",
+        "jd-6a.2"
+      ],
+      "cumulative_levels": [
+        "L1"
+      ],
+      "cumulative_responsibilities": [
+        "能基于{jd-6a.1 定位源需求}中的可用源，按{jd-6a.2 位姿质量先验}上报自身位置、高度、姿态、航向及定位质量。"
+      ],
+      "required_jd_ids": [
+        "jd-6a.1",
+        "jd-6a.2"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1182"
+    },
+    {
+      "cell": "A6a×L2",
+      "a_id": "A6a",
+      "level": "L2",
+      "g_group": "G2",
+      "ability": "自定位 / 姿态航向估计",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能在执行片段内连续维护{jd-6a.1 定位源需求}对应的融合位姿态势，并按{jd-6a.2 位姿质量先验}提示漂移、跳变或失锁。",
+      "jd_refs": [
+        "jd-6a.1",
+        "jd-6a.2"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2"
+      ],
+      "cumulative_responsibilities": [
+        "能基于{jd-6a.1 定位源需求}中的可用源，按{jd-6a.2 位姿质量先验}上报自身位置、高度、姿态、航向及定位质量。",
+        "能在执行片段内连续维护{jd-6a.1 定位源需求}对应的融合位姿态势，并按{jd-6a.2 位姿质量先验}提示漂移、跳变或失锁。"
+      ],
+      "required_jd_ids": [
+        "jd-6a.1",
+        "jd-6a.2"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1193"
     },
     {
       "cell": "A6a×L3",
-      "ability": "A6a",
+      "a_id": "A6a",
       "level": "L3",
-      "name": "绝对定位退化识别与保护上报",
-      "responsibility": "正常阶段维护定位与质量；退化后标记不可信、请求允许的保护动作、上报并等待外部决定。",
-      "excludes": ["自主恢复与恢复验证闭环", "把外部执行器动作计为 SUT 能力"]
+      "g_group": "G2",
+      "ability": "自定位 / 姿态航向估计",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能在{jd-0.2 工作空间结构}中全程维护位姿态势，在{jd-0.3 扰动谱}退化条件下按{jd-6a.2 位姿质量先验}识别 GNSS 退化、航向漂移或低置信，并按{jd-0.5 人机确认协议}请人确认。",
+      "jd_refs": [
+        "jd-0.2",
+        "jd-0.3",
+        "jd-6a.2",
+        "jd-0.5"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "cumulative_responsibilities": [
+        "能基于{jd-6a.1 定位源需求}中的可用源，按{jd-6a.2 位姿质量先验}上报自身位置、高度、姿态、航向及定位质量。",
+        "能在执行片段内连续维护{jd-6a.1 定位源需求}对应的融合位姿态势，并按{jd-6a.2 位姿质量先验}提示漂移、跳变或失锁。",
+        "能在{jd-0.2 工作空间结构}中全程维护位姿态势，在{jd-0.3 扰动谱}退化条件下按{jd-6a.2 位姿质量先验}识别 GNSS 退化、航向漂移或低置信，并按{jd-0.5 人机确认协议}请人确认。"
+      ],
+      "required_jd_ids": [
+        "jd-6a.1",
+        "jd-6a.2",
+        "jd-0.2",
+        "jd-0.3",
+        "jd-0.5"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1205"
+    },
+    {
+      "cell": "A6a×L4",
+      "a_id": "A6a",
+      "level": "L4",
+      "g_group": "G2",
+      "ability": "自定位 / 姿态航向估计",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能在自定位异常时自主从{jd-6a.3 定位策略适用集}中选择处置（切换源 / 重定位 / 地标观测 / 等待收敛 / 外部辅助），并验证位姿可信度。",
+      "jd_refs": [
+        "jd-6a.3"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3",
+        "L4"
+      ],
+      "cumulative_responsibilities": [
+        "能基于{jd-6a.1 定位源需求}中的可用源，按{jd-6a.2 位姿质量先验}上报自身位置、高度、姿态、航向及定位质量。",
+        "能在执行片段内连续维护{jd-6a.1 定位源需求}对应的融合位姿态势，并按{jd-6a.2 位姿质量先验}提示漂移、跳变或失锁。",
+        "能在{jd-0.2 工作空间结构}中全程维护位姿态势，在{jd-0.3 扰动谱}退化条件下按{jd-6a.2 位姿质量先验}识别 GNSS 退化、航向漂移或低置信，并按{jd-0.5 人机确认协议}请人确认。",
+        "能在自定位异常时自主从{jd-6a.3 定位策略适用集}中选择处置（切换源 / 重定位 / 地标观测 / 等待收敛 / 外部辅助），并验证位姿可信度。"
+      ],
+      "required_jd_ids": [
+        "jd-6a.1",
+        "jd-6a.2",
+        "jd-0.2",
+        "jd-0.3",
+        "jd-0.5",
+        "jd-6a.3"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1220"
+    },
+    {
+      "cell": "A6b×L1",
+      "a_id": "A6b",
+      "level": "L1",
+      "g_group": "G2",
+      "ability": "相对定位 / 方位关系估计",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能用{jd-6b.2 相对几何感知机制}估计目标、障碍或他机相对自身的距离、方位和朝向，并按{jd-6b.1 相对几何先验}评估可信度。",
+      "jd_refs": [
+        "jd-6b.2",
+        "jd-6b.1"
+      ],
+      "cumulative_levels": [
+        "L1"
+      ],
+      "cumulative_responsibilities": [
+        "能用{jd-6b.2 相对几何感知机制}估计目标、障碍或他机相对自身的距离、方位和朝向，并按{jd-6b.1 相对几何先验}评估可信度。"
+      ],
+      "required_jd_ids": [
+        "jd-6b.2",
+        "jd-6b.1"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1233"
     },
     {
       "cell": "A6b×L2",
-      "ability": "A6b",
+      "a_id": "A6b",
       "level": "L2",
-      "name": "连续相对几何维护",
-      "responsibility": "连续维护与中心线、目标或检查面的相对距离、方位、横向/垂向偏差和质量状态。",
-      "excludes": ["相对定位异常后的自主恢复"]
+      "g_group": "G2",
+      "ability": "相对定位 / 方位关系估计",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能在执行片段内连续维护相对位置、方位、距离变化和遮挡关系，并按{jd-6b.1 相对几何先验}的范围与精度要求进行评估。",
+      "jd_refs": [
+        "jd-6b.1"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2"
+      ],
+      "cumulative_responsibilities": [
+        "能用{jd-6b.2 相对几何感知机制}估计目标、障碍或他机相对自身的距离、方位和朝向，并按{jd-6b.1 相对几何先验}评估可信度。",
+        "能在执行片段内连续维护相对位置、方位、距离变化和遮挡关系，并按{jd-6b.1 相对几何先验}的范围与精度要求进行评估。"
+      ],
+      "required_jd_ids": [
+        "jd-6b.2",
+        "jd-6b.1"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1244"
     },
     {
-      "cell": "A7×L1",
-      "ability": "A7",
+      "cell": "A6b×L3",
+      "a_id": "A6b",
+      "level": "L3",
+      "g_group": "G2",
+      "ability": "相对定位 / 方位关系估计",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能在任务过程中维护相对几何态势，在{jd-0.3 扰动谱}引起的遮挡或光照变化下，按{jd-6b.1 相对几何先验}识别方位跳变、距离异常或位置冲突，并按{jd-0.5 人机确认协议}请人确认。",
+      "jd_refs": [
+        "jd-0.3",
+        "jd-6b.1",
+        "jd-0.5"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "cumulative_responsibilities": [
+        "能用{jd-6b.2 相对几何感知机制}估计目标、障碍或他机相对自身的距离、方位和朝向，并按{jd-6b.1 相对几何先验}评估可信度。",
+        "能在执行片段内连续维护相对位置、方位、距离变化和遮挡关系，并按{jd-6b.1 相对几何先验}的范围与精度要求进行评估。",
+        "能在任务过程中维护相对几何态势，在{jd-0.3 扰动谱}引起的遮挡或光照变化下，按{jd-6b.1 相对几何先验}识别方位跳变、距离异常或位置冲突，并按{jd-0.5 人机确认协议}请人确认。"
+      ],
+      "required_jd_ids": [
+        "jd-6b.2",
+        "jd-6b.1",
+        "jd-0.3",
+        "jd-0.5"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1255"
+    },
+    {
+      "cell": "A6b×L4",
+      "a_id": "A6b",
+      "level": "L4",
+      "g_group": "G2",
+      "ability": "相对定位 / 方位关系估计",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能在相对关系不可信时自主从{jd-6b.3 相对定位策略适用集}中选择处置（换视角 / 重观测 / 扩搜 / 他机补观测 / 重新关联），并验证相对几何可信度。",
+      "jd_refs": [
+        "jd-6b.3"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3",
+        "L4"
+      ],
+      "cumulative_responsibilities": [
+        "能用{jd-6b.2 相对几何感知机制}估计目标、障碍或他机相对自身的距离、方位和朝向，并按{jd-6b.1 相对几何先验}评估可信度。",
+        "能在执行片段内连续维护相对位置、方位、距离变化和遮挡关系，并按{jd-6b.1 相对几何先验}的范围与精度要求进行评估。",
+        "能在任务过程中维护相对几何态势，在{jd-0.3 扰动谱}引起的遮挡或光照变化下，按{jd-6b.1 相对几何先验}识别方位跳变、距离异常或位置冲突，并按{jd-0.5 人机确认协议}请人确认。",
+        "能在相对关系不可信时自主从{jd-6b.3 相对定位策略适用集}中选择处置（换视角 / 重观测 / 扩搜 / 他机补观测 / 重新关联），并验证相对几何可信度。"
+      ],
+      "required_jd_ids": [
+        "jd-6b.2",
+        "jd-6b.1",
+        "jd-0.3",
+        "jd-0.5",
+        "jd-6b.3"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1269"
+    },
+    {
+      "cell": "A11×L1",
+      "a_id": "A11",
       "level": "L1",
-      "name": "航路建议",
-      "responsibility": "输出航路可行性、约束、风险或航段偏差提示。",
-      "excludes": ["自主执行航路", "闭环导航控制"]
+      "g_group": "G2",
+      "ability": "健康 / 能源 / 资源管理",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能基于{jd-11.1 资源消耗包络}提示电量、链路、传感器、执行器、{jd-0.9 载荷集}和算力的基础状态及风险。",
+      "jd_refs": [
+        "jd-11.1",
+        "jd-0.9"
+      ],
+      "cumulative_levels": [
+        "L1"
+      ],
+      "cumulative_responsibilities": [
+        "能基于{jd-11.1 资源消耗包络}提示电量、链路、传感器、执行器、{jd-0.9 载荷集}和算力的基础状态及风险。"
+      ],
+      "required_jd_ids": [
+        "jd-11.1",
+        "jd-0.9"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1282"
     },
     {
-      "cell": "A7×L2",
-      "ability": "A7",
+      "cell": "A11×L2",
+      "a_id": "A11",
       "level": "L2",
-      "name": "固定航迹执行与模式切换",
-      "responsibility": "执行已给定的固定航迹，并按照上游已选择的模式和目标切换固定路线。",
-      "excludes": ["低层速度姿态控制", "未声明的动态重规划"]
+      "g_group": "G2",
+      "ability": "健康 / 能源 / 资源管理",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能按{jd-11.1 资源消耗包络}和{jd-11.2 资源预警 / 预留策略}判断资源是否足以完成当前执行片段。",
+      "jd_refs": [
+        "jd-11.1",
+        "jd-11.2"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2"
+      ],
+      "cumulative_responsibilities": [
+        "能基于{jd-11.1 资源消耗包络}提示电量、链路、传感器、执行器、{jd-0.9 载荷集}和算力的基础状态及风险。",
+        "能按{jd-11.1 资源消耗包络}和{jd-11.2 资源预警 / 预留策略}判断资源是否足以完成当前执行片段。"
+      ],
+      "required_jd_ids": [
+        "jd-11.1",
+        "jd-0.9",
+        "jd-11.2"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1293"
     },
     {
-      "cell": "A8×L1",
-      "ability": "A8",
-      "level": "L1",
-      "name": "飞行状态与安全包络建议",
-      "responsibility": "判断当前状态是否位于控制约束与安全包络内，并输出速度、姿态或控制调整建议。",
-      "excludes": ["闭环执行控制调整"]
+      "cell": "A11×L3",
+      "a_id": "A11",
+      "level": "L3",
+      "g_group": "G2",
+      "ability": "健康 / 能源 / 资源管理",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能在{jd-0.1 任务时长}内全程预测资源余量与健康状态变化，按{jd-11.2 资源预警 / 预留策略}识别低电趋势、链路退化、载荷异常、算力拥塞或热风险，并按{jd-0.5 人机确认协议}请人确认。",
+      "jd_refs": [
+        "jd-0.1",
+        "jd-11.2",
+        "jd-0.5"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "cumulative_responsibilities": [
+        "能基于{jd-11.1 资源消耗包络}提示电量、链路、传感器、执行器、{jd-0.9 载荷集}和算力的基础状态及风险。",
+        "能按{jd-11.1 资源消耗包络}和{jd-11.2 资源预警 / 预留策略}判断资源是否足以完成当前执行片段。",
+        "能在{jd-0.1 任务时长}内全程预测资源余量与健康状态变化，按{jd-11.2 资源预警 / 预留策略}识别低电趋势、链路退化、载荷异常、算力拥塞或热风险，并按{jd-0.5 人机确认协议}请人确认。"
+      ],
+      "required_jd_ids": [
+        "jd-11.1",
+        "jd-0.9",
+        "jd-11.2",
+        "jd-0.1",
+        "jd-0.5"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1305"
     },
     {
       "cell": "A11×L4",
-      "ability": "A11",
+      "a_id": "A11",
       "level": "L4",
-      "name": "资源风险自主决策与终态验证",
-      "responsibility": "持续估算资源与可达性，自主选择允许的兜底策略和目标，并在处置后验证安全终态。",
-      "excludes": ["把路线低层执行性能计为 A11"]
+      "g_group": "G2",
+      "ability": "健康 / 能源 / 资源管理",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能在资源或健康异常时自主从{jd-11.3 资源处置策略适用集}中选择处置（降载 / 切链路 / 关闭非关键载荷 / 降采样率 / 保留返航窗口 / 等待冷却 / 请求维护），并验证新状态。",
+      "jd_refs": [
+        "jd-11.3"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3",
+        "L4"
+      ],
+      "cumulative_responsibilities": [
+        "能基于{jd-11.1 资源消耗包络}提示电量、链路、传感器、执行器、{jd-0.9 载荷集}和算力的基础状态及风险。",
+        "能按{jd-11.1 资源消耗包络}和{jd-11.2 资源预警 / 预留策略}判断资源是否足以完成当前执行片段。",
+        "能在{jd-0.1 任务时长}内全程预测资源余量与健康状态变化，按{jd-11.2 资源预警 / 预留策略}识别低电趋势、链路退化、载荷异常、算力拥塞或热风险，并按{jd-0.5 人机确认协议}请人确认。",
+        "能在资源或健康异常时自主从{jd-11.3 资源处置策略适用集}中选择处置（降载 / 切链路 / 关闭非关键载荷 / 降采样率 / 保留返航窗口 / 等待冷却 / 请求维护），并验证新状态。"
+      ],
+      "required_jd_ids": [
+        "jd-11.1",
+        "jd-0.9",
+        "jd-11.2",
+        "jd-0.1",
+        "jd-0.5",
+        "jd-11.3"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1319"
+    },
+    {
+      "cell": "A7×L1",
+      "a_id": "A7",
+      "level": "L1",
+      "g_group": "G3",
+      "ability": "导航 / 航迹 / 轨迹管理",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能用{jd-7.2 导航工作机制}维持局部运动目标，例如高度、方向、速度或悬停点。",
+      "jd_refs": [
+        "jd-7.2"
+      ],
+      "cumulative_levels": [
+        "L1"
+      ],
+      "cumulative_responsibilities": [
+        "能用{jd-7.2 导航工作机制}维持局部运动目标，例如高度、方向、速度或悬停点。"
+      ],
+      "required_jd_ids": [
+        "jd-7.2"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1332"
+    },
+    {
+      "cell": "A7×L2",
+      "a_id": "A7",
+      "level": "L2",
+      "g_group": "G3",
+      "ability": "导航 / 航迹 / 轨迹管理",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能维护{jd-7.1 航路拓扑}中的航点、线段或轨迹片段，并按{jd-7.2 导航工作机制}报告偏航、超界或不可达。",
+      "jd_refs": [
+        "jd-7.1",
+        "jd-7.2"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2"
+      ],
+      "cumulative_responsibilities": [
+        "能用{jd-7.2 导航工作机制}维持局部运动目标，例如高度、方向、速度或悬停点。",
+        "能维护{jd-7.1 航路拓扑}中的航点、线段或轨迹片段，并按{jd-7.2 导航工作机制}报告偏航、超界或不可达。"
+      ],
+      "required_jd_ids": [
+        "jd-7.2",
+        "jd-7.1"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1342"
+    },
+    {
+      "cell": "A7×L3",
+      "a_id": "A7",
+      "level": "L3",
+      "g_group": "G3",
+      "ability": "导航 / 航迹 / 轨迹管理",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能在{jd-7.1 航路拓扑}中全程维护航迹 / 轨迹态势，在{jd-0.3 扰动谱}的风扰下按{jd-7.3 轨迹重规划判据}识别持续偏航、路径不可行或轨迹冲突，并按{jd-0.5 人机确认协议}请人确认。",
+      "jd_refs": [
+        "jd-7.1",
+        "jd-0.3",
+        "jd-7.3",
+        "jd-0.5"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "cumulative_responsibilities": [
+        "能用{jd-7.2 导航工作机制}维持局部运动目标，例如高度、方向、速度或悬停点。",
+        "能维护{jd-7.1 航路拓扑}中的航点、线段或轨迹片段，并按{jd-7.2 导航工作机制}报告偏航、超界或不可达。",
+        "能在{jd-7.1 航路拓扑}中全程维护航迹 / 轨迹态势，在{jd-0.3 扰动谱}的风扰下按{jd-7.3 轨迹重规划判据}识别持续偏航、路径不可行或轨迹冲突，并按{jd-0.5 人机确认协议}请人确认。"
+      ],
+      "required_jd_ids": [
+        "jd-7.2",
+        "jd-7.1",
+        "jd-0.3",
+        "jd-7.3",
+        "jd-0.5"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1354"
+    },
+    {
+      "cell": "A7×L4",
+      "a_id": "A7",
+      "level": "L4",
+      "g_group": "G3",
+      "ability": "导航 / 航迹 / 轨迹管理",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能在{jd-7.3 轨迹重规划判据}触发时，自主从{jd-7.4 航迹处置策略适用集}中选择处置（改高度 / 改航迹 / 等待 / 悬停 / 增大裕度），并验证新航迹可信。",
+      "jd_refs": [
+        "jd-7.3",
+        "jd-7.4"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3",
+        "L4"
+      ],
+      "cumulative_responsibilities": [
+        "能用{jd-7.2 导航工作机制}维持局部运动目标，例如高度、方向、速度或悬停点。",
+        "能维护{jd-7.1 航路拓扑}中的航点、线段或轨迹片段，并按{jd-7.2 导航工作机制}报告偏航、超界或不可达。",
+        "能在{jd-7.1 航路拓扑}中全程维护航迹 / 轨迹态势，在{jd-0.3 扰动谱}的风扰下按{jd-7.3 轨迹重规划判据}识别持续偏航、路径不可行或轨迹冲突，并按{jd-0.5 人机确认协议}请人确认。",
+        "能在{jd-7.3 轨迹重规划判据}触发时，自主从{jd-7.4 航迹处置策略适用集}中选择处置（改高度 / 改航迹 / 等待 / 悬停 / 增大裕度），并验证新航迹可信。"
+      ],
+      "required_jd_ids": [
+        "jd-7.2",
+        "jd-7.1",
+        "jd-0.3",
+        "jd-7.3",
+        "jd-0.5",
+        "jd-7.4"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1369"
+    },
+    {
+      "cell": "A8×L1",
+      "a_id": "A8",
+      "level": "L1",
+      "g_group": "G3",
+      "ability": "飞行控制 / 执行机构",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能基于{jd-8.2 控制工作机制}理解飞控级控制状态（稳定 / 定高 / 悬停 / 姿态保持），按{jd-8.1 控制质量先验}识别偏差或异常并提出修正。",
+      "jd_refs": [
+        "jd-8.2",
+        "jd-8.1"
+      ],
+      "cumulative_levels": [
+        "L1"
+      ],
+      "cumulative_responsibilities": [
+        "能基于{jd-8.2 控制工作机制}理解飞控级控制状态（稳定 / 定高 / 悬停 / 姿态保持），按{jd-8.1 控制质量先验}识别偏差或异常并提出修正。"
+      ],
+      "required_jd_ids": [
+        "jd-8.2",
+        "jd-8.1"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1383"
+    },
+    {
+      "cell": "A8×L2",
+      "a_id": "A8",
+      "level": "L2",
+      "g_group": "G3",
+      "ability": "飞行控制 / 执行机构",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能按{jd-8.2 控制工作机制}持续执行片段内的速度、高度、姿态和航向控制指令，并按{jd-8.1 控制质量先验}报告控制误差。",
+      "jd_refs": [
+        "jd-8.2",
+        "jd-8.1"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2"
+      ],
+      "cumulative_responsibilities": [
+        "能基于{jd-8.2 控制工作机制}理解飞控级控制状态（稳定 / 定高 / 悬停 / 姿态保持），按{jd-8.1 控制质量先验}识别偏差或异常并提出修正。",
+        "能按{jd-8.2 控制工作机制}持续执行片段内的速度、高度、姿态和航向控制指令，并按{jd-8.1 控制质量先验}报告控制误差。"
+      ],
+      "required_jd_ids": [
+        "jd-8.2",
+        "jd-8.1"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1394"
+    },
+    {
+      "cell": "A8×L3",
+      "a_id": "A8",
+      "level": "L3",
+      "g_group": "G3",
+      "ability": "飞行控制 / 执行机构",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能在任务过程中维护控制质量，按{jd-8.1 控制质量先验}识别{jd-0.3 扰动谱}引起的饱和、振荡、姿态异常、风扰或执行余量下降，并按{jd-0.5 人机确认协议}请人确认。",
+      "jd_refs": [
+        "jd-8.1",
+        "jd-0.3",
+        "jd-0.5"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "cumulative_responsibilities": [
+        "能基于{jd-8.2 控制工作机制}理解飞控级控制状态（稳定 / 定高 / 悬停 / 姿态保持），按{jd-8.1 控制质量先验}识别偏差或异常并提出修正。",
+        "能按{jd-8.2 控制工作机制}持续执行片段内的速度、高度、姿态和航向控制指令，并按{jd-8.1 控制质量先验}报告控制误差。",
+        "能在任务过程中维护控制质量，按{jd-8.1 控制质量先验}识别{jd-0.3 扰动谱}引起的饱和、振荡、姿态异常、风扰或执行余量下降，并按{jd-0.5 人机确认协议}请人确认。"
+      ],
+      "required_jd_ids": [
+        "jd-8.2",
+        "jd-8.1",
+        "jd-0.3",
+        "jd-0.5"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1406"
+    },
+    {
+      "cell": "A8×L4",
+      "a_id": "A8",
+      "level": "L4",
+      "g_group": "G3",
+      "ability": "飞行控制 / 执行机构",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能在控制异常时自主从{jd-8.3 控制处置策略适用集}中选择处置（降速 / 增大裕度 / 切换控制模式 / 等待稳定 / 请求检查），并验证控制状态可信。",
+      "jd_refs": [
+        "jd-8.3"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3",
+        "L4"
+      ],
+      "cumulative_responsibilities": [
+        "能基于{jd-8.2 控制工作机制}理解飞控级控制状态（稳定 / 定高 / 悬停 / 姿态保持），按{jd-8.1 控制质量先验}识别偏差或异常并提出修正。",
+        "能按{jd-8.2 控制工作机制}持续执行片段内的速度、高度、姿态和航向控制指令，并按{jd-8.1 控制质量先验}报告控制误差。",
+        "能在任务过程中维护控制质量，按{jd-8.1 控制质量先验}识别{jd-0.3 扰动谱}引起的饱和、振荡、姿态异常、风扰或执行余量下降，并按{jd-0.5 人机确认协议}请人确认。",
+        "能在控制异常时自主从{jd-8.3 控制处置策略适用集}中选择处置（降速 / 增大裕度 / 切换控制模式 / 等待稳定 / 请求检查），并验证控制状态可信。"
+      ],
+      "required_jd_ids": [
+        "jd-8.2",
+        "jd-8.1",
+        "jd-0.3",
+        "jd-0.5",
+        "jd-8.3"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1420"
+    },
+    {
+      "cell": "A9a×L1",
+      "a_id": "A9a",
+      "level": "L1",
+      "g_group": "G4",
+      "ability": "载荷动作执行",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能基于{jd-0.9 载荷集}发出{jd-9a.1 载荷动作目录}中的单次动作工具调用（拍照 / 喊话 / 投送 / 采样等），不保证下游执行结果。",
+      "jd_refs": [
+        "jd-0.9",
+        "jd-9a.1"
+      ],
+      "cumulative_levels": [
+        "L1"
+      ],
+      "cumulative_responsibilities": [
+        "能基于{jd-0.9 载荷集}发出{jd-9a.1 载荷动作目录}中的单次动作工具调用（拍照 / 喊话 / 投送 / 采样等），不保证下游执行结果。"
+      ],
+      "required_jd_ids": [
+        "jd-0.9",
+        "jd-9a.1"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1433"
+    },
+    {
+      "cell": "A9a×L2",
+      "a_id": "A9a",
+      "level": "L2",
+      "g_group": "G4",
+      "ability": "载荷动作执行",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能连续执行{jd-9a.1 载荷动作目录}中一个片段的载荷动作，并按{jd-9a.2 动作时序先验}维护动作进度、失败、重试和参数状态。",
+      "jd_refs": [
+        "jd-9a.1",
+        "jd-9a.2"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2"
+      ],
+      "cumulative_responsibilities": [
+        "能基于{jd-0.9 载荷集}发出{jd-9a.1 载荷动作目录}中的单次动作工具调用（拍照 / 喊话 / 投送 / 采样等），不保证下游执行结果。",
+        "能连续执行{jd-9a.1 载荷动作目录}中一个片段的载荷动作，并按{jd-9a.2 动作时序先验}维护动作进度、失败、重试和参数状态。"
+      ],
+      "required_jd_ids": [
+        "jd-0.9",
+        "jd-9a.1",
+        "jd-9a.2"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1444"
+    },
+    {
+      "cell": "A9a×L3",
+      "a_id": "A9a",
+      "level": "L3",
+      "g_group": "G4",
+      "ability": "载荷动作执行",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能维护任务过程中的载荷动作态势，按{jd-9a.2 动作时序先验}识别漏执行、重复、时序错位、云台或载荷异常，并按{jd-0.5 人机确认协议}请人确认是否重试或跳过。",
+      "jd_refs": [
+        "jd-9a.2",
+        "jd-0.5"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "cumulative_responsibilities": [
+        "能基于{jd-0.9 载荷集}发出{jd-9a.1 载荷动作目录}中的单次动作工具调用（拍照 / 喊话 / 投送 / 采样等），不保证下游执行结果。",
+        "能连续执行{jd-9a.1 载荷动作目录}中一个片段的载荷动作，并按{jd-9a.2 动作时序先验}维护动作进度、失败、重试和参数状态。",
+        "能维护任务过程中的载荷动作态势，按{jd-9a.2 动作时序先验}识别漏执行、重复、时序错位、云台或载荷异常，并按{jd-0.5 人机确认协议}请人确认是否重试或跳过。"
+      ],
+      "required_jd_ids": [
+        "jd-0.9",
+        "jd-9a.1",
+        "jd-9a.2",
+        "jd-0.5"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1456"
+    },
+    {
+      "cell": "A9a×L4",
+      "a_id": "A9a",
+      "level": "L4",
+      "g_group": "G4",
+      "ability": "载荷动作执行",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能在载荷动作异常时自主从{jd-9a.3 载荷处置策略适用集}中选择处置（重试 / 换角度 / 调参数 / 切模式 / 暂停 / 请求检查），并验证新动作状态。",
+      "jd_refs": [
+        "jd-9a.3"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3",
+        "L4"
+      ],
+      "cumulative_responsibilities": [
+        "能基于{jd-0.9 载荷集}发出{jd-9a.1 载荷动作目录}中的单次动作工具调用（拍照 / 喊话 / 投送 / 采样等），不保证下游执行结果。",
+        "能连续执行{jd-9a.1 载荷动作目录}中一个片段的载荷动作，并按{jd-9a.2 动作时序先验}维护动作进度、失败、重试和参数状态。",
+        "能维护任务过程中的载荷动作态势，按{jd-9a.2 动作时序先验}识别漏执行、重复、时序错位、云台或载荷异常，并按{jd-0.5 人机确认协议}请人确认是否重试或跳过。",
+        "能在载荷动作异常时自主从{jd-9a.3 载荷处置策略适用集}中选择处置（重试 / 换角度 / 调参数 / 切模式 / 暂停 / 请求检查），并验证新动作状态。"
+      ],
+      "required_jd_ids": [
+        "jd-0.9",
+        "jd-9a.1",
+        "jd-9a.2",
+        "jd-0.5",
+        "jd-9a.3"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1469"
+    },
+    {
+      "cell": "A9b×L1",
+      "a_id": "A9b",
+      "level": "L1",
+      "g_group": "G4",
+      "ability": "载荷成果生成 / 远端呈现",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能在载荷工具调用返回时识别并展示{jd-9b.1 成果格式}中的单次成果（图像 / 视频首帧 / 喊话记录 / 投送确认 / 采样记录），不主动维护或验证质量。",
+      "jd_refs": [
+        "jd-9b.1"
+      ],
+      "cumulative_levels": [
+        "L1"
+      ],
+      "cumulative_responsibilities": [
+        "能在载荷工具调用返回时识别并展示{jd-9b.1 成果格式}中的单次成果（图像 / 视频首帧 / 喊话记录 / 投送确认 / 采样记录），不主动维护或验证质量。"
+      ],
+      "required_jd_ids": [
+        "jd-9b.1"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1482"
+    },
+    {
+      "cell": "A9b×L2",
+      "a_id": "A9b",
+      "level": "L2",
+      "g_group": "G4",
+      "ability": "载荷成果生成 / 远端呈现",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能维护执行片段内与{jd-9b.1 成果格式}对应的图像序列、视频流、检测结果、覆盖状态、投送确认或采样记录。",
+      "jd_refs": [
+        "jd-9b.1"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2"
+      ],
+      "cumulative_responsibilities": [
+        "能在载荷工具调用返回时识别并展示{jd-9b.1 成果格式}中的单次成果（图像 / 视频首帧 / 喊话记录 / 投送确认 / 采样记录），不主动维护或验证质量。",
+        "能维护执行片段内与{jd-9b.1 成果格式}对应的图像序列、视频流、检测结果、覆盖状态、投送确认或采样记录。"
+      ],
+      "required_jd_ids": [
+        "jd-9b.1"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1492"
+    },
+    {
+      "cell": "A9b×L3",
+      "a_id": "A9b",
+      "level": "L3",
+      "g_group": "G4",
+      "ability": "载荷成果生成 / 远端呈现",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能维护任务过程中的成果态势，按{jd-9b.2 覆盖完整度判据}识别覆盖不足、质量下降、视频无画面、报告缺项、低置信或成果缺失，并按{jd-0.5 人机确认协议}请{jd-0.4 在场人角色}确认是否补采或复核。",
+      "jd_refs": [
+        "jd-9b.2",
+        "jd-0.5",
+        "jd-0.4"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "cumulative_responsibilities": [
+        "能在载荷工具调用返回时识别并展示{jd-9b.1 成果格式}中的单次成果（图像 / 视频首帧 / 喊话记录 / 投送确认 / 采样记录），不主动维护或验证质量。",
+        "能维护执行片段内与{jd-9b.1 成果格式}对应的图像序列、视频流、检测结果、覆盖状态、投送确认或采样记录。",
+        "能维护任务过程中的成果态势，按{jd-9b.2 覆盖完整度判据}识别覆盖不足、质量下降、视频无画面、报告缺项、低置信或成果缺失，并按{jd-0.5 人机确认协议}请{jd-0.4 在场人角色}确认是否补采或复核。"
+      ],
+      "required_jd_ids": [
+        "jd-9b.1",
+        "jd-9b.2",
+        "jd-0.5",
+        "jd-0.4"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1503"
+    },
+    {
+      "cell": "A9b×L4",
+      "a_id": "A9b",
+      "level": "L4",
+      "g_group": "G4",
+      "ability": "载荷成果生成 / 远端呈现",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能在成果异常时自主从{jd-9b.3 成果处置策略适用集}中选择处置（重拍 / 补扫 / 换角度 / 重生成报告 / 切换成果格式 / 重投 / 重采），并验证新成果按{jd-0.7 任务完成判据}可信。",
+      "jd_refs": [
+        "jd-9b.3",
+        "jd-0.7"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3",
+        "L4"
+      ],
+      "cumulative_responsibilities": [
+        "能在载荷工具调用返回时识别并展示{jd-9b.1 成果格式}中的单次成果（图像 / 视频首帧 / 喊话记录 / 投送确认 / 采样记录），不主动维护或验证质量。",
+        "能维护执行片段内与{jd-9b.1 成果格式}对应的图像序列、视频流、检测结果、覆盖状态、投送确认或采样记录。",
+        "能维护任务过程中的成果态势，按{jd-9b.2 覆盖完整度判据}识别覆盖不足、质量下降、视频无画面、报告缺项、低置信或成果缺失，并按{jd-0.5 人机确认协议}请{jd-0.4 在场人角色}确认是否补采或复核。",
+        "能在成果异常时自主从{jd-9b.3 成果处置策略适用集}中选择处置（重拍 / 补扫 / 换角度 / 重生成报告 / 切换成果格式 / 重投 / 重采），并验证新成果按{jd-0.7 任务完成判据}可信。"
+      ],
+      "required_jd_ids": [
+        "jd-9b.1",
+        "jd-9b.2",
+        "jd-0.5",
+        "jd-0.4",
+        "jd-9b.3",
+        "jd-0.7"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1517"
+    },
+    {
+      "cell": "A10×L1",
+      "a_id": "A10",
+      "level": "L1",
+      "g_group": "G5",
+      "ability": "通信 / C2 / 遥测",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能展示{jd-0.8 通信基建}的链路、C2 和遥测状态，以及{jd-10.2 地面站拓扑}中的地面站基础状态与风险。",
+      "jd_refs": [
+        "jd-0.8",
+        "jd-10.2"
+      ],
+      "cumulative_levels": [
+        "L1"
+      ],
+      "cumulative_responsibilities": [
+        "能展示{jd-0.8 通信基建}的链路、C2 和遥测状态，以及{jd-10.2 地面站拓扑}中的地面站基础状态与风险。"
+      ],
+      "required_jd_ids": [
+        "jd-0.8",
+        "jd-10.2"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1531"
+    },
+    {
+      "cell": "A10×L2",
+      "a_id": "A10",
+      "level": "L2",
+      "g_group": "G5",
+      "ability": "通信 / C2 / 遥测",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能维护执行片段内相对于{jd-10.1 链路质量先验}的链路质量、延迟、丢包、遥测连续性和 C2 可用性。",
+      "jd_refs": [
+        "jd-10.1"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2"
+      ],
+      "cumulative_responsibilities": [
+        "能展示{jd-0.8 通信基建}的链路、C2 和遥测状态，以及{jd-10.2 地面站拓扑}中的地面站基础状态与风险。",
+        "能维护执行片段内相对于{jd-10.1 链路质量先验}的链路质量、延迟、丢包、遥测连续性和 C2 可用性。"
+      ],
+      "required_jd_ids": [
+        "jd-0.8",
+        "jd-10.2",
+        "jd-10.1"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1542"
+    },
+    {
+      "cell": "A10×L3",
+      "a_id": "A10",
+      "level": "L3",
+      "g_group": "G5",
+      "ability": "通信 / C2 / 遥测",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能维护任务过程中的通信 / 遥测态势，按{jd-10.1 链路质量先验}识别链路退化、遥测间断、C2 不可用或{jd-10.2 地面站拓扑}异常，并按{jd-0.5 人机确认协议}请人确认。",
+      "jd_refs": [
+        "jd-10.1",
+        "jd-10.2",
+        "jd-0.5"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "cumulative_responsibilities": [
+        "能展示{jd-0.8 通信基建}的链路、C2 和遥测状态，以及{jd-10.2 地面站拓扑}中的地面站基础状态与风险。",
+        "能维护执行片段内相对于{jd-10.1 链路质量先验}的链路质量、延迟、丢包、遥测连续性和 C2 可用性。",
+        "能维护任务过程中的通信 / 遥测态势，按{jd-10.1 链路质量先验}识别链路退化、遥测间断、C2 不可用或{jd-10.2 地面站拓扑}异常，并按{jd-0.5 人机确认协议}请人确认。"
+      ],
+      "required_jd_ids": [
+        "jd-0.8",
+        "jd-10.2",
+        "jd-10.1",
+        "jd-0.5"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1553"
+    },
+    {
+      "cell": "A10×L4",
+      "a_id": "A10",
+      "level": "L4",
+      "g_group": "G5",
+      "ability": "通信 / C2 / 遥测",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能在通信或遥测异常时自主从{jd-10.3 通信处置策略适用集}中选择处置（切链路 / 切备用站 / 降低遥测频率 / 缓存数据 / 执行链路切换），并验证新链路可信。",
+      "jd_refs": [
+        "jd-10.3"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3",
+        "L4"
+      ],
+      "cumulative_responsibilities": [
+        "能展示{jd-0.8 通信基建}的链路、C2 和遥测状态，以及{jd-10.2 地面站拓扑}中的地面站基础状态与风险。",
+        "能维护执行片段内相对于{jd-10.1 链路质量先验}的链路质量、延迟、丢包、遥测连续性和 C2 可用性。",
+        "能维护任务过程中的通信 / 遥测态势，按{jd-10.1 链路质量先验}识别链路退化、遥测间断、C2 不可用或{jd-10.2 地面站拓扑}异常，并按{jd-0.5 人机确认协议}请人确认。",
+        "能在通信或遥测异常时自主从{jd-10.3 通信处置策略适用集}中选择处置（切链路 / 切备用站 / 降低遥测频率 / 缓存数据 / 执行链路切换），并验证新链路可信。"
+      ],
+      "required_jd_ids": [
+        "jd-0.8",
+        "jd-10.2",
+        "jd-10.1",
+        "jd-0.5",
+        "jd-10.3"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1567"
+    },
+    {
+      "cell": "A13×L1",
+      "a_id": "A13",
+      "level": "L1",
+      "g_group": "G5",
+      "ability": "空域 / 交通 / 合规接入",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能展示{jd-13.4 授权生命周期}、{jd-13.2 地理围栏集}、{jd-13.1 空域类别}和{jd-13.3 交通信息源需求}的基础状态及风险。",
+      "jd_refs": [
+        "jd-13.4",
+        "jd-13.2",
+        "jd-13.1",
+        "jd-13.3"
+      ],
+      "cumulative_levels": [
+        "L1"
+      ],
+      "cumulative_responsibilities": [
+        "能展示{jd-13.4 授权生命周期}、{jd-13.2 地理围栏集}、{jd-13.1 空域类别}和{jd-13.3 交通信息源需求}的基础状态及风险。"
+      ],
+      "required_jd_ids": [
+        "jd-13.4",
+        "jd-13.2",
+        "jd-13.1",
+        "jd-13.3"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1580"
+    },
+    {
+      "cell": "A13×L2",
+      "a_id": "A13",
+      "level": "L2",
+      "g_group": "G5",
+      "ability": "空域 / 交通 / 合规接入",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能维护执行片段内{jd-13.4 授权生命周期}的边界，以及{jd-13.2 地理围栏集}、{jd-13.3 交通信息源需求}和{jd-0.6 合规域}的约束状态。",
+      "jd_refs": [
+        "jd-13.4",
+        "jd-13.2",
+        "jd-13.3",
+        "jd-0.6"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2"
+      ],
+      "cumulative_responsibilities": [
+        "能展示{jd-13.4 授权生命周期}、{jd-13.2 地理围栏集}、{jd-13.1 空域类别}和{jd-13.3 交通信息源需求}的基础状态及风险。",
+        "能维护执行片段内{jd-13.4 授权生命周期}的边界，以及{jd-13.2 地理围栏集}、{jd-13.3 交通信息源需求}和{jd-0.6 合规域}的约束状态。"
+      ],
+      "required_jd_ids": [
+        "jd-13.4",
+        "jd-13.2",
+        "jd-13.1",
+        "jd-13.3",
+        "jd-0.6"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1593"
+    },
+    {
+      "cell": "A13×L3",
+      "a_id": "A13",
+      "level": "L3",
+      "g_group": "G5",
+      "ability": "空域 / 交通 / 合规接入",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能维护任务过程中的空域 / 合规态势，识别{jd-13.4 授权生命周期}临近失效、{jd-13.2 地理围栏集}冲突或{jd-13.3 交通信息源需求}服务异常，并按{jd-0.5 人机确认协议}请人进行合规确认。",
+      "jd_refs": [
+        "jd-13.4",
+        "jd-13.2",
+        "jd-13.3",
+        "jd-0.5"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "cumulative_responsibilities": [
+        "能展示{jd-13.4 授权生命周期}、{jd-13.2 地理围栏集}、{jd-13.1 空域类别}和{jd-13.3 交通信息源需求}的基础状态及风险。",
+        "能维护执行片段内{jd-13.4 授权生命周期}的边界，以及{jd-13.2 地理围栏集}、{jd-13.3 交通信息源需求}和{jd-0.6 合规域}的约束状态。",
+        "能维护任务过程中的空域 / 合规态势，识别{jd-13.4 授权生命周期}临近失效、{jd-13.2 地理围栏集}冲突或{jd-13.3 交通信息源需求}服务异常，并按{jd-0.5 人机确认协议}请人进行合规确认。"
+      ],
+      "required_jd_ids": [
+        "jd-13.4",
+        "jd-13.2",
+        "jd-13.1",
+        "jd-13.3",
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1607"
+    },
+    {
+      "cell": "A13×L4",
+      "a_id": "A13",
+      "level": "L4",
+      "g_group": "G5",
+      "ability": "空域 / 交通 / 合规接入",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能在空域或合规异常时自主从{jd-13.5 合规处置策略适用集}中选择处置（刷新授权 / 更新围栏 / 等待服务恢复 / 复核交通 / 退避 / 返航），并验证新接入可信。",
+      "jd_refs": [
+        "jd-13.5"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3",
+        "L4"
+      ],
+      "cumulative_responsibilities": [
+        "能展示{jd-13.4 授权生命周期}、{jd-13.2 地理围栏集}、{jd-13.1 空域类别}和{jd-13.3 交通信息源需求}的基础状态及风险。",
+        "能维护执行片段内{jd-13.4 授权生命周期}的边界，以及{jd-13.2 地理围栏集}、{jd-13.3 交通信息源需求}和{jd-0.6 合规域}的约束状态。",
+        "能维护任务过程中的空域 / 合规态势，识别{jd-13.4 授权生命周期}临近失效、{jd-13.2 地理围栏集}冲突或{jd-13.3 交通信息源需求}服务异常，并按{jd-0.5 人机确认协议}请人进行合规确认。",
+        "能在空域或合规异常时自主从{jd-13.5 合规处置策略适用集}中选择处置（刷新授权 / 更新围栏 / 等待服务恢复 / 复核交通 / 退避 / 返航），并验证新接入可信。"
+      ],
+      "required_jd_ids": [
+        "jd-13.4",
+        "jd-13.2",
+        "jd-13.1",
+        "jd-13.3",
+        "jd-0.6",
+        "jd-0.5",
+        "jd-13.5"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1622"
+    },
+    {
+      "cell": "A12×L1",
+      "a_id": "A12",
+      "level": "L1",
+      "g_group": "G6",
+      "ability": "安全包络 / 运行保证 / 处置建议",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能基于{jd-0.10 安全包络先验}和{jd-12.1 分相位安全阈值}上报低电、越界、姿态、链路或定位异常等局部安全状态。",
+      "jd_refs": [
+        "jd-0.10",
+        "jd-12.1"
+      ],
+      "cumulative_levels": [
+        "L1"
+      ],
+      "cumulative_responsibilities": [
+        "能基于{jd-0.10 安全包络先验}和{jd-12.1 分相位安全阈值}上报低电、越界、姿态、链路或定位异常等局部安全状态。"
+      ],
+      "required_jd_ids": [
+        "jd-0.10",
+        "jd-12.1"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1635"
+    },
+    {
+      "cell": "A12×L2",
+      "a_id": "A12",
+      "level": "L2",
+      "g_group": "G6",
+      "ability": "安全包络 / 运行保证 / 处置建议",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能在执行片段内维护{jd-12.1 分相位安全阈值}对应的安全边界、{jd-12.2 安全处置策略适用集}对应的保护触发状态、返航窗口与接管状态。",
+      "jd_refs": [
+        "jd-12.1",
+        "jd-12.2"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2"
+      ],
+      "cumulative_responsibilities": [
+        "能基于{jd-0.10 安全包络先验}和{jd-12.1 分相位安全阈值}上报低电、越界、姿态、链路或定位异常等局部安全状态。",
+        "能在执行片段内维护{jd-12.1 分相位安全阈值}对应的安全边界、{jd-12.2 安全处置策略适用集}对应的保护触发状态、返航窗口与接管状态。"
+      ],
+      "required_jd_ids": [
+        "jd-0.10",
+        "jd-12.1",
+        "jd-12.2"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1646"
+    },
+    {
+      "cell": "A12×L3",
+      "a_id": "A12",
+      "level": "L3",
+      "g_group": "G6",
+      "ability": "安全包络 / 运行保证 / 处置建议",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能在任务过程中按{jd-12.1 分相位安全阈值}维护安全态势，发现低电趋势、丢链趋势、边界接近或风险累积，并按{jd-0.5 人机确认协议}请人确认{jd-12.2 安全处置策略适用集}中的兜底策略。",
+      "jd_refs": [
+        "jd-12.1",
+        "jd-0.5",
+        "jd-12.2"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "cumulative_responsibilities": [
+        "能基于{jd-0.10 安全包络先验}和{jd-12.1 分相位安全阈值}上报低电、越界、姿态、链路或定位异常等局部安全状态。",
+        "能在执行片段内维护{jd-12.1 分相位安全阈值}对应的安全边界、{jd-12.2 安全处置策略适用集}对应的保护触发状态、返航窗口与接管状态。",
+        "能在任务过程中按{jd-12.1 分相位安全阈值}维护安全态势，发现低电趋势、丢链趋势、边界接近或风险累积，并按{jd-0.5 人机确认协议}请人确认{jd-12.2 安全处置策略适用集}中的兜底策略。"
+      ],
+      "required_jd_ids": [
+        "jd-0.10",
+        "jd-12.1",
+        "jd-12.2",
+        "jd-0.5"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1658"
+    },
+    {
+      "cell": "A12×L4",
+      "a_id": "A12",
+      "level": "L4",
+      "g_group": "G6",
+      "ability": "安全包络 / 运行保证 / 处置建议",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能在安全异常时自主从{jd-12.2 安全处置策略适用集}中选择处置，进入并保持{jd-12.3 安全态定义}中的可接受 safe state，不依赖运行时人工兜底。",
+      "jd_refs": [
+        "jd-12.2",
+        "jd-12.3"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3",
+        "L4"
+      ],
+      "cumulative_responsibilities": [
+        "能基于{jd-0.10 安全包络先验}和{jd-12.1 分相位安全阈值}上报低电、越界、姿态、链路或定位异常等局部安全状态。",
+        "能在执行片段内维护{jd-12.1 分相位安全阈值}对应的安全边界、{jd-12.2 安全处置策略适用集}对应的保护触发状态、返航窗口与接管状态。",
+        "能在任务过程中按{jd-12.1 分相位安全阈值}维护安全态势，发现低电趋势、丢链趋势、边界接近或风险累积，并按{jd-0.5 人机确认协议}请人确认{jd-12.2 安全处置策略适用集}中的兜底策略。",
+        "能在安全异常时自主从{jd-12.2 安全处置策略适用集}中选择处置，进入并保持{jd-12.3 安全态定义}中的可接受 safe state，不依赖运行时人工兜底。"
+      ],
+      "required_jd_ids": [
+        "jd-0.10",
+        "jd-12.1",
+        "jd-12.2",
+        "jd-0.5",
+        "jd-12.3"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1672"
+    },
+    {
+      "cell": "A15×L1",
+      "a_id": "A15",
+      "level": "L1",
+      "g_group": "G6",
+      "ability": "日志 / 审计 / 保证证据",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能按{jd-15.1 事件类目}记录基础事件、状态和操作记录。",
+      "jd_refs": [
+        "jd-15.1"
+      ],
+      "cumulative_levels": [
+        "L1"
+      ],
+      "cumulative_responsibilities": [
+        "能按{jd-15.1 事件类目}记录基础事件、状态和操作记录。"
+      ],
+      "required_jd_ids": [
+        "jd-15.1"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1686"
+    },
+    {
+      "cell": "A15×L2",
+      "a_id": "A15",
+      "level": "L2",
+      "g_group": "G6",
+      "ability": "日志 / 审计 / 保证证据",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能按{jd-15.1 事件类目}和{jd-15.2 证据格式规格}记录执行片段内的关键状态、保护触发、人工介入、建议和结果。",
+      "jd_refs": [
+        "jd-15.1",
+        "jd-15.2"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2"
+      ],
+      "cumulative_responsibilities": [
+        "能按{jd-15.1 事件类目}记录基础事件、状态和操作记录。",
+        "能按{jd-15.1 事件类目}和{jd-15.2 证据格式规格}记录执行片段内的关键状态、保护触发、人工介入、建议和结果。"
+      ],
+      "required_jd_ids": [
+        "jd-15.1",
+        "jd-15.2"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1696"
+    },
+    {
+      "cell": "A15×L3",
+      "a_id": "A15",
+      "level": "L3",
+      "g_group": "G6",
+      "ability": "日志 / 审计 / 保证证据",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能维护任务过程证据链，按{jd-15.2 证据格式规格}和{jd-15.3 留存策略}识别日志缺口、时间戳异常、事件不可回放或证据不完整，并按{jd-0.5 人机确认协议}请人审计补齐。",
+      "jd_refs": [
+        "jd-15.2",
+        "jd-15.3",
+        "jd-0.5"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "cumulative_responsibilities": [
+        "能按{jd-15.1 事件类目}记录基础事件、状态和操作记录。",
+        "能按{jd-15.1 事件类目}和{jd-15.2 证据格式规格}记录执行片段内的关键状态、保护触发、人工介入、建议和结果。",
+        "能维护任务过程证据链，按{jd-15.2 证据格式规格}和{jd-15.3 留存策略}识别日志缺口、时间戳异常、事件不可回放或证据不完整，并按{jd-0.5 人机确认协议}请人审计补齐。"
+      ],
+      "required_jd_ids": [
+        "jd-15.1",
+        "jd-15.2",
+        "jd-15.3",
+        "jd-0.5"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1708"
+    },
+    {
+      "cell": "A15×L4",
+      "a_id": "A15",
+      "level": "L4",
+      "g_group": "G6",
+      "ability": "日志 / 审计 / 保证证据",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能按{jd-15.2 证据格式规格}自主生成异常处置和兜底动作的可回放、可解释、可复核证据链，证明系统决策、动作、责任边界和恢复过程。",
+      "jd_refs": [
+        "jd-15.2"
+      ],
+      "cumulative_levels": [
+        "L1",
+        "L2",
+        "L3",
+        "L4"
+      ],
+      "cumulative_responsibilities": [
+        "能按{jd-15.1 事件类目}记录基础事件、状态和操作记录。",
+        "能按{jd-15.1 事件类目}和{jd-15.2 证据格式规格}记录执行片段内的关键状态、保护触发、人工介入、建议和结果。",
+        "能维护任务过程证据链，按{jd-15.2 证据格式规格}和{jd-15.3 留存策略}识别日志缺口、时间戳异常、事件不可回放或证据不完整，并按{jd-0.5 人机确认协议}请人审计补齐。",
+        "能按{jd-15.2 证据格式规格}自主生成异常处置和兜底动作的可回放、可解释、可复核证据链，证明系统决策、动作、责任边界和恢复过程。"
+      ],
+      "required_jd_ids": [
+        "jd-15.1",
+        "jd-15.2",
+        "jd-15.3",
+        "jd-0.5"
+      ],
+      "source_ref": "AxL责任定义字典_17A_68单元_机读版.md:1722"
     }
   ],
   "jd_fields": [
-    {"slot_id": "jd-0.2", "name": "工作空间结构", "rule": "值必须来自用户描述；缺失时为 TBD。"},
-    {"slot_id": "jd-0.3", "name": "扰动谱", "rule": "只记录用户明确给出的扰动类型或候选集合，不创造强度和阈值。"},
-    {"slot_id": "jd-0.5", "name": "人机确认协议/结构化外部事件接口", "rule": "不得把运行接口自动解释为待评分自然语言交互能力。"},
-    {"slot_id": "jd-0.7", "name": "任务完成判据", "rule": "可总结结构性条件；数值判据未知时保持 TBD。"},
-    {"slot_id": "jd-0.9", "name": "载荷集", "rule": "只使用用户声明的载荷。"},
-    {"slot_id": "jd-0.10", "name": "安全包络", "rule": "可记录组成项；不得生成未提供的数值阈值。"},
-    {"slot_id": "jd-5.1", "name": "业务对象类别", "rule": "对象类别与干扰项必须可追溯到用户描述。"},
-    {"slot_id": "jd-6a.1", "name": "定位源需求", "rule": "列出用户明确声明或标为 proposed 的候选定位源。"},
-    {"slot_id": "jd-6a.3", "name": "定位策略适用集/允许保护动作集", "rule": "动作必须由用户或项目边界允许；未知时为 TBD。"},
-    {"slot_id": "jd-6b.1", "name": "相对几何先验", "rule": "记录中心线、检查面、目标距离等已给定先验。"},
-    {"slot_id": "jd-6b.2", "name": "相对几何感知机制", "rule": "记录已声明传感器或等价观测机制。"},
-    {"slot_id": "jd-7.1", "name": "航路拓扑", "rule": "记录起点、终点、固定航段、返航点或备降点等已声明节点。"},
-    {"slot_id": "jd-7.2", "name": "导航工作机制", "rule": "记录 waypoint、中心线跟随或用户声明的等价表示。"},
-    {"slot_id": "jd-8.1", "name": "控制接口", "rule": "只描述责任边界；具体协议未知时为 TBD。"},
-    {"slot_id": "jd-8.2", "name": "控制约束", "rule": "不得生成未提供的数值范围。"},
-    {"slot_id": "jd-8.3", "name": "平台与执行包络", "rule": "平台类型和能力来自用户输入或外部 registry；未知字段为 TBD。"}
+    {
+      "id": "jd-0.1",
+      "scope": "global",
+      "g_group": null,
+      "owner_a": null,
+      "ability": null,
+      "name": "任务时长",
+      "description": "任务、任务阶段或航段的持续时间、时间预算、截止时间与长短程属性。",
+      "related_a": [
+        "A4",
+        "A11"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:44",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-0.2",
+      "scope": "global",
+      "g_group": null,
+      "owner_a": null,
+      "ability": null,
+      "name": "工作空间结构",
+      "description": "任务所在空间的场景类型、尺度、拓扑、边界、障碍与可通行区域结构。",
+      "related_a": [
+        "A5",
+        "A6a",
+        "A6b",
+        "A7"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:54",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-0.3",
+      "scope": "global",
+      "g_group": null,
+      "owner_a": null,
+      "ability": null,
+      "name": "扰动谱",
+      "description": "可注入或自然出现的扰动类型、强度、持续时间、发生窗口及组合方式。",
+      "related_a": [
+        "A5",
+        "A6a",
+        "A6b",
+        "A7",
+        "A8"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:66",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-0.4",
+      "scope": "global",
+      "g_group": null,
+      "owner_a": null,
+      "ability": null,
+      "name": "在场人角色",
+      "description": "任务中存在或可交互的人类角色，以及其职责、权限、位置与决策关系。",
+      "related_a": [
+        "A1",
+        "A3",
+        "A14",
+        "A9b"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:79",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-0.5",
+      "scope": "global",
+      "g_group": null,
+      "owner_a": null,
+      "ability": null,
+      "name": "人机确认协议",
+      "description": "人机之间确认、纠偏、批准、审计、通知、等待与继续执行的交互规则。",
+      "related_a": [
+        "A14",
+        "A5",
+        "A6a",
+        "A6b",
+        "A11",
+        "A7",
+        "A8",
+        "A9a",
+        "A9b",
+        "A10",
+        "A13",
+        "A12",
+        "A15"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:91",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-0.6",
+      "scope": "global",
+      "g_group": null,
+      "owner_a": null,
+      "ability": null,
+      "name": "合规域",
+      "description": "任务适用的空域、法规、组织制度、业务规范与其他合规约束集合。",
+      "related_a": [
+        "A2",
+        "A7",
+        "A13",
+        "A12",
+        "A15"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:112",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-0.7",
+      "scope": "global",
+      "g_group": null,
+      "owner_a": null,
+      "ability": null,
+      "name": "任务完成判据",
+      "description": "任务完成、部分完成、失败、终止或中止的全局判定条件。",
+      "related_a": [
+        "A4",
+        "A9b"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:125",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-0.8",
+      "scope": "global",
+      "g_group": null,
+      "owner_a": null,
+      "ability": null,
+      "name": "通信基建",
+      "description": "任务可使用的通信链路、地面站、网络拓扑、覆盖范围与基础设施条件。",
+      "related_a": [
+        "A10"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:135",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-0.9",
+      "scope": "global",
+      "g_group": null,
+      "owner_a": null,
+      "ability": null,
+      "name": "载荷集",
+      "description": "平台可用的任务载荷、传感器、执行载荷及其组合与可用状态。",
+      "related_a": [
+        "A5",
+        "A11",
+        "A8",
+        "A9a"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:144",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-0.10",
+      "scope": "global",
+      "g_group": null,
+      "owner_a": null,
+      "ability": null,
+      "name": "安全包络先验",
+      "description": "任务执行前已声明的安全边界、允许范围、阈值及最低安全储备。",
+      "related_a": [
+        "A2",
+        "A12"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:156",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-1.1",
+      "scope": "local",
+      "g_group": "G1",
+      "owner_a": "A1",
+      "ability": "意图 / 交互入口",
+      "name": "指称对象目录",
+      "description": "JD 中可被指称的业务对象或实体类型，包含统一 ID 体系。",
+      "related_a": [
+        "A1"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:166",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-1.2",
+      "scope": "local",
+      "g_group": "G1",
+      "owner_a": "A1",
+      "ability": "意图 / 交互入口",
+      "name": "指称方式集",
+      "description": "该 JD 中指向同一对象的可用指称方式，例如按 ID、地图指示、视频指示或自然语言描述。",
+      "related_a": [
+        "A1"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:175",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-1.3",
+      "scope": "local",
+      "g_group": "G1",
+      "owner_a": "A1",
+      "ability": "意图 / 交互入口",
+      "name": "业务术语表",
+      "description": "该 JD 的专有名词、动作动词与状态形容词词表。",
+      "related_a": [
+        "A1"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:184",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-2.1",
+      "scope": "local",
+      "g_group": "G1",
+      "owner_a": "A2",
+      "ability": "任务规范 / 约束模型",
+      "name": "任务参数表",
+      "description": "JD 的任务级参数、类型、取值范围与默认值，例如飞行高度、拍摄间隔、覆盖率判据等。",
+      "related_a": [
+        "A2"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:193",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-2.2",
+      "scope": "local",
+      "g_group": "G1",
+      "owner_a": "A2",
+      "ability": "任务规范 / 约束模型",
+      "name": "平台参数表",
+      "description": "无人机及其他实体的平台级参数、默认值与设计运行域，例如最大风速、续航与环境耐受范围。",
+      "related_a": [
+        "A2"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:202",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-2.3",
+      "scope": "local",
+      "g_group": "G1",
+      "owner_a": "A2",
+      "ability": "任务规范 / 约束模型",
+      "name": "隐式参数规则",
+      "description": "上下文相关的参数自动推断规则，即专家默认知道但 JD-SOP 未显式写出的规则。",
+      "related_a": [
+        "A2"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:211",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-3.1",
+      "scope": "local",
+      "g_group": "G1",
+      "owner_a": "A3",
+      "ability": "意图推理 / 任务解释",
+      "name": "任务技能库",
+      "description": "该 JD 的可组合执行原语集，例如飞到、拍照、红外、喊话、采样、复检等。",
+      "related_a": [
+        "A3"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:220",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-3.2",
+      "scope": "local",
+      "g_group": "G1",
+      "owner_a": "A3",
+      "ability": "意图推理 / 任务解释",
+      "name": "任务完成语义",
+      "description": "JD 任务级“完成”的语义：哪些子单元完成才算完成，什么异常算部分完成，什么状态算中止。",
+      "related_a": [
+        "A3"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:229",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-4.1",
+      "scope": "local",
+      "g_group": "G1",
+      "owner_a": "A4",
+      "ability": "交互到执行编排",
+      "name": "任务结构",
+      "description": "JD 的标准相位以及相位间依赖和顺序约束，例如准备→起飞→巡检→返航→数据落地。",
+      "related_a": [
+        "A4"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:238",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-4.2",
+      "scope": "local",
+      "g_group": "G1",
+      "owner_a": "A4",
+      "ability": "交互到执行编排",
+      "name": "人机交接点",
+      "description": "任务流中需要人介入的位置；A4 描述在哪里交接，A14 描述用什么协议交接。",
+      "related_a": [
+        "A4"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:247",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-4.3",
+      "scope": "local",
+      "g_group": "G1",
+      "owner_a": "A4",
+      "ability": "交互到执行编排",
+      "name": "重编排触发",
+      "description": "JD 特定的任务级重规划触发条件，区别于 A7 的轨迹级重规划判据。",
+      "related_a": [
+        "A4"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:256",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-4.4",
+      "scope": "local",
+      "g_group": "G1",
+      "owner_a": "A4",
+      "ability": "交互到执行编排",
+      "name": "任务级重规划策略",
+      "description": "JD 典型的多步重规划与恢复模式，区别于 A12 的反射级兜底动作。",
+      "related_a": [
+        "A4"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:265",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-4.5",
+      "scope": "local",
+      "g_group": "G1",
+      "owner_a": "A4",
+      "ability": "交互到执行编排",
+      "name": "编排输出机制",
+      "description": "JD 的 A4 输出抽象层级，例如 tool call、skill 调用、trajectory 或 velocity。",
+      "related_a": [
+        "A4"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:274",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-14.1",
+      "scope": "local",
+      "g_group": "G1",
+      "owner_a": "A14",
+      "ability": "监督 / 请求 / 交接",
+      "name": "交接协议表",
+      "description": "交接类型×优先级×延迟预算的综合协议表，覆盖确认、纠偏、批准、审计、通知等类型。",
+      "related_a": [
+        "A14"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:283",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-14.2",
+      "scope": "local",
+      "g_group": "G1",
+      "owner_a": "A14",
+      "ability": "监督 / 请求 / 交接",
+      "name": "偏好对齐协议",
+      "description": "JD 中用户偏好可表达的维度与系统对齐流程，包含 preference taxonomy。",
+      "related_a": [
+        "A14"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:292",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-14.3",
+      "scope": "local",
+      "g_group": "G1",
+      "owner_a": "A14",
+      "ability": "监督 / 请求 / 交接",
+      "name": "高层通知规则",
+      "description": "L4 高层通知、边界发现与策略切换时采用的通知规则。",
+      "related_a": [
+        "A14"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:301",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-5.1",
+      "scope": "local",
+      "g_group": "G2",
+      "owner_a": "A5",
+      "ability": "环境感知 / 态势感知",
+      "name": "业务对象类目",
+      "description": "所有可感知业务对象及类别标签，包括 target、confuser、obstacle、risk，以及物理特征与出现先验。",
+      "related_a": [
+        "A5"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:310",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-5.2",
+      "scope": "local",
+      "g_group": "G2",
+      "owner_a": "A5",
+      "ability": "环境感知 / 态势感知",
+      "name": "典型场景特征",
+      "description": "JD 典型场景统计，例如目标密度、分布模式、动态性与占用模式。",
+      "related_a": [
+        "A5"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:319",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-5.3",
+      "scope": "local",
+      "g_group": "G2",
+      "owner_a": "A5",
+      "ability": "环境感知 / 态势感知",
+      "name": "感知模态集",
+      "description": "该 JD 使用的感知模态及工作机制，例如 RGB、红外、LiDAR、视觉 SLAM 与多模态融合。",
+      "related_a": [
+        "A5"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:328",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-5.4",
+      "scope": "local",
+      "g_group": "G2",
+      "owner_a": "A5",
+      "ability": "环境感知 / 态势感知",
+      "name": "感知策略适用集",
+      "description": "该 JD 下 L4 自主处置可用且有效的感知策略子集，例如切模态、换视角、扩搜或等待再观测。",
+      "related_a": [
+        "A5"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:337",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-6a.1",
+      "scope": "local",
+      "g_group": "G2",
+      "owner_a": "A6a",
+      "ability": "自定位 / 姿态航向估计",
+      "name": "定位源需求",
+      "description": "该 JD 假设或要求平台支持的定位源集，例如 GNSS、视觉、激光、UWB 与磁定位。",
+      "related_a": [
+        "A6a"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:346",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-6a.2",
+      "scope": "local",
+      "g_group": "G2",
+      "owner_a": "A6a",
+      "ability": "自定位 / 姿态航向估计",
+      "name": "位姿质量先验",
+      "description": "该 JD 对位姿不确定度的容忍范围，包括平面、高度、姿态与航向。",
+      "related_a": [
+        "A6a"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:355",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-6a.3",
+      "scope": "local",
+      "g_group": "G2",
+      "owner_a": "A6a",
+      "ability": "自定位 / 姿态航向估计",
+      "name": "定位策略适用集",
+      "description": "该 JD 下 L4 自主处置可用且有效的定位策略子集，例如切换源、重定位、地标观测、等待收敛与外部辅助。",
+      "related_a": [
+        "A6a"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:364",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-6b.1",
+      "scope": "local",
+      "g_group": "G2",
+      "owner_a": "A6b",
+      "ability": "相对定位 / 方位关系估计",
+      "name": "相对几何先验",
+      "description": "该 JD 典型相对距离、方位和朝向范围，以及精度要求。",
+      "related_a": [
+        "A6b"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:373",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-6b.2",
+      "scope": "local",
+      "g_group": "G2",
+      "owner_a": "A6b",
+      "ability": "相对定位 / 方位关系估计",
+      "name": "相对几何感知机制",
+      "description": "该 JD 使用的相对几何估计机制，例如双目、单目加深度估计、LiDAR、Radar 与多源融合。",
+      "related_a": [
+        "A6b"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:382",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-6b.3",
+      "scope": "local",
+      "g_group": "G2",
+      "owner_a": "A6b",
+      "ability": "相对定位 / 方位关系估计",
+      "name": "相对定位策略适用集",
+      "description": "该 JD 下 L4 自主处置可用且有效的相对定位策略子集，例如换视角、重观测、扩搜、他机补观测与重新关联。",
+      "related_a": [
+        "A6b"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:391",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-11.1",
+      "scope": "local",
+      "g_group": "G2",
+      "owner_a": "A11",
+      "ability": "健康 / 能源 / 资源管理",
+      "name": "资源消耗包络",
+      "description": "JD 中电量、算力、带宽、载重等资源的典型消耗曲线。",
+      "related_a": [
+        "A11"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:400",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-11.2",
+      "scope": "local",
+      "g_group": "G2",
+      "owner_a": "A11",
+      "ability": "健康 / 能源 / 资源管理",
+      "name": "资源预警 / 预留策略",
+      "description": "JD 的“何时预警+必保返航余量”组合，包括健康预警阈值与返航预留比。",
+      "related_a": [
+        "A11"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:409",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-11.3",
+      "scope": "local",
+      "g_group": "G2",
+      "owner_a": "A11",
+      "ability": "健康 / 能源 / 资源管理",
+      "name": "资源处置策略适用集",
+      "description": "该 JD 下 L4 可用且有效的资源处置策略子集，例如降载、切链路、关闭非关键载荷、降采样率、保留返航窗口、等待冷却或请求支援。",
+      "related_a": [
+        "A11"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:418",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-7.1",
+      "scope": "local",
+      "g_group": "G3",
+      "owner_a": "A7",
+      "ability": "导航 / 航迹 / 轨迹管理",
+      "name": "航路拓扑",
+      "description": "JD 的航路结构集，例如航点、线段、扫描与盘旋。",
+      "related_a": [
+        "A7"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:427",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-7.2",
+      "scope": "local",
+      "g_group": "G3",
+      "owner_a": "A7",
+      "ability": "导航 / 航迹 / 轨迹管理",
+      "name": "导航工作机制",
+      "description": "该 JD 的导航工作范式，例如航点跟随、轨迹跟踪、矢量场制导、反应式避障与混合模式。",
+      "related_a": [
+        "A7"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:436",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-7.3",
+      "scope": "local",
+      "g_group": "G3",
+      "owner_a": "A7",
+      "ability": "导航 / 航迹 / 轨迹管理",
+      "name": "轨迹重规划判据",
+      "description": "轨迹级重规划的触发条件，区别于 A4 的任务级 replan triggers。",
+      "related_a": [
+        "A7"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:445",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-7.4",
+      "scope": "local",
+      "g_group": "G3",
+      "owner_a": "A7",
+      "ability": "导航 / 航迹 / 轨迹管理",
+      "name": "航迹处置策略适用集",
+      "description": "该 JD 下 L4 可用且有效的运动处置策略子集，例如改高度、改航迹、等待、悬停与增加裕度。",
+      "related_a": [
+        "A7"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:454",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-8.1",
+      "scope": "local",
+      "g_group": "G3",
+      "owner_a": "A8",
+      "ability": "飞行控制 / 执行机构",
+      "name": "控制质量先验",
+      "description": "该 JD 对控制质量的容忍范围，包括位置、姿态、速度与航向误差。",
+      "related_a": [
+        "A8"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:463",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-8.2",
+      "scope": "local",
+      "g_group": "G3",
+      "owner_a": "A8",
+      "ability": "飞行控制 / 执行机构",
+      "name": "控制工作机制",
+      "description": "该 JD 的控制工作范式，例如 PID、MPC、自适应控制、增益调度与 RL controller。",
+      "related_a": [
+        "A8"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:472",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-8.3",
+      "scope": "local",
+      "g_group": "G3",
+      "owner_a": "A8",
+      "ability": "飞行控制 / 执行机构",
+      "name": "控制处置策略适用集",
+      "description": "该 JD 下 L4 可用且有效的控制处置策略子集，例如模式切换、降速、增大裕度、等待稳定与请求检查。",
+      "related_a": [
+        "A8"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:481",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-9a.1",
+      "scope": "local",
+      "g_group": "G4",
+      "owner_a": "A9a",
+      "ability": "载荷动作执行",
+      "name": "载荷动作目录",
+      "description": "JD 调用的载荷动作集，例如拍照、喊话、投送、采样与云台调位。",
+      "related_a": [
+        "A9a"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:490",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-9a.2",
+      "scope": "local",
+      "g_group": "G4",
+      "owner_a": "A9a",
+      "ability": "载荷动作执行",
+      "name": "动作时序先验",
+      "description": "载荷动作之间的顺序与依赖约束；是语义约束而非数值，例如“先稳云台再快门”。",
+      "related_a": [
+        "A9a"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:499",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-9a.3",
+      "scope": "local",
+      "g_group": "G4",
+      "owner_a": "A9a",
+      "ability": "载荷动作执行",
+      "name": "载荷处置策略适用集",
+      "description": "该 JD 下 L4 可用且有效的载荷处置策略子集，例如重试、换角度、调参数、切模式、暂停或请求检查。",
+      "related_a": [
+        "A9a"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:508",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-9b.1",
+      "scope": "local",
+      "g_group": "G4",
+      "owner_a": "A9b",
+      "ability": "载荷成果生成 / 远端呈现",
+      "name": "成果格式",
+      "description": "JD 期望的成果产物形态，例如结构化报告、图序、视频流、采样记录与热图。",
+      "related_a": [
+        "A9b"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:517",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-9b.2",
+      "scope": "local",
+      "g_group": "G4",
+      "owner_a": "A9b",
+      "ability": "载荷成果生成 / 远端呈现",
+      "name": "覆盖完整度判据",
+      "description": "“怎么算覆盖了”的语义判定逻辑，而非单一数值，例如每个目标至少具有多个观察角。",
+      "related_a": [
+        "A9b"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:526",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-9b.3",
+      "scope": "local",
+      "g_group": "G4",
+      "owner_a": "A9b",
+      "ability": "载荷成果生成 / 远端呈现",
+      "name": "成果处置策略适用集",
+      "description": "该 JD 下 L4 可用且有效的成果处置策略子集，例如重拍、补扫、换角度、重生成报告、切格式、重投或重采。",
+      "related_a": [
+        "A9b"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:535",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-10.1",
+      "scope": "local",
+      "g_group": "G5",
+      "owner_a": "A10",
+      "ability": "通信 / C2 / 遥测",
+      "name": "链路质量先验",
+      "description": "该 JD 典型链路 QoS 区间，包括延迟、丢包、带宽分布与异常时段。",
+      "related_a": [
+        "A10"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:544",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-10.2",
+      "scope": "local",
+      "g_group": "G5",
+      "owner_a": "A10",
+      "ability": "通信 / C2 / 遥测",
+      "name": "地面站拓扑",
+      "description": "JD 的地面站结构，例如单站、多站、备份站与接力站。",
+      "related_a": [
+        "A10"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:553",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-10.3",
+      "scope": "local",
+      "g_group": "G5",
+      "owner_a": "A10",
+      "ability": "通信 / C2 / 遥测",
+      "name": "通信处置策略适用集",
+      "description": "该 JD 下 L4 可用且有效的通信处置策略子集，例如切链路、切备用站、降低遥测频率、缓存数据与链路切换。",
+      "related_a": [
+        "A10"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:562",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-13.1",
+      "scope": "local",
+      "g_group": "G5",
+      "owner_a": "A13",
+      "ability": "空域 / 交通 / 合规接入",
+      "name": "空域类别",
+      "description": "该 JD 涉及的空域类别，例如 ICAO G/E/D/C/B/A 等。",
+      "related_a": [
+        "A13"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:571",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-13.2",
+      "scope": "local",
+      "g_group": "G5",
+      "owner_a": "A13",
+      "ability": "空域 / 交通 / 合规接入",
+      "name": "地理围栏集",
+      "description": "JD 的地理围栏集合，包含具体边界。",
+      "related_a": [
+        "A13"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:580",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-13.3",
+      "scope": "local",
+      "g_group": "G5",
+      "owner_a": "A13",
+      "ability": "空域 / 交通 / 合规接入",
+      "name": "交通信息源需求",
+      "description": "JD 要求平台接入的交通信息源集，例如 UTM、U-space 与 ADS-B。",
+      "related_a": [
+        "A13"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:589",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-13.4",
+      "scope": "local",
+      "g_group": "G5",
+      "owner_a": "A13",
+      "ability": "空域 / 交通 / 合规接入",
+      "name": "授权生命周期",
+      "description": "授权的生命周期管理，例如长期、临时与即时授权。",
+      "related_a": [
+        "A13"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:598",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-13.5",
+      "scope": "local",
+      "g_group": "G5",
+      "owner_a": "A13",
+      "ability": "空域 / 交通 / 合规接入",
+      "name": "合规处置策略适用集",
+      "description": "该 JD 下 L4 可用且有效的合规处置策略子集，例如刷新授权、更新围栏、等待恢复、复核交通、退避与返航。",
+      "related_a": [
+        "A13"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:607",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-12.1",
+      "scope": "local",
+      "g_group": "G6",
+      "owner_a": "A12",
+      "ability": "安全包络 / 运行保证 / 处置建议",
+      "name": "分相位安全阈值",
+      "description": "“任务相位×安全阈值”的 schedule；起飞、巡检与返航可采用不同阈值。",
+      "related_a": [
+        "A12"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:616",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-12.2",
+      "scope": "local",
+      "g_group": "G6",
+      "owner_a": "A12",
+      "ability": "安全包络 / 运行保证 / 处置建议",
+      "name": "安全处置策略适用集",
+      "description": "L4 兜底动作子集及触发条件，包括 ODD 越界响应、返航、悬停、降级、备降与安全模式。",
+      "related_a": [
+        "A12"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:625",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-12.3",
+      "scope": "local",
+      "g_group": "G6",
+      "owner_a": "A12",
+      "ability": "安全包络 / 运行保证 / 处置建议",
+      "name": "安全态定义",
+      "description": "该 JD 接受的 safe state 集合，以及悬停、返航点、备降点和安全模式各自的进入条件。",
+      "related_a": [
+        "A12"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:634",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-15.1",
+      "scope": "local",
+      "g_group": "G6",
+      "owner_a": "A15",
+      "ability": "日志 / 审计 / 保证证据",
+      "name": "事件类目",
+      "description": "该 JD 要记录的跨 A 事件类目；meta-A 用于列举其他 A 产生的关键事件。",
+      "related_a": [
+        "A15"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:643",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-15.2",
+      "scope": "local",
+      "g_group": "G6",
+      "owner_a": "A15",
+      "ability": "日志 / 审计 / 保证证据",
+      "name": "证据格式规格",
+      "description": "JD 的证据格式与审计协议，吸收原 audit protocol。",
+      "related_a": [
+        "A15"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:652",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    },
+    {
+      "id": "jd-15.3",
+      "scope": "local",
+      "g_group": "G6",
+      "owner_a": "A15",
+      "ability": "日志 / 审计 / 保证证据",
+      "name": "留存策略",
+      "description": "日志与证据留存策略，是 JD-SOP 对法定 minimum 的进一步细化。",
+      "related_a": [
+        "A15"
+      ],
+      "source_ref": "JD业务变量字典_66槽位_机读版.md:661",
+      "extraction_rule": "只绑定用户原文或人工确认值；缺失时保持 TBD。不得生成未提供的阈值、业务规则、平台能力或 simulator 接口。"
+    }
   ],
   "global_rules": [
-    "threshold、正式业务规则和 simulator 接口不得由 Agent 发明。",
+    "threshold、正式业务规则、平台能力和 simulator 接口不得由 Agent 发明。",
     "正式评分 Coverage 与 runtime dependency 必须分离。",
     "外部执行器完成的动作不得归因给 SUT。",
-    "每个候选必须包含用户原文证据片段或明确标为 TBD。",
-    "自然语言模板必须使用【jd-x.x 字段＝值】形式标记已识别 JD。"
+    "任务候选必须引用人工确认稿，场景固定值必须引用版本化场景来源。",
+    "自然语言模板只表达业务语义，不暴露 A×L、GAL 或 JD 内部编号；JD 保存在结构化结果中。",
+    "A×L 等级责任累计：目标 L2/L3/L4 必须包含全部较低等级责任。",
+    "所有产物必须保存 A×L 与 JD 源字典的 schema_version。"
   ]
 }

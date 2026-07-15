@@ -13,15 +13,31 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
 from urllib.parse import parse_qs, urlparse
 
-from .catalog import ROOT
+from .catalog import ROOT, load_fixed_scenario, load_reference_catalog, load_scenario_registry
 from .models import AgentCandidate
-from .service import ConfigAgentError, GeminiConfigAgent, save_agent_run, validate_candidate
+from .service import (
+    ConfigAgentError,
+    GeminiConfigAgent,
+    GeminiNarrativeAgent,
+    save_agent_run,
+    save_narrative_run,
+    validate_candidate,
+)
 
 
 MAX_REQUEST_BYTES = 1_000_000
 LOG_PATH = ROOT / ".agent_runs" / "agent-events.jsonl"
 RUN_STATUS: dict[str, dict[str, Any]] = {}
 RUN_STATUS_LOCK = threading.Lock()
+
+
+def _safe_exception_text(exc: Exception) -> str:
+    text = f"{type(exc).__name__}: {exc}"
+    for name in ("GEMINI_API_KEY", "GOOGLE_API_KEY"):
+        secret = os.environ.get(name)
+        if secret:
+            text = text.replace(secret, "<redacted>")
+    return text[:500]
 
 
 def _log_event(run_id: str, event: str, details: dict[str, Any] | None = None) -> None:
@@ -74,14 +90,53 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
     def do_GET(self) -> None:  # noqa: N802
         parsed = urlparse(self.path)
         if parsed.path == "/api/health":
+            catalog = load_reference_catalog()
             self._json(HTTPStatus.OK, {
                 "status": "ready" if os.environ.get("GEMINI_API_KEY") else "missing_api_key",
                 "agent_ready": bool(os.environ.get("GEMINI_API_KEY")),
                 "flash_model": _model_for_tier("flash"),
                 "lite_model": _model_for_tier("lite"),
                 "pro_model": _model_for_tier("pro"),
-                "catalog_scope": "partial_demo_catalog",
+                "catalog_version": catalog["catalog_version"],
+                "catalog_scope": catalog["scope"],
+                "catalog_counts": catalog["counts"],
+                "catalog_source_versions": catalog["source_versions"],
             })
+            return
+        if parsed.path == "/api/catalog":
+            catalog = load_reference_catalog()
+            self._json(HTTPStatus.OK, {
+                "catalog_version": catalog["catalog_version"],
+                "scope": catalog["scope"],
+                "source_versions": catalog["source_versions"],
+                "counts": catalog["counts"],
+                "abilities": catalog["abilities"],
+                "gal_cells": [{
+                    "cell": item["cell"],
+                    "a_id": item["a_id"],
+                    "level": item["level"],
+                    "ability": item["ability"],
+                    "level_label": item["level_label"],
+                    "cumulative_responsibilities": item["cumulative_responsibilities"],
+                    "required_jd_ids": item["required_jd_ids"],
+                } for item in catalog["gal_cells"]],
+                "jd_fields": [{
+                    "id": item["id"],
+                    "name": item["name"],
+                    "scope": item["scope"],
+                    "owner_a": item["owner_a"],
+                } for item in catalog["jd_fields"]],
+            })
+            return
+        if parsed.path == "/api/scenario":
+            scenario_id = (parse_qs(parsed.query).get("scenario_id") or [None])[0]
+            try:
+                self._json(HTTPStatus.OK, load_fixed_scenario(scenario_id))
+            except KeyError:
+                self._json(HTTPStatus.NOT_FOUND, {"error": "scenario_not_found"})
+            return
+        if parsed.path == "/api/scenarios":
+            self._json(HTTPStatus.OK, load_scenario_registry())
             return
         if parsed.path == "/api/config-agent/status":
             run_id = (parse_qs(parsed.query).get("run_id") or [""])[0]
@@ -110,7 +165,11 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
         super().do_GET()
 
     def do_POST(self) -> None:  # noqa: N802
-        if self.path not in {"/api/config-agent/analyze", "/api/config-agent/revise"}:
+        if self.path not in {
+            "/api/config-agent/expand",
+            "/api/config-agent/analyze",
+            "/api/config-agent/revise",
+        }:
             self._json(HTTPStatus.NOT_FOUND, {"error": "not_found"})
             return
         try:
@@ -123,12 +182,17 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
         try:
             payload = json.loads(self.rfile.read(length).decode("utf-8"))
             task_description = str(payload.get("task_description") or "").strip()
+            scenario_id = str(payload.get("scenario_id") or load_scenario_registry()["default_scenario_id"])
+            try:
+                fixed_scenario = load_fixed_scenario(scenario_id)
+            except KeyError as exc:
+                raise ValueError(f"unknown scenario_id: {scenario_id}") from exc
             if self.path == "/api/config-agent/revise":
                 parent_run_id = str(payload.get("parent_run_id") or "")
                 if not re.fullmatch(r"agent-[a-z0-9-]{6,64}", parent_run_id):
                     raise ValueError("invalid parent_run_id")
                 candidate = AgentCandidate.model_validate(payload.get("candidate"))
-                issues = validate_candidate(candidate, task_description)
+                issues = validate_candidate(candidate, task_description, fixed_scenario)
                 revision_number = max(1, int(payload.get("revision_number") or 1))
                 revision_id = f"{parent_run_id}-r{revision_number}-{uuid.uuid4().hex[:6]}"
                 record = {
@@ -139,6 +203,7 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                     "created_at": datetime.now(timezone.utc).isoformat(),
                     "change_summary": payload.get("change_summary") or [],
                     "task_description": task_description,
+                    "scenario_id": scenario_id,
                     "candidate": candidate.model_dump(mode="json"),
                     "validation_status": "needs_review" if issues else "pass",
                     "validation_issues": [item.model_dump(mode="json") for item in issues],
@@ -175,15 +240,51 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
             model = _model_for_tier(tier)
             _log_event(run_id, "request_received", {
                 "model": model,
+                "scenario_id": scenario_id,
+                "operation": "narrative_expand" if self.path == "/api/config-agent/expand" else "classification_and_extraction",
                 "task_characters": len(task_description),
             })
+
+            if self.path == "/api/config-agent/expand":
+                narrative_agent = GeminiNarrativeAgent(api_key=api_key, model=model)
+                narrative_result = narrative_agent.expand(
+                    task_description,
+                    fixed_scenario=fixed_scenario,
+                    run_id=run_id,
+                    progress=lambda event, details: _log_event(run_id, event, details),
+                )
+                run_path = save_narrative_run(task_description, narrative_result, fixed_scenario)
+                with RUN_STATUS_LOCK:
+                    RUN_STATUS.setdefault(run_id, {})["result"] = narrative_result.model_dump(mode="json")
+                    RUN_STATUS[run_id]["status"] = "completed"
+                _log_event(run_id, "run_saved", {
+                    "artifact_type": "narrative_expansion_run",
+                    "path": str(run_path.relative_to(ROOT)),
+                })
+                self._json(HTTPStatus.OK, {
+                    "result": narrative_result.model_dump(mode="json"),
+                    "local_record": str(run_path.relative_to(ROOT)),
+                })
+                return
+
+            source_task_description = str(payload.get("source_task_description") or "").strip() or None
+            narrative_parent_run_id = str(payload.get("narrative_parent_run_id") or "").strip() or None
+            if narrative_parent_run_id and not re.fullmatch(r"agent-[a-z0-9-]{6,64}", narrative_parent_run_id):
+                raise ValueError("invalid narrative_parent_run_id")
             agent = GeminiConfigAgent(api_key=api_key, model=model)
             result = agent.analyze(
                 task_description,
+                fixed_scenario=fixed_scenario,
                 run_id=run_id,
                 progress=lambda event, details: _log_event(run_id, event, details),
             )
-            run_path = save_agent_run(task_description, result)
+            run_path = save_agent_run(
+                task_description,
+                result,
+                fixed_scenario,
+                source_task_description=source_task_description,
+                narrative_parent_run_id=narrative_parent_run_id,
+            )
             with RUN_STATUS_LOCK:
                 RUN_STATUS.setdefault(run_id, {})["result"] = result.model_dump(mode="json")
                 RUN_STATUS[run_id]["status"] = "completed"
@@ -198,9 +299,9 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
             if "run_id" in locals():
                 _log_event(run_id, "run_failed", {"error": str(exc)[:500]})
             self._json(HTTPStatus.BAD_GATEWAY, {"error": "agent_error", "message": str(exc)})
-        except Exception:
+        except Exception as exc:
             if "run_id" in locals():
-                _log_event(run_id, "run_failed", {"error": "unexpected_internal_error"})
+                _log_event(run_id, "run_failed", {"error": _safe_exception_text(exc)})
             self._json(HTTPStatus.INTERNAL_SERVER_ERROR, {
                 "error": "internal_error",
                 "message": "本地 Agent 服务发生未预期错误；请查看启动终端。",

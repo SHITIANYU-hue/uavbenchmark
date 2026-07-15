@@ -1,0 +1,40 @@
+{
+  "status": "pass",
+  "catalog_version": "full-17A-68AxL-66JD-2026-07-14",
+  "source_versions": {
+    "axl": "png-17-abilities-68-cells-2026-07-14",
+    "jd": "png-66-slots-2026-07-14"
+  },
+  "source_sha256": {
+    "AxL责任定义字典_17A_68单元_机读版.md": "76b43babfc28c46b9fe51e5c59dd8c1f033a85711b8bb7bc824cec5eab14c905",
+    "JD业务变量字典_66槽位_机读版.md": "42cefb36ab64176a45b61ed39bcead3c254f3f54417963d5b0f28ca90b16ff99"
+  },
+  "validated_counts": {
+    "g_groups": 6,
+    "abilities": 17,
+    "levels": 4,
+    "gal_cells": 68,
+    "jd_fields": 66,
+    "global_jd": 10,
+    "local_jd": 56
+  },
+  "referenced_jd_count": 66,
+  "unreferenced_jd_ids": [],
+  "legacy_semantic_conflicts": [
+    {
+      "slot_id": "jd-8.1",
+      "legacy_name": "控制接口",
+      "current_name": "控制质量先验"
+    },
+    {
+      "slot_id": "jd-8.2",
+      "legacy_name": "控制约束",
+      "current_name": "控制工作机制"
+    },
+    {
+      "slot_id": "jd-8.3",
+      "legacy_name": "平台与执行包络",
+      "current_name": "控制处置策略适用集"
+    }
+  ]
+}
