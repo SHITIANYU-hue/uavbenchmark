@@ -11,13 +11,19 @@ if [ ! -x ".venv/bin/python" ]; then
   exit 1
 fi
 
-if [ -z "$GEMINI_API_KEY" ]; then
-  printf "Paste GEMINI_API_KEY (input hidden): "
+if [ -f "$ROOT_DIR/.env" ]; then
+  set -a
+  . "$ROOT_DIR/.env"
+  set +a
+fi
+
+if [ -z "$DEEPSEEK_API_KEY" ]; then
+  printf "Paste DEEPSEEK_API_KEY (input hidden): "
   stty -echo
-  IFS= read -r GEMINI_API_KEY
+  IFS= read -r DEEPSEEK_API_KEY
   stty echo
   printf "\n"
-  export GEMINI_API_KEY
+  export DEEPSEEK_API_KEY
 fi
 
 export PYTHONPATH="$ROOT_DIR/src"

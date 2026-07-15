@@ -1,4 +1,4 @@
-"""Local HTTP server for pipeline.html and the Gemini Config Agent."""
+"""Local HTTP server for pipeline.html and the DeepSeek Config Agent."""
 
 from __future__ import annotations
 
@@ -17,12 +17,14 @@ from .catalog import ROOT, load_fixed_scenario, load_reference_catalog, load_sce
 from .models import AgentCandidate
 from .service import (
     ConfigAgentError,
-    GeminiConfigAgent,
-    GeminiNarrativeAgent,
+    ConfigAgent,
+    NarrativeAgent,
     save_agent_run,
     save_narrative_run,
     validate_candidate,
 )
+from ..instance.generator import generate_instance
+from ..instance.batch import generate_batch, traverse_domain
 
 
 MAX_REQUEST_BYTES = 1_000_000
@@ -33,7 +35,7 @@ RUN_STATUS_LOCK = threading.Lock()
 
 def _safe_exception_text(exc: Exception) -> str:
     text = f"{type(exc).__name__}: {exc}"
-    for name in ("GEMINI_API_KEY", "GOOGLE_API_KEY"):
+    for name in ("DEEPSEEK_API_KEY",):
         secret = os.environ.get(name)
         if secret:
             text = text.replace(secret, "<redacted>")
@@ -63,10 +65,10 @@ def _log_event(run_id: str, event: str, details: dict[str, Any] | None = None) -
 
 def _model_for_tier(tier: str) -> str:
     if tier == "pro":
-        return os.environ.get("GEMINI_PRO_MODEL", "gemini-2.5-pro")
+        return os.environ.get("DEEPSEEK_PRO_MODEL", "deepseek-chat")
     if tier == "lite":
-        return os.environ.get("GEMINI_LITE_MODEL", "gemini-3.1-flash-lite")
-    return os.environ.get("GEMINI_FLASH_MODEL", "gemini-3.5-flash")
+        return os.environ.get("DEEPSEEK_LITE_MODEL", "deepseek-chat")
+    return os.environ.get("DEEPSEEK_FLASH_MODEL", "deepseek-chat")
 
 
 class PipelineRequestHandler(SimpleHTTPRequestHandler):
@@ -92,8 +94,8 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
         if parsed.path == "/api/health":
             catalog = load_reference_catalog()
             self._json(HTTPStatus.OK, {
-                "status": "ready" if os.environ.get("GEMINI_API_KEY") else "missing_api_key",
-                "agent_ready": bool(os.environ.get("GEMINI_API_KEY")),
+                "status": "ready" if os.environ.get("DEEPSEEK_API_KEY") else "missing_api_key",
+                "agent_ready": bool(os.environ.get("DEEPSEEK_API_KEY")),
                 "flash_model": _model_for_tier("flash"),
                 "lite_model": _model_for_tier("lite"),
                 "pro_model": _model_for_tier("pro"),
@@ -169,6 +171,9 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
             "/api/config-agent/expand",
             "/api/config-agent/analyze",
             "/api/config-agent/revise",
+            "/api/instance/generate",
+            "/api/instance/batch",
+            "/api/instance/traverse",
         }:
             self._json(HTTPStatus.NOT_FOUND, {"error": "not_found"})
             return
@@ -181,6 +186,34 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
             return
         try:
             payload = json.loads(self.rfile.read(length).decode("utf-8"))
+
+            if self.path in {"/api/instance/generate", "/api/instance/batch", "/api/instance/traverse"}:
+                template = payload.get("template") or payload.get("task_template")
+                if not isinstance(template, dict):
+                    raise ValueError("Missing 'template' (task_template JSON object).")
+                if self.path == "/api/instance/generate":
+                    seed = int(payload.get("seed", 0))
+                    instance = generate_instance(template, seed)
+                    self._json(HTTPStatus.OK, {"instance": instance})
+                elif self.path == "/api/instance/batch":
+                    seeds = payload.get("seeds", [0])
+                    if isinstance(seeds, str):
+                        from ..instance.batch import parse_seed_spec
+                        seeds = parse_seed_spec(seeds)
+                    instances = generate_batch(template, seeds)
+                    self._json(HTTPStatus.OK, {
+                        "count": len(instances),
+                        "instances": instances,
+                    })
+                else:
+                    steps = int(payload.get("steps_per_range", 3))
+                    instances = traverse_domain(template, steps_per_range=steps)
+                    self._json(HTTPStatus.OK, {
+                        "count": len(instances),
+                        "instances": instances,
+                    })
+                return
+
             task_description = str(payload.get("task_description") or "").strip()
             scenario_id = str(payload.get("scenario_id") or load_scenario_registry()["default_scenario_id"])
             try:
@@ -225,11 +258,11 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                 })
                 return
 
-            api_key = os.environ.get("GEMINI_API_KEY")
+            api_key = os.environ.get("DEEPSEEK_API_KEY")
             if not api_key:
                 self._json(HTTPStatus.SERVICE_UNAVAILABLE, {
                     "error": "missing_api_key",
-                    "message": "本地 Agent 服务未设置 GEMINI_API_KEY。",
+                    "message": "本地 Agent 服务未设置 DEEPSEEK_API_KEY。",
                 })
                 return
             tier = str(payload.get("model_tier") or "flash").lower()
@@ -246,7 +279,7 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
             })
 
             if self.path == "/api/config-agent/expand":
-                narrative_agent = GeminiNarrativeAgent(api_key=api_key, model=model)
+                narrative_agent = NarrativeAgent(api_key=api_key, model=model)
                 narrative_result = narrative_agent.expand(
                     task_description,
                     fixed_scenario=fixed_scenario,
@@ -271,7 +304,7 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
             narrative_parent_run_id = str(payload.get("narrative_parent_run_id") or "").strip() or None
             if narrative_parent_run_id and not re.fullmatch(r"agent-[a-z0-9-]{6,64}", narrative_parent_run_id):
                 raise ValueError("invalid narrative_parent_run_id")
-            agent = GeminiConfigAgent(api_key=api_key, model=model)
+            agent = ConfigAgent(api_key=api_key, model=model)
             result = agent.analyze(
                 task_description,
                 fixed_scenario=fixed_scenario,
@@ -313,7 +346,7 @@ def main() -> None:
     port = int(os.environ.get("UAV_AGENT_PORT", "8765"))
     server = ThreadingHTTPServer((host, port), PipelineRequestHandler)
     print(f"UAV Benchmark Config Agent: http://{host}:{port}")
-    print("API Key is read from GEMINI_API_KEY and is never sent to pipeline.html.")
+    print("API Key is read from DEEPSEEK_API_KEY and is never sent to pipeline.html.")
     print(f"Event log: {LOG_PATH.relative_to(ROOT)}")
     try:
         server.serve_forever()

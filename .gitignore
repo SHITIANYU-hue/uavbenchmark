@@ -8,6 +8,7 @@ __pycache__/
 !.env.example
 .agent_runs/
 outputs/
+*.egg-info/
 
 # Local research/source materials; not part of the public runnable repository.
 /01c_dashboard_总表.xlsx

@@ -6,23 +6,24 @@ build-backend = "setuptools.build_meta"
 name = "uav-benchmark"
 version = "0.1.0"
 description = "Reproducible machine contracts and mock pipeline for UAV benchmark tasks"
-requires-python = ">=3.11"
+requires-python = ">=3.9"
 dependencies = [
   "jsonschema>=4.16,<5",
   "PyYAML>=6,<7",
+  'eval_type_backport; python_version < "3.10"',
 ]
 
 [project.scripts]
 uav-benchmark-template = "uav_benchmark.compiler.cli:main"
 uav-benchmark-agent = "uav_benchmark.agent.server:main"
+uav-benchmark-instance = "uav_benchmark.instance.cli:main"
 
 [project.optional-dependencies]
 test = [
   "pytest>=7,<9",
 ]
 agent = [
-  "google-genai>=2.11,<3",
-  "socksio>=1.0.0,<2",
+  "openai>=1.40,<3",
 ]
 
 [tool.pytest.ini_options]

@@ -34,8 +34,8 @@ class RuntimeDependencyCandidate(StrictModel):
     provider: Literal["external_system", "executor", "human_or_external_decision"]
     responsibilities: list[str] = Field(min_length=1)
     evidence_quote: str
-    # Gemini Structured Outputs accepts a boolean schema here, but not a
-    # boolean Literal/const. The deterministic validator enforces false.
+    # DeepSeek JSON mode accepts a boolean schema here. The deterministic
+    # validator enforces false.
     scored: bool = False
     status: Literal["proposed", "TBD"] = "proposed"
     provenance: Literal["agent_extracted", "scenario_fixed", "human_added", "human_edited", "auto_fixed"] = "agent_extracted"
@@ -82,7 +82,7 @@ class AgentCandidate(StrictModel):
     runtime_dependencies: list[RuntimeDependencyCandidate] = Field(default_factory=list)
     jd_candidates: list[JDCandidate] = Field(default_factory=list)
     responsibility_boundaries: list[ResponsibilityBoundary] = Field(default_factory=list)
-    natural_language_template: str = Field(min_length=400)
+    natural_language_template: str = Field(default="")
     open_questions: list[OpenQuestion] = Field(default_factory=list)
     warnings: list[str] = Field(default_factory=list)
 

@@ -8,16 +8,15 @@ from __future__ import annotations
 
 import unittest
 from types import SimpleNamespace
-from unittest.mock import patch
 
 from uav_benchmark.agent.catalog import load_fixed_scenario, load_reference_catalog, load_scenario_registry
 from uav_benchmark.agent.models import AgentCandidate, NarrativeDraft
 from uav_benchmark.agent.service import (
     ConfigAgentError,
-    GeminiConfigAgent,
-    GeminiNarrativeAgent,
+    ConfigAgent,
+    NarrativeAgent,
     _extract_tool_trace,
-    gemini_response_schema,
+    structured_output_schema,
     validate_candidate,
     validate_narrative_draft,
 )
@@ -76,18 +75,14 @@ def candidate(evidence: str) -> AgentCandidate:
 
 
 class AgentContractChecks(unittest.TestCase):
-    def test_missing_socks_dependency_has_actionable_error(self) -> None:
-        with patch(
-            "uav_benchmark.agent.service.genai.Client",
-            side_effect=ImportError("Using SOCKS proxy, but the 'socksio' package is not installed."),
-        ):
-            with self.assertRaisesRegex(ConfigAgentError, "socksio"):
-                GeminiConfigAgent(api_key="test-key", model="test-model")
+    def test_client_construction_does_not_raise(self) -> None:
+        agent = ConfigAgent(api_key="test-key", model="test-model")
+        self.assertEqual(agent.model, "test-model")
 
     def test_transport_schema_removes_unsupported_additional_properties(self) -> None:
-        schema_text = str(gemini_response_schema())
+        schema_text = str(structured_output_schema())
         self.assertNotIn("additionalProperties", schema_text)
-        narrative_schema_text = str(gemini_response_schema(NarrativeDraft))
+        narrative_schema_text = str(structured_output_schema(NarrativeDraft))
         self.assertNotIn("additionalProperties", narrative_schema_text)
 
     def test_first_call_narrative_rejects_internal_labels(self) -> None:
@@ -103,21 +98,25 @@ class AgentContractChecks(unittest.TestCase):
         prose = candidate("持续识别车辆并维护跨帧身份").natural_language_template
         calls: list[str] = []
 
-        class FakeModels:
-            def generate_content(self, *, model: str, contents: str, config: object) -> object:
+        class FakeCompletions:
+            def create(self, *, model: str, messages: object, **kwargs: object) -> object:
                 calls.append(model)
-                return SimpleNamespace(parsed=NarrativeDraft(
+                draft_obj = NarrativeDraft(
                     task_title="高速公路车辆巡检",
                     expanded_narrative=prose.replace("\n", "\\n"),
                     open_questions=["具体观察时长是多少？"],
-                ), usage_metadata=None)
+                )
+                return SimpleNamespace(
+                    choices=[SimpleNamespace(message=SimpleNamespace(content=draft_obj.model_dump_json()))],
+                    usage=None,
+                )
 
-        agent = GeminiNarrativeAgent.__new__(GeminiNarrativeAgent)
-        agent.model = "fake-gemini"
-        agent.client = SimpleNamespace(models=FakeModels())
+        agent = NarrativeAgent.__new__(NarrativeAgent)
+        agent.model = "fake-deepseek"
+        agent.client = SimpleNamespace(chat=SimpleNamespace(completions=FakeCompletions()))
         result = agent.expand("巡查高速路，持续记录病害，遇到异常先通知调度。")
 
-        self.assertEqual(calls, ["fake-gemini"])
+        self.assertEqual(calls, ["fake-deepseek"])
         self.assertEqual(result.draft.expanded_narrative, prose)
         self.assertNotRegex(result.draft.expanded_narrative, r"A\d+[a-z]?×L[1-4]|jd-")
 
@@ -273,18 +272,22 @@ class AgentContractChecks(unittest.TestCase):
         self.assertNotIn("lookup_jd_catalog", [item.tool for item in trace])
 
     def test_orchestrator_uses_one_model_request_after_two_local_tools(self) -> None:
-        from uav_benchmark.agent.service import GeminiConfigAgent
+        from uav_benchmark.agent.service import ConfigAgent
 
         calls: list[tuple[str, object]] = []
 
-        class FakeModels:
-            def generate_content(self, *, model: str, contents: str, config: object) -> object:
-                calls.append((model, config))
-                return SimpleNamespace(parsed=candidate("持续识别车辆并维护跨帧身份"), usage_metadata=None)
+        class FakeCompletions:
+            def create(self, *, model: str, messages: object, **kwargs: object) -> object:
+                calls.append((model, kwargs))
+                cand = candidate("持续识别车辆并维护跨帧身份")
+                return SimpleNamespace(
+                    choices=[SimpleNamespace(message=SimpleNamespace(content=cand.model_dump_json()))],
+                    usage=None,
+                )
 
-        agent = GeminiConfigAgent.__new__(GeminiConfigAgent)
-        agent.model = "fake-gemini"
-        agent.client = SimpleNamespace(models=FakeModels())
+        agent = ConfigAgent.__new__(ConfigAgent)
+        agent.model = "fake-deepseek"
+        agent.client = SimpleNamespace(chat=SimpleNamespace(completions=FakeCompletions()))
         events: list[str] = []
         confirmed_narrative = candidate("持续识别车辆并维护跨帧身份").natural_language_template
         result = agent.analyze(confirmed_narrative, progress=lambda event, _details: events.append(event))

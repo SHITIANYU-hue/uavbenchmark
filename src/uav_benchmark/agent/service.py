@@ -1,15 +1,15 @@
-"""Gemini Config Agent and deterministic post-validation."""
+"""DeepSeek Config Agent and deterministic post-validation."""
 
 from __future__ import annotations
 
 import json
+import os
 import re
 import uuid
 from pathlib import Path
 from typing import Any, Callable
 
-from google import genai
-from google.genai import types
+from openai import OpenAI
 
 from .catalog import (
     ROOT,
@@ -95,9 +95,9 @@ Mandatory rules:
 - A JD or runtime dependency copied from fixed_scenario uses provenance=scenario_fixed
   and an exact scenario substring; task-specific values use provenance=agent_extracted
   and exact human task evidence.
-- The natural-language template has already been generated and reviewed before
-  this call. Copy confirmed_task_narrative exactly into natural_language_template;
-  do not rewrite, summarize, expand, or polish it.
+- The natural-language template will be overwritten by the orchestrator after
+  this call returns. Set natural_language_template to the literal string
+  "见确认稿" — do NOT copy or rewrite the narrative.
 - Keep A×L and JD identifiers in the structured fields only. The natural-language
   template must not contain A×L labels, GAL labels, jd-x.x identifiers, or schema names.
 - Express selected responsibilities and non-responsibilities in plain business Chinese.
@@ -109,14 +109,13 @@ class ConfigAgentError(RuntimeError):
     """A user-safe Config Agent failure."""
 
 
-def gemini_response_schema(model: type[AgentCandidate] | type[NarrativeDraft] = AgentCandidate) -> dict[str, Any]:
-    """Return an API-compatible schema while keeping local models strict.
+def structured_output_schema(model: type[AgentCandidate] | type[NarrativeDraft] = AgentCandidate) -> dict[str, Any]:
+    """Return a JSON Schema describing the expected structured response.
 
     Pydantic emits ``additionalProperties: false`` for ``extra='forbid'``.
-    The Gemini response_schema endpoint currently rejects the SDK-serialized
-    ``additional_properties`` field, so it is removed only from the transport
-    schema. ``AgentCandidate.model_validate`` still rejects extra fields after
-    the response returns.
+    The schema is embedded in the system prompt so DeepSeek produces JSON
+    that conforms to it. ``AgentCandidate.model_validate`` still rejects
+    extra fields after the response returns.
     """
 
     def sanitize(value: Any) -> Any:
@@ -133,49 +132,180 @@ def gemini_response_schema(model: type[AgentCandidate] | type[NarrativeDraft] = 
     return sanitize(model.model_json_schema())
 
 
+def _schema_instruction(model_cls: type[AgentCandidate] | type[NarrativeDraft]) -> str:
+    schema = structured_output_schema(model_cls)
+    schema_text = json.dumps(schema, ensure_ascii=False, indent=2)
+    return (
+        "\n\nYou must respond with a single valid JSON object that strictly "
+        "conforms to the following JSON Schema. Output ONLY the raw JSON "
+        "object—no markdown fences, no commentary, no surrounding text:\n\n"
+        + schema_text
+    )
+
+
 def _create_client(api_key: str) -> Any:
-    try:
-        return genai.Client(
-            api_key=api_key,
-            http_options=types.HttpOptions(
-                timeout=90_000,
-                retry_options=types.HttpRetryOptions(attempts=1),
-            ),
-        )
-    except ImportError as exc:
-        if "socksio" in str(exc).lower():
-            raise ConfigAgentError(
-                "检测到 SOCKS 代理，但本地环境缺少 socksio。请重新安装 Agent 依赖："
-                ".venv/bin/python -m pip install -e '.[agent,test]'"
-            ) from exc
-        raise
+    base_url = os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
+    return OpenAI(api_key=api_key, base_url=base_url, timeout=90.0, max_retries=0)
 
 
 def _model_error(exc: Exception) -> ConfigAgentError:
+    from openai import APIConnectionError, APIStatusError, AuthenticationError, RateLimitError
+
     message = str(exc)
-    if "API_KEY" in message.upper() or "401" in message or "403" in message:
-        return ConfigAgentError("Gemini API Key 无效、无权限或对应模型不可用。")
-    if "503" in message or "UNAVAILABLE" in message or "HIGH DEMAND" in message.upper():
-        return ConfigAgentError("Gemini 当前临时高负载（503）。本次输入与 Run ID 已保存，请稍后重试。")
-    if "429" in message or "RESOURCE_EXHAUSTED" in message:
-        return ConfigAgentError("Gemini 请求频率已达到当前额度（429）。请至少等待一分钟后再重试。")
-    return ConfigAgentError(f"Gemini 调用失败：{message[:240]}")
+    if isinstance(exc, AuthenticationError) or "401" in message or "403" in message:
+        return ConfigAgentError("DeepSeek API Key 无效、无权限或对应模型不可用。")
+    if isinstance(exc, RateLimitError) or "429" in message or "RESOURCE_EXHAUSTED" in message:
+        return ConfigAgentError("DeepSeek 请求频率已达到当前额度（429）。请至少等待一分钟后再重试。")
+    if isinstance(exc, APIConnectionError):
+        return ConfigAgentError(f"无法连接 DeepSeek 服务：{message[:240]}")
+    if "503" in message or "UNAVAILABLE" in message:
+        return ConfigAgentError("DeepSeek 当前临时高负载（503）。本次输入与 Run ID 已保存，请稍后重试。")
+    return ConfigAgentError(f"DeepSeek 调用失败：{message[:240]}")
 
 
 def _usage_dict(response: Any) -> dict[str, int | float | str | None]:
-    usage_metadata = getattr(response, "usage_metadata", None)
-    usage: dict[str, int | float | str | None] = {}
-    if usage_metadata is not None:
-        for key, value in usage_metadata.model_dump(exclude_none=True).items():
-            if isinstance(value, (int, float, str)) or value is None:
-                usage[key] = value
-    return usage
+    usage = getattr(response, "usage", None)
+    if usage is None:
+        return {}
+    result: dict[str, int | float | str | None] = {}
+    for attr in ("prompt_tokens", "completion_tokens", "total_tokens"):
+        val = getattr(usage, attr, None)
+        if isinstance(val, (int, float)):
+            result[attr] = val
+    return result
 
 
 def _normalize_narrative_linebreaks(value: str) -> str:
     """Convert model-emitted literal newline escapes into real paragraphs."""
 
     return value.replace("\\r\\n", "\n").replace("\\n", "\n")
+
+
+def _strip_json_fences(text: str) -> str:
+    """Remove markdown code fences (```json ... ```) and surrounding noise."""
+
+    text = text.strip()
+    if text.startswith("```"):
+        first_newline = text.find("\n")
+        if first_newline != -1:
+            text = text[first_newline + 1:]
+        if text.rstrip().endswith("```"):
+            text = text.rstrip()[:-3]
+    return text.strip()
+
+
+def _extract_json(raw_text: str) -> str:
+    """Best-effort extraction of a JSON object from model output."""
+
+    text = _strip_json_fences(raw_text)
+    try:
+        json.loads(text)
+        return text
+    except json.JSONDecodeError:
+        pass
+    start = text.find("{")
+    end = text.rfind("}")
+    if start != -1 and end != -1 and end > start:
+        return text[start:end + 1]
+    return text
+
+
+def _save_debug_response(run_id: str, operation: str, raw_text: str, finish_reason: str | None) -> Path:
+    output_dir = ROOT / ".agent_runs"
+    output_dir.mkdir(exist_ok=True)
+    debug_path = output_dir / f"{run_id}_raw_{operation}.txt"
+    debug_path.write_text(
+        f"run_id: {run_id}\n"
+        f"operation: {operation}\n"
+        f"finish_reason: {finish_reason}\n"
+        f"content_length: {len(raw_text)}\n"
+        f"---raw---\n"
+        f"{raw_text}",
+        encoding="utf-8",
+    )
+    return debug_path
+
+
+def _parse_model_json(
+    raw_text: str,
+    model_cls: type,
+    *,
+    run_id: str,
+    operation: str,
+    finish_reason: str | None,
+    emit: Callable[[str, dict[str, Any]], None] | None = None,
+):
+    """Parse a JSON response into *model_cls*, saving a debug dump on failure."""
+
+    text = _extract_json(raw_text)
+    try:
+        return model_cls.model_validate_json(text)
+    except Exception as exc:
+        debug_path = _save_debug_response(run_id, operation, raw_text, finish_reason)
+        snippet = raw_text[:300].replace("\n", "\\n")
+        detail = str(exc)[:500]
+        if finish_reason == "length":
+            raise ConfigAgentError(
+                f"DeepSeek 返回被截断（finish_reason=length），JSON 不完整。"
+                f"原始响应已保存到 {debug_path.name}。"
+            ) from exc
+        raise ConfigAgentError(
+            f"DeepSeek 返回的 JSON 无法解析为 {model_cls.__name__}。\n"
+            f"错误：{detail}\n"
+            f"原始响应已保存到 {debug_path.name}。\n"
+            f"响应片段（前300字符）：{snippet}"
+        ) from exc
+
+
+def _condensed_gal_catalog() -> dict[str, Any]:
+    """Compact GAL catalog: cell IDs, ability names, required JDs — no full responsibility text."""
+
+    catalog = lookup_gal_catalog()
+    return {
+        "catalog_version": catalog["catalog_version"],
+        "abilities": catalog["abilities"],
+        "cells": [
+            {
+                "cell": c["cell"],
+                "a_id": c["a_id"],
+                "level": c["level"],
+                "ability": c["ability"],
+                "level_label": c["level_label"],
+                "cumulative_level_count": len(c["cumulative_levels"]),
+                "required_jd_ids": c["required_jd_ids"],
+            }
+            for c in catalog["gal_cells"]
+        ],
+    }
+
+
+def _condensed_jd_catalog() -> dict[str, Any]:
+    """Compact JD catalog: slot IDs and canonical names — no verbose descriptions."""
+
+    catalog = lookup_jd_catalog()
+    return {
+        "jd_fields": [
+            {"id": f["id"], "name": f["name"], "scope": f["scope"], "owner_a": f["owner_a"]}
+            for f in catalog["jd_fields"]
+        ],
+    }
+
+
+def _save_raw_request(run_id: str, operation: str, messages: list[dict[str, str]]) -> Path:
+    output_dir = ROOT / ".agent_runs"
+    output_dir.mkdir(exist_ok=True)
+    path = output_dir / f"{run_id}_input_{operation}.txt"
+    parts: list[str] = []
+    for msg in messages:
+        parts.append(f"=== {msg['role']} ({len(msg['content'])} chars) ===\n{msg['content']}")
+    path.write_text(
+        f"run_id: {run_id}\noperation: {operation}\n"
+        f"total_messages: {len(messages)}\n"
+        f"total_chars: {sum(len(m['content']) for m in messages)}\n\n"
+        + "\n\n".join(parts),
+        encoding="utf-8",
+    )
+    return path
 
 
 def _extract_tool_trace(history: Any) -> list[ToolTrace]:
@@ -378,7 +508,7 @@ def validate_narrative_draft(draft: NarrativeDraft) -> list[ValidationIssue]:
     return issues
 
 
-class GeminiNarrativeAgent:
+class NarrativeAgent:
     """Call 1: turn a short human request into editable business prose."""
 
     def __init__(self, api_key: str, model: str) -> None:
@@ -404,31 +534,40 @@ class GeminiNarrativeAgent:
             "narrative_backbone": load_template_backbone()["paragraph_sequence"],
         }, ensure_ascii=False)
 
-        emit("model_request_started", {"model": self.model, "operation": "narrative_expand", "timeout_seconds": 90})
+        system_content = NARRATIVE_SYSTEM_INSTRUCTION + _schema_instruction(NarrativeDraft)
+        messages = [
+            {"role": "system", "content": system_content},
+            {"role": "user", "content": agent_input},
+        ]
+        _save_raw_request(run_id or "unknown", "narrative_expand", messages)
+        emit("model_request_started", {
+            "model": self.model,
+            "operation": "narrative_expand",
+            "timeout_seconds": 90,
+            "input_chars": len(system_content) + len(agent_input),
+        })
         try:
-            response = self.client.models.generate_content(
+            response = self.client.chat.completions.create(
                 model=self.model,
-                contents=agent_input,
-                config=types.GenerateContentConfig(
-                    system_instruction=NARRATIVE_SYSTEM_INSTRUCTION,
-                    temperature=0.2,
-                    response_mime_type="application/json",
-                    response_schema=gemini_response_schema(NarrativeDraft),
-                ),
+                messages=messages,
+                temperature=0.2,
+                max_tokens=8192,
+                response_format={"type": "json_object"},
             )
         except Exception as exc:
             emit("model_request_failed", {"error": str(exc)[:500]})
             raise _model_error(exc) from exc
         emit("model_response_received", {"model": self.model, "operation": "narrative_expand"})
 
-        draft = response.parsed
-        if draft is None:
-            try:
-                draft = NarrativeDraft.model_validate_json(response.text)
-            except Exception as exc:
-                raise ConfigAgentError("Gemini 未返回符合任务文案合同的结构化结果。") from exc
-        elif not isinstance(draft, NarrativeDraft):
-            draft = NarrativeDraft.model_validate(draft)
+        raw_text = response.choices[0].message.content or ""
+        finish_reason = getattr(response.choices[0], "finish_reason", None) if response.choices else None
+        draft = _parse_model_json(
+            raw_text, NarrativeDraft,
+            run_id=run_id or "unknown",
+            operation="narrative_expand",
+            finish_reason=finish_reason,
+            emit=emit,
+        )
 
         draft = draft.model_copy(update={
             "expanded_narrative": _normalize_narrative_linebreaks(draft.expanded_narrative).strip(),
@@ -446,7 +585,7 @@ class GeminiNarrativeAgent:
         )
 
 
-class GeminiConfigAgent:
+class ConfigAgent:
     def __init__(self, api_key: str, model: str) -> None:
         self.model = model
         self.client = _create_client(api_key)
@@ -468,13 +607,13 @@ class GeminiConfigAgent:
         trace: list[ToolTrace] = []
         emit("tool_called", {"tool": "lookup_gal_catalog"})
         trace.append(ToolTrace(tool="lookup_gal_catalog", status="called"))
-        gal_catalog = lookup_gal_catalog()
+        gal_catalog = _condensed_gal_catalog()
         trace.append(ToolTrace(tool="lookup_gal_catalog", status="completed"))
         emit("tool_completed", {"tool": "lookup_gal_catalog"})
 
         emit("tool_called", {"tool": "lookup_jd_catalog"})
         trace.append(ToolTrace(tool="lookup_jd_catalog", status="called"))
-        jd_catalog = lookup_jd_catalog()
+        jd_catalog = _condensed_jd_catalog()
         trace.append(ToolTrace(tool="lookup_jd_catalog", status="completed"))
         emit("tool_completed", {"tool": "lookup_jd_catalog"})
 
@@ -488,31 +627,39 @@ class GeminiConfigAgent:
             },
         }, ensure_ascii=False)
 
-        emit("model_request_started", {"model": self.model, "timeout_seconds": 90})
+        system_content = SYSTEM_INSTRUCTION + _schema_instruction(AgentCandidate)
+        messages = [
+            {"role": "system", "content": system_content},
+            {"role": "user", "content": agent_input},
+        ]
+        _save_raw_request(run_id or "unknown", "classification", messages)
+        emit("model_request_started", {
+            "model": self.model,
+            "timeout_seconds": 90,
+            "input_chars": len(system_content) + len(agent_input),
+        })
         try:
-            response = self.client.models.generate_content(
+            response = self.client.chat.completions.create(
                 model=self.model,
-                contents=agent_input,
-                config=types.GenerateContentConfig(
-                    system_instruction=SYSTEM_INSTRUCTION,
-                    temperature=0.15,
-                    response_mime_type="application/json",
-                    response_schema=gemini_response_schema(),
-                ),
+                messages=messages,
+                temperature=0.15,
+                max_tokens=8192,
+                response_format={"type": "json_object"},
             )
         except Exception as exc:
             emit("model_request_failed", {"error": str(exc)[:500]})
             raise _model_error(exc) from exc
         emit("model_response_received", {"model": self.model})
 
-        candidate = response.parsed
-        if candidate is None:
-            try:
-                candidate = AgentCandidate.model_validate_json(response.text)
-            except Exception as exc:
-                raise ConfigAgentError("Gemini 未返回符合候选合同的结构化结果。") from exc
-        elif not isinstance(candidate, AgentCandidate):
-            candidate = AgentCandidate.model_validate(candidate)
+        raw_text = response.choices[0].message.content or ""
+        finish_reason = getattr(response.choices[0], "finish_reason", None) if response.choices else None
+        candidate = _parse_model_json(
+            raw_text, AgentCandidate,
+            run_id=run_id or "unknown",
+            operation="classification",
+            finish_reason=finish_reason,
+            emit=emit,
+        )
 
         # Catalog provenance and the reviewed prose are deterministic local
         # metadata. Call 2 may classify the prose but may never rewrite it.

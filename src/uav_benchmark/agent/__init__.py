@@ -1,4 +1,4 @@
-"""Gemini-backed Config Agent for UAV benchmark task authoring."""
+"""DeepSeek-backed Config Agent for UAV benchmark task authoring."""
 
 from .models import AgentCandidate, AgentRunResult
 

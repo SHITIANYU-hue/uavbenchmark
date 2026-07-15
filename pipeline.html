@@ -593,7 +593,8 @@
       ["NARRATIVE", "任务文案复核"],
       ["COVERAGE", "能力等级复核"],
       ["JD", "变量提取"],
-      ["TEMPLATE", "任务模板"]
+      ["TEMPLATE", "任务模板"],
+      ["INSTANCE", "任务实例化"]
     ];
 
     const SCENARIO_TASK_EXAMPLES = {
@@ -791,6 +792,13 @@
       template: null,
       templateView: "natural",
       templateValidated: false,
+      instanceSeed: 0,
+      instanceBatchSeeds: "0-4",
+      instanceMode: "single",
+      instanceResult: null,
+      instanceResults: null,
+      instanceError: null,
+      instanceLoading: false,
       instances: [],
       selectedInstance: null,
       selectedSut: null,
@@ -898,8 +906,8 @@
       request_received: "本地服务已接收任务",
       tool_called: "正在读取受审目录",
       tool_completed: "受审目录读取完成",
-      model_request_started: "GAL / JD 已就绪，等待 Gemini 返回",
-      model_response_received: "Gemini 已返回，正在解析候选",
+      model_request_started: "GAL / JD 已就绪，等待 DeepSeek 返回",
+      model_response_received: "DeepSeek 已返回，正在解析候选",
       candidate_validated: "候选已完成确定性校验",
       run_saved: "运行结果已保存"
     };
@@ -1103,7 +1111,7 @@
         '<input data-review-jd-value="' + item.slot_id + '" value="' + escapeHtml(item.value || "") + '" placeholder="例如：平台类型仍待确认"></div>' +
         '<div class="review-field"><label>确认依据（填写值时必填）</label><input data-review-jd-source="' + item.slot_id + '" value="' +
         escapeHtml(item.source_note || "") + '" placeholder="例如：7月13日项目会议纪要 / 业务负责人确认"></div></div></div>').join("");
-      return '<h3 class="review-section-title">统一补录 TBD</h3><p class="review-help">能确认的值统一填写；不能确认的继续留空。保存不会调用 Gemini。</p>' +
+      return '<h3 class="review-section-title">统一补录 TBD</h3><p class="review-help">能确认的值统一填写；不能确认的继续留空。保存不会调用 DeepSeek。</p>' +
         '<div class="review-form-list">' + missingHtml + (rows || '<div class="review-empty">当前没有 TBD 字段。</div>') + '</div>';
     }
 
@@ -1194,7 +1202,7 @@
         '<button class="review-tab ' + (state.reviewTab === "template" ? "active" : "") + '" data-review-tab="template" type="button">模板编辑</button></div>' +
         '<div class="review-workspace-body">' + tabBody + (state.reviewSaveError ? '<div class="disclaimer">' + escapeHtml(state.reviewSaveError) + '</div>' : "") +
         '<div class="review-field" style="margin-top:14px"><label>本次修改说明</label><input id="reviewNote" value="' + escapeHtml(state.reviewNote || "") + '" placeholder="例如：补充控制接口与外部决定端口，保留安全阈值 TBD"></div></div>' +
-        '<div class="review-workspace-foot"><span class="action-note">保存后本地重新校验，不调用 Gemini，不消耗 RPM。</span><button class="btn primary" id="saveHumanRevision" type="button">保存为新版本并重新校验</button></div>' +
+        '<div class="review-workspace-foot"><span class="action-note">保存后本地重新校验，不调用 DeepSeek，不消耗 RPM。</span><button class="btn primary" id="saveHumanRevision" type="button">保存为新版本并重新校验</button></div>' +
         '</section></div>';
       bindReviewWorkspace();
     }
@@ -1280,7 +1288,7 @@
         (state.narrativeRunId ? '<div class="context-block"><div class="context-label">Narrative Run</div><div class="context-value mono">' + escapeHtml(state.narrativeRunId) + '</div></div>' : '') +
         '<div class="context-block"><div class="context-label">Classification Run</div><div class="context-value mono">' + escapeHtml(state.runId.startsWith("agent-") ? state.runId : "尚未开始") + "</div></div>" +
         '<div class="context-block"><div class="context-label">Model</div><div class="context-value mono">' +
-        escapeHtml(state.agentResult ? state.agentResult.model : state.modelTier === "pro" ? "Gemini Pro" : state.modelTier === "lite" ? "Gemini 3.1 Flash-Lite" : "Gemini 3.5 Flash") + '</div></div>' +
+        escapeHtml(state.agentResult ? state.agentResult.model : state.modelTier === "pro" ? "DeepSeek Chat (Pro)" : state.modelTier === "lite" ? "DeepSeek Chat (Lite)" : "DeepSeek Chat") + '</div></div>' +
         '<div class="context-block"><div class="context-label">Knowledge Catalog</div><div class="context-value mono">' +
         (catalogCounts ? catalogCounts.abilities + ' A · ' + catalogCounts.gal_cells + ' A×L · ' + catalogCounts.jd_fields + ' JD' : '正在读取') +
         '</div><div class="action-note">版本：' + escapeHtml(state.catalogSummary ? state.catalogSummary.catalog_version : "—") + '</div></div>' +
@@ -1352,7 +1360,7 @@
       const locked = state.completed.has(0);
       setWorkspaceHeader(0, scenario ? (locked ? "固定场景已确认" : "等待人工确认") : "正在读取固定场景");
       if (!scenario) {
-        document.getElementById("workspaceBody").innerHTML = '<div class="choice-card"><b>正在读取固定业务场景</b><p>请通过本地启动脚本打开页面；Stage 0 不调用 Gemini。</p></div>';
+        document.getElementById("workspaceBody").innerHTML = '<div class="choice-card"><b>正在读取固定业务场景</b><p>请通过本地启动脚本打开页面；Stage 0 不调用 DeepSeek。</p></div>';
         return;
       }
       const modeLabel = { fixed_value: "固定值", fixed_domain: "固定取值域", task_derived: "由任务提取" };
@@ -1390,13 +1398,13 @@
       const taskExample = SCENARIO_TASK_EXAMPLES[state.selectedScenarioId] || "例如：请用一到三句话说明希望无人机完成什么、遇到异常如何处理，以及最后需要什么结果。";
       setWorkspaceHeader(1, busy ? "调用 1/2 · 正在扩充文案" : locked ? "简短任务已提交" : serverReady ? "文案 Agent 已就绪" : "等待本地服务");
       document.getElementById("workspaceBody").innerHTML =
-        '<p class="intro">请像向同事交代工作一样，用 1–3 句话说明想让无人机做什么。第一次 Gemini 调用会把这段人话扩充成完整业务文案，但不会判断 A×L，也不会提取 JD。</p>' +
+        '<p class="intro">请像向同事交代工作一样，用 1–3 句话说明想让无人机做什么。第一次 DeepSeek 调用会把这段人话扩充成完整业务文案，但不会判断 A×L，也不会提取 JD。</p>' +
         '<div class="field-label"><label for="taskPrompt">本次任务要求</label><span>简短自然语言 · 可编辑</span></div>' +
         '<textarea class="task-input" id="taskPrompt" placeholder="' + escapeHtml(taskExample) + '"' + (locked || busy ? " disabled" : "") + '>' + escapeHtml(state.prompt) + "</textarea>" +
         '<div class="instance-tools"><div class="control"><label for="modelTier">两次调用使用的模型</label><select id="modelTier"' + (locked || busy ? " disabled" : "") + '>' +
-        '<option value="flash"' + (state.modelTier === "flash" ? " selected" : "") + '>Gemini 3.5 Flash · 推荐</option>' +
-        '<option value="lite"' + (state.modelTier === "lite" ? " selected" : "") + '>Gemini 3.1 Flash-Lite · 高负载备用</option>' +
-        '<option value="pro"' + (state.modelTier === "pro" ? " selected" : "") + '>Gemini Pro · 复核型</option></select></div></div>' +
+        '<option value="flash"' + (state.modelTier === "flash" ? " selected" : "") + '>DeepSeek Chat · 推荐</option>' +
+        '<option value="lite"' + (state.modelTier === "lite" ? " selected" : "") + '>DeepSeek Chat · 备用</option>' +
+        '<option value="pro"' + (state.modelTier === "pro" ? " selected" : "") + '>DeepSeek Chat · 复核型</option></select></div></div>' +
         (busy ? '<div class="choice-card selected"><div class="choice-code">CALL 1 / 2 · 可刷新恢复</div><b>' + escapeHtml(currentRunLabel("narrative")) + '</b><p>正在把简短人话扩充为七段式业务文案，不进行能力分级。</p></div>' : "") +
         (state.narrativeError ? '<div class="choice-card dependency selected"><div class="choice-code">NARRATIVE AGENT ERROR</div><b>本次未生成文案</b><p>' + escapeHtml(state.narrativeError) + '</p></div>' : "") +
         '<div class="action-row"><span class="action-note">' + (locked ? "简短输入已形成快照，下一步仍可修改扩充后的完整文案。" : serverReady ? "这一步消耗一次模型请求；Key 只由本机服务读取。" : "请先运行 scripts/start_agent_demo.sh，再从本地地址打开页面。") + '</span>' +
@@ -1450,7 +1458,7 @@
       }).join("") + '</div>' : '';
       setWorkspaceHeader(2, busy ? "调用 2/2 · 正在分类与提取" : locked ? "任务文案已确认" : "等待人工修改与确认");
       document.getElementById("workspaceBody").innerHTML =
-        '<p class="intro">下面是第一次 Gemini 调用扩充的完整任务文案。请直接修改不准确、过度推断或缺失的内容。确认后，第二次 Gemini 调用才会据此判断 A×L 等级并提取 JD；第二次调用不会改写这段文案。</p>' +
+        '<p class="intro">下面是第一次 DeepSeek 调用扩充的完整任务文案。请直接修改不准确、过度推断或缺失的内容。确认后，第二次 DeepSeek 调用才会据此判断 A×L 等级并提取 JD；第二次调用不会改写这段文案。</p>' +
         '<div class="choice-card"><div class="choice-code">原始人工输入</div><p>' + escapeHtml(state.prompt) + '</p></div>' +
         '<div class="field-label"><label for="narrativeDraft">Agent 扩充文案</label><span>' + (state.narrativeEdited ? "已人工修改" : "Agent 原稿") + ' · 可编辑</span></div>' +
         '<textarea class="task-input review-template-editor" id="narrativeDraft"' + (locked || busy ? " disabled" : "") + '>' + escapeHtml(state.narrativeDraft || "") + '</textarea>' +
@@ -1984,9 +1992,149 @@
       });
     }
 
+    function candidateToTemplate() {
+      const cand = state.agentResult ? state.agentResult.candidate : null;
+      if (!cand) return null;
+      const jdSlots = (cand.jd_candidates || []).map(jd => {
+        const hasValue = jd.value !== null && jd.value !== undefined && jd.value !== "";
+        return {
+          slot_id: jd.slot_id,
+          description: jd.name || jd.slot_id,
+          visibility: "sut_visible",
+          binding: hasValue
+            ? {mode: "fixed", value: jd.value, status: "verified"}
+            : {mode: "TBD", status: "TBD"},
+          provenance: []
+        };
+      });
+      return {
+        schema_version: "0.1.0",
+        artifact_type: "task_template",
+        template_id: (cand.task_title || "agent_template").replace(/\s+/g, "_").substring(0, 40),
+        template_version: "0.1.0",
+        title: cand.task_title || "Agent Template",
+        scenario: {summary: cand.scenario_summary || "", fixed_boundaries: [], out_of_scope: []},
+        coverage: (cand.coverage_candidates || []).map(c => ({
+          coverage_id: c.cell.replace(/[×]/g, "_").toLowerCase(),
+          group: "G2", ability: c.cell.split("×")[0], level: c.cell.split("×")[1] || "L1",
+          role: c.role || "primary", sut_responsibilities: c.responsibilities || [], out_of_scope: c.out_of_scope || []
+        })),
+        jd_slots: jdSlots,
+        phases: [{phase_id: "task", order: 1, entry_conditions: ["start"], exit_conditions: ["done"],
+          minimum_duration: {value: null, unit: "TBD", status: "TBD"}}],
+        disturbances: [],
+        interfaces: {sut_visible_inputs: [], sut_outputs: [], hidden_ground_truth: [],
+          executor_responsibilities: (cand.runtime_dependencies || []).map(d => d.responsibilities[0] || "TBD"),
+          external_decision_port: {description: "TBD", status: "TBD", protocol: null}},
+        metrics: [], provenance: []
+      };
+    }
+
+    async function generateInstancePreview() {
+      const template = candidateToTemplate();
+      if (!template) { state.instanceError = "没有可用的 Task Template；请先完成 Stage 0–5。"; render(); return; }
+      state.instanceLoading = true;
+      state.instanceError = null;
+      state.instanceResult = null;
+      state.instanceResults = null;
+      render();
+      try {
+        const endpoint = state.instanceMode === "traverse" ? "/api/instance/traverse"
+          : state.instanceMode === "batch" ? "/api/instance/batch"
+          : "/api/instance/generate";
+        const body = state.instanceMode === "single"
+          ? {template, seed: parseInt(state.instanceSeed) || 0}
+          : state.instanceMode === "batch"
+          ? {template, seeds: state.instanceBatchSeeds}
+          : {template, steps_per_range: 3};
+        const resp = await fetch(endpoint, {
+          method: "POST", headers: {"Content-Type": "application/json"},
+          body: JSON.stringify(body)
+        });
+        const data = await resp.json();
+        if (!resp.ok) throw new Error(data.message || data.error || "request failed");
+        if (state.instanceMode === "single") {
+          state.instanceResult = data.instance;
+        } else {
+          state.instanceResults = data.instances || [];
+        }
+      } catch (err) {
+        state.instanceError = String(err.message || err);
+      } finally {
+        state.instanceLoading = false;
+        render();
+      }
+    }
+
+    function renderInstanceStage() {
+      const locked = state.completed.has(5);
+      const tpl = candidateToTemplate();
+      setWorkspaceHeader(6, state.instanceResult ? "实例已生成" : state.instanceLoading ? "正在生成..." : "等待 Seed 输入");
+      let bindingRows = "";
+      if (tpl && tpl.jd_slots) {
+        bindingRows = tpl.jd_slots.map(s => {
+          const mode = s.binding.mode;
+          const val = mode === "fixed" ? escapeHtml(String(s.binding.value)) : mode === "TBD" ? "—" : escapeHtml(mode);
+          const tag = mode === "fixed" ? "fixed" : mode === "TBD" ? "tbd" : "proposed";
+          return '<tr><td class="mono">' + escapeHtml(s.slot_id) + '</td><td>' + escapeHtml(s.description) +
+            '</td><td>' + statusPill(mode, tag) + '</td><td>' + val + '</td></tr>';
+        }).join("");
+      }
+      let resultHtml = "";
+      if (state.instanceError) {
+        resultHtml = '<div class="choice-card dependency selected"><div class="choice-code">INSTANCE ERROR</div><b>生成失败</b><p>' + escapeHtml(state.instanceError) + '</p></div>';
+      } else if (state.instanceResult) {
+        const rows = (state.instanceResult.slot_bindings || []).map(s =>
+          '<tr><td class="mono">' + escapeHtml(s.slot_id) + '</td><td>' + escapeHtml(JSON.stringify(s.value)) +
+          '</td><td>' + statusPill(s.status, s.status === "verified" ? "given" : "tbd") + '</td></tr>'
+        ).join("");
+        resultHtml = '<div class="choice-card selected"><div class="choice-code">INSTANCE · SEED ' + state.instanceResult.seed + '</div>' +
+          '<p class="mono" style="font-size:12px">' + escapeHtml(state.instanceResult.instance_id) + '</p>' +
+          '<table class="jd-table"><thead><tr><th>Slot</th><th>Value</th><th>Status</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
+      } else if (state.instanceResults) {
+        resultHtml = '<div class="choice-card selected"><div class="choice-code">BATCH · ' + state.instanceResults.length + ' INSTANCES</div>' +
+          '<table class="jd-table"><thead><tr><th>Instance ID</th><th>Seed</th><th>Resolved</th></tr></thead><tbody>' +
+          state.instanceResults.map(inst => {
+            const resolved = (inst.slot_bindings || []).filter(s => s.status !== "TBD").length;
+            const total = (inst.slot_bindings || []).length;
+            return '<tr><td class="mono">' + escapeHtml(inst.instance_id) + '</td><td>' + inst.seed +
+              '</td><td>' + resolved + '/' + total + '</td></tr>';
+          }).join("") + '</tbody></table></div>';
+      }
+      document.getElementById("workspaceBody").innerHTML =
+        '<p class="intro">从已确认的 Task Template 和 Seed 生成具体的任务实例。同一个 (template, seed) 组合始终产生相同的实例。</p>' +
+        (tpl ? '<table class="jd-table"><thead><tr><th>Slot</th><th>Description</th><th>Mode</th><th>Value</th></tr></thead><tbody>' + bindingRows + '</tbody></table>' :
+          '<div class="choice-card"><b>请先完成 Stage 0–5</b><p>需要先通过 Config Agent 生成 Task Template。</p></div>') +
+        (tpl ? '<div class="field-label" style="margin-top:18px"><label>生成模式</label></div>' +
+          '<div class="control" style="margin-bottom:10px"><select id="instanceMode">' +
+            '<option value="single"' + (state.instanceMode === "single" ? " selected" : "") + '>单个 Seed</option>' +
+            '<option value="batch"' + (state.instanceMode === "batch" ? " selected" : "") + '>批量 Seed 范围</option>' +
+            '<option value="traverse"' + (state.instanceMode === "traverse" ? " selected" : "") + '>全遍历（笛卡尔积）</option>' +
+          '</select></div>' +
+          '<div id="instanceSingleFields" style="' + (state.instanceMode !== "single" ? "display:none" : "") + 'margin-bottom:10px">' +
+            '<label>Seed</label><input id="instanceSeedInput" type="number" min="0" value="' + state.instanceSeed + '" style="width:120px"></div>' +
+          '<div id="instanceBatchFields" style="' + (state.instanceMode !== "batch" ? "display:none" : "") + 'margin-bottom:10px">' +
+            '<label>Seed 范围（如 0-9 或 0,3,7）</label><input id="instanceBatchInput" type="text" value="' + escapeHtml(state.instanceBatchSeeds) + '" style="width:200px"></div>' +
+          '<div class="action-row"><span class="action-note">' + (state.instanceMode === "traverse" ? "枚举所有 enum/range 组合" : "确定性生成") + '</span>' +
+            '<button class="btn primary" id="generateInstanceBtn" type="button"' + (state.instanceLoading ? " disabled" : "") + '>' +
+            (state.instanceLoading ? "生成中..." : "生成实例") + '</button></div>' : '') +
+        resultHtml;
+      const modeSelect = document.getElementById("instanceMode");
+      if (modeSelect) modeSelect.addEventListener("change", () => {
+        state.instanceMode = modeSelect.value;
+        render();
+      });
+      const seedInput = document.getElementById("instanceSeedInput");
+      if (seedInput) seedInput.addEventListener("change", () => { state.instanceSeed = parseInt(seedInput.value) || 0; });
+      const batchInput = document.getElementById("instanceBatchInput");
+      if (batchInput) batchInput.addEventListener("change", () => { state.instanceBatchSeeds = batchInput.value; });
+      const genBtn = document.getElementById("generateInstanceBtn");
+      if (genBtn) genBtn.addEventListener("click", generateInstancePreview);
+    }
+
     function renderWorkspace() {
       const renderers = [
-        renderScenarioStage, renderInputStage, renderNarrativeStage, renderCoverageStage, renderJdStage, renderTemplateStage
+        renderScenarioStage, renderInputStage, renderNarrativeStage, renderCoverageStage, renderJdStage, renderTemplateStage, renderInstanceStage
       ];
       renderers[state.currentStage]();
     }
