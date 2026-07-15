@@ -107,7 +107,7 @@ variables:
       mode: enum
       allowed_values: [corridor_profile_a, corridor_profile_b, corridor_profile_c]
       status: proposed
-  - slot_id: jd-8.3
+  - slot_id: jd-2.2
     description: 与返航和安全备降策略兼容的平台 profile
     visibility: compiler_only
     binding:

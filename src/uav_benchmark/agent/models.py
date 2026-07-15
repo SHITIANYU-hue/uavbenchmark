@@ -7,15 +7,11 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field
 
 
-SupportedCell = Literal[
-    "A5×L1", "A5×L2", "A6a×L3", "A6b×L2",
-    "A7×L1", "A7×L2", "A8×L1", "A11×L4",
-]
-SupportedJD = Literal[
-    "jd-0.2", "jd-0.3", "jd-0.5", "jd-0.7", "jd-0.9", "jd-0.10",
-    "jd-5.1", "jd-6a.1", "jd-6a.3", "jd-6b.1", "jd-6b.2",
-    "jd-7.1", "jd-7.2", "jd-8.1", "jd-8.2", "jd-8.3",
-]
+# IDs are validated against the versioned local knowledge catalog instead of
+# being duplicated as Python Literal enums.  This keeps schema and catalog
+# upgrades independent while retaining deterministic post-validation.
+SupportedCell = str
+SupportedJD = str
 
 
 class StrictModel(BaseModel):
@@ -29,6 +25,8 @@ class CoverageCandidate(StrictModel):
     out_of_scope: list[str] = Field(default_factory=list)
     evidence_quote: str
     status: Literal["proposed", "TBD"] = "proposed"
+    provenance: Literal["agent_inferred", "human_edited"] = "agent_inferred"
+    source_note: str | None = None
 
 
 class RuntimeDependencyCandidate(StrictModel):
@@ -40,7 +38,7 @@ class RuntimeDependencyCandidate(StrictModel):
     # boolean Literal/const. The deterministic validator enforces false.
     scored: bool = False
     status: Literal["proposed", "TBD"] = "proposed"
-    provenance: Literal["agent_extracted", "human_added", "human_edited", "auto_fixed"] = "agent_extracted"
+    provenance: Literal["agent_extracted", "scenario_fixed", "human_added", "human_edited", "auto_fixed"] = "agent_extracted"
     source_note: str | None = None
 
 
@@ -50,7 +48,7 @@ class JDCandidate(StrictModel):
     value: str | None
     status: Literal["given", "proposed", "TBD"]
     evidence_quote: str
-    provenance: Literal["agent_extracted", "human_added", "human_edited", "auto_fixed"] = "agent_extracted"
+    provenance: Literal["agent_extracted", "scenario_fixed", "human_added", "human_edited", "auto_fixed"] = "agent_extracted"
     source_note: str | None = None
 
 
@@ -67,7 +65,17 @@ class OpenQuestion(StrictModel):
     blocking: bool = False
 
 
+class NarrativeDraft(StrictModel):
+    """First-call output: business prose only, without GAL/JD classification."""
+
+    task_title: str
+    expanded_narrative: str = Field(min_length=400)
+    open_questions: list[str] = Field(default_factory=list)
+    warnings: list[str] = Field(default_factory=list)
+
+
 class AgentCandidate(StrictModel):
+    catalog_versions: dict[str, str] = Field(default_factory=dict)
     task_title: str
     scenario_summary: str
     coverage_candidates: list[CoverageCandidate] = Field(min_length=1)
@@ -97,4 +105,13 @@ class AgentRunResult(StrictModel):
     validation_status: Literal["pass", "needs_review"]
     validation_issues: list[ValidationIssue]
     tool_trace: list[ToolTrace]
+    usage: dict[str, int | float | str | None] = Field(default_factory=dict)
+
+
+class NarrativeRunResult(StrictModel):
+    run_id: str
+    model: str
+    draft: NarrativeDraft
+    validation_status: Literal["pass", "needs_review"]
+    validation_issues: list[ValidationIssue]
     usage: dict[str, int | float | str | None] = Field(default_factory=dict)

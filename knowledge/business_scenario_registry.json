@@ -1,0 +1,238 @@
+{
+  "schema": "uav-benchmark-business-scenario-registry",
+  "schema_version": "0.1.0",
+  "registry_version": "inspection-scenarios-2026-07-15",
+  "source": "用户于 2026-07-15 提供的巡检作业类需求清单",
+  "default_scenario_id": "highway_inspection",
+  "scenarios": [
+    {
+      "scenario_id": "highway_inspection",
+      "scenario_version": "2026-07-15-demand-baseline",
+      "title": "高速巡检",
+      "summary": "面向高速公路及超长路段的周期性、临时性和突发事件巡检。场景提供巡查计划、路线、无人机调度、检测告警、证据采集、数据归档和工作流联动等业务条件；持续病害观测与趋势预测属于可选任务模块。Stage 0 只固定这些业务模块和变量域，不默认要求本次任务覆盖全部模块，也不预设 A×L。",
+      "fixed_boundary": [
+        "工作空间属于高速公路及其沿线路段，具体道路、里程和空间几何待任务或实例确认",
+        "允许周期性或临时性巡查，并支持超长路段的任务表达",
+        "允许突发事件触发应急路线规划和多架次调度，但具体编队、架次和调度接口保持 TBD",
+        "允许检测告警、证据采集、归档报表、事件联动、持续观测和趋势分析模块",
+        "远程拍照、喊话、车牌识别、灯光警示和热成像为可选载荷能力，不在 Stage 0 自动计入 SUT 评分"
+      ],
+      "available_task_modules": [
+        {"name": "任务规划", "requirement": "周期性/临时性巡查计划制定、航线自动生成和超长路段巡检"},
+        {"name": "应急调度", "requirement": "突发事件时规划应急航线并调度多架次无人机管控现场"},
+        {"name": "检测识别", "requirement": "AI 智能识别，支持边飞边检或先飞后检，并通过多渠道推送告警"},
+        {"name": "数据归档", "requirement": "按路段和时间归档数据，生成巡查报告及统计报表"},
+        {"name": "飞行处置", "requirement": "远程拍照取证、喊话疏导、车牌识别、灯光警示或热成像感知"},
+        {"name": "事件联动", "requirement": "通过可配置工作流实现事件触发的巡检与处置"},
+        {"name": "病害观测", "requirement": "对病害进行持续观测、对比和分析"},
+        {"name": "进展预测", "requirement": "基于历史观测提供病害趋势预测及预防处置建议"}
+      ],
+      "variable_bindings": [
+        {"slot_id": "jd-0.1", "name": "任务时长", "binding_mode": "task_derived", "value_or_domain": "周期性、临时性、应急或持续观测时长；具体时间参数保持 TBD"},
+        {"slot_id": "jd-0.2", "name": "工作空间结构", "binding_mode": "fixed_domain", "value_or_domain": "高速公路、沿线路段和超长道路走廊；具体路段结构待确认"},
+        {"slot_id": "jd-0.7", "name": "任务完成判据", "binding_mode": "task_derived", "value_or_domain": "由本次选择的巡检模块和人工任务描述生成，阈值保持 TBD"},
+        {"slot_id": "jd-0.8", "name": "通信基建", "binding_mode": "fixed_domain", "value_or_domain": "多渠道实时告警和远程处置所需链路；渠道与协议 TBD"},
+        {"slot_id": "jd-0.9", "name": "载荷集", "binding_mode": "fixed_domain", "value_or_domain": "拍照、喊话、车牌识别、灯光警示、热成像及检测载荷的可选集合"},
+        {"slot_id": "jd-2.1", "name": "任务参数表", "binding_mode": "task_derived", "value_or_domain": "巡查周期、临时任务、路段范围、架次和检测模式；具体值 TBD"},
+        {"slot_id": "jd-3.1", "name": "任务技能库", "binding_mode": "fixed_domain", "value_or_domain": "规划、调度、检测、归档、载荷处置、事件联动、持续观测和趋势分析模块"},
+        {"slot_id": "jd-4.1", "name": "任务结构", "binding_mode": "task_derived", "value_or_domain": "由人工选择的模块组合形成任务阶段和依赖关系"},
+        {"slot_id": "jd-4.3", "name": "重编排触发", "binding_mode": "fixed_domain", "value_or_domain": "突发事件或工作流事件可触发重编排；具体事件枚举 TBD"},
+        {"slot_id": "jd-4.4", "name": "任务级重规划策略", "binding_mode": "fixed_domain", "value_or_domain": "应急航线和多架次调度策略域；具体规则 TBD"},
+        {"slot_id": "jd-5.1", "name": "业务对象类目", "binding_mode": "fixed_domain", "value_or_domain": "道路事件、病害、车辆和取证对象；正式类目表 TBD"},
+        {"slot_id": "jd-5.3", "name": "感知模态集", "binding_mode": "fixed_domain", "value_or_domain": "可见光、车牌识别、热成像或其他已确认检测模态"},
+        {"slot_id": "jd-7.1", "name": "航路拓扑", "binding_mode": "task_derived", "value_or_domain": "高速路段、起终点、巡检航段和应急航线；具体拓扑 TBD"},
+        {"slot_id": "jd-9a.1", "name": "载荷动作目录", "binding_mode": "fixed_domain", "value_or_domain": "拍照、喊话、灯光警示及其他已授权载荷动作"},
+        {"slot_id": "jd-9b.1", "name": "成果格式", "binding_mode": "fixed_domain", "value_or_domain": "按路段/时间归档、巡查报告和统计报表；具体格式 TBD"},
+        {"slot_id": "jd-15.2", "name": "证据格式规格", "binding_mode": "fixed_domain", "value_or_domain": "检测告警、图像或热成像证据和处置记录；字段 TBD"}
+      ],
+      "runtime_dependencies": [
+        {"dependency_id": "route_and_dispatch_service", "provider": "external_system", "responsibility": "提供受审路网、计划和多架次调度执行能力；接口 TBD"},
+        {"dependency_id": "notification_and_archive_service", "provider": "external_system", "responsibility": "完成多渠道消息投递、数据归档和报表存储；接口 TBD"},
+        {"dependency_id": "external_flight_controller", "provider": "executor", "responsibility": "完成低层飞行控制；具体控制接口 TBD"}
+      ]
+    },
+    {
+      "scenario_id": "oil_gas_inspection",
+      "scenario_version": "2026-07-15-demand-baseline",
+      "title": "油气巡检",
+      "summary": "面向超长油气管道和设备的周期性、临时性及突发事件巡检。场景提供长续航任务表达、应急路线与多架次调度、检测告警、证据采集、数据归档、事件联动和基于历史观测的趋势分析。具体管道、设备、缺陷类目、资源阈值和安全处置规则仍需由任务或实例确认。",
+      "fixed_boundary": [
+        "工作空间属于油气管道、设备区或管廊走廊，具体空间结构待确认",
+        "允许周期性、临时性和超长管道加设备的长续航巡检任务",
+        "允许突发事件触发应急航线和多架次调度，但规则与接口保持 TBD",
+        "允许边飞边检、先飞后检、告警、归档、载荷处置、事件联动和趋势分析模块",
+        "远程拍照、喊话、灯光警示和热成像为可选载荷能力"
+      ],
+      "available_task_modules": [
+        {"name": "任务规划", "requirement": "周期性/临时性计划、航线生成和超长管道加设备长续航巡检"},
+        {"name": "应急调度", "requirement": "突发事件应急航线和多架次无人机现场管控"},
+        {"name": "检测识别", "requirement": "边飞边检或先飞后检，并通过多渠道实时推送告警"},
+        {"name": "数据归档", "requirement": "按路段和时间归档数据并生成报告与统计报表"},
+        {"name": "飞行处置", "requirement": "远程拍照取证、喊话疏导、灯光警示或热成像感知"},
+        {"name": "事件联动", "requirement": "工作流触发自主巡检与处置"},
+        {"name": "进展预测", "requirement": "基于历史观测提供病害趋势预测及预防处置建议"}
+      ],
+      "variable_bindings": [
+        {"slot_id": "jd-0.1", "name": "任务时长", "binding_mode": "task_derived", "value_or_domain": "周期性、临时性、应急或长续航任务时长；具体数值 TBD"},
+        {"slot_id": "jd-0.2", "name": "工作空间结构", "binding_mode": "fixed_domain", "value_or_domain": "油气管道、设备区或线性/分段线性管廊走廊"},
+        {"slot_id": "jd-0.7", "name": "任务完成判据", "binding_mode": "task_derived", "value_or_domain": "由本次巡检模块和任务责任生成，阈值保持 TBD"},
+        {"slot_id": "jd-0.8", "name": "通信基建", "binding_mode": "fixed_domain", "value_or_domain": "长距离通信、多渠道告警与远程处置链路；具体能力 TBD"},
+        {"slot_id": "jd-0.9", "name": "载荷集", "binding_mode": "fixed_domain", "value_or_domain": "拍照、喊话、灯光警示、热成像及检测载荷的可选集合"},
+        {"slot_id": "jd-2.1", "name": "任务参数表", "binding_mode": "task_derived", "value_or_domain": "巡查周期、管道/设备范围、架次、续航与检测模式；具体值 TBD"},
+        {"slot_id": "jd-3.1", "name": "任务技能库", "binding_mode": "fixed_domain", "value_or_domain": "规划、调度、检测、归档、载荷处置、事件联动和趋势分析模块"},
+        {"slot_id": "jd-4.1", "name": "任务结构", "binding_mode": "task_derived", "value_or_domain": "由人工选择的管道、设备和应急模块组合形成"},
+        {"slot_id": "jd-4.3", "name": "重编排触发", "binding_mode": "fixed_domain", "value_or_domain": "突发事件或工作流事件；正式枚举 TBD"},
+        {"slot_id": "jd-5.1", "name": "业务对象类目", "binding_mode": "fixed_domain", "value_or_domain": "管道、设备、病害、缺陷和处置对象；正式类目表 TBD"},
+        {"slot_id": "jd-5.3", "name": "感知模态集", "binding_mode": "fixed_domain", "value_or_domain": "可见光、热成像或其他已确认检测模态"},
+        {"slot_id": "jd-7.1", "name": "航路拓扑", "binding_mode": "task_derived", "value_or_domain": "管道/设备巡检航段、起终点和应急航线；具体拓扑 TBD"},
+        {"slot_id": "jd-9a.1", "name": "载荷动作目录", "binding_mode": "fixed_domain", "value_or_domain": "拍照、喊话、灯光警示及其他已授权动作"},
+        {"slot_id": "jd-9b.1", "name": "成果格式", "binding_mode": "fixed_domain", "value_or_domain": "按路段/时间归档、巡查报告和统计报表；具体格式 TBD"},
+        {"slot_id": "jd-11.1", "name": "资源消耗包络", "binding_mode": "task_derived", "value_or_domain": "超长管道和设备巡检的续航、载荷与资源预算；具体数值 TBD"},
+        {"slot_id": "jd-15.2", "name": "证据格式规格", "binding_mode": "fixed_domain", "value_or_domain": "检测告警、图像/热成像证据和处置记录；字段 TBD"}
+      ],
+      "runtime_dependencies": [
+        {"dependency_id": "route_and_dispatch_service", "provider": "external_system", "responsibility": "提供管道/设备路线、计划和多架次调度执行能力；接口 TBD"},
+        {"dependency_id": "notification_and_archive_service", "provider": "external_system", "responsibility": "完成告警投递、数据归档和报表存储；接口 TBD"},
+        {"dependency_id": "external_flight_controller", "provider": "executor", "responsibility": "完成低层飞行控制；具体控制接口 TBD"}
+      ]
+    },
+    {
+      "scenario_id": "bridge_inspection",
+      "scenario_version": "2026-07-15-demand-baseline",
+      "title": "桥梁巡检",
+      "summary": "面向桥面、桥底和结构件层级的桥梁巡检。场景允许桥梁三维重建、分层航线设计、周期性或临时任务编排、检测告警、数据归档、数字孪生呈现、人工标记、事件联动、持续病害观测和趋势预测。具体桥型、结构件目录、模型精度、观测质量和检测阈值均保持 TBD。",
+      "fixed_boundary": [
+        "工作空间属于桥梁及其桥面、桥底和结构件层级空间",
+        "允许建立或引用桥梁三维模型并设计分层巡检航线",
+        "允许周期性、临时性任务规划和无人巡检任务表达",
+        "允许检测告警、归档报表、数字孪生、人工标记、事件联动和趋势分析模块",
+        "三维模型精度、结构件类目、缺陷类目和检测规则未由当前需求确定"
+      ],
+      "available_task_modules": [
+        {"name": "数据建模", "requirement": "桥梁三维模型重建"},
+        {"name": "航线设计", "requirement": "桥面、桥底及结构件层级的桥梁巡检航线设计"},
+        {"name": "任务规划", "requirement": "周期性、临时性任务规划与编排"},
+        {"name": "检测识别", "requirement": "边飞边检或先飞后检，并通过多渠道推送告警"},
+        {"name": "数据归档", "requirement": "归档巡检数据并生成报告与统计报表"},
+        {"name": "数字孪生", "requirement": "在三维模型中呈现检测结果并支持人工标记与维护"},
+        {"name": "事件联动", "requirement": "工作流触发巡检与处置"},
+        {"name": "病害观测", "requirement": "持续观测、对比和分析桥梁病害"},
+        {"name": "进展预测", "requirement": "基于历史观测提供病害趋势预测及预防建议"}
+      ],
+      "variable_bindings": [
+        {"slot_id": "jd-0.1", "name": "任务时长", "binding_mode": "task_derived", "value_or_domain": "建模、巡检、持续观测或临时任务时长；具体值 TBD"},
+        {"slot_id": "jd-0.2", "name": "工作空间结构", "binding_mode": "fixed_domain", "value_or_domain": "桥面、桥底、桥墩、梁体和结构件层级空间；具体桥型与几何 TBD"},
+        {"slot_id": "jd-0.7", "name": "任务完成判据", "binding_mode": "task_derived", "value_or_domain": "由建模、航线、检测、归档或观测任务生成；阈值 TBD"},
+        {"slot_id": "jd-0.9", "name": "载荷集", "binding_mode": "task_derived", "value_or_domain": "三维重建和检测所需载荷未由当前需求指定，保持 TBD"},
+        {"slot_id": "jd-2.1", "name": "任务参数表", "binding_mode": "task_derived", "value_or_domain": "桥梁范围、层级、巡检周期、检测模式和模型输出要求；具体值 TBD"},
+        {"slot_id": "jd-3.1", "name": "任务技能库", "binding_mode": "fixed_domain", "value_or_domain": "三维建模、航线设计、任务规划、检测、归档、数字孪生、事件联动、持续观测和趋势分析"},
+        {"slot_id": "jd-4.1", "name": "任务结构", "binding_mode": "task_derived", "value_or_domain": "由人工选择的建模、巡检和分析模块组合形成"},
+        {"slot_id": "jd-5.1", "name": "业务对象类目", "binding_mode": "fixed_domain", "value_or_domain": "桥梁结构件、病害、缺陷和干扰对象；正式目录 TBD"},
+        {"slot_id": "jd-5.2", "name": "典型场景特征", "binding_mode": "fixed_domain", "value_or_domain": "桥面、桥底和结构件层级，遮挡与近距离观察条件；具体特征 TBD"},
+        {"slot_id": "jd-6b.1", "name": "相对几何先验", "binding_mode": "fixed_domain", "value_or_domain": "桥梁三维模型、结构件几何或检查面先验；模型精度 TBD"},
+        {"slot_id": "jd-6b.2", "name": "相对几何感知机制", "binding_mode": "task_derived", "value_or_domain": "三维重建与结构件巡检所需机制和模态 TBD"},
+        {"slot_id": "jd-7.1", "name": "航路拓扑", "binding_mode": "fixed_domain", "value_or_domain": "桥面、桥底和结构件层级航路；具体起终点和航点 TBD"},
+        {"slot_id": "jd-9b.1", "name": "成果格式", "binding_mode": "fixed_domain", "value_or_domain": "巡检数据、报告、统计报表、三维模型和数字孪生标记；具体格式 TBD"},
+        {"slot_id": "jd-9b.2", "name": "覆盖完整度判据", "binding_mode": "task_derived", "value_or_domain": "桥面、桥底、结构件或模型覆盖要求；具体判据 TBD"},
+        {"slot_id": "jd-15.2", "name": "证据格式规格", "binding_mode": "fixed_domain", "value_or_domain": "检测告警、病害证据、模型位置和人工标记记录；字段 TBD"}
+      ],
+      "runtime_dependencies": [
+        {"dependency_id": "bridge_model_and_twin_service", "provider": "external_system", "responsibility": "存储桥梁模型、数字孪生结果和人工标记；接口 TBD"},
+        {"dependency_id": "notification_and_archive_service", "provider": "external_system", "responsibility": "完成告警、数据归档和报表存储；接口 TBD"},
+        {"dependency_id": "external_flight_controller", "provider": "executor", "responsibility": "完成低层飞行控制；具体接口 TBD"}
+      ]
+    },
+    {
+      "scenario_id": "campus_inspection",
+      "scenario_version": "2026-07-15-demand-baseline",
+      "title": "园区巡检",
+      "summary": "面向园区道路、建筑和设施的综合巡检。场景允许园区三维重建、巡检航线设计、周期性或临时任务编排、检测告警、远程取证与喊话驱离、车牌识别、数据归档、工作流联动以及无人机与地面机器人或机器狗协同。具体园区对象、协同协议、处置权限和安全规则保持 TBD。",
+      "fixed_boundary": [
+        "工作空间属于园区道路、建筑、设施和允许巡检区域",
+        "允许园区三维模型重建和巡检航线设计",
+        "允许周期性、临时性巡检、检测告警、载荷处置、数据归档和事件联动模块",
+        "允许无人机与地面机器人或机器狗协同，但通信、任务分工和控制接口保持 TBD",
+        "远程拍照、喊话驱离和车牌识别为可选载荷能力"
+      ],
+      "available_task_modules": [
+        {"name": "三维重建", "requirement": "园区三维模型重建与可视化，辅助巡检安全飞行"},
+        {"name": "航线设计", "requirement": "园区巡检航线设计"},
+        {"name": "任务规划", "requirement": "周期性、临时性任务规划与编排"},
+        {"name": "检测识别", "requirement": "边飞边检或先飞后检，并通过多渠道推送告警"},
+        {"name": "飞行处置", "requirement": "远程拍照取证、喊话驱离或车牌识别"},
+        {"name": "数据归档", "requirement": "归档巡检数据并生成报告与统计报表"},
+        {"name": "事件联动", "requirement": "工作流触发巡检与处置"},
+        {"name": "空地协同", "requirement": "无人机与地面机器人或机器狗协同巡检"}
+      ],
+      "variable_bindings": [
+        {"slot_id": "jd-0.1", "name": "任务时长", "binding_mode": "task_derived", "value_or_domain": "周期性、临时性、事件触发或协同任务时长；具体值 TBD"},
+        {"slot_id": "jd-0.2", "name": "工作空间结构", "binding_mode": "fixed_domain", "value_or_domain": "园区道路、建筑、设施和允许巡检区域；具体几何 TBD"},
+        {"slot_id": "jd-0.7", "name": "任务完成判据", "binding_mode": "task_derived", "value_or_domain": "由本次选择的巡检、处置或协同模块生成；阈值 TBD"},
+        {"slot_id": "jd-0.8", "name": "通信基建", "binding_mode": "fixed_domain", "value_or_domain": "告警、远程处置和空地协同所需链路；协议与覆盖 TBD"},
+        {"slot_id": "jd-0.9", "name": "载荷集", "binding_mode": "fixed_domain", "value_or_domain": "三维重建、检测、拍照、喊话和车牌识别所需载荷的可选集合"},
+        {"slot_id": "jd-2.1", "name": "任务参数表", "binding_mode": "task_derived", "value_or_domain": "园区范围、巡检周期、检测模式、处置和协同参数；具体值 TBD"},
+        {"slot_id": "jd-3.1", "name": "任务技能库", "binding_mode": "fixed_domain", "value_or_domain": "三维重建、航线设计、任务规划、检测、载荷处置、归档、事件联动和空地协同"},
+        {"slot_id": "jd-4.1", "name": "任务结构", "binding_mode": "task_derived", "value_or_domain": "由人工选择的空中巡检、地面巡检和协同阶段形成"},
+        {"slot_id": "jd-4.2", "name": "人机交接点", "binding_mode": "task_derived", "value_or_domain": "远程处置、人工确认或协同任务交接点；具体规则 TBD"},
+        {"slot_id": "jd-5.1", "name": "业务对象类目", "binding_mode": "task_derived", "value_or_domain": "园区事件、车辆、人员、设施或其他巡检对象；正式目录 TBD"},
+        {"slot_id": "jd-6b.1", "name": "相对几何先验", "binding_mode": "fixed_domain", "value_or_domain": "园区三维模型、建筑与设施几何；模型精度 TBD"},
+        {"slot_id": "jd-7.1", "name": "航路拓扑", "binding_mode": "task_derived", "value_or_domain": "园区巡检航路、起终点和允许区域；具体拓扑 TBD"},
+        {"slot_id": "jd-9a.1", "name": "载荷动作目录", "binding_mode": "fixed_domain", "value_or_domain": "拍照、喊话驱离、车牌识别及其他已授权动作"},
+        {"slot_id": "jd-9b.1", "name": "成果格式", "binding_mode": "fixed_domain", "value_or_domain": "巡检数据、报告、统计报表和三维可视化结果；具体格式 TBD"},
+        {"slot_id": "jd-15.2", "name": "证据格式规格", "binding_mode": "fixed_domain", "value_or_domain": "检测告警、图像证据、处置和协同记录；字段 TBD"}
+      ],
+      "runtime_dependencies": [
+        {"dependency_id": "campus_model_service", "provider": "external_system", "responsibility": "提供园区三维模型和可视化存储；接口 TBD"},
+        {"dependency_id": "ground_robot_or_robot_dog", "provider": "external_system", "responsibility": "执行人工任务明确要求的地面巡检或协同部分；协议 TBD"},
+        {"dependency_id": "notification_and_archive_service", "provider": "external_system", "responsibility": "完成告警、数据归档和报表存储；接口 TBD"},
+        {"dependency_id": "external_flight_controller", "provider": "executor", "responsibility": "完成低层飞行控制；具体接口 TBD"}
+      ]
+    },
+    {
+      "scenario_id": "other_inspection",
+      "scenario_version": "2026-07-15-demand-baseline",
+      "title": "其他巡检场景（河道 / 矿山 / 海事等）",
+      "summary": "面向尚未单独建档的河道、矿山、海事或其他巡检业务。当前只确认可包含周期性/临时性任务规划、突发事件应急路线和多架次调度、AI 检测识别及多渠道告警。人工必须先声明具体子场景；在子场景未确认前，不生成工作空间、对象类目、载荷、安全或合规规则。",
+      "fixed_boundary": [
+        "本条目是场景族而不是一个可直接混用的统一场景",
+        "人工任务必须先声明河道、矿山、海事或其他具体子类型",
+        "只固定任务规划、应急调度、检测识别和告警四类可选业务模块",
+        "空间结构、对象类目、载荷、合规域、安全包络和处置权限均按子类型保持 TBD"
+      ],
+      "available_task_modules": [
+        {"name": "任务规划", "requirement": "周期性/临时性巡查计划制定及航线自动生成"},
+        {"name": "应急调度", "requirement": "突发事件应急航线和多架次无人机现场管控"},
+        {"name": "检测识别", "requirement": "AI 智能识别"},
+        {"name": "告警推送", "requirement": "多渠道实时推送告警"}
+      ],
+      "variable_bindings": [
+        {"slot_id": "jd-0.1", "name": "任务时长", "binding_mode": "task_derived", "value_or_domain": "周期性、临时性或应急任务时长；具体值 TBD"},
+        {"slot_id": "jd-0.2", "name": "工作空间结构", "binding_mode": "task_derived", "value_or_domain": "必须先声明河道、矿山、海事或其他具体子场景，随后人工确认空间结构"},
+        {"slot_id": "jd-0.6", "name": "合规域", "binding_mode": "task_derived", "value_or_domain": "随具体子场景确定；当前为 TBD"},
+        {"slot_id": "jd-0.7", "name": "任务完成判据", "binding_mode": "task_derived", "value_or_domain": "由具体子场景和本次任务责任生成；当前为 TBD"},
+        {"slot_id": "jd-0.8", "name": "通信基建", "binding_mode": "fixed_domain", "value_or_domain": "多渠道实时告警所需链路；渠道与协议 TBD"},
+        {"slot_id": "jd-0.9", "name": "载荷集", "binding_mode": "task_derived", "value_or_domain": "随具体子场景和检测任务确定；当前为 TBD"},
+        {"slot_id": "jd-2.1", "name": "任务参数表", "binding_mode": "task_derived", "value_or_domain": "巡查周期、区域、架次、应急和检测参数；具体值 TBD"},
+        {"slot_id": "jd-3.1", "name": "任务技能库", "binding_mode": "fixed_domain", "value_or_domain": "任务规划、应急调度、检测识别和告警推送"},
+        {"slot_id": "jd-4.1", "name": "任务结构", "binding_mode": "task_derived", "value_or_domain": "由具体子场景和人工选择模块形成"},
+        {"slot_id": "jd-4.3", "name": "重编排触发", "binding_mode": "fixed_domain", "value_or_domain": "突发事件可触发应急调度；具体事件枚举 TBD"},
+        {"slot_id": "jd-5.1", "name": "业务对象类目", "binding_mode": "task_derived", "value_or_domain": "随河道、矿山、海事或其他子场景确定；当前为 TBD"},
+        {"slot_id": "jd-5.3", "name": "感知模态集", "binding_mode": "task_derived", "value_or_domain": "随具体检测任务确定；当前为 TBD"},
+        {"slot_id": "jd-7.1", "name": "航路拓扑", "binding_mode": "task_derived", "value_or_domain": "随具体子场景确定；当前为 TBD"},
+        {"slot_id": "jd-15.2", "name": "证据格式规格", "binding_mode": "task_derived", "value_or_domain": "随检测对象和告警要求确定；当前为 TBD"}
+      ],
+      "runtime_dependencies": [
+        {"dependency_id": "route_and_dispatch_service", "provider": "external_system", "responsibility": "提供具体子场景的路线、计划和多架次调度执行能力；接口 TBD"},
+        {"dependency_id": "notification_service", "provider": "external_system", "responsibility": "完成多渠道告警投递；接口 TBD"},
+        {"dependency_id": "external_flight_controller", "provider": "executor", "responsibility": "完成低层飞行控制；具体接口 TBD"}
+      ]
+    }
+  ],
+  "global_no_invention": [
+    "Stage 0 的可选业务模块不等于本次任务的正式 A×L coverage",
+    "场景清单没有给出的阈值、对象 taxonomy、工作流、通信协议和 simulator 接口保持 TBD",
+    "多架次调度不自动等于多机协同能力，除非人工任务明确责任与交互",
+    "边飞边检和先飞后检的具体数据流与时序由任务或接口文档确认",
+    "趋势预测的模型、时间窗、置信度和处置规则不得自动生成"
+  ]
+}

@@ -22,6 +22,7 @@ test = [
 ]
 agent = [
   "google-genai>=2.11,<3",
+  "socksio>=1.0.0,<2",
 ]
 
 [tool.pytest.ini_options]

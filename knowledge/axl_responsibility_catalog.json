@@ -1,0 +1,2243 @@
+{
+  "schema": "uav-benchmark-a-by-l-responsibility-dictionary",
+  "schema_version": "png-17-abilities-68-cells-2026-07-14",
+  "source": "用户提供的《L×G×A 能力矩阵·含 JD 业务变量》17 张能力卡片 PNG",
+  "transcription_mode": "semantic_normalized_from_png",
+  "counts": {
+    "g_groups": 6,
+    "abilities": 17,
+    "levels_per_ability": 4,
+    "a_by_l_cells": 68
+  },
+  "level_policy": {
+    "cumulative": true,
+    "selection_rule": "target A×L 的期望责任 = 当前级责任 + inherits_levels 中全部低等级责任。",
+    "levels": {
+      "L1": {
+        "label": "域内潜在自主",
+        "general_boundary": "人在任务回路中主导；系统提供局部理解、状态呈现、提示或单点建议。",
+        "inherits": []
+      },
+      "L2": {
+        "label": "域内受令自主",
+        "general_boundary": "人给出明确命令、结构或协议；系统负责一个执行片段或声明范围内的持续执行与维护。",
+        "inherits": [
+          "L1"
+        ]
+      },
+      "L3": {
+        "label": "域内监督自主",
+        "general_boundary": "系统负责名义任务过程的持续维护和异常识别；人在监督回路中承担确认、批准、纠偏或兜底。",
+        "inherits": [
+          "L1",
+          "L2"
+        ]
+      },
+      "L4": {
+        "label": "域内主导自主",
+        "general_boundary": "系统在声明域内自主选择处置、完成恢复并验证结果；运行时兜底责任不再由人承担。",
+        "inherits": [
+          "L1",
+          "L2",
+          "L3"
+        ]
+      }
+    }
+  },
+  "same_case_leveling_rule": {
+    "keep_fixed": [
+      "业务案例身份与核心目标",
+      "目标 A 域",
+      "案例中的主要业务对象与基本场景"
+    ],
+    "vary_by_level": [
+      "系统承担的责任边界",
+      "人类在运行时的角色",
+      "需要暴露的 JD 变量与异常条件",
+      "期望的 SUT 行为、Trace 与 GT 证据"
+    ],
+    "do_not_infer": [
+      "threshold",
+      "具体业务规则",
+      "simulator 接口",
+      "未在案例或 JD 中声明的平台能力"
+    ]
+  },
+  "abilities": [
+    {
+      "a_id": "A1",
+      "g_group": "G1",
+      "ability": "意图 / 交互入口",
+      "global_jd": [
+        "jd-0.4"
+      ],
+      "local_jd": [
+        "jd-1.1",
+        "jd-1.2",
+        "jd-1.3"
+      ],
+      "levels": {
+        "L1": {
+          "level_label": "域内潜在自主",
+          "inherits_levels": [],
+          "responsibility": "能通过{jd-1.2 指称方式集}和{jd-1.3 业务术语表}理解来自{jd-0.4 在场人角色}的飞控输入。",
+          "jd_refs": [
+            "jd-1.2",
+            "jd-1.3",
+            "jd-0.4"
+          ]
+        },
+        "L2": {
+          "level_label": "域内受令自主",
+          "inherits_levels": [
+            "L1"
+          ],
+          "responsibility": "能理解用{jd-1.3 业务术语表}表达的局部结构化命令、航线或等价输入，识别其中{jd-1.1 指称对象目录}的指称。",
+          "jd_refs": [
+            "jd-1.3",
+            "jd-1.1"
+          ]
+        },
+        "L3": {
+          "level_label": "域内监督自主",
+          "inherits_levels": [
+            "L1",
+            "L2"
+          ],
+          "responsibility": "能理解高阶目标（目标对象依{jd-1.1 指称对象目录}，指称方式覆盖{jd-1.2 指称方式集}，词汇使用{jd-1.3 业务术语表}），并识别其中的限制、确认规则和异常偏好。",
+          "jd_refs": [
+            "jd-1.1",
+            "jd-1.2",
+            "jd-1.3"
+          ]
+        },
+        "L4": {
+          "level_label": "域内主导自主",
+          "inherits_levels": [
+            "L1",
+            "L2",
+            "L3"
+          ],
+          "responsibility": "能接收{jd-0.4 在场人角色}的高层目标、偏好或审计请求，自动消解{jd-1.2 指称方式集}中的 deictic / 上下文承接歧义，并关联{jd-1.1 指称对象目录}。",
+          "jd_refs": [
+            "jd-0.4",
+            "jd-1.2",
+            "jd-1.1"
+          ]
+        }
+      }
+    },
+    {
+      "a_id": "A2",
+      "g_group": "G1",
+      "ability": "任务规范 / 约束模型",
+      "global_jd": [
+        "jd-0.6",
+        "jd-0.10"
+      ],
+      "local_jd": [
+        "jd-2.1",
+        "jd-2.2",
+        "jd-2.3"
+      ],
+      "levels": {
+        "L1": {
+          "level_label": "域内潜在自主",
+          "inherits_levels": [],
+          "responsibility": "能理解{jd-2.1 任务参数表}和{jd-2.2 平台参数表}中由人显式给定的参数，例如方向、距离、速度和高度。",
+          "jd_refs": [
+            "jd-2.1",
+            "jd-2.2"
+          ]
+        },
+        "L2": {
+          "level_label": "域内受令自主",
+          "inherits_levels": [
+            "L1"
+          ],
+          "responsibility": "能按{jd-2.1 任务参数表}的 schema 和默认值，必要时引用{jd-2.2 平台参数表}，补全局部动作的参数配置。",
+          "jd_refs": [
+            "jd-2.1",
+            "jd-2.2"
+          ]
+        },
+        "L3": {
+          "level_label": "域内监督自主",
+          "inherits_levels": [
+            "L1",
+            "L2"
+          ],
+          "responsibility": "能从上下文、{jd-2.1 任务参数表}、{jd-0.6 合规域}和{jd-0.10 安全包络先验}补全任务规范，包括运行限制和上报 / 确认条件。",
+          "jd_refs": [
+            "jd-2.1",
+            "jd-0.6",
+            "jd-0.10"
+          ]
+        },
+        "L4": {
+          "level_label": "域内主导自主",
+          "inherits_levels": [
+            "L1",
+            "L2",
+            "L3"
+          ],
+          "responsibility": "能基于{jd-2.3 隐式参数规则}中的专家默认知识，并结合{jd-2.2 平台参数表}内化运行设计域，自主补全必要约束及兜底规则。",
+          "jd_refs": [
+            "jd-2.3",
+            "jd-2.2"
+          ]
+        }
+      }
+    },
+    {
+      "a_id": "A3",
+      "g_group": "G1",
+      "ability": "意图推理 / 任务解释",
+      "global_jd": [
+        "jd-0.4"
+      ],
+      "local_jd": [
+        "jd-3.1",
+        "jd-3.2"
+      ],
+      "levels": {
+        "L1": {
+          "level_label": "域内潜在自主",
+          "inherits_levels": [],
+          "responsibility": "能理解{jd-3.1 任务技能库}中单个技能的动作含义、参数和局部影响。",
+          "jd_refs": [
+            "jd-3.1"
+          ]
+        },
+        "L2": {
+          "level_label": "域内受令自主",
+          "inherits_levels": [
+            "L1"
+          ],
+          "responsibility": "能将命令映射到{jd-3.1 任务技能库}中已知的技能或局部技能片段。",
+          "jd_refs": [
+            "jd-3.1"
+          ]
+        },
+        "L3": {
+          "level_label": "域内监督自主",
+          "inherits_levels": [
+            "L1",
+            "L2"
+          ],
+          "responsibility": "能按{jd-3.2 任务完成语义}分析任务全程的上下文（基于{jd-3.1 任务技能库}），识别需要{jd-0.4 在场人角色}确认的覆盖缺口。",
+          "jd_refs": [
+            "jd-3.2",
+            "jd-3.1",
+            "jd-0.4"
+          ]
+        },
+        "L4": {
+          "level_label": "域内主导自主",
+          "inherits_levels": [
+            "L1",
+            "L2",
+            "L3"
+          ],
+          "responsibility": "能将{jd-3.1 任务技能库}展开成跨任务的全程编排，并按{jd-3.2 任务完成语义}自主敲定细节。",
+          "jd_refs": [
+            "jd-3.1",
+            "jd-3.2"
+          ]
+        }
+      }
+    },
+    {
+      "a_id": "A4",
+      "g_group": "G1",
+      "ability": "交互到执行编排",
+      "global_jd": [
+        "jd-0.1",
+        "jd-0.7"
+      ],
+      "local_jd": [
+        "jd-4.1",
+        "jd-4.2",
+        "jd-4.3",
+        "jd-4.4",
+        "jd-4.5"
+      ],
+      "levels": {
+        "L1": {
+          "level_label": "域内潜在自主",
+          "inherits_levels": [],
+          "responsibility": "能通过{jd-4.5 编排输出机制}发出单点动作，并理解其局部后续效果。",
+          "jd_refs": [
+            "jd-4.5"
+          ]
+        },
+        "L2": {
+          "level_label": "域内受令自主",
+          "inherits_levels": [
+            "L1"
+          ],
+          "responsibility": "能按{jd-4.1 任务结构}把局部命令接入执行片段并闭环，输出通过{jd-4.5 编排输出机制}下发。",
+          "jd_refs": [
+            "jd-4.1",
+            "jd-4.5"
+          ]
+        },
+        "L3": {
+          "level_label": "域内监督自主",
+          "inherits_levels": [
+            "L1",
+            "L2"
+          ],
+          "responsibility": "能按{jd-4.1 任务结构}完成覆盖全{jd-0.1 任务时长}的编排，并在{jd-4.2 人机交接点}提出人工判断需求。",
+          "jd_refs": [
+            "jd-4.1",
+            "jd-0.1",
+            "jd-4.2"
+          ]
+        },
+        "L4": {
+          "level_label": "域内主导自主",
+          "inherits_levels": [
+            "L1",
+            "L2",
+            "L3"
+          ],
+          "responsibility": "能由{jd-4.3 重编排触发}触发，按{jd-4.4 任务级重规划策略}完成多步重编排，推动{jd-0.7 任务完成判据}达成。",
+          "jd_refs": [
+            "jd-4.3",
+            "jd-4.4",
+            "jd-0.7"
+          ]
+        }
+      }
+    },
+    {
+      "a_id": "A14",
+      "g_group": "G1",
+      "ability": "监督 / 请求 / 交接",
+      "global_jd": [
+        "jd-0.4",
+        "jd-0.5"
+      ],
+      "local_jd": [
+        "jd-14.1",
+        "jd-14.2",
+        "jd-14.3"
+      ],
+      "levels": {
+        "L1": {
+          "level_label": "域内潜在自主",
+          "inherits_levels": [],
+          "responsibility": "能向{jd-0.4 在场人角色}围绕局部动作及时提示状态、风险和操作建议。",
+          "jd_refs": [
+            "jd-0.4"
+          ]
+        },
+        "L2": {
+          "level_label": "域内受令自主",
+          "inherits_levels": [
+            "L1"
+          ],
+          "responsibility": "能即时反馈失败信息，并按{jd-14.1 交接协议表}提供暂停、取消或接管入口。",
+          "jd_refs": [
+            "jd-14.1"
+          ]
+        },
+        "L3": {
+          "level_label": "域内监督自主",
+          "inherits_levels": [
+            "L1",
+            "L2"
+          ],
+          "responsibility": "能按{jd-14.1 交接协议表}中的类型、优先级和延迟预算，依据{jd-0.5 人机确认协议}向{jd-0.4 在场人角色}请求确认、风险批准、纠偏或交接。",
+          "jd_refs": [
+            "jd-14.1",
+            "jd-0.5",
+            "jd-0.4"
+          ]
+        },
+        "L4": {
+          "level_label": "域内主导自主",
+          "inherits_levels": [
+            "L1",
+            "L2",
+            "L3"
+          ],
+          "responsibility": "能按{jd-14.2 偏好对齐协议}提供偏好对齐，并按{jd-14.3 高层通知规则}完成纠偏审计总结和高层通知。",
+          "jd_refs": [
+            "jd-14.2",
+            "jd-14.3"
+          ]
+        }
+      }
+    },
+    {
+      "a_id": "A5",
+      "g_group": "G2",
+      "ability": "环境感知 / 态势感知",
+      "global_jd": [
+        "jd-0.2",
+        "jd-0.3",
+        "jd-0.5",
+        "jd-0.9"
+      ],
+      "local_jd": [
+        "jd-5.1",
+        "jd-5.2",
+        "jd-5.3",
+        "jd-5.4"
+      ],
+      "levels": {
+        "L1": {
+          "level_label": "域内潜在自主",
+          "inherits_levels": [],
+          "responsibility": "能使用{jd-5.3 感知模态集}中的可用模态作业，识别{jd-5.1 业务对象类目}中的对象（target / confuser / obstacle / risk）并提示。",
+          "jd_refs": [
+            "jd-5.3",
+            "jd-5.1"
+          ]
+        },
+        "L2": {
+          "level_label": "域内受令自主",
+          "inherits_levels": [
+            "L1"
+          ],
+          "responsibility": "能在执行片段内持续观测{jd-5.1 业务对象类目}相关对象，按{jd-5.2 典型场景特征}的密度和动态维护可见、丢失与遮挡状态，并提示漏检或误检。",
+          "jd_refs": [
+            "jd-5.1",
+            "jd-5.2"
+          ]
+        },
+        "L3": {
+          "level_label": "域内监督自主",
+          "inherits_levels": [
+            "L1",
+            "L2"
+          ],
+          "responsibility": "能在{jd-0.2 工作空间结构}中全程维护态势，在{jd-0.3 扰动谱}影响下按{jd-5.2 典型场景特征}识别 ID 混淆、低置信或域外场景，并按{jd-0.5 人机确认协议}请人确认是否继续或重观测。",
+          "jd_refs": [
+            "jd-0.2",
+            "jd-0.3",
+            "jd-5.2",
+            "jd-0.5"
+          ]
+        },
+        "L4": {
+          "level_label": "域内主导自主",
+          "inherits_levels": [
+            "L1",
+            "L2",
+            "L3"
+          ],
+          "responsibility": "能在感知异常时自主从{jd-5.4 感知策略适用集}中选择并执行有效策略（重观测 / 换视角 / 切模态 / 扩搜 / 等待），验证态势可信度恢复；必要时按{jd-0.5 人机确认协议}请人决断。",
+          "jd_refs": [
+            "jd-5.4",
+            "jd-0.5"
+          ]
+        }
+      }
+    },
+    {
+      "a_id": "A6a",
+      "g_group": "G2",
+      "ability": "自定位 / 姿态航向估计",
+      "global_jd": [
+        "jd-0.2",
+        "jd-0.3",
+        "jd-0.5"
+      ],
+      "local_jd": [
+        "jd-6a.1",
+        "jd-6a.2",
+        "jd-6a.3"
+      ],
+      "levels": {
+        "L1": {
+          "level_label": "域内潜在自主",
+          "inherits_levels": [],
+          "responsibility": "能基于{jd-6a.1 定位源需求}中的可用源，按{jd-6a.2 位姿质量先验}上报自身位置、高度、姿态、航向及定位质量。",
+          "jd_refs": [
+            "jd-6a.1",
+            "jd-6a.2"
+          ]
+        },
+        "L2": {
+          "level_label": "域内受令自主",
+          "inherits_levels": [
+            "L1"
+          ],
+          "responsibility": "能在执行片段内连续维护{jd-6a.1 定位源需求}对应的融合位姿态势，并按{jd-6a.2 位姿质量先验}提示漂移、跳变或失锁。",
+          "jd_refs": [
+            "jd-6a.1",
+            "jd-6a.2"
+          ]
+        },
+        "L3": {
+          "level_label": "域内监督自主",
+          "inherits_levels": [
+            "L1",
+            "L2"
+          ],
+          "responsibility": "能在{jd-0.2 工作空间结构}中全程维护位姿态势，在{jd-0.3 扰动谱}退化条件下按{jd-6a.2 位姿质量先验}识别 GNSS 退化、航向漂移或低置信，并按{jd-0.5 人机确认协议}请人确认。",
+          "jd_refs": [
+            "jd-0.2",
+            "jd-0.3",
+            "jd-6a.2",
+            "jd-0.5"
+          ]
+        },
+        "L4": {
+          "level_label": "域内主导自主",
+          "inherits_levels": [
+            "L1",
+            "L2",
+            "L3"
+          ],
+          "responsibility": "能在自定位异常时自主从{jd-6a.3 定位策略适用集}中选择处置（切换源 / 重定位 / 地标观测 / 等待收敛 / 外部辅助），并验证位姿可信度。",
+          "jd_refs": [
+            "jd-6a.3"
+          ]
+        }
+      }
+    },
+    {
+      "a_id": "A6b",
+      "g_group": "G2",
+      "ability": "相对定位 / 方位关系估计",
+      "global_jd": [
+        "jd-0.2",
+        "jd-0.3",
+        "jd-0.5"
+      ],
+      "local_jd": [
+        "jd-6b.1",
+        "jd-6b.2",
+        "jd-6b.3"
+      ],
+      "levels": {
+        "L1": {
+          "level_label": "域内潜在自主",
+          "inherits_levels": [],
+          "responsibility": "能用{jd-6b.2 相对几何感知机制}估计目标、障碍或他机相对自身的距离、方位和朝向，并按{jd-6b.1 相对几何先验}评估可信度。",
+          "jd_refs": [
+            "jd-6b.2",
+            "jd-6b.1"
+          ]
+        },
+        "L2": {
+          "level_label": "域内受令自主",
+          "inherits_levels": [
+            "L1"
+          ],
+          "responsibility": "能在执行片段内连续维护相对位置、方位、距离变化和遮挡关系，并按{jd-6b.1 相对几何先验}的范围与精度要求进行评估。",
+          "jd_refs": [
+            "jd-6b.1"
+          ]
+        },
+        "L3": {
+          "level_label": "域内监督自主",
+          "inherits_levels": [
+            "L1",
+            "L2"
+          ],
+          "responsibility": "能在任务过程中维护相对几何态势，在{jd-0.3 扰动谱}引起的遮挡或光照变化下，按{jd-6b.1 相对几何先验}识别方位跳变、距离异常或位置冲突，并按{jd-0.5 人机确认协议}请人确认。",
+          "jd_refs": [
+            "jd-0.3",
+            "jd-6b.1",
+            "jd-0.5"
+          ]
+        },
+        "L4": {
+          "level_label": "域内主导自主",
+          "inherits_levels": [
+            "L1",
+            "L2",
+            "L3"
+          ],
+          "responsibility": "能在相对关系不可信时自主从{jd-6b.3 相对定位策略适用集}中选择处置（换视角 / 重观测 / 扩搜 / 他机补观测 / 重新关联），并验证相对几何可信度。",
+          "jd_refs": [
+            "jd-6b.3"
+          ]
+        }
+      }
+    },
+    {
+      "a_id": "A11",
+      "g_group": "G2",
+      "ability": "健康 / 能源 / 资源管理",
+      "global_jd": [
+        "jd-0.9",
+        "jd-0.1",
+        "jd-0.5"
+      ],
+      "local_jd": [
+        "jd-11.1",
+        "jd-11.2",
+        "jd-11.3"
+      ],
+      "levels": {
+        "L1": {
+          "level_label": "域内潜在自主",
+          "inherits_levels": [],
+          "responsibility": "能基于{jd-11.1 资源消耗包络}提示电量、链路、传感器、执行器、{jd-0.9 载荷集}和算力的基础状态及风险。",
+          "jd_refs": [
+            "jd-11.1",
+            "jd-0.9"
+          ]
+        },
+        "L2": {
+          "level_label": "域内受令自主",
+          "inherits_levels": [
+            "L1"
+          ],
+          "responsibility": "能按{jd-11.1 资源消耗包络}和{jd-11.2 资源预警 / 预留策略}判断资源是否足以完成当前执行片段。",
+          "jd_refs": [
+            "jd-11.1",
+            "jd-11.2"
+          ]
+        },
+        "L3": {
+          "level_label": "域内监督自主",
+          "inherits_levels": [
+            "L1",
+            "L2"
+          ],
+          "responsibility": "能在{jd-0.1 任务时长}内全程预测资源余量与健康状态变化，按{jd-11.2 资源预警 / 预留策略}识别低电趋势、链路退化、载荷异常、算力拥塞或热风险，并按{jd-0.5 人机确认协议}请人确认。",
+          "jd_refs": [
+            "jd-0.1",
+            "jd-11.2",
+            "jd-0.5"
+          ]
+        },
+        "L4": {
+          "level_label": "域内主导自主",
+          "inherits_levels": [
+            "L1",
+            "L2",
+            "L3"
+          ],
+          "responsibility": "能在资源或健康异常时自主从{jd-11.3 资源处置策略适用集}中选择处置（降载 / 切链路 / 关闭非关键载荷 / 降采样率 / 保留返航窗口 / 等待冷却 / 请求维护），并验证新状态。",
+          "jd_refs": [
+            "jd-11.3"
+          ]
+        }
+      }
+    },
+    {
+      "a_id": "A7",
+      "g_group": "G3",
+      "ability": "导航 / 航迹 / 轨迹管理",
+      "global_jd": [
+        "jd-0.2",
+        "jd-0.6",
+        "jd-0.3",
+        "jd-0.5"
+      ],
+      "local_jd": [
+        "jd-7.1",
+        "jd-7.2",
+        "jd-7.3",
+        "jd-7.4"
+      ],
+      "levels": {
+        "L1": {
+          "level_label": "域内潜在自主",
+          "inherits_levels": [],
+          "responsibility": "能用{jd-7.2 导航工作机制}维持局部运动目标，例如高度、方向、速度或悬停点。",
+          "jd_refs": [
+            "jd-7.2"
+          ]
+        },
+        "L2": {
+          "level_label": "域内受令自主",
+          "inherits_levels": [
+            "L1"
+          ],
+          "responsibility": "能维护{jd-7.1 航路拓扑}中的航点、线段或轨迹片段，并按{jd-7.2 导航工作机制}报告偏航、超界或不可达。",
+          "jd_refs": [
+            "jd-7.1",
+            "jd-7.2"
+          ]
+        },
+        "L3": {
+          "level_label": "域内监督自主",
+          "inherits_levels": [
+            "L1",
+            "L2"
+          ],
+          "responsibility": "能在{jd-7.1 航路拓扑}中全程维护航迹 / 轨迹态势，在{jd-0.3 扰动谱}的风扰下按{jd-7.3 轨迹重规划判据}识别持续偏航、路径不可行或轨迹冲突，并按{jd-0.5 人机确认协议}请人确认。",
+          "jd_refs": [
+            "jd-7.1",
+            "jd-0.3",
+            "jd-7.3",
+            "jd-0.5"
+          ]
+        },
+        "L4": {
+          "level_label": "域内主导自主",
+          "inherits_levels": [
+            "L1",
+            "L2",
+            "L3"
+          ],
+          "responsibility": "能在{jd-7.3 轨迹重规划判据}触发时，自主从{jd-7.4 航迹处置策略适用集}中选择处置（改高度 / 改航迹 / 等待 / 悬停 / 增大裕度），并验证新航迹可信。",
+          "jd_refs": [
+            "jd-7.3",
+            "jd-7.4"
+          ]
+        }
+      }
+    },
+    {
+      "a_id": "A8",
+      "g_group": "G3",
+      "ability": "飞行控制 / 执行机构",
+      "global_jd": [
+        "jd-0.3",
+        "jd-0.9",
+        "jd-0.5"
+      ],
+      "local_jd": [
+        "jd-8.1",
+        "jd-8.2",
+        "jd-8.3"
+      ],
+      "levels": {
+        "L1": {
+          "level_label": "域内潜在自主",
+          "inherits_levels": [],
+          "responsibility": "能基于{jd-8.2 控制工作机制}理解飞控级控制状态（稳定 / 定高 / 悬停 / 姿态保持），按{jd-8.1 控制质量先验}识别偏差或异常并提出修正。",
+          "jd_refs": [
+            "jd-8.2",
+            "jd-8.1"
+          ]
+        },
+        "L2": {
+          "level_label": "域内受令自主",
+          "inherits_levels": [
+            "L1"
+          ],
+          "responsibility": "能按{jd-8.2 控制工作机制}持续执行片段内的速度、高度、姿态和航向控制指令，并按{jd-8.1 控制质量先验}报告控制误差。",
+          "jd_refs": [
+            "jd-8.2",
+            "jd-8.1"
+          ]
+        },
+        "L3": {
+          "level_label": "域内监督自主",
+          "inherits_levels": [
+            "L1",
+            "L2"
+          ],
+          "responsibility": "能在任务过程中维护控制质量，按{jd-8.1 控制质量先验}识别{jd-0.3 扰动谱}引起的饱和、振荡、姿态异常、风扰或执行余量下降，并按{jd-0.5 人机确认协议}请人确认。",
+          "jd_refs": [
+            "jd-8.1",
+            "jd-0.3",
+            "jd-0.5"
+          ]
+        },
+        "L4": {
+          "level_label": "域内主导自主",
+          "inherits_levels": [
+            "L1",
+            "L2",
+            "L3"
+          ],
+          "responsibility": "能在控制异常时自主从{jd-8.3 控制处置策略适用集}中选择处置（降速 / 增大裕度 / 切换控制模式 / 等待稳定 / 请求检查），并验证控制状态可信。",
+          "jd_refs": [
+            "jd-8.3"
+          ]
+        }
+      }
+    },
+    {
+      "a_id": "A9a",
+      "g_group": "G4",
+      "ability": "载荷动作执行",
+      "global_jd": [
+        "jd-0.9",
+        "jd-0.5"
+      ],
+      "local_jd": [
+        "jd-9a.1",
+        "jd-9a.2",
+        "jd-9a.3"
+      ],
+      "levels": {
+        "L1": {
+          "level_label": "域内潜在自主",
+          "inherits_levels": [],
+          "responsibility": "能基于{jd-0.9 载荷集}发出{jd-9a.1 载荷动作目录}中的单次动作工具调用（拍照 / 喊话 / 投送 / 采样等），不保证下游执行结果。",
+          "jd_refs": [
+            "jd-0.9",
+            "jd-9a.1"
+          ]
+        },
+        "L2": {
+          "level_label": "域内受令自主",
+          "inherits_levels": [
+            "L1"
+          ],
+          "responsibility": "能连续执行{jd-9a.1 载荷动作目录}中一个片段的载荷动作，并按{jd-9a.2 动作时序先验}维护动作进度、失败、重试和参数状态。",
+          "jd_refs": [
+            "jd-9a.1",
+            "jd-9a.2"
+          ]
+        },
+        "L3": {
+          "level_label": "域内监督自主",
+          "inherits_levels": [
+            "L1",
+            "L2"
+          ],
+          "responsibility": "能维护任务过程中的载荷动作态势，按{jd-9a.2 动作时序先验}识别漏执行、重复、时序错位、云台或载荷异常，并按{jd-0.5 人机确认协议}请人确认是否重试或跳过。",
+          "jd_refs": [
+            "jd-9a.2",
+            "jd-0.5"
+          ]
+        },
+        "L4": {
+          "level_label": "域内主导自主",
+          "inherits_levels": [
+            "L1",
+            "L2",
+            "L3"
+          ],
+          "responsibility": "能在载荷动作异常时自主从{jd-9a.3 载荷处置策略适用集}中选择处置（重试 / 换角度 / 调参数 / 切模式 / 暂停 / 请求检查），并验证新动作状态。",
+          "jd_refs": [
+            "jd-9a.3"
+          ]
+        }
+      }
+    },
+    {
+      "a_id": "A9b",
+      "g_group": "G4",
+      "ability": "载荷成果生成 / 远端呈现",
+      "global_jd": [
+        "jd-0.7",
+        "jd-0.4",
+        "jd-0.5"
+      ],
+      "local_jd": [
+        "jd-9b.1",
+        "jd-9b.2",
+        "jd-9b.3"
+      ],
+      "levels": {
+        "L1": {
+          "level_label": "域内潜在自主",
+          "inherits_levels": [],
+          "responsibility": "能在载荷工具调用返回时识别并展示{jd-9b.1 成果格式}中的单次成果（图像 / 视频首帧 / 喊话记录 / 投送确认 / 采样记录），不主动维护或验证质量。",
+          "jd_refs": [
+            "jd-9b.1"
+          ]
+        },
+        "L2": {
+          "level_label": "域内受令自主",
+          "inherits_levels": [
+            "L1"
+          ],
+          "responsibility": "能维护执行片段内与{jd-9b.1 成果格式}对应的图像序列、视频流、检测结果、覆盖状态、投送确认或采样记录。",
+          "jd_refs": [
+            "jd-9b.1"
+          ]
+        },
+        "L3": {
+          "level_label": "域内监督自主",
+          "inherits_levels": [
+            "L1",
+            "L2"
+          ],
+          "responsibility": "能维护任务过程中的成果态势，按{jd-9b.2 覆盖完整度判据}识别覆盖不足、质量下降、视频无画面、报告缺项、低置信或成果缺失，并按{jd-0.5 人机确认协议}请{jd-0.4 在场人角色}确认是否补采或复核。",
+          "jd_refs": [
+            "jd-9b.2",
+            "jd-0.5",
+            "jd-0.4"
+          ]
+        },
+        "L4": {
+          "level_label": "域内主导自主",
+          "inherits_levels": [
+            "L1",
+            "L2",
+            "L3"
+          ],
+          "responsibility": "能在成果异常时自主从{jd-9b.3 成果处置策略适用集}中选择处置（重拍 / 补扫 / 换角度 / 重生成报告 / 切换成果格式 / 重投 / 重采），并验证新成果按{jd-0.7 任务完成判据}可信。",
+          "jd_refs": [
+            "jd-9b.3",
+            "jd-0.7"
+          ]
+        }
+      }
+    },
+    {
+      "a_id": "A10",
+      "g_group": "G5",
+      "ability": "通信 / C2 / 遥测",
+      "global_jd": [
+        "jd-0.8",
+        "jd-0.5"
+      ],
+      "local_jd": [
+        "jd-10.1",
+        "jd-10.2",
+        "jd-10.3"
+      ],
+      "levels": {
+        "L1": {
+          "level_label": "域内潜在自主",
+          "inherits_levels": [],
+          "responsibility": "能展示{jd-0.8 通信基建}的链路、C2 和遥测状态，以及{jd-10.2 地面站拓扑}中的地面站基础状态与风险。",
+          "jd_refs": [
+            "jd-0.8",
+            "jd-10.2"
+          ]
+        },
+        "L2": {
+          "level_label": "域内受令自主",
+          "inherits_levels": [
+            "L1"
+          ],
+          "responsibility": "能维护执行片段内相对于{jd-10.1 链路质量先验}的链路质量、延迟、丢包、遥测连续性和 C2 可用性。",
+          "jd_refs": [
+            "jd-10.1"
+          ]
+        },
+        "L3": {
+          "level_label": "域内监督自主",
+          "inherits_levels": [
+            "L1",
+            "L2"
+          ],
+          "responsibility": "能维护任务过程中的通信 / 遥测态势，按{jd-10.1 链路质量先验}识别链路退化、遥测间断、C2 不可用或{jd-10.2 地面站拓扑}异常，并按{jd-0.5 人机确认协议}请人确认。",
+          "jd_refs": [
+            "jd-10.1",
+            "jd-10.2",
+            "jd-0.5"
+          ]
+        },
+        "L4": {
+          "level_label": "域内主导自主",
+          "inherits_levels": [
+            "L1",
+            "L2",
+            "L3"
+          ],
+          "responsibility": "能在通信或遥测异常时自主从{jd-10.3 通信处置策略适用集}中选择处置（切链路 / 切备用站 / 降低遥测频率 / 缓存数据 / 执行链路切换），并验证新链路可信。",
+          "jd_refs": [
+            "jd-10.3"
+          ]
+        }
+      }
+    },
+    {
+      "a_id": "A13",
+      "g_group": "G5",
+      "ability": "空域 / 交通 / 合规接入",
+      "global_jd": [
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "local_jd": [
+        "jd-13.1",
+        "jd-13.2",
+        "jd-13.3",
+        "jd-13.4",
+        "jd-13.5"
+      ],
+      "levels": {
+        "L1": {
+          "level_label": "域内潜在自主",
+          "inherits_levels": [],
+          "responsibility": "能展示{jd-13.4 授权生命周期}、{jd-13.2 地理围栏集}、{jd-13.1 空域类别}和{jd-13.3 交通信息源需求}的基础状态及风险。",
+          "jd_refs": [
+            "jd-13.4",
+            "jd-13.2",
+            "jd-13.1",
+            "jd-13.3"
+          ]
+        },
+        "L2": {
+          "level_label": "域内受令自主",
+          "inherits_levels": [
+            "L1"
+          ],
+          "responsibility": "能维护执行片段内{jd-13.4 授权生命周期}的边界，以及{jd-13.2 地理围栏集}、{jd-13.3 交通信息源需求}和{jd-0.6 合规域}的约束状态。",
+          "jd_refs": [
+            "jd-13.4",
+            "jd-13.2",
+            "jd-13.3",
+            "jd-0.6"
+          ]
+        },
+        "L3": {
+          "level_label": "域内监督自主",
+          "inherits_levels": [
+            "L1",
+            "L2"
+          ],
+          "responsibility": "能维护任务过程中的空域 / 合规态势，识别{jd-13.4 授权生命周期}临近失效、{jd-13.2 地理围栏集}冲突或{jd-13.3 交通信息源需求}服务异常，并按{jd-0.5 人机确认协议}请人进行合规确认。",
+          "jd_refs": [
+            "jd-13.4",
+            "jd-13.2",
+            "jd-13.3",
+            "jd-0.5"
+          ]
+        },
+        "L4": {
+          "level_label": "域内主导自主",
+          "inherits_levels": [
+            "L1",
+            "L2",
+            "L3"
+          ],
+          "responsibility": "能在空域或合规异常时自主从{jd-13.5 合规处置策略适用集}中选择处置（刷新授权 / 更新围栏 / 等待服务恢复 / 复核交通 / 退避 / 返航），并验证新接入可信。",
+          "jd_refs": [
+            "jd-13.5"
+          ]
+        }
+      }
+    },
+    {
+      "a_id": "A12",
+      "g_group": "G6",
+      "ability": "安全包络 / 运行保证 / 处置建议",
+      "global_jd": [
+        "jd-0.10",
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "local_jd": [
+        "jd-12.1",
+        "jd-12.2",
+        "jd-12.3"
+      ],
+      "levels": {
+        "L1": {
+          "level_label": "域内潜在自主",
+          "inherits_levels": [],
+          "responsibility": "能基于{jd-0.10 安全包络先验}和{jd-12.1 分相位安全阈值}上报低电、越界、姿态、链路或定位异常等局部安全状态。",
+          "jd_refs": [
+            "jd-0.10",
+            "jd-12.1"
+          ]
+        },
+        "L2": {
+          "level_label": "域内受令自主",
+          "inherits_levels": [
+            "L1"
+          ],
+          "responsibility": "能在执行片段内维护{jd-12.1 分相位安全阈值}对应的安全边界、{jd-12.2 安全处置策略适用集}对应的保护触发状态、返航窗口与接管状态。",
+          "jd_refs": [
+            "jd-12.1",
+            "jd-12.2"
+          ]
+        },
+        "L3": {
+          "level_label": "域内监督自主",
+          "inherits_levels": [
+            "L1",
+            "L2"
+          ],
+          "responsibility": "能在任务过程中按{jd-12.1 分相位安全阈值}维护安全态势，发现低电趋势、丢链趋势、边界接近或风险累积，并按{jd-0.5 人机确认协议}请人确认{jd-12.2 安全处置策略适用集}中的兜底策略。",
+          "jd_refs": [
+            "jd-12.1",
+            "jd-0.5",
+            "jd-12.2"
+          ]
+        },
+        "L4": {
+          "level_label": "域内主导自主",
+          "inherits_levels": [
+            "L1",
+            "L2",
+            "L3"
+          ],
+          "responsibility": "能在安全异常时自主从{jd-12.2 安全处置策略适用集}中选择处置，进入并保持{jd-12.3 安全态定义}中的可接受 safe state，不依赖运行时人工兜底。",
+          "jd_refs": [
+            "jd-12.2",
+            "jd-12.3"
+          ]
+        }
+      }
+    },
+    {
+      "a_id": "A15",
+      "g_group": "G6",
+      "ability": "日志 / 审计 / 保证证据",
+      "global_jd": [
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "local_jd": [
+        "jd-15.1",
+        "jd-15.2",
+        "jd-15.3"
+      ],
+      "levels": {
+        "L1": {
+          "level_label": "域内潜在自主",
+          "inherits_levels": [],
+          "responsibility": "能按{jd-15.1 事件类目}记录基础事件、状态和操作记录。",
+          "jd_refs": [
+            "jd-15.1"
+          ]
+        },
+        "L2": {
+          "level_label": "域内受令自主",
+          "inherits_levels": [
+            "L1"
+          ],
+          "responsibility": "能按{jd-15.1 事件类目}和{jd-15.2 证据格式规格}记录执行片段内的关键状态、保护触发、人工介入、建议和结果。",
+          "jd_refs": [
+            "jd-15.1",
+            "jd-15.2"
+          ]
+        },
+        "L3": {
+          "level_label": "域内监督自主",
+          "inherits_levels": [
+            "L1",
+            "L2"
+          ],
+          "responsibility": "能维护任务过程证据链，按{jd-15.2 证据格式规格}和{jd-15.3 留存策略}识别日志缺口、时间戳异常、事件不可回放或证据不完整，并按{jd-0.5 人机确认协议}请人审计补齐。",
+          "jd_refs": [
+            "jd-15.2",
+            "jd-15.3",
+            "jd-0.5"
+          ]
+        },
+        "L4": {
+          "level_label": "域内主导自主",
+          "inherits_levels": [
+            "L1",
+            "L2",
+            "L3"
+          ],
+          "responsibility": "能按{jd-15.2 证据格式规格}自主生成异常处置和兜底动作的可回放、可解释、可复核证据链，证明系统决策、动作、责任边界和恢复过程。",
+          "jd_refs": [
+            "jd-15.2"
+          ]
+        }
+      }
+    }
+  ],
+  "flat_a_by_l_index": [
+    {
+      "cell": "A1×L1",
+      "a_id": "A1",
+      "level": "L1",
+      "g_group": "G1",
+      "ability": "意图 / 交互入口",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能通过{jd-1.2 指称方式集}和{jd-1.3 业务术语表}理解来自{jd-0.4 在场人角色}的飞控输入。",
+      "jd_refs": [
+        "jd-1.2",
+        "jd-1.3",
+        "jd-0.4"
+      ]
+    },
+    {
+      "cell": "A1×L2",
+      "a_id": "A1",
+      "level": "L2",
+      "g_group": "G1",
+      "ability": "意图 / 交互入口",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能理解用{jd-1.3 业务术语表}表达的局部结构化命令、航线或等价输入，识别其中{jd-1.1 指称对象目录}的指称。",
+      "jd_refs": [
+        "jd-1.3",
+        "jd-1.1"
+      ]
+    },
+    {
+      "cell": "A1×L3",
+      "a_id": "A1",
+      "level": "L3",
+      "g_group": "G1",
+      "ability": "意图 / 交互入口",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能理解高阶目标（目标对象依{jd-1.1 指称对象目录}，指称方式覆盖{jd-1.2 指称方式集}，词汇使用{jd-1.3 业务术语表}），并识别其中的限制、确认规则和异常偏好。",
+      "jd_refs": [
+        "jd-1.1",
+        "jd-1.2",
+        "jd-1.3"
+      ]
+    },
+    {
+      "cell": "A1×L4",
+      "a_id": "A1",
+      "level": "L4",
+      "g_group": "G1",
+      "ability": "意图 / 交互入口",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能接收{jd-0.4 在场人角色}的高层目标、偏好或审计请求，自动消解{jd-1.2 指称方式集}中的 deictic / 上下文承接歧义，并关联{jd-1.1 指称对象目录}。",
+      "jd_refs": [
+        "jd-0.4",
+        "jd-1.2",
+        "jd-1.1"
+      ]
+    },
+    {
+      "cell": "A2×L1",
+      "a_id": "A2",
+      "level": "L1",
+      "g_group": "G1",
+      "ability": "任务规范 / 约束模型",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能理解{jd-2.1 任务参数表}和{jd-2.2 平台参数表}中由人显式给定的参数，例如方向、距离、速度和高度。",
+      "jd_refs": [
+        "jd-2.1",
+        "jd-2.2"
+      ]
+    },
+    {
+      "cell": "A2×L2",
+      "a_id": "A2",
+      "level": "L2",
+      "g_group": "G1",
+      "ability": "任务规范 / 约束模型",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能按{jd-2.1 任务参数表}的 schema 和默认值，必要时引用{jd-2.2 平台参数表}，补全局部动作的参数配置。",
+      "jd_refs": [
+        "jd-2.1",
+        "jd-2.2"
+      ]
+    },
+    {
+      "cell": "A2×L3",
+      "a_id": "A2",
+      "level": "L3",
+      "g_group": "G1",
+      "ability": "任务规范 / 约束模型",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能从上下文、{jd-2.1 任务参数表}、{jd-0.6 合规域}和{jd-0.10 安全包络先验}补全任务规范，包括运行限制和上报 / 确认条件。",
+      "jd_refs": [
+        "jd-2.1",
+        "jd-0.6",
+        "jd-0.10"
+      ]
+    },
+    {
+      "cell": "A2×L4",
+      "a_id": "A2",
+      "level": "L4",
+      "g_group": "G1",
+      "ability": "任务规范 / 约束模型",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能基于{jd-2.3 隐式参数规则}中的专家默认知识，并结合{jd-2.2 平台参数表}内化运行设计域，自主补全必要约束及兜底规则。",
+      "jd_refs": [
+        "jd-2.3",
+        "jd-2.2"
+      ]
+    },
+    {
+      "cell": "A3×L1",
+      "a_id": "A3",
+      "level": "L1",
+      "g_group": "G1",
+      "ability": "意图推理 / 任务解释",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能理解{jd-3.1 任务技能库}中单个技能的动作含义、参数和局部影响。",
+      "jd_refs": [
+        "jd-3.1"
+      ]
+    },
+    {
+      "cell": "A3×L2",
+      "a_id": "A3",
+      "level": "L2",
+      "g_group": "G1",
+      "ability": "意图推理 / 任务解释",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能将命令映射到{jd-3.1 任务技能库}中已知的技能或局部技能片段。",
+      "jd_refs": [
+        "jd-3.1"
+      ]
+    },
+    {
+      "cell": "A3×L3",
+      "a_id": "A3",
+      "level": "L3",
+      "g_group": "G1",
+      "ability": "意图推理 / 任务解释",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能按{jd-3.2 任务完成语义}分析任务全程的上下文（基于{jd-3.1 任务技能库}），识别需要{jd-0.4 在场人角色}确认的覆盖缺口。",
+      "jd_refs": [
+        "jd-3.2",
+        "jd-3.1",
+        "jd-0.4"
+      ]
+    },
+    {
+      "cell": "A3×L4",
+      "a_id": "A3",
+      "level": "L4",
+      "g_group": "G1",
+      "ability": "意图推理 / 任务解释",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能将{jd-3.1 任务技能库}展开成跨任务的全程编排，并按{jd-3.2 任务完成语义}自主敲定细节。",
+      "jd_refs": [
+        "jd-3.1",
+        "jd-3.2"
+      ]
+    },
+    {
+      "cell": "A4×L1",
+      "a_id": "A4",
+      "level": "L1",
+      "g_group": "G1",
+      "ability": "交互到执行编排",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能通过{jd-4.5 编排输出机制}发出单点动作，并理解其局部后续效果。",
+      "jd_refs": [
+        "jd-4.5"
+      ]
+    },
+    {
+      "cell": "A4×L2",
+      "a_id": "A4",
+      "level": "L2",
+      "g_group": "G1",
+      "ability": "交互到执行编排",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能按{jd-4.1 任务结构}把局部命令接入执行片段并闭环，输出通过{jd-4.5 编排输出机制}下发。",
+      "jd_refs": [
+        "jd-4.1",
+        "jd-4.5"
+      ]
+    },
+    {
+      "cell": "A4×L3",
+      "a_id": "A4",
+      "level": "L3",
+      "g_group": "G1",
+      "ability": "交互到执行编排",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能按{jd-4.1 任务结构}完成覆盖全{jd-0.1 任务时长}的编排，并在{jd-4.2 人机交接点}提出人工判断需求。",
+      "jd_refs": [
+        "jd-4.1",
+        "jd-0.1",
+        "jd-4.2"
+      ]
+    },
+    {
+      "cell": "A4×L4",
+      "a_id": "A4",
+      "level": "L4",
+      "g_group": "G1",
+      "ability": "交互到执行编排",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能由{jd-4.3 重编排触发}触发，按{jd-4.4 任务级重规划策略}完成多步重编排，推动{jd-0.7 任务完成判据}达成。",
+      "jd_refs": [
+        "jd-4.3",
+        "jd-4.4",
+        "jd-0.7"
+      ]
+    },
+    {
+      "cell": "A14×L1",
+      "a_id": "A14",
+      "level": "L1",
+      "g_group": "G1",
+      "ability": "监督 / 请求 / 交接",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能向{jd-0.4 在场人角色}围绕局部动作及时提示状态、风险和操作建议。",
+      "jd_refs": [
+        "jd-0.4"
+      ]
+    },
+    {
+      "cell": "A14×L2",
+      "a_id": "A14",
+      "level": "L2",
+      "g_group": "G1",
+      "ability": "监督 / 请求 / 交接",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能即时反馈失败信息，并按{jd-14.1 交接协议表}提供暂停、取消或接管入口。",
+      "jd_refs": [
+        "jd-14.1"
+      ]
+    },
+    {
+      "cell": "A14×L3",
+      "a_id": "A14",
+      "level": "L3",
+      "g_group": "G1",
+      "ability": "监督 / 请求 / 交接",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能按{jd-14.1 交接协议表}中的类型、优先级和延迟预算，依据{jd-0.5 人机确认协议}向{jd-0.4 在场人角色}请求确认、风险批准、纠偏或交接。",
+      "jd_refs": [
+        "jd-14.1",
+        "jd-0.5",
+        "jd-0.4"
+      ]
+    },
+    {
+      "cell": "A14×L4",
+      "a_id": "A14",
+      "level": "L4",
+      "g_group": "G1",
+      "ability": "监督 / 请求 / 交接",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能按{jd-14.2 偏好对齐协议}提供偏好对齐，并按{jd-14.3 高层通知规则}完成纠偏审计总结和高层通知。",
+      "jd_refs": [
+        "jd-14.2",
+        "jd-14.3"
+      ]
+    },
+    {
+      "cell": "A5×L1",
+      "a_id": "A5",
+      "level": "L1",
+      "g_group": "G2",
+      "ability": "环境感知 / 态势感知",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能使用{jd-5.3 感知模态集}中的可用模态作业，识别{jd-5.1 业务对象类目}中的对象（target / confuser / obstacle / risk）并提示。",
+      "jd_refs": [
+        "jd-5.3",
+        "jd-5.1"
+      ]
+    },
+    {
+      "cell": "A5×L2",
+      "a_id": "A5",
+      "level": "L2",
+      "g_group": "G2",
+      "ability": "环境感知 / 态势感知",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能在执行片段内持续观测{jd-5.1 业务对象类目}相关对象，按{jd-5.2 典型场景特征}的密度和动态维护可见、丢失与遮挡状态，并提示漏检或误检。",
+      "jd_refs": [
+        "jd-5.1",
+        "jd-5.2"
+      ]
+    },
+    {
+      "cell": "A5×L3",
+      "a_id": "A5",
+      "level": "L3",
+      "g_group": "G2",
+      "ability": "环境感知 / 态势感知",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能在{jd-0.2 工作空间结构}中全程维护态势，在{jd-0.3 扰动谱}影响下按{jd-5.2 典型场景特征}识别 ID 混淆、低置信或域外场景，并按{jd-0.5 人机确认协议}请人确认是否继续或重观测。",
+      "jd_refs": [
+        "jd-0.2",
+        "jd-0.3",
+        "jd-5.2",
+        "jd-0.5"
+      ]
+    },
+    {
+      "cell": "A5×L4",
+      "a_id": "A5",
+      "level": "L4",
+      "g_group": "G2",
+      "ability": "环境感知 / 态势感知",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能在感知异常时自主从{jd-5.4 感知策略适用集}中选择并执行有效策略（重观测 / 换视角 / 切模态 / 扩搜 / 等待），验证态势可信度恢复；必要时按{jd-0.5 人机确认协议}请人决断。",
+      "jd_refs": [
+        "jd-5.4",
+        "jd-0.5"
+      ]
+    },
+    {
+      "cell": "A6a×L1",
+      "a_id": "A6a",
+      "level": "L1",
+      "g_group": "G2",
+      "ability": "自定位 / 姿态航向估计",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能基于{jd-6a.1 定位源需求}中的可用源，按{jd-6a.2 位姿质量先验}上报自身位置、高度、姿态、航向及定位质量。",
+      "jd_refs": [
+        "jd-6a.1",
+        "jd-6a.2"
+      ]
+    },
+    {
+      "cell": "A6a×L2",
+      "a_id": "A6a",
+      "level": "L2",
+      "g_group": "G2",
+      "ability": "自定位 / 姿态航向估计",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能在执行片段内连续维护{jd-6a.1 定位源需求}对应的融合位姿态势，并按{jd-6a.2 位姿质量先验}提示漂移、跳变或失锁。",
+      "jd_refs": [
+        "jd-6a.1",
+        "jd-6a.2"
+      ]
+    },
+    {
+      "cell": "A6a×L3",
+      "a_id": "A6a",
+      "level": "L3",
+      "g_group": "G2",
+      "ability": "自定位 / 姿态航向估计",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能在{jd-0.2 工作空间结构}中全程维护位姿态势，在{jd-0.3 扰动谱}退化条件下按{jd-6a.2 位姿质量先验}识别 GNSS 退化、航向漂移或低置信，并按{jd-0.5 人机确认协议}请人确认。",
+      "jd_refs": [
+        "jd-0.2",
+        "jd-0.3",
+        "jd-6a.2",
+        "jd-0.5"
+      ]
+    },
+    {
+      "cell": "A6a×L4",
+      "a_id": "A6a",
+      "level": "L4",
+      "g_group": "G2",
+      "ability": "自定位 / 姿态航向估计",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能在自定位异常时自主从{jd-6a.3 定位策略适用集}中选择处置（切换源 / 重定位 / 地标观测 / 等待收敛 / 外部辅助），并验证位姿可信度。",
+      "jd_refs": [
+        "jd-6a.3"
+      ]
+    },
+    {
+      "cell": "A6b×L1",
+      "a_id": "A6b",
+      "level": "L1",
+      "g_group": "G2",
+      "ability": "相对定位 / 方位关系估计",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能用{jd-6b.2 相对几何感知机制}估计目标、障碍或他机相对自身的距离、方位和朝向，并按{jd-6b.1 相对几何先验}评估可信度。",
+      "jd_refs": [
+        "jd-6b.2",
+        "jd-6b.1"
+      ]
+    },
+    {
+      "cell": "A6b×L2",
+      "a_id": "A6b",
+      "level": "L2",
+      "g_group": "G2",
+      "ability": "相对定位 / 方位关系估计",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能在执行片段内连续维护相对位置、方位、距离变化和遮挡关系，并按{jd-6b.1 相对几何先验}的范围与精度要求进行评估。",
+      "jd_refs": [
+        "jd-6b.1"
+      ]
+    },
+    {
+      "cell": "A6b×L3",
+      "a_id": "A6b",
+      "level": "L3",
+      "g_group": "G2",
+      "ability": "相对定位 / 方位关系估计",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能在任务过程中维护相对几何态势，在{jd-0.3 扰动谱}引起的遮挡或光照变化下，按{jd-6b.1 相对几何先验}识别方位跳变、距离异常或位置冲突，并按{jd-0.5 人机确认协议}请人确认。",
+      "jd_refs": [
+        "jd-0.3",
+        "jd-6b.1",
+        "jd-0.5"
+      ]
+    },
+    {
+      "cell": "A6b×L4",
+      "a_id": "A6b",
+      "level": "L4",
+      "g_group": "G2",
+      "ability": "相对定位 / 方位关系估计",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能在相对关系不可信时自主从{jd-6b.3 相对定位策略适用集}中选择处置（换视角 / 重观测 / 扩搜 / 他机补观测 / 重新关联），并验证相对几何可信度。",
+      "jd_refs": [
+        "jd-6b.3"
+      ]
+    },
+    {
+      "cell": "A11×L1",
+      "a_id": "A11",
+      "level": "L1",
+      "g_group": "G2",
+      "ability": "健康 / 能源 / 资源管理",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能基于{jd-11.1 资源消耗包络}提示电量、链路、传感器、执行器、{jd-0.9 载荷集}和算力的基础状态及风险。",
+      "jd_refs": [
+        "jd-11.1",
+        "jd-0.9"
+      ]
+    },
+    {
+      "cell": "A11×L2",
+      "a_id": "A11",
+      "level": "L2",
+      "g_group": "G2",
+      "ability": "健康 / 能源 / 资源管理",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能按{jd-11.1 资源消耗包络}和{jd-11.2 资源预警 / 预留策略}判断资源是否足以完成当前执行片段。",
+      "jd_refs": [
+        "jd-11.1",
+        "jd-11.2"
+      ]
+    },
+    {
+      "cell": "A11×L3",
+      "a_id": "A11",
+      "level": "L3",
+      "g_group": "G2",
+      "ability": "健康 / 能源 / 资源管理",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能在{jd-0.1 任务时长}内全程预测资源余量与健康状态变化，按{jd-11.2 资源预警 / 预留策略}识别低电趋势、链路退化、载荷异常、算力拥塞或热风险，并按{jd-0.5 人机确认协议}请人确认。",
+      "jd_refs": [
+        "jd-0.1",
+        "jd-11.2",
+        "jd-0.5"
+      ]
+    },
+    {
+      "cell": "A11×L4",
+      "a_id": "A11",
+      "level": "L4",
+      "g_group": "G2",
+      "ability": "健康 / 能源 / 资源管理",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能在资源或健康异常时自主从{jd-11.3 资源处置策略适用集}中选择处置（降载 / 切链路 / 关闭非关键载荷 / 降采样率 / 保留返航窗口 / 等待冷却 / 请求维护），并验证新状态。",
+      "jd_refs": [
+        "jd-11.3"
+      ]
+    },
+    {
+      "cell": "A7×L1",
+      "a_id": "A7",
+      "level": "L1",
+      "g_group": "G3",
+      "ability": "导航 / 航迹 / 轨迹管理",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能用{jd-7.2 导航工作机制}维持局部运动目标，例如高度、方向、速度或悬停点。",
+      "jd_refs": [
+        "jd-7.2"
+      ]
+    },
+    {
+      "cell": "A7×L2",
+      "a_id": "A7",
+      "level": "L2",
+      "g_group": "G3",
+      "ability": "导航 / 航迹 / 轨迹管理",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能维护{jd-7.1 航路拓扑}中的航点、线段或轨迹片段，并按{jd-7.2 导航工作机制}报告偏航、超界或不可达。",
+      "jd_refs": [
+        "jd-7.1",
+        "jd-7.2"
+      ]
+    },
+    {
+      "cell": "A7×L3",
+      "a_id": "A7",
+      "level": "L3",
+      "g_group": "G3",
+      "ability": "导航 / 航迹 / 轨迹管理",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能在{jd-7.1 航路拓扑}中全程维护航迹 / 轨迹态势，在{jd-0.3 扰动谱}的风扰下按{jd-7.3 轨迹重规划判据}识别持续偏航、路径不可行或轨迹冲突，并按{jd-0.5 人机确认协议}请人确认。",
+      "jd_refs": [
+        "jd-7.1",
+        "jd-0.3",
+        "jd-7.3",
+        "jd-0.5"
+      ]
+    },
+    {
+      "cell": "A7×L4",
+      "a_id": "A7",
+      "level": "L4",
+      "g_group": "G3",
+      "ability": "导航 / 航迹 / 轨迹管理",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能在{jd-7.3 轨迹重规划判据}触发时，自主从{jd-7.4 航迹处置策略适用集}中选择处置（改高度 / 改航迹 / 等待 / 悬停 / 增大裕度），并验证新航迹可信。",
+      "jd_refs": [
+        "jd-7.3",
+        "jd-7.4"
+      ]
+    },
+    {
+      "cell": "A8×L1",
+      "a_id": "A8",
+      "level": "L1",
+      "g_group": "G3",
+      "ability": "飞行控制 / 执行机构",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能基于{jd-8.2 控制工作机制}理解飞控级控制状态（稳定 / 定高 / 悬停 / 姿态保持），按{jd-8.1 控制质量先验}识别偏差或异常并提出修正。",
+      "jd_refs": [
+        "jd-8.2",
+        "jd-8.1"
+      ]
+    },
+    {
+      "cell": "A8×L2",
+      "a_id": "A8",
+      "level": "L2",
+      "g_group": "G3",
+      "ability": "飞行控制 / 执行机构",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能按{jd-8.2 控制工作机制}持续执行片段内的速度、高度、姿态和航向控制指令，并按{jd-8.1 控制质量先验}报告控制误差。",
+      "jd_refs": [
+        "jd-8.2",
+        "jd-8.1"
+      ]
+    },
+    {
+      "cell": "A8×L3",
+      "a_id": "A8",
+      "level": "L3",
+      "g_group": "G3",
+      "ability": "飞行控制 / 执行机构",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能在任务过程中维护控制质量，按{jd-8.1 控制质量先验}识别{jd-0.3 扰动谱}引起的饱和、振荡、姿态异常、风扰或执行余量下降，并按{jd-0.5 人机确认协议}请人确认。",
+      "jd_refs": [
+        "jd-8.1",
+        "jd-0.3",
+        "jd-0.5"
+      ]
+    },
+    {
+      "cell": "A8×L4",
+      "a_id": "A8",
+      "level": "L4",
+      "g_group": "G3",
+      "ability": "飞行控制 / 执行机构",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能在控制异常时自主从{jd-8.3 控制处置策略适用集}中选择处置（降速 / 增大裕度 / 切换控制模式 / 等待稳定 / 请求检查），并验证控制状态可信。",
+      "jd_refs": [
+        "jd-8.3"
+      ]
+    },
+    {
+      "cell": "A9a×L1",
+      "a_id": "A9a",
+      "level": "L1",
+      "g_group": "G4",
+      "ability": "载荷动作执行",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能基于{jd-0.9 载荷集}发出{jd-9a.1 载荷动作目录}中的单次动作工具调用（拍照 / 喊话 / 投送 / 采样等），不保证下游执行结果。",
+      "jd_refs": [
+        "jd-0.9",
+        "jd-9a.1"
+      ]
+    },
+    {
+      "cell": "A9a×L2",
+      "a_id": "A9a",
+      "level": "L2",
+      "g_group": "G4",
+      "ability": "载荷动作执行",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能连续执行{jd-9a.1 载荷动作目录}中一个片段的载荷动作，并按{jd-9a.2 动作时序先验}维护动作进度、失败、重试和参数状态。",
+      "jd_refs": [
+        "jd-9a.1",
+        "jd-9a.2"
+      ]
+    },
+    {
+      "cell": "A9a×L3",
+      "a_id": "A9a",
+      "level": "L3",
+      "g_group": "G4",
+      "ability": "载荷动作执行",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能维护任务过程中的载荷动作态势，按{jd-9a.2 动作时序先验}识别漏执行、重复、时序错位、云台或载荷异常，并按{jd-0.5 人机确认协议}请人确认是否重试或跳过。",
+      "jd_refs": [
+        "jd-9a.2",
+        "jd-0.5"
+      ]
+    },
+    {
+      "cell": "A9a×L4",
+      "a_id": "A9a",
+      "level": "L4",
+      "g_group": "G4",
+      "ability": "载荷动作执行",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能在载荷动作异常时自主从{jd-9a.3 载荷处置策略适用集}中选择处置（重试 / 换角度 / 调参数 / 切模式 / 暂停 / 请求检查），并验证新动作状态。",
+      "jd_refs": [
+        "jd-9a.3"
+      ]
+    },
+    {
+      "cell": "A9b×L1",
+      "a_id": "A9b",
+      "level": "L1",
+      "g_group": "G4",
+      "ability": "载荷成果生成 / 远端呈现",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能在载荷工具调用返回时识别并展示{jd-9b.1 成果格式}中的单次成果（图像 / 视频首帧 / 喊话记录 / 投送确认 / 采样记录），不主动维护或验证质量。",
+      "jd_refs": [
+        "jd-9b.1"
+      ]
+    },
+    {
+      "cell": "A9b×L2",
+      "a_id": "A9b",
+      "level": "L2",
+      "g_group": "G4",
+      "ability": "载荷成果生成 / 远端呈现",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能维护执行片段内与{jd-9b.1 成果格式}对应的图像序列、视频流、检测结果、覆盖状态、投送确认或采样记录。",
+      "jd_refs": [
+        "jd-9b.1"
+      ]
+    },
+    {
+      "cell": "A9b×L3",
+      "a_id": "A9b",
+      "level": "L3",
+      "g_group": "G4",
+      "ability": "载荷成果生成 / 远端呈现",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能维护任务过程中的成果态势，按{jd-9b.2 覆盖完整度判据}识别覆盖不足、质量下降、视频无画面、报告缺项、低置信或成果缺失，并按{jd-0.5 人机确认协议}请{jd-0.4 在场人角色}确认是否补采或复核。",
+      "jd_refs": [
+        "jd-9b.2",
+        "jd-0.5",
+        "jd-0.4"
+      ]
+    },
+    {
+      "cell": "A9b×L4",
+      "a_id": "A9b",
+      "level": "L4",
+      "g_group": "G4",
+      "ability": "载荷成果生成 / 远端呈现",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能在成果异常时自主从{jd-9b.3 成果处置策略适用集}中选择处置（重拍 / 补扫 / 换角度 / 重生成报告 / 切换成果格式 / 重投 / 重采），并验证新成果按{jd-0.7 任务完成判据}可信。",
+      "jd_refs": [
+        "jd-9b.3",
+        "jd-0.7"
+      ]
+    },
+    {
+      "cell": "A10×L1",
+      "a_id": "A10",
+      "level": "L1",
+      "g_group": "G5",
+      "ability": "通信 / C2 / 遥测",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能展示{jd-0.8 通信基建}的链路、C2 和遥测状态，以及{jd-10.2 地面站拓扑}中的地面站基础状态与风险。",
+      "jd_refs": [
+        "jd-0.8",
+        "jd-10.2"
+      ]
+    },
+    {
+      "cell": "A10×L2",
+      "a_id": "A10",
+      "level": "L2",
+      "g_group": "G5",
+      "ability": "通信 / C2 / 遥测",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能维护执行片段内相对于{jd-10.1 链路质量先验}的链路质量、延迟、丢包、遥测连续性和 C2 可用性。",
+      "jd_refs": [
+        "jd-10.1"
+      ]
+    },
+    {
+      "cell": "A10×L3",
+      "a_id": "A10",
+      "level": "L3",
+      "g_group": "G5",
+      "ability": "通信 / C2 / 遥测",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能维护任务过程中的通信 / 遥测态势，按{jd-10.1 链路质量先验}识别链路退化、遥测间断、C2 不可用或{jd-10.2 地面站拓扑}异常，并按{jd-0.5 人机确认协议}请人确认。",
+      "jd_refs": [
+        "jd-10.1",
+        "jd-10.2",
+        "jd-0.5"
+      ]
+    },
+    {
+      "cell": "A10×L4",
+      "a_id": "A10",
+      "level": "L4",
+      "g_group": "G5",
+      "ability": "通信 / C2 / 遥测",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能在通信或遥测异常时自主从{jd-10.3 通信处置策略适用集}中选择处置（切链路 / 切备用站 / 降低遥测频率 / 缓存数据 / 执行链路切换），并验证新链路可信。",
+      "jd_refs": [
+        "jd-10.3"
+      ]
+    },
+    {
+      "cell": "A13×L1",
+      "a_id": "A13",
+      "level": "L1",
+      "g_group": "G5",
+      "ability": "空域 / 交通 / 合规接入",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能展示{jd-13.4 授权生命周期}、{jd-13.2 地理围栏集}、{jd-13.1 空域类别}和{jd-13.3 交通信息源需求}的基础状态及风险。",
+      "jd_refs": [
+        "jd-13.4",
+        "jd-13.2",
+        "jd-13.1",
+        "jd-13.3"
+      ]
+    },
+    {
+      "cell": "A13×L2",
+      "a_id": "A13",
+      "level": "L2",
+      "g_group": "G5",
+      "ability": "空域 / 交通 / 合规接入",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能维护执行片段内{jd-13.4 授权生命周期}的边界，以及{jd-13.2 地理围栏集}、{jd-13.3 交通信息源需求}和{jd-0.6 合规域}的约束状态。",
+      "jd_refs": [
+        "jd-13.4",
+        "jd-13.2",
+        "jd-13.3",
+        "jd-0.6"
+      ]
+    },
+    {
+      "cell": "A13×L3",
+      "a_id": "A13",
+      "level": "L3",
+      "g_group": "G5",
+      "ability": "空域 / 交通 / 合规接入",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能维护任务过程中的空域 / 合规态势，识别{jd-13.4 授权生命周期}临近失效、{jd-13.2 地理围栏集}冲突或{jd-13.3 交通信息源需求}服务异常，并按{jd-0.5 人机确认协议}请人进行合规确认。",
+      "jd_refs": [
+        "jd-13.4",
+        "jd-13.2",
+        "jd-13.3",
+        "jd-0.5"
+      ]
+    },
+    {
+      "cell": "A13×L4",
+      "a_id": "A13",
+      "level": "L4",
+      "g_group": "G5",
+      "ability": "空域 / 交通 / 合规接入",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能在空域或合规异常时自主从{jd-13.5 合规处置策略适用集}中选择处置（刷新授权 / 更新围栏 / 等待服务恢复 / 复核交通 / 退避 / 返航），并验证新接入可信。",
+      "jd_refs": [
+        "jd-13.5"
+      ]
+    },
+    {
+      "cell": "A12×L1",
+      "a_id": "A12",
+      "level": "L1",
+      "g_group": "G6",
+      "ability": "安全包络 / 运行保证 / 处置建议",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能基于{jd-0.10 安全包络先验}和{jd-12.1 分相位安全阈值}上报低电、越界、姿态、链路或定位异常等局部安全状态。",
+      "jd_refs": [
+        "jd-0.10",
+        "jd-12.1"
+      ]
+    },
+    {
+      "cell": "A12×L2",
+      "a_id": "A12",
+      "level": "L2",
+      "g_group": "G6",
+      "ability": "安全包络 / 运行保证 / 处置建议",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能在执行片段内维护{jd-12.1 分相位安全阈值}对应的安全边界、{jd-12.2 安全处置策略适用集}对应的保护触发状态、返航窗口与接管状态。",
+      "jd_refs": [
+        "jd-12.1",
+        "jd-12.2"
+      ]
+    },
+    {
+      "cell": "A12×L3",
+      "a_id": "A12",
+      "level": "L3",
+      "g_group": "G6",
+      "ability": "安全包络 / 运行保证 / 处置建议",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能在任务过程中按{jd-12.1 分相位安全阈值}维护安全态势，发现低电趋势、丢链趋势、边界接近或风险累积，并按{jd-0.5 人机确认协议}请人确认{jd-12.2 安全处置策略适用集}中的兜底策略。",
+      "jd_refs": [
+        "jd-12.1",
+        "jd-0.5",
+        "jd-12.2"
+      ]
+    },
+    {
+      "cell": "A12×L4",
+      "a_id": "A12",
+      "level": "L4",
+      "g_group": "G6",
+      "ability": "安全包络 / 运行保证 / 处置建议",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能在安全异常时自主从{jd-12.2 安全处置策略适用集}中选择处置，进入并保持{jd-12.3 安全态定义}中的可接受 safe state，不依赖运行时人工兜底。",
+      "jd_refs": [
+        "jd-12.2",
+        "jd-12.3"
+      ]
+    },
+    {
+      "cell": "A15×L1",
+      "a_id": "A15",
+      "level": "L1",
+      "g_group": "G6",
+      "ability": "日志 / 审计 / 保证证据",
+      "level_label": "域内潜在自主",
+      "inherits_levels": [],
+      "responsibility": "能按{jd-15.1 事件类目}记录基础事件、状态和操作记录。",
+      "jd_refs": [
+        "jd-15.1"
+      ]
+    },
+    {
+      "cell": "A15×L2",
+      "a_id": "A15",
+      "level": "L2",
+      "g_group": "G6",
+      "ability": "日志 / 审计 / 保证证据",
+      "level_label": "域内受令自主",
+      "inherits_levels": [
+        "L1"
+      ],
+      "responsibility": "能按{jd-15.1 事件类目}和{jd-15.2 证据格式规格}记录执行片段内的关键状态、保护触发、人工介入、建议和结果。",
+      "jd_refs": [
+        "jd-15.1",
+        "jd-15.2"
+      ]
+    },
+    {
+      "cell": "A15×L3",
+      "a_id": "A15",
+      "level": "L3",
+      "g_group": "G6",
+      "ability": "日志 / 审计 / 保证证据",
+      "level_label": "域内监督自主",
+      "inherits_levels": [
+        "L1",
+        "L2"
+      ],
+      "responsibility": "能维护任务过程证据链，按{jd-15.2 证据格式规格}和{jd-15.3 留存策略}识别日志缺口、时间戳异常、事件不可回放或证据不完整，并按{jd-0.5 人机确认协议}请人审计补齐。",
+      "jd_refs": [
+        "jd-15.2",
+        "jd-15.3",
+        "jd-0.5"
+      ]
+    },
+    {
+      "cell": "A15×L4",
+      "a_id": "A15",
+      "level": "L4",
+      "g_group": "G6",
+      "ability": "日志 / 审计 / 保证证据",
+      "level_label": "域内主导自主",
+      "inherits_levels": [
+        "L1",
+        "L2",
+        "L3"
+      ],
+      "responsibility": "能按{jd-15.2 证据格式规格}自主生成异常处置和兜底动作的可回放、可解释、可复核证据链，证明系统决策、动作、责任边界和恢复过程。",
+      "jd_refs": [
+        "jd-15.2"
+      ]
+    }
+  ],
+  "source_document": "AxL责任定义字典_17A_68单元_机读版.md",
+  "source_sha256": "76b43babfc28c46b9fe51e5c59dd8c1f033a85711b8bb7bc824cec5eab14c905"
+}

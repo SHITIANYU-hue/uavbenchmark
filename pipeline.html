@@ -127,7 +127,7 @@
     }
     .stage-rail {
       display: grid;
-      grid-template-columns: repeat(9, minmax(92px, 1fr));
+      grid-template-columns: repeat(6, minmax(110px, 1fr));
       gap: 7px;
       max-width: 1500px;
       margin: 0 auto;
@@ -302,6 +302,13 @@
       white-space: pre-wrap;
     }
     .natural-template mark { color: #075d5a; background: var(--teal-soft); border-radius: 4px; }
+    .scenario-summary { padding: 16px; border: 1px solid #b7d9d6; border-radius: 12px; background: var(--teal-soft); color: #294354; line-height: 1.75; }
+    .boundary-list { display: grid; gap: 7px; margin: 12px 0 18px; padding: 0; list-style: none; }
+    .boundary-list li { padding: 9px 11px; border: 1px solid var(--line); border-radius: 9px; background: #fff; color: #40596a; font-size: 10px; }
+    .level-review { display: flex; gap: 8px; align-items: center; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); }
+    .level-review label { color: var(--muted); font-size: 9px; font-weight: 800; }
+    .level-review select { min-width: 86px; height: 34px; padding: 0 9px; color: var(--teal); border: 1px solid #9bc9c5; border-radius: 8px; background: #fff; font-weight: 850; }
+    .agent-proposal { margin-left: auto; color: var(--muted); font-size: 9px; }
 
     .instance-tools { display: grid; grid-template-columns: 130px 140px 1fr; gap: 9px; align-items: end; margin-bottom: 14px; }
     .control label { display: block; margin-bottom: 5px; color: var(--muted); font-size: 9px; font-weight: 750; }
@@ -538,15 +545,10 @@
   <header class="app-header">
     <div class="brand">
       <div class="brand-mark">UAV</div>
-      <div><b>Benchmark Pipeline Console</b><span id="headerCaseTitle">案例加载中 · 浏览器演示</span></div>
+      <div><b>Benchmark Pipeline Console</b><span id="headerCaseTitle">固定业务场景加载中</span></div>
     </div>
     <div class="header-actions">
-      <span class="mode-badge">当前重点 · AGENT → TEMPLATE</span>
-      <select class="case-select" id="caseSelect" aria-label="选择案例">
-        <option value="custom">新任务 · 自由输入</option>
-        <option value="case1">案例一 · 城市违停巡检</option>
-        <option value="case2">案例二 · 油田管廊巡检</option>
-      </select>
+      <span class="mode-badge">固定场景 → 人工任务 → AGENT → 人工复核</span>
       <button class="btn" id="resetButton" type="button">重新开始</button>
       <button class="btn" type="button" onclick="window.print()"><span class="print-label">打印摘要</span></button>
     </div>
@@ -586,20 +588,26 @@
     ].join("\n\n");
 
     const STAGES = [
-      ["INPUT", "业务描述"],
-      ["COVERAGE", "能力确认"],
+      ["SCENARIO", "固定业务场景"],
+      ["TASK", "简短任务输入"],
+      ["NARRATIVE", "任务文案复核"],
+      ["COVERAGE", "能力等级复核"],
       ["JD", "变量提取"],
       ["TEMPLATE", "任务模板"]
     ];
 
+    const SCENARIO_TASK_EXAMPLES = {
+      highway_inspection: "例如：让无人机巡查指定高速路段，持续识别和记录违法停车车辆。同一辆车短时遮挡后再次出现时不要重复上报；遇到定位异常先安全保持并通知调度人员，最后生成按路段整理的违停巡检报告。",
+      oil_gas_inspection: "例如：让无人机沿油气管道巡检并持续记录发现的异常。电量不足以安全完成任务时，由它自己决定缩短巡检、返航还是去安全点，并告诉我最后是否安全结束。",
+      bridge_inspection: "例如：让无人机检查桥底和指定结构件，把发现的病害标在桥梁三维模型上并持续更新。不能确定的病害留给人工确认，不要直接给出维修结论。",
+      campus_inspection: "例如：让无人机巡查园区道路和设施，发现异常后持续更新告警。需要近距离查看时通知机器狗去复核，最后把无人机和机器狗的结果汇总起来。",
+      other_inspection: "例如：这是河道巡检。让无人机沿指定河段持续查找异常漂浮物，发现后记录位置和图片并发出告警；遇到突发情况时给调度人员一个应急航线建议。"
+    };
+
     const CITY_PROMPT = [
-      "在城市高楼峡谷道路环境中，一架具备悬停或等效安全保持能力、满足既定速度范围、转弯约束和起降约束的无人机，从指定起飞点进入道路巡检区域，沿包含巡检起点、巡检终点和航点的固定道路航段执行违停车辆巡检。",
-      "无人机搭载 RGB 相机。道路中包含违停车辆、正常停放车辆和相似干扰目标，车辆可出现、离开、交错、短时遮挡或重新出现。系统持续处理多帧 RGB 观测，完成车辆连续检测、跨帧身份维护、重复目标去除和巡检报告更新，输出目标 ID、类别、图像证据、发现时间和道路巡检段记录。",
-      "正常任务阶段由外部 waypoint executor 或仿真执行器推进固定航段，外部飞控负责基础速度保持、姿态稳定和位置保持。系统可获得 GNSS/RTK、VIO、IMU、磁力计和气压计等定位观测，以及当前航路、禁飞区、障碍物、速度、姿态、偏航、风况和飞行状态。具体平台参数、控制约束数值和安全包络阈值尚未确定。",
-      "A5×L2 负责连续感知和身份维护；A6a×L3 负责正常阶段持续维护位姿与定位质量，并在退化后完成不可信标记、保护请求、异常上报和等待；A7×L1 只输出航路可行性、约束、风险或航段偏差提示；A8×L1 只判断当前飞行状态是否在控制约束和安全包络内并输出调整建议。SUT 不自主执行航路调整或闭环飞行控制。",
-      "在系统完成足够长的正常巡检和车辆连续观测后，Fixture 注入 GNSS 多径、位置跳变、连续失锁或定位源不一致等定位退化。SUT 判断位姿不可信后，应停止依赖该位姿进行高风险推进，并请求外部 Executor 执行暂停推进、悬停或等效安全保持。真实车辆身份、违停标签、真实位姿、故障类型和故障开始时间不直接提供给 SUT。",
-      "SUT 通过结构化异常事件接口输出异常类型、定位可信状态、当前任务状态和已执行保护动作。外部决定接口返回继续、返航或终止等后续动作；该接口只用于完成运行闭环，不评价自然语言理解、协认或控制权交接能力。",
-      "任务在以下结构性条件满足时结束：正常阶段已完成连续违停车辆识别、跨帧身份保持、去重和报告更新；定位退化发生后，系统已标记定位不可信、触发允许的保护动作并输出异常事件。具体观测时长、定位可信阈值和安全包络数值仍待业务方确认。"
+      "请让无人机沿固定道路航段持续巡检违停车辆。车辆出现、短时遮挡或重新出现时，系统应保持同一目标身份，合并重复观测并持续更新巡检报告。",
+      "正常阶段持续维护自身位姿和定位质量。当定位观测明显退化或不同来源相互矛盾时，系统应标记当前位姿不可信，停止依赖该位姿进行高风险推进，请求外部执行器进入安全保持，并通过结构化接口上报异常后等待外部决定。",
+      "系统只输出航路风险、航段偏差和飞行状态建议，不自主修改航路，也不执行低层飞行控制。具体时长、定位可信阈值和安全包络数值尚未确定。"
     ].join("\n\n");
 
     const OILFIELD_COVERAGE = [
@@ -614,18 +622,18 @@
     const CITY_COVERAGE = [
       { id: "a5_l2", code: "A5×L2", name: "连续车辆感知", detail: "连续检测、跨帧身份保持、去重并持续更新巡检报告。", kind: "scored" },
       { id: "a6a_l3", code: "A6a×L3", name: "定位退化责任", detail: "识别退化、标记不可信、请求保护、上报并等待外部决定。", kind: "scored" },
-      { id: "a7_l1", code: "A7×L1", name: "航路建议", detail: "输出航路可行性、约束、风险与偏差提示；不自主执行。", kind: "scored" },
-      { id: "a8_l1", code: "A8×L1", name: "包络建议", detail: "评估状态与安全包络并输出调整建议；不闭环控制。", kind: "scored" },
+      { id: "a7_l1", code: "A7×L1", name: "局部运动目标", detail: "维护局部运动目标并输出航路可行性、约束、风险与偏差提示；外部 Executor 执行。", kind: "scored" },
+      { id: "a8_l1", code: "A8×L1", name: "控制状态建议", detail: "理解飞控控制状态、识别质量偏差并输出调整建议；不闭环控制。", kind: "scored" },
       { id: "executor_dep", code: "Executor", name: "外部保护执行", detail: "推进固定航段，执行暂停或等效安全保持；不计 SUT coverage。", kind: "dependency" },
       { id: "decision_dep", code: "External Decision", name: "外部决定接口", detail: "接收异常上报并返回继续、返航或终止等外部决定；协议 TBD。", kind: "dependency" }
     ];
 
     const OILFIELD_JD_ROWS = [
       ["jd-0.2", "工作空间结构", "油田线性或分段线性管廊", "原始任务 + 案例二文档", "given"],
-      ["jd-8.3", "平台与执行包络", "platform_profile_registry", "平台 profile 待项目组提供", "tbd"],
+      ["jd-2.2", "平台参数表", "platform_profile_registry", "平台 profile 待项目组提供", "tbd"],
       ["jd-7.1", "航路拓扑", "固定巡检、返航与安全备降路线", "原始任务", "proposed"],
       ["jd-0.9", "载荷集", "RGB；可选热红外/深度/测距", "原始任务", "proposed"],
-      ["jd-5.1", "业务对象类别", "腐蚀、泄漏、破损、异物侵入", "原始任务", "given"],
+      ["jd-5.1", "业务对象类目", "腐蚀、泄漏、破损、异物侵入", "原始任务", "given"],
       ["jd-6b.1", "相对几何先验", "中心线、检查面、目标观察距离", "案例二文档", "proposed"],
       ["jd-0.3", "资源偏差窗口", "resource_deviation_profile", "Fixture profile 待确认", "tbd"],
       ["jd-0.10", "安全包络", "最低储备与可达性规则", "不得由 Agent 编造", "tbd"],
@@ -634,7 +642,7 @@
 
     const CITY_JD_ROWS = [
       ["jd-0.2", "工作空间结构", "城市高楼峡谷与固定道路航段", "交接文件当前确认边界", "given"],
-      ["jd-5.1", "业务对象类别", "车辆与违停标签", "案例一合同示例", "given"],
+      ["jd-5.1", "业务对象类目", "车辆与违停标签", "案例一合同示例", "given"],
       ["vehicle_layout", "车辆布局", "vehicle_layout_profile", "实例变量域待确认", "proposed"],
       ["occlusion_profile", "遮挡配置", "occlusion_profile", "实例变量域待确认", "proposed"],
       ["localization_fault", "定位退化", "localization_degradation_profile", "异常窗口与强度待确认", "tbd"],
@@ -691,9 +699,9 @@
       },
       case1: {
         key: "case1",
-        label: "案例一",
-        title: "城市高楼峡谷违停车辆巡检",
-        status: "当前确认边界",
+        label: "固定场景",
+        title: "城市高楼峡谷道路巡检",
+        status: "会议确认基线",
         prompt: CITY_PROMPT,
         naturalTemplate: "",
         coverage: CITY_COVERAGE,
@@ -735,24 +743,40 @@
       }
     };
 
-    function activeCase() { return CASES[state.caseKey]; }
+    function activeCase() { return CASES.case1; }
 
-    const initialState = (caseKey = "case1") => ({
-      caseKey,
+    const initialState = () => ({
+      caseKey: "case1",
       currentStage: 0,
       maxUnlocked: 0,
       completed: new Set(),
-      runId: caseKey + "-demo-001",
-      prompt: CASES[caseKey].prompt,
+      runId: "fixed-scenario-demo-001",
+      prompt: "",
       inputVersion: null,
       selectedCoverage: new Set(),
       modelTier: "flash",
       serverStatus: "checking",
       serverModels: null,
+      catalogSummary: null,
+      scenarioRegistry: null,
+      selectedScenarioId: "highway_inspection",
+      fixedScenario: null,
+      narrativeStatus: "idle",
+      narrativeRunId: null,
+      narrativeEvent: null,
+      narrativeEventDetails: null,
+      narrativeResult: null,
+      narrativeDraft: "",
+      narrativeOriginal: "",
+      narrativeEdited: false,
+      narrativeError: null,
       agentStatus: "idle",
       agentEvent: null,
       agentEventDetails: null,
       agentResult: null,
+      proposedCoverageCells: [],
+      coverageEdited: false,
+      coverageSaving: false,
       agentError: null,
       baseRunId: null,
       revisionId: null,
@@ -778,19 +802,22 @@
       grader: null
     });
 
-    const STORAGE_KEY = "uav_benchmark_pipeline_state_v1";
+    const STORAGE_KEY = "uav_benchmark_pipeline_state_v4";
 
     function loadStoredState() {
       try {
         const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
-        if (!saved || !CASES[saved.caseKey]) return initialState("case1");
-        const restored = Object.assign(initialState(saved.caseKey), saved);
+        if (!saved) return initialState();
+        const restored = Object.assign(initialState(), saved, { caseKey: "case1" });
         restored.completed = new Set(saved.completed || []);
         restored.selectedCoverage = new Set(saved.selectedCoverage || []);
+        restored.narrativeDraft = normalizeNarrativeText(restored.narrativeDraft || "");
+        restored.narrativeOriginal = normalizeNarrativeText(restored.narrativeOriginal || "");
+        reconcileNarrativeValidation(restored.narrativeResult, restored.narrativeDraft);
         restored.serverStatus = "checking";
         return restored;
       } catch (error) {
-        return initialState("case1");
+        return initialState();
       }
     }
 
@@ -823,16 +850,24 @@
     function coverageItems() {
       const candidate = agentCandidate();
       if (!candidate) return [];
-      const scored = (candidate.coverage_candidates || []).map((item, index) => ({
-        id: "scored_" + index,
-        code: item.cell,
-        name: item.role === "primary" ? "主要评分能力" : item.role === "anomaly" ? "异常处置能力" : "辅助评分能力",
-        detail: (item.responsibilities || []).join("；") + (item.status === "TBD" ? "（TBD）" : ""),
-        evidence: item.evidence_quote,
-        kind: "scored"
-      }));
+      const scored = (candidate.coverage_candidates || []).map((item, index) => {
+        const catalogCell = state.catalogSummary && state.catalogSummary.gal_cells.find(row => row.cell === item.cell);
+        return {
+          id: "scored_" + index,
+          candidateIndex: index,
+          code: item.cell,
+          aId: item.cell.split("×")[0],
+          level: item.cell.split("×")[1],
+          proposedCode: state.proposedCoverageCells[index] || item.cell,
+          name: catalogCell ? catalogCell.ability : item.role === "primary" ? "主要评分能力" : item.role === "anomaly" ? "异常处置能力" : "辅助评分能力",
+          detail: (item.responsibilities || []).join("；") + (item.status === "TBD" ? "（TBD）" : ""),
+          evidence: item.evidence_quote,
+          kind: "scored"
+        };
+      });
       const dependencies = (candidate.runtime_dependencies || []).map((item, index) => ({
         id: "dependency_" + index,
+        candidateIndex: index,
         code: item.dependency_id,
         name: item.provider,
         detail: (item.responsibilities || []).join("；") + (item.status === "TBD" ? "（TBD）" : ""),
@@ -869,12 +904,21 @@
       run_saved: "运行结果已保存"
     };
 
+    const NARRATIVE_EVENT_LABELS = {
+      request_submitted: "简短任务已提交",
+      request_received: "本地服务已接收简短任务",
+      model_request_started: "正在扩充完整业务文案",
+      model_response_received: "文案已返回，正在解析",
+      narrative_validated: "扩充文案已完成本地检查",
+      run_saved: "扩充文案与运行记录已保存"
+    };
+
     const JD_DISPLAY_NAMES = {
       "jd-0.2": "工作空间结构", "jd-0.3": "扰动谱", "jd-0.5": "人机确认协议/结构化外部事件接口",
-      "jd-0.7": "任务完成判据", "jd-0.9": "载荷集", "jd-0.10": "安全包络", "jd-5.1": "业务对象类别",
+      "jd-0.7": "任务完成判据", "jd-0.9": "载荷集", "jd-0.10": "安全包络先验", "jd-5.1": "业务对象类目",
       "jd-6a.1": "定位源需求", "jd-6a.3": "定位策略适用集/允许保护动作集", "jd-6b.1": "相对几何先验",
       "jd-6b.2": "相对几何感知机制", "jd-7.1": "航路拓扑", "jd-7.2": "导航工作机制",
-      "jd-8.1": "控制接口", "jd-8.2": "控制约束", "jd-8.3": "平台与执行包络"
+      "jd-8.1": "控制质量先验", "jd-8.2": "控制工作机制", "jd-8.3": "控制处置策略适用集"
     };
 
     const ISSUE_COPY = {
@@ -884,7 +928,14 @@
       EVIDENCE_NOT_VERBATIM: ["Agent 证据不是原文片段", "核对候选值与原始业务描述，必要时改为人工补充并记录来源。"],
       INCOMPLETE_TEMPLATE_STRUCTURE: ["自然语言模板结构不完整", "按七段式模板骨架补全任务环境、责任、异常和完成条件。"],
       MISSING_COVERAGE_IN_TEMPLATE: ["模板未写明已选 A×L", "在正文中明确能力编号、责任和不测项。"],
-      RUNTIME_DEPENDENCY_MARKED_SCORED: ["外部依赖被错误计分", "Runtime Dependency 必须保持 scored=false。"]
+      RUNTIME_DEPENDENCY_MARKED_SCORED: ["外部依赖被错误计分", "Runtime Dependency 必须保持 scored=false。"],
+      JD_NAME_MISMATCH: ["JD 名称与当前字典版本不一致", "按当前 66 槽位字典修正名称，不要沿用旧版同 ID 含义。"],
+      CATALOG_VERSION_MISMATCH: ["知识目录版本不一致", "使用当前本地 A×L 与 JD 字典重新生成候选。"],
+      TAGGED_JD_NOT_EMITTED: ["模板引用了 JD，但 JD 表缺少该项", "把正文已引用的 JD 同步加入结构化 JD 表。"],
+      DUPLICATE_GAL_CELL: ["能力候选重复", "合并相同 A×L 的候选责任与证据。"],
+      DUPLICATE_JD_SLOT: ["JD 槽位重复", "同一 JD ID 在候选表中只保留一项。"],
+      INTERNAL_LABEL_IN_NARRATIVE: ["业务正文包含内部编号", "从自然语言正文移除 A×L、GAL 和 JD 编号；这些信息只在结构化复核区显示。"],
+      INCOMPLETE_CUMULATIVE_RESPONSIBILITY: ["等级责任累计不完整", "目标等级必须显式保留从 L1 到当前等级的每层责任。"]
     };
 
     function issueCopy(issue) {
@@ -895,14 +946,43 @@
 
     function issueReviewTab(issue) {
       if ((issue.path || "").startsWith("runtime_dependencies")) return "dependencies";
-      if (["MISSING_REQUIRED_JD_IN_TEMPLATE", "INCOMPLETE_TEMPLATE_STRUCTURE", "MISSING_COVERAGE_IN_TEMPLATE", "MISSING_JD_ANNOTATION", "UNKNOWN_JD_IN_TEMPLATE"].includes(issue.code)) return "template";
+      if (["INCOMPLETE_TEMPLATE_STRUCTURE", "INTERNAL_LABEL_IN_NARRATIVE"].includes(issue.code)) return "template";
       return "tbd";
     }
 
-    function currentRunLabel() {
-      const label = RUN_EVENT_LABELS[state.agentEvent] || "正在准备 Config Agent";
-      const tool = state.agentEventDetails && state.agentEventDetails.tool;
+    function currentRunLabel(kind) {
+      const narrative = kind === "narrative";
+      const event = narrative ? state.narrativeEvent : state.agentEvent;
+      const details = narrative ? state.narrativeEventDetails : state.agentEventDetails;
+      const label = (narrative ? NARRATIVE_EVENT_LABELS[event] : RUN_EVENT_LABELS[event]) || (narrative ? "正在准备任务文案 Agent" : "正在准备分类 Agent");
+      const tool = details && details.tool;
       return tool ? label + " · " + tool : label;
+    }
+
+    function normalizeNarrativeText(value) {
+      return String(value || "").replace(/\\r\\n/g, "\n").replace(/\\n/g, "\n").trim();
+    }
+
+    function reconcileNarrativeValidation(result, narrative) {
+      if (!result || !Array.isArray(result.validation_issues)) return;
+      const paragraphCount = narrative.split(/\n\s*\n/).map(item => item.trim()).filter(Boolean).length;
+      if (paragraphCount < 7) return;
+      result.validation_issues = result.validation_issues.filter(item => item.code !== "INCOMPLETE_TEMPLATE_STRUCTURE");
+      result.validation_status = result.validation_issues.length ? "needs_review" : "pass";
+    }
+
+    function applyNarrativeResult(result) {
+      const normalizedNarrative = normalizeNarrativeText(result.draft.expanded_narrative);
+      result.draft.expanded_narrative = normalizedNarrative;
+      reconcileNarrativeValidation(result, normalizedNarrative);
+      state.narrativeResult = result;
+      state.narrativeRunId = result.run_id;
+      state.narrativeStatus = "done";
+      state.narrativeEvent = "run_saved";
+      state.narrativeOriginal = normalizedNarrative;
+      state.narrativeDraft = normalizedNarrative;
+      state.narrativeEdited = false;
+      state.narrativeError = null;
     }
 
     function applyAgentResult(result) {
@@ -917,39 +997,58 @@
       state.revisionNumber = 0;
       state.revisionHistory = [];
       state.reviewDraft = null;
+      state.proposedCoverageCells = (result.candidate.coverage_candidates || []).map(item => item.cell);
+      state.coverageEdited = false;
       state.selectedCoverage = new Set(coverageItems().map(item => item.id));
     }
 
-    async function pollRunStatus() {
-      if (state.agentStatus !== "running" || !state.runId.startsWith("agent-")) return;
+    async function pollRunStatus(kind) {
+      const narrative = kind === "narrative";
+      const statusKey = narrative ? "narrativeStatus" : "agentStatus";
+      const runId = narrative ? state.narrativeRunId : state.runId;
+      if (state[statusKey] !== "running" || !runId || !runId.startsWith("agent-")) return;
       try {
-        const response = await fetch("/api/config-agent/status?run_id=" + encodeURIComponent(state.runId), { cache: "no-store" });
+        const response = await fetch("/api/config-agent/status?run_id=" + encodeURIComponent(runId), { cache: "no-store" });
         if (response.ok) {
           const status = await response.json();
-          state.agentEvent = status.event || state.agentEvent;
-          state.agentEventDetails = status.details || null;
+          if (narrative) {
+            state.narrativeEvent = status.event || state.narrativeEvent;
+            state.narrativeEventDetails = status.details || null;
+          } else {
+            state.agentEvent = status.event || state.agentEvent;
+            state.agentEventDetails = status.details || null;
+          }
           if (status.status === "completed" && status.result) {
-            applyAgentResult(status.result);
-            state.completed.add(0);
-            state.maxUnlocked = Math.max(state.maxUnlocked, 1);
-            state.currentStage = 1;
+            if (narrative) {
+              applyNarrativeResult(status.result);
+              state.completed.add(1);
+              state.maxUnlocked = Math.max(state.maxUnlocked, 2);
+              state.currentStage = 2;
+            } else {
+              applyAgentResult(status.result);
+              state.completed.add(2);
+              state.maxUnlocked = Math.max(state.maxUnlocked, 3);
+              state.currentStage = 3;
+            }
           } else if (status.status === "failed") {
-            state.agentStatus = "error";
-            state.agentError = (status.details && status.details.error) || "Agent 运行失败，请查看终端日志。";
+            state[statusKey] = "error";
+            const errorText = (status.details && status.details.error) || "Agent 运行失败，请查看终端日志。";
+            if (narrative) state.narrativeError = errorText;
+            else state.agentError = errorText;
           }
           render();
         }
       } catch (error) {
         // A transient polling error does not cancel the model request.
       }
-      if (state.agentStatus === "running") {
-        pendingPollTimer = setTimeout(pollRunStatus, 1500);
+      if (state[statusKey] === "running") {
+        pendingPollTimer = setTimeout(() => pollRunStatus(kind), 1500);
       }
     }
 
-    function startRunPolling() {
+    function startRunPolling(kind) {
       if (pendingPollTimer) clearTimeout(pendingPollTimer);
-      pendingPollTimer = setTimeout(pollRunStatus, 300);
+      pendingPollTimer = setTimeout(() => pollRunStatus(kind), 300);
     }
 
     function cloneCandidate() {
@@ -985,7 +1084,7 @@
             status: "TBD",
             evidence_quote: "",
             provenance: "auto_fixed",
-            source_note: "DOCX task-template backbone required slot"
+            source_note: "当前版本化 A×L/JD 目录要求的必需槽位"
           });
         }
       });
@@ -1109,7 +1208,8 @@
           body: JSON.stringify({
             parent_run_id: state.baseRunId || state.agentResult.run_id,
             revision_number: state.revisionNumber + 1,
-            task_description: state.prompt,
+            scenario_id: state.selectedScenarioId,
+            task_description: state.narrativeDraft,
             candidate: state.reviewDraft,
             change_summary: [state.reviewNote || "人工审核修改"]
           })
@@ -1158,7 +1258,7 @@
         const marker = done ? "✓ DONE" : current ? "● CURRENT" : locked ? "LOCKED" : "READY";
         return '<button class="stage-node ' + cls + '" type="button" data-stage="' + index + '"' +
           (locked ? " disabled" : "") + '><span>' + marker + '</span><b>' +
-          String(index + 1).padStart(2, "0") + " · " + stage[1] + "</b></button>";
+          String(index).padStart(2, "0") + " · " + stage[1] + "</b></button>";
       }).join("");
       rail.querySelectorAll("[data-stage]").forEach(button => {
         button.addEventListener("click", () => goToStage(Number(button.dataset.stage)));
@@ -1172,13 +1272,18 @@
       const deps = items.filter(item => item.kind === "dependency" && state.selectedCoverage.has(item.id));
       const pending = agentCandidate() ? (agentCandidate().open_questions || []).length : 0;
       const progress = Math.round((state.completed.size / STAGES.length) * 100);
+      const catalogCounts = state.catalogSummary && state.catalogSummary.counts;
       document.getElementById("contextPanel").innerHTML =
         '<div class="context-block"><div class="context-label">Task</div><div class="context-value">' + escapeHtml(currentTitle()) + '</div>' +
         '<div class="mini-tags"><span class="mini-tag">' + escapeHtml(profile.label) + '</span><span class="mini-tag">' +
-        escapeHtml(state.agentStatus === "done" ? "Agent 已返回" : state.agentStatus === "running" ? "Agent 运行中" : profile.status) + '</span></div></div>' +
-        '<div class="context-block"><div class="context-label">Run ID</div><div class="context-value mono">' + state.runId + "</div></div>" +
+        escapeHtml(state.agentStatus === "done" ? "两次调用已返回" : state.agentStatus === "running" ? "调用 2 运行中" : state.narrativeStatus === "done" ? "文案待确认" : state.narrativeStatus === "running" ? "调用 1 运行中" : profile.status) + '</span></div></div>' +
+        (state.narrativeRunId ? '<div class="context-block"><div class="context-label">Narrative Run</div><div class="context-value mono">' + escapeHtml(state.narrativeRunId) + '</div></div>' : '') +
+        '<div class="context-block"><div class="context-label">Classification Run</div><div class="context-value mono">' + escapeHtml(state.runId.startsWith("agent-") ? state.runId : "尚未开始") + "</div></div>" +
         '<div class="context-block"><div class="context-label">Model</div><div class="context-value mono">' +
         escapeHtml(state.agentResult ? state.agentResult.model : state.modelTier === "pro" ? "Gemini Pro" : state.modelTier === "lite" ? "Gemini 3.1 Flash-Lite" : "Gemini 3.5 Flash") + '</div></div>' +
+        '<div class="context-block"><div class="context-label">Knowledge Catalog</div><div class="context-value mono">' +
+        (catalogCounts ? catalogCounts.abilities + ' A · ' + catalogCounts.gal_cells + ' A×L · ' + catalogCounts.jd_fields + ' JD' : '正在读取') +
+        '</div><div class="action-note">版本：' + escapeHtml(state.catalogSummary ? state.catalogSummary.catalog_version : "—") + '</div></div>' +
         '<div class="context-block"><div class="context-label">Scored Coverage</div><div class="mini-tags">' +
         (scored.length ? scored.map(item => '<span class="mini-tag scored">' + item.code + "</span>").join("") : '<span class="mini-tag">未确认</span>') +
         '</div></div><div class="context-block"><div class="context-label">Runtime Dependencies</div><div class="mini-tags">' +
@@ -1193,7 +1298,7 @@
       return '<div class="review-list">' + items.map(item =>
         '<div class="review-item ' + item[0] + '"><div class="review-type">' + item[1] + '</div><b>' +
         item[2] + "</b><p>" + item[3] + "</p>" + (item[4] ? '<span class="artifact-link">' + item[4] + "</span>" : "") + "</div>"
-      ).join("") + '</div><div class="disclaimer">本页运行结果均为浏览器内 synthetic fixture。结构通过不代表业务阈值或 simulator 接口已经确认。</div>';
+      ).join("") + '</div><div class="disclaimer">Agent 输出是候选；能力等级需人工确认，未知业务阈值与 simulator 接口继续保持 TBD。</div>';
     }
 
     function renderReview() {
@@ -1204,22 +1309,32 @@
       switch (state.currentStage) {
         case 0:
           items = [
-            [state.serverStatus === "ready" ? "valid" : "pending", "LOCAL SERVICE", state.serverStatus === "ready" ? "Config Agent 已就绪" : "等待本地服务", state.serverStatus === "ready" ? "API Key 只保存在本地服务进程中。" : "请通过启动脚本打开页面，不要直接双击 HTML。", "/api/health"],
-            ["info", "INPUT", "案例只是示例输入", "Agent 不读取两个案例的现成 Task Template 作为答案。", "task_description"]
+            [state.fixedScenario ? "valid" : "pending", "SCENARIO SOURCE", state.fixedScenario ? "固定业务场景已加载" : "等待场景文件", state.fixedScenario ? "场景与业务变量在人工任务输入之前锁定。" : "请通过本地服务读取版本化场景。", "/api/scenario"],
+            ["info", "BOUNDARY", "Stage 0 不预设能力等级", "这里只固定环境、对象、观测、外部设施和允许变量域。", "fixed_scenario"]
           ]; break;
         case 1:
           items = [
-            [toolNames.includes("lookup_gal_catalog") ? "valid" : "pending", "TOOL TRACE", "GAL 目录查询", toolNames.includes("lookup_gal_catalog") ? "Agent 已实际查询受审 GAL 候选目录。" : "未观察到必需工具调用。", "lookup_gal_catalog"],
-            ["info", "HUMAN GATE", "A×L 仍需人工确认", "Agent 只提出候选，不把推断自动升级为正式覆盖边界。", "coverage_candidates"]
+            [state.serverStatus === "ready" ? "valid" : "pending", "LOCAL SERVICE", state.serverStatus === "ready" ? "Config Agent 已就绪" : "等待本地服务", state.serverStatus === "ready" ? "API Key 只保存在本地服务进程中。" : "请通过启动脚本打开页面，不要直接双击 HTML。", "/api/health"],
+            ["info", "HUMAN INPUT", "只描述本次任务责任", "不要求人工填写 A×L 或 JD 编号。", "human_task_description"]
           ]; break;
         case 2:
           items = [
-            [toolNames.includes("lookup_jd_catalog") ? "valid" : "pending", "TOOL TRACE", "JD 目录查询", toolNames.includes("lookup_jd_catalog") ? "Agent 已实际查询受审 JD 字段目录。" : "未观察到必需工具调用。", "lookup_jd_catalog"],
-            [issueCount ? "pending" : "valid", "VALIDATOR", issueCount ? issueCount + " 个问题待复核" : "确定性校验通过", issueCount ? "查看模板页中的校验问题；不可静默忽略。" : "字段 ID 与原文证据已通过本地规则检查。", "validation_issues"]
+            [state.narrativeStatus === "done" ? "valid" : "pending", "CALL 1 / 2", "完整任务文案已生成", "文案可以人工编辑；本阶段不进行 A×L 或 JD 分类。", "expanded_narrative"],
+            [state.narrativeEdited ? "info" : "valid", "HUMAN GATE", state.narrativeEdited ? "文案已人工修改" : "等待人工确认", "第二次调用只读取最终确认的文案，不会改写它。", "confirmed_task_narrative"]
           ]; break;
         case 3:
           items = [
-            ["valid", "PRIMARY ARTIFACT", "自然语言 Task Template", "JD 插槽、责任边界和完成条件作为默认交付正文。", "natural_language_template"],
+            [toolNames.includes("lookup_gal_catalog") ? "valid" : "pending", "TOOL TRACE", "GAL 目录查询", toolNames.includes("lookup_gal_catalog") ? "Agent 已查询 17 个 A、68 个累计式 A×L 责任单元。" : "未观察到必需工具调用。", "lookup_gal_catalog"],
+            ["info", "HUMAN GATE", "L1–L4 可人工改选", "Agent 只提出候选；人工确认或修正后才形成正式边界。", "coverage_candidates"]
+          ]; break;
+        case 4:
+          items = [
+            [toolNames.includes("lookup_jd_catalog") ? "valid" : "pending", "TOOL TRACE", "JD 目录查询", toolNames.includes("lookup_jd_catalog") ? "Agent 已查询 10 个全局 JD 与 56 个局部 JD。" : "未观察到必需工具调用。", "lookup_jd_catalog"],
+            [issueCount ? "pending" : "valid", "VALIDATOR", issueCount ? issueCount + " 个问题待复核" : "确定性校验通过", issueCount ? "查看模板页中的校验问题；不可静默忽略。" : "字段 ID 与原文证据已通过本地规则检查。", "validation_issues"]
+          ]; break;
+        case 5:
+          items = [
+            ["valid", "PRIMARY ARTIFACT", "自然语言 Task Template", "正文只保留业务语言；A×L 与 JD 留在结构化审核结果中。", "natural_language_template"],
             [issueCount ? "pending" : "valid", "NO INVENTION", issueCount ? "需要人工复核" : "本地规则未发现越界字段", "阈值、业务规则和 simulator 接口仍不能由 Agent 编造。", "validation_status"]
           ]; break;
       }
@@ -1227,58 +1342,162 @@
     }
 
     function setWorkspaceHeader(index, stateText) {
-      document.getElementById("workspaceEyebrow").textContent = "STAGE " + String(index + 1).padStart(2, "0") + " · " + STAGES[index][0];
+      document.getElementById("workspaceEyebrow").textContent = "STAGE " + String(index).padStart(2, "0") + " · " + STAGES[index][0];
       document.getElementById("workspaceTitle").textContent = STAGES[index][1];
       document.getElementById("workspaceState").textContent = stateText;
     }
 
-    function renderInputStage() {
+    function renderScenarioStage() {
+      const scenario = state.fixedScenario;
       const locked = state.completed.has(0);
-      const busy = state.agentStatus === "running";
-      const serverReady = state.serverStatus === "ready";
-      setWorkspaceHeader(0, busy ? "Config Agent 分析中" : state.inputVersion ? "Agent 分析完成" : serverReady ? "Agent 已就绪" : "等待本地服务");
+      setWorkspaceHeader(0, scenario ? (locked ? "固定场景已确认" : "等待人工确认") : "正在读取固定场景");
+      if (!scenario) {
+        document.getElementById("workspaceBody").innerHTML = '<div class="choice-card"><b>正在读取固定业务场景</b><p>请通过本地启动脚本打开页面；Stage 0 不调用 Gemini。</p></div>';
+        return;
+      }
+      const modeLabel = { fixed_value: "固定值", fixed_domain: "固定取值域", task_derived: "由任务提取" };
+      const modeStyle = { fixed_value: "given", fixed_domain: "proposed", task_derived: "tbd" };
+      const rows = (scenario.variable_bindings || []).map(item => '<tr><td class="mono">' + escapeHtml(item.slot_id) + '</td><td><b>' +
+        escapeHtml(item.name) + '</b></td><td>' + escapeHtml(item.value_or_domain) + '</td><td>' +
+        statusPill(modeLabel[item.binding_mode] || item.binding_mode, modeStyle[item.binding_mode] || "proposed") + '</td></tr>').join("");
+      const scenarioOptions = ((state.scenarioRegistry && state.scenarioRegistry.scenarios) || []).map(item =>
+        '<option value="' + escapeHtml(item.scenario_id) + '"' + (item.scenario_id === state.selectedScenarioId ? " selected" : "") + '>' + escapeHtml(item.title) + '</option>'
+      ).join("");
+      const modules = (scenario.available_task_modules || []).map(item => '<div class="choice-card"><div class="choice-code">' + escapeHtml(item.name) + '</div><p>' + escapeHtml(item.requirement) + '</p></div>').join("");
       document.getElementById("workspaceBody").innerHTML =
-        '<p class="intro">输入任意无人机业务任务。Gemini Config Agent 会查询受审 GAL/JD 目录，提出候选能力、变量和自然语言模板；不会读取两个示例案例的现成模板作为答案。</p>' +
-        '<div class="field-label"><label for="taskPrompt">' + activeCase().title + '</label><span>原始输入 · 可编辑</span></div>' +
-        '<textarea class="task-input" id="taskPrompt" placeholder="粘贴业务场景、任务责任、外部执行责任和完成条件……"' + (locked || busy ? " disabled" : "") + '>' + escapeHtml(state.prompt) + "</textarea>" +
-        '<div class="instance-tools"><div class="control"><label for="modelTier">Agent 模型</label><select id="modelTier"' + (locked || busy ? " disabled" : "") + '>' +
-        '<option value="flash"' + (state.modelTier === "flash" ? " selected" : "") + '>Gemini 3.5 Flash · 推荐演示</option>' +
+        '<p class="intro">先选择并锁定一个业务场景及其变量边界，再由人描述本次想让无人机完成的任务。这里选择的是场景配置，不是预制案例答案；本阶段不选择能力，也不调用 Agent。</p>' +
+        '<div class="field-label"><label for="businessScenarioSelect">业务场景</label><span>Stage 0 · 必选</span></div><div class="control" style="margin-bottom:14px"><select id="businessScenarioSelect"' + (locked ? " disabled" : "") + '>' + scenarioOptions + '</select></div>' +
+        '<div class="scenario-summary"><b>' + escapeHtml(scenario.title) + '</b><br>' + escapeHtml(scenario.summary) + '</div>' +
+        '<div class="group-label">固定场景边界</div><ul class="boundary-list">' + (scenario.fixed_boundary || []).map(item => '<li>✓ ' + escapeHtml(item) + '</li>').join("") + '</ul>' +
+        '<div class="group-label">可选任务模块 · 不自动计入本次能力</div><div class="choice-grid">' + modules + '</div>' +
+        '<div class="group-label">对应业务变量</div><table class="data-table"><thead><tr><th>JD</th><th>变量</th><th>固定值或允许域</th><th>绑定方式</th></tr></thead><tbody>' + rows + '</tbody></table>' +
+        '<div class="action-row"><span class="action-note">来源：' + escapeHtml(state.scenarioRegistry ? state.scenarioRegistry.source : "场景注册表") + ' · ' + escapeHtml(scenario.scenario_version) + '</span>' +
+        '<button class="btn primary" id="confirmScenario" type="button">' + (locked ? "查看任务输入 →" : "确认场景与变量 →") + '</button></div>';
+      const scenarioSelect = document.getElementById("businessScenarioSelect");
+      if (scenarioSelect) scenarioSelect.addEventListener("change", event => {
+        state.selectedScenarioId = event.target.value;
+        state.fixedScenario = state.scenarioRegistry.scenarios.find(item => item.scenario_id === state.selectedScenarioId);
+        state.prompt = "";
+        render();
+      });
+      document.getElementById("confirmScenario").addEventListener("click", () => locked ? goToStage(1) : completeStage(0));
+    }
+
+    function renderInputStage() {
+      const locked = state.completed.has(1);
+      const busy = state.narrativeStatus === "running";
+      const serverReady = state.serverStatus === "ready";
+      const taskExample = SCENARIO_TASK_EXAMPLES[state.selectedScenarioId] || "例如：请用一到三句话说明希望无人机完成什么、遇到异常如何处理，以及最后需要什么结果。";
+      setWorkspaceHeader(1, busy ? "调用 1/2 · 正在扩充文案" : locked ? "简短任务已提交" : serverReady ? "文案 Agent 已就绪" : "等待本地服务");
+      document.getElementById("workspaceBody").innerHTML =
+        '<p class="intro">请像向同事交代工作一样，用 1–3 句话说明想让无人机做什么。第一次 Gemini 调用会把这段人话扩充成完整业务文案，但不会判断 A×L，也不会提取 JD。</p>' +
+        '<div class="field-label"><label for="taskPrompt">本次任务要求</label><span>简短自然语言 · 可编辑</span></div>' +
+        '<textarea class="task-input" id="taskPrompt" placeholder="' + escapeHtml(taskExample) + '"' + (locked || busy ? " disabled" : "") + '>' + escapeHtml(state.prompt) + "</textarea>" +
+        '<div class="instance-tools"><div class="control"><label for="modelTier">两次调用使用的模型</label><select id="modelTier"' + (locked || busy ? " disabled" : "") + '>' +
+        '<option value="flash"' + (state.modelTier === "flash" ? " selected" : "") + '>Gemini 3.5 Flash · 推荐</option>' +
         '<option value="lite"' + (state.modelTier === "lite" ? " selected" : "") + '>Gemini 3.1 Flash-Lite · 高负载备用</option>' +
         '<option value="pro"' + (state.modelTier === "pro" ? " selected" : "") + '>Gemini Pro · 复核型</option></select></div></div>' +
-        (busy ? '<div class="choice-card selected"><div class="choice-code">LIVE AGENT RUN · 可刷新恢复</div><b>' + escapeHtml(currentRunLabel()) + '</b><p>页面每 1.5 秒读取本地运行状态；刷新后会使用同一 Run ID 恢复。模型请求最长等待 90 秒。</p></div>' : "") +
-        (state.agentError ? '<div class="choice-card dependency selected"><div class="choice-code">AGENT ERROR</div><b>本次未生成候选</b><p>' + escapeHtml(state.agentError) + '</p></div>' : "") +
-        '<div class="action-row"><span class="action-note">' + (locked ? "输入快照已锁定；修改请重新开始一次 run。" : serverReady ? "Key 只由本机服务读取，不会进入浏览器。" : "请先运行 scripts/start_agent_demo.sh，再从本地地址打开页面。") + '</span>' +
-        '<button class="btn primary" id="saveInput" type="button"' + (busy ? " disabled" : "") + '>' + (locked ? "查看能力确认 →" : busy ? "Agent 运行中…" : "运行 Config Agent →") + '</button></div>';
+        (busy ? '<div class="choice-card selected"><div class="choice-code">CALL 1 / 2 · 可刷新恢复</div><b>' + escapeHtml(currentRunLabel("narrative")) + '</b><p>正在把简短人话扩充为七段式业务文案，不进行能力分级。</p></div>' : "") +
+        (state.narrativeError ? '<div class="choice-card dependency selected"><div class="choice-code">NARRATIVE AGENT ERROR</div><b>本次未生成文案</b><p>' + escapeHtml(state.narrativeError) + '</p></div>' : "") +
+        '<div class="action-row"><span class="action-note">' + (locked ? "简短输入已形成快照，下一步仍可修改扩充后的完整文案。" : serverReady ? "这一步消耗一次模型请求；Key 只由本机服务读取。" : "请先运行 scripts/start_agent_demo.sh，再从本地地址打开页面。") + '</span>' +
+        '<button class="btn primary" id="saveInput" type="button"' + (busy ? " disabled" : "") + '>' + (locked ? "查看扩充文案 →" : busy ? "正在扩充…" : "调用 1：生成任务文案 →") + '</button></div>';
       const modelSelect = document.getElementById("modelTier");
       if (modelSelect) modelSelect.addEventListener("change", event => { state.modelTier = event.target.value; persistState(); });
       const promptInput = document.getElementById("taskPrompt");
       if (promptInput) promptInput.addEventListener("input", event => { state.prompt = event.target.value; persistState(); });
       document.getElementById("saveInput").addEventListener("click", async () => {
-        if (locked) { goToStage(1); return; }
+        if (locked) { goToStage(2); return; }
         const value = document.getElementById("taskPrompt").value.trim();
-        if (value.length < 80) {
-          state.agentError = "任务描述至少需要 80 个字符，并应包含环境、任务责任、外部依赖或完成条件。";
+        if (value.length < 10) {
+          state.narrativeError = "请至少用一句完整的话说明希望无人机做什么。";
           render();
           return;
         }
         state.prompt = value;
-        state.runId = "agent-ui-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
+        state.narrativeRunId = "agent-draft-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
+        state.narrativeStatus = "running";
+        state.narrativeEvent = "request_submitted";
+        state.narrativeEventDetails = null;
+        state.narrativeError = null;
+        render();
+        startRunPolling("narrative");
+        try {
+          const response = await fetch("/api/config-agent/expand", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ scenario_id: state.selectedScenarioId, task_description: value, model_tier: state.modelTier, run_id: state.narrativeRunId })
+          });
+          const payload = await response.json();
+          if (!response.ok) throw new Error(payload.message || "任务文案 Agent 调用失败（HTTP " + response.status + "）。");
+          applyNarrativeResult(payload.result);
+          completeStage(1);
+        } catch (error) {
+          if (state.narrativeStatus === "done") return;
+          state.narrativeStatus = "error";
+          state.narrativeError = error.message || String(error);
+          render();
+        }
+      });
+    }
+
+    function renderNarrativeStage() {
+      const locked = state.completed.has(2);
+      const busy = state.agentStatus === "running";
+      const issues = (state.narrativeResult && state.narrativeResult.validation_issues) || [];
+      const narrativeIssues = issues.length ? '<div class="group-label">第一次调用的本地检查 · ' + issues.length + ' 项待处理</div><div class="review-list">' + issues.map(item => {
+        const copy = issueCopy(item);
+        return '<div class="review-item pending"><div class="review-type">WARNING</div><b>' + escapeHtml(copy.title) + '</b><p>' + escapeHtml(copy.detail) + '</p><span class="artifact-link">' + escapeHtml(item.code) + '</span></div>';
+      }).join("") + '</div>' : '';
+      setWorkspaceHeader(2, busy ? "调用 2/2 · 正在分类与提取" : locked ? "任务文案已确认" : "等待人工修改与确认");
+      document.getElementById("workspaceBody").innerHTML =
+        '<p class="intro">下面是第一次 Gemini 调用扩充的完整任务文案。请直接修改不准确、过度推断或缺失的内容。确认后，第二次 Gemini 调用才会据此判断 A×L 等级并提取 JD；第二次调用不会改写这段文案。</p>' +
+        '<div class="choice-card"><div class="choice-code">原始人工输入</div><p>' + escapeHtml(state.prompt) + '</p></div>' +
+        '<div class="field-label"><label for="narrativeDraft">Agent 扩充文案</label><span>' + (state.narrativeEdited ? "已人工修改" : "Agent 原稿") + ' · 可编辑</span></div>' +
+        '<textarea class="task-input review-template-editor" id="narrativeDraft"' + (locked || busy ? " disabled" : "") + '>' + escapeHtml(state.narrativeDraft || "") + '</textarea>' +
+        narrativeIssues +
+        (busy ? '<div class="choice-card selected"><div class="choice-code">CALL 2 / 2 · 可刷新恢复</div><b>' + escapeHtml(currentRunLabel("classification")) + '</b><p>正在查询受审 A×L / JD 目录并形成结构化候选。</p></div>' : '') +
+        (state.agentError ? '<div class="choice-card dependency selected"><div class="choice-code">CLASSIFICATION AGENT ERROR</div><b>本次未生成分类候选</b><p>' + escapeHtml(state.agentError) + '</p></div>' : '') +
+        '<div class="action-row"><span class="action-note">第二次调用以当前编辑框内容为唯一任务依据。完成后仍可人工修改 L1–L4。</span>' +
+        '<button class="btn primary" id="classifyNarrative" type="button"' + (busy ? " disabled" : "") + '>' + (locked ? "查看能力等级 →" : busy ? "正在分类…" : "确认文案并调用 2：分类与提取 →") + '</button></div>';
+      const editor = document.getElementById("narrativeDraft");
+      if (editor) editor.addEventListener("input", event => {
+        state.narrativeDraft = event.target.value;
+        state.narrativeEdited = state.narrativeDraft !== state.narrativeOriginal;
+        persistState();
+      });
+      document.getElementById("classifyNarrative").addEventListener("click", async () => {
+        if (locked) { goToStage(3); return; }
+        const narrative = document.getElementById("narrativeDraft").value.trim();
+        if (narrative.length < 300) {
+          state.agentError = "完整任务文案至少需要 300 个字符；请补足任务行为、责任边界、异常和完成条件。";
+          render();
+          return;
+        }
+        state.narrativeDraft = narrative;
+        state.runId = "agent-classify-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
         state.agentStatus = "running";
         state.agentEvent = "request_submitted";
         state.agentEventDetails = null;
         state.agentError = null;
         render();
-        startRunPolling();
+        startRunPolling("classification");
         try {
           const response = await fetch("/api/config-agent/analyze", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ task_description: value, model_tier: state.modelTier, run_id: state.runId })
+            body: JSON.stringify({
+              scenario_id: state.selectedScenarioId,
+              task_description: narrative,
+              source_task_description: state.prompt,
+              narrative_parent_run_id: state.narrativeRunId,
+              model_tier: state.modelTier,
+              run_id: state.runId
+            })
           });
           const payload = await response.json();
-          if (!response.ok) throw new Error(payload.message || "Config Agent 调用失败（HTTP " + response.status + "）。");
+          if (!response.ok) throw new Error(payload.message || "分类 Agent 调用失败（HTTP " + response.status + "）。");
           applyAgentResult(payload.result);
-          completeStage(0);
+          completeStage(2);
         } catch (error) {
           if (state.agentStatus === "done") return;
           state.agentStatus = "error";
@@ -1289,21 +1508,32 @@
     }
 
     function renderCoverageStage() {
-      const locked = state.completed.has(1);
-      setWorkspaceHeader(1, locked ? "候选边界已确认" : "需要人工确认");
+      const locked = state.completed.has(3);
+      const busy = state.coverageSaving;
+      setWorkspaceHeader(3, locked ? "能力等级已确认" : busy ? "正在保存人工复核" : "需要人工复核");
       const scored = coverageItems().filter(item => item.kind === "scored");
       const deps = coverageItems().filter(item => item.kind === "dependency");
-      const cards = items => items.map(item =>
+      const levelOptions = item => ["L1", "L2", "L3", "L4"].map(level =>
+        '<option value="' + level + '"' + (item.level === level ? " selected" : "") + '>' + level + '</option>'
+      ).join("");
+      const scoredCards = scored.map(item =>
+        '<label class="choice-card scored' + (state.selectedCoverage.has(item.id) ? " selected" : "") + '">' +
+        '<input type="checkbox" data-coverage="' + item.id + '"' + (state.selectedCoverage.has(item.id) ? " checked" : "") + (locked || busy ? " disabled" : "") + '>' +
+        '<div class="choice-code">' + item.code + "</div><b>" + escapeHtml(item.name) + "</b><p>" + escapeHtml(item.detail) + "</p>" +
+        '<div class="level-review"><label>人工复核等级</label><select data-coverage-level="' + item.candidateIndex + '"' + (locked || busy ? " disabled" : "") + '>' + levelOptions(item) + '</select>' +
+        '<span class="agent-proposal">Agent 建议：' + escapeHtml(item.proposedCode) + '</span></div></label>'
+      ).join("");
+      const dependencyCards = deps.map(item =>
         '<label class="choice-card ' + item.kind + (state.selectedCoverage.has(item.id) ? " selected" : "") + '">' +
-        '<input type="checkbox" data-coverage="' + item.id + '"' + (state.selectedCoverage.has(item.id) ? " checked" : "") + (locked ? " disabled" : "") + '>' +
-        '<div class="choice-code">' + item.code + "</div><b>" + item.name + "</b><p>" + item.detail + "</p></label>"
+        '<input type="checkbox" data-coverage="' + item.id + '"' + (state.selectedCoverage.has(item.id) ? " checked" : "") + (locked || busy ? " disabled" : "") + '>' +
+        '<div class="choice-code">' + escapeHtml(item.code) + "</div><b>" + escapeHtml(item.name) + "</b><p>" + escapeHtml(item.detail) + "</p></label>"
       ).join("");
       document.getElementById("workspaceBody").innerHTML =
-        '<p class="intro">以下内容来自本次 Agent 运行。正式评分能力与外部运行依赖分开显示，并由人确认。</p>' +
-        '<div class="group-label">Scored Coverage · 正式评分候选</div><div class="choice-grid">' + cards(scored) + "</div>" +
-        '<div class="group-label">Runtime Dependencies · 外部提供且不评分</div><div class="choice-grid">' + (deps.length ? cards(deps) : '<div class="choice-card"><b>未提取到外部依赖</b><p>请人工检查原文是否缺少执行器或外部决策责任。</p></div>') + "</div>" +
-        '<div class="action-row"><span class="action-note">确认仅作用于本次候选，不自动改写 GAL 权威定义。</span>' +
-        '<div><button class="btn" id="editDependencies" type="button">人工补充外部依赖</button> <button class="btn primary" id="confirmCoverage" type="button">' + (locked ? "查看 JD 提取 →" : "确认能力边界 →") + '</button></div></div>';
+        '<p class="intro">Agent 根据任务行为提出 A×L 候选。请逐项确认；如果等级不准确，可直接在 L1–L4 中修改。高等级会累计包含同一能力的低等级责任。</p>' +
+        '<div class="group-label">Scored Coverage · Agent 候选与人工等级复核</div><div class="choice-grid">' + scoredCards + "</div>" +
+        '<div class="group-label">Runtime Dependencies · 外部提供且不评分</div><div class="choice-grid">' + (deps.length ? dependencyCards : '<div class="choice-card"><b>未提取到外部依赖</b><p>请人工检查任务是否需要执行器或外部决定接口。</p></div>') + "</div>" +
+        '<div class="action-row"><span class="action-note">人工改级只改变本次任务候选，不会改写 GAL 权威目录。</span>' +
+        '<div><button class="btn" id="editDependencies" type="button"' + (busy ? " disabled" : "") + '>人工补充外部依赖</button> <button class="btn primary" id="confirmCoverage" type="button"' + (busy ? " disabled" : "") + '>' + (locked ? "查看变量提取 →" : busy ? "正在保存…" : "确认能力等级 →") + '</button></div></div>';
       document.querySelectorAll("[data-coverage]").forEach(input => {
         input.addEventListener("change", () => {
           if (input.checked) state.selectedCoverage.add(input.dataset.coverage);
@@ -1311,19 +1541,83 @@
           render();
         });
       });
-      document.getElementById("confirmCoverage").addEventListener("click", () => {
-        if (locked) { goToStage(2); return; }
-        const hasScored = scored.some(item => state.selectedCoverage.has(item.id));
-        if (!hasScored) return;
-        completeStage(1);
-      });
+      document.querySelectorAll("[data-coverage-level]").forEach(select => select.addEventListener("change", () => {
+        changeCoverageLevel(Number(select.dataset.coverageLevel), select.value);
+      }));
+      document.getElementById("confirmCoverage").addEventListener("click", () => locked ? goToStage(4) : confirmCoverageReview());
       document.getElementById("editDependencies").addEventListener("click", () => openReviewWorkspace("dependencies"));
+    }
+
+    function changeCoverageLevel(candidateIndex, level) {
+      const item = agentCandidate().coverage_candidates[candidateIndex];
+      const aId = item.cell.split("×")[0];
+      const target = state.catalogSummary && state.catalogSummary.gal_cells.find(row => row.a_id === aId && row.level === level);
+      if (!target) return;
+      item.cell = target.cell;
+      item.responsibilities = target.cumulative_responsibilities.slice();
+      item.provenance = "human_edited";
+      item.source_note = "Stage 3 人工能力等级复核";
+      state.coverageEdited = true;
+      const existing = new Set((agentCandidate().jd_candidates || []).map(row => row.slot_id));
+      (target.required_jd_ids || []).forEach(slotId => {
+        if (existing.has(slotId)) return;
+        const definition = state.catalogSummary.jd_fields.find(row => row.id === slotId);
+        agentCandidate().jd_candidates.push({
+          slot_id: slotId,
+          name: definition ? definition.name : slotId,
+          value: null,
+          status: "TBD",
+          evidence_quote: "",
+          provenance: "auto_fixed",
+          source_note: "人工改级后由版本化目录补入的必需槽位"
+        });
+      });
+      render();
+    }
+
+    async function confirmCoverageReview() {
+      const items = coverageItems();
+      if (!items.some(item => item.kind === "scored" && state.selectedCoverage.has(item.id))) return;
+      const draft = cloneCandidate();
+      draft.coverage_candidates = draft.coverage_candidates.filter((_item, index) => state.selectedCoverage.has("scored_" + index));
+      draft.runtime_dependencies = draft.runtime_dependencies.filter((_item, index) => state.selectedCoverage.has("dependency_" + index));
+      state.coverageSaving = true;
+      render();
+      try {
+        const response = await fetch("/api/config-agent/revise", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            parent_run_id: state.baseRunId || state.agentResult.run_id,
+            revision_number: state.revisionNumber + 1,
+            scenario_id: state.selectedScenarioId,
+            task_description: state.narrativeDraft,
+            candidate: draft,
+            change_summary: [state.coverageEdited ? "人工复核并调整 A×L 等级" : "人工确认 Agent 提出的 A×L 等级"]
+          })
+        });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.message || "能力等级复核保存失败。");
+        state.agentResult.candidate = payload.candidate;
+        state.agentResult.validation_status = payload.validation_status;
+        state.agentResult.validation_issues = payload.validation_issues;
+        state.revisionNumber += 1;
+        state.revisionId = payload.revision_id;
+        state.revisionHistory.push({ revision_id: payload.revision_id, note: "Stage 3 能力等级复核", status: payload.validation_status });
+        state.selectedCoverage = new Set(coverageItems().map(item => item.id));
+        state.coverageSaving = false;
+        completeStage(3);
+      } catch (error) {
+        state.coverageSaving = false;
+        state.agentError = error.message || String(error);
+        render();
+      }
     }
 
     function renderJdStage() {
       const rowsData = jdRows();
       const tbdCount = rowsData.filter(row => row[4] === "tbd").length;
-      setWorkspaceHeader(2, state.jdConfirmed ? "字段已确认 · " + tbdCount + " 项 TBD" : "字段提取完成 · 等待确认");
+      setWorkspaceHeader(4, state.jdConfirmed ? "字段已确认 · " + tbdCount + " 项 TBD" : "字段提取完成 · 等待确认");
       const label = { given: "原文给定", proposed: "候选", tbd: "TBD" };
       const rows = rowsData.map(row => '<tr><td class="mono">' + escapeHtml(row[0]) + "</td><td><b>" + escapeHtml(row[1]) +
         "</b></td><td>" + escapeHtml(row[2]) + "</td><td>" + escapeHtml(row[3]) + "</td><td>" +
@@ -1336,7 +1630,7 @@
       document.getElementById("openTbdReview").addEventListener("click", () => openReviewWorkspace("tbd"));
       document.getElementById("confirmJd").addEventListener("click", () => {
         state.jdConfirmed = true;
-        completeStage(2);
+        completeStage(4);
       });
     }
 
@@ -1366,7 +1660,7 @@
     function renderTemplateStage() {
       const result = state.agentResult;
       const issueCount = result ? (result.validation_issues || []).length : 0;
-      setWorkspaceHeader(3, state.templateValidated ? "自然语言模板已确认" : issueCount ? "候选模板 · 需要复核" : "候选模板 · 校验通过");
+      setWorkspaceHeader(5, state.templateValidated ? "自然语言模板已确认" : issueCount ? "候选模板 · 需要复核" : "候选模板 · 校验通过");
       const naturalActive = state.templateView === "natural";
       const preview = naturalActive ?
         '<div class="natural-template">' + escapeHtml(agentCandidate().natural_language_template) + '</div>' :
@@ -1375,13 +1669,13 @@
         result.validation_issues.map((item, index) => { const copy = issueCopy(item); return '<div class="review-item pending"><div class="review-type">需要处理</div><b>' + escapeHtml(copy.title) + '</b><p>' + escapeHtml(copy.detail) + '</p><div class="review-item-foot"><span class="artifact-link">' + escapeHtml(item.code) + '</span><button class="btn" data-fix-issue="' + index + '" type="button">去处理</button></div></div>'; }).join("") + '</div>' : "";
       const revision = state.revisionId ? '<span class="revision-badge">Human Revision v' + (state.revisionNumber + 1) + '</span>' : "";
       document.getElementById("workspaceBody").innerHTML =
-        '<div class="validation-grid"><div class="validation-card"><b>' + (issueCount ? "△" : "✓") + ' JD ANNOTATION</b><span>模板插槽与来源可追踪</span></div>' +
+        '<div class="validation-grid"><div class="validation-card"><b>' + (issueCount ? "△" : "✓") + ' STRUCTURED MAPPING</b><span>JD 与 A×L 在结构化结果中可追踪</span></div>' +
         '<div class="validation-card"><b>✓ BOUNDARY</b><span>Coverage 与依赖分离</span></div>' +
         '<div class="validation-card"><b>' + (issueCount ? "△ REVIEW" : "✓ NO INVENTION") + '</b><span>未知 threshold / interface 必须保持 TBD</span></div></div>' +
         '<div class="template-tabs"><button class="template-tab ' + (naturalActive ? "active" : "") +
         '" type="button" data-template-view="natural">自然语言 Task Template</button><button class="template-tab ' +
         (!naturalActive ? "active" : "") + '" type="button" data-template-view="manifest">机器 Manifest 摘要</button></div>' +
-        revision + preview + issues + '<div class="action-row"><span class="action-note">' + (issueCount ? "请先在人工审核工作台解决结构问题，再确认本轮。" : "模板结构校验通过；TBD 仍作为待业务确认项保留。") + '</span>' +
+        revision + preview + issues + '<div class="action-row"><span class="action-note">' + (issueCount ? "请先在人工审核工作台解决结构问题，再确认本轮。" : "正文不暴露内部编号；TBD 仍作为待业务确认项保留。") + '</span>' +
         '<div><button class="btn" id="openHumanReview" type="button">打开人工审核工作台</button> <button class="btn primary" id="validateTemplate" type="button"' + (issueCount ? " disabled" : "") + '>确认并完成本轮</button></div></div>';
       document.querySelectorAll("[data-template-view]").forEach(button => {
         button.addEventListener("click", () => {
@@ -1392,7 +1686,7 @@
       document.getElementById("validateTemplate").addEventListener("click", () => {
         if (issueCount) return;
         state.templateValidated = true;
-        completeStage(3);
+        completeStage(5);
       });
       document.querySelectorAll("[data-fix-issue]").forEach(button => button.addEventListener("click", () => {
         openReviewWorkspace(issueReviewTab(result.validation_issues[Number(button.dataset.fixIssue)]));
@@ -1692,14 +1986,13 @@
 
     function renderWorkspace() {
       const renderers = [
-        renderInputStage, renderCoverageStage, renderJdStage, renderTemplateStage
+        renderScenarioStage, renderInputStage, renderNarrativeStage, renderCoverageStage, renderJdStage, renderTemplateStage
       ];
       renderers[state.currentStage]();
     }
 
     function render() {
-      document.getElementById("caseSelect").value = state.caseKey;
-      document.getElementById("headerCaseTitle").textContent = currentTitle() + " · 本地 Config Agent";
+      document.getElementById("headerCaseTitle").textContent = (state.fixedScenario ? state.fixedScenario.title : activeCase().title) + " · 固定业务场景";
       renderStageRail();
       renderContext();
       renderReview();
@@ -1712,15 +2005,7 @@
       if (runTimer) clearInterval(runTimer);
       if (pendingPollTimer) clearTimeout(pendingPollTimer);
       runTimer = null;
-      state = initialState(state.caseKey);
-      render();
-    });
-
-    document.getElementById("caseSelect").addEventListener("change", event => {
-      if (runTimer) clearInterval(runTimer);
-      if (pendingPollTimer) clearTimeout(pendingPollTimer);
-      runTimer = null;
-      state = initialState(event.target.value);
+      state = initialState();
       render();
       checkAgentHealth();
     });
@@ -1731,11 +2016,25 @@
         const health = await response.json();
         state.serverStatus = health.agent_ready ? "ready" : "missing_api_key";
         state.serverModels = health;
+        const catalogResponse = await fetch("/api/catalog", { cache: "no-store" });
+        if (catalogResponse.ok) {
+          const catalog = await catalogResponse.json();
+          state.catalogSummary = catalog;
+          Object.assign(JD_DISPLAY_NAMES, Object.fromEntries(catalog.jd_fields.map(item => [item.id, item.name])));
+        }
+        const scenarioResponse = await fetch("/api/scenarios", { cache: "no-store" });
+        if (scenarioResponse.ok) {
+          state.scenarioRegistry = await scenarioResponse.json();
+          const selected = state.scenarioRegistry.scenarios.find(item => item.scenario_id === state.selectedScenarioId);
+          state.fixedScenario = selected || state.scenarioRegistry.scenarios.find(item => item.scenario_id === state.scenarioRegistry.default_scenario_id);
+          state.selectedScenarioId = state.fixedScenario.scenario_id;
+        }
       } catch (error) {
         state.serverStatus = "offline";
       }
       render();
-      if (state.agentStatus === "running") startRunPolling();
+      if (state.narrativeStatus === "running") startRunPolling("narrative");
+      else if (state.agentStatus === "running") startRunPolling("classification");
     }
 
     render();

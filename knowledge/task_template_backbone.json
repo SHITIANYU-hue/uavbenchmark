@@ -1,42 +1,30 @@
 {
-  "backbone_version": "0.1",
+  "backbone_version": "0.3-fixed-scenario-human-task",
   "authority": [
-    "【benchmark】任务案例模版.docx / 3.1 场景叙事具体内容",
-    "【benchmark 任务分布_模板】G2 环境感知 _ G3 机动飞行 .docx / capability JD mappings"
+    "AxL责任定义字典_17A_68单元_机读版.md",
+    "JD业务变量字典_66槽位_机读版.md"
   ],
-  "purpose": "This file defines generic template completeness only. It contains no case-specific values or finished case answers.",
+  "purpose": "This file defines a clean business-readable narrative. GAL and JD identifiers remain in structured review artifacts instead of being embedded in the prose.",
   "base_slots": [
     "jd-0.2",
-    "jd-8.3",
-    "jd-7.1",
-    "jd-0.3",
-    "jd-0.10",
     "jd-0.7"
   ],
-  "coverage_slot_rules": {
-    "A5×L1": ["jd-0.9", "jd-5.1"],
-    "A5×L2": ["jd-0.9", "jd-5.1"],
-    "A6a×L3": ["jd-6a.1", "jd-6a.3", "jd-0.5"],
-    "A6b×L2": ["jd-6b.1", "jd-6b.2"],
-    "A7×L1": ["jd-7.1"],
-    "A7×L2": ["jd-7.1", "jd-7.2"],
-    "A8×L1": ["jd-8.1", "jd-8.2", "jd-8.3", "jd-0.10"],
-    "A11×L4": ["jd-0.10", "jd-0.5"]
-  },
+  "coverage_slot_policy": "For every selected A×L, use required_jd_ids from the active versioned GAL catalog. The list already includes inherited lower-level responsibility references.",
   "paragraph_sequence": [
-    "workspace, platform envelope, route topology, and task objective",
-    "payload, business objects, observation process, and required outputs",
-    "external executor, control interface, positioning inputs, and observable flight state",
-    "each selected A×L responsibility, explicit non-responsibilities, and attribution boundaries",
-    "nominal window, disturbance or anomaly, protection behavior, and prohibited answer leakage",
-    "structured report or external decision loop, including what is not evaluated",
-    "task completion criteria and all remaining TBD items"
+    "fixed workspace, business objective, objects, and task context",
+    "requested nominal behavior and continuity or update responsibility",
+    "available observations, variable values, and remaining TBD facts in business language",
+    "SUT, external executor, runtime dependency, and human responsibility boundaries",
+    "nominal process, disturbance or anomaly exposure, and prohibited answer leakage",
+    "required outputs, evidence, reporting, and external decision loops",
+    "task completion criteria, catalog versions, and all remaining TBD items"
   ],
   "generation_rules": [
     "Emit every required JD slot even when the value is unknown.",
     "Unknown values use null, status TBD, and an empty evidence quote.",
     "The natural-language template follows the seven-paragraph sequence.",
-    "Every required JD slot appears as a bracket annotation in the natural-language template.",
+    "Every required JD slot appears in the structured jd_candidates table; the natural-language template does not expose internal JD or A×L identifiers.",
+    "Do not put A×L, GAL, jd-x.x, schema field names, or catalog implementation labels in the natural-language template.",
     "Do not fill a TBD slot from a case example, prior answer, or general world knowledge.",
     "Keep thresholds, business decisions, and simulator interfaces as TBD unless verbatim evidence exists."
   ]
