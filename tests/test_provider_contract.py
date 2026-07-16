@@ -48,3 +48,6 @@ def test_ui_keeps_team_flow_and_adds_human_review_controls() -> None:
     assert "changeCoverageLevel" in html
     assert "人工补充 Runtime Dependency" in html
     assert "完整 68 单元目录" in html
+    assert "let state = loadState();" in html
+    assert "已开始新任务；手动检查点仍可加载" in html
+    assert "已加载检查点 ✓" in html
