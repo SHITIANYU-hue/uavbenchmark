@@ -158,6 +158,7 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                 "scope": catalog["scope"],
                 "source_versions": catalog["source_versions"],
                 "counts": catalog["counts"],
+                "level_policy": catalog["level_policy"],
                 "abilities": catalog["abilities"],
                 "gal_cells": [{
                     "cell": item["cell"],
@@ -223,6 +224,7 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
         if self.path not in {
             "/api/config-agent/expand",
             "/api/config-agent/analyze",
+            "/api/config-agent/fill-tbd",
             "/api/config-agent/revise",
             "/api/instance/generate",
             "/api/instance/batch",
@@ -391,19 +393,27 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
             requested_run_id = str(payload.get("run_id") or "")
             run_id = requested_run_id if re.fullmatch(r"agent-[a-z0-9-]{6,64}", requested_run_id) else f"agent-{uuid.uuid4().hex[:12]}"
             model = _model_for_tier(provider, tier)
+            operation = {
+                "/api/config-agent/expand": "narrative_expand",
+                "/api/config-agent/fill-tbd": "fill_tbd_domains",
+            }.get(self.path, "classification_and_extraction")
             _log_event(run_id, "request_received", {
                 "provider": provider,
                 "model": model,
                 "scenario_id": scenario_id,
-                "operation": "narrative_expand" if self.path == "/api/config-agent/expand" else "classification_and_extraction",
+                "operation": operation,
                 "task_characters": len(task_description),
             })
 
             if self.path == "/api/config-agent/expand":
+                target_coverage = payload.get("target_coverage") or []
+                if not isinstance(target_coverage, list):
+                    raise ValueError("target_coverage must be a list of A×L cell IDs")
                 narrative_agent = NarrativeAgent(api_key=api_key, model=model, provider=provider)
                 narrative_result = narrative_agent.expand(
                     task_description,
                     fixed_scenario=fixed_scenario,
+                    target_coverage=[str(c) for c in target_coverage],
                     run_id=run_id,
                     progress=lambda event, details: _log_event(run_id, event, details),
                 )
@@ -421,14 +431,46 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                 })
                 return
 
+            if self.path == "/api/config-agent/fill-tbd":
+                tbd_slots = payload.get("tbd_slots") or []
+                resolved_slots = payload.get("resolved_slots") or []
+                if not isinstance(tbd_slots, list) or not tbd_slots:
+                    raise ValueError("tbd_slots must be a non-empty list")
+                agent = ConfigAgent(api_key=api_key, model=model, provider=provider)
+                fill_result = agent.fill_tbd_domains(
+                    task_description,
+                    tbd_slots=tbd_slots,
+                    resolved_slots=resolved_slots if isinstance(resolved_slots, list) else [],
+                    fixed_scenario=fixed_scenario,
+                    run_id=run_id,
+                    progress=lambda event, details: _log_event(run_id, event, details),
+                )
+                with RUN_STATUS_LOCK:
+                    RUN_STATUS.setdefault(run_id, {})["result"] = fill_result.model_dump(mode="json")
+                    RUN_STATUS[run_id]["status"] = "completed"
+                _log_event(run_id, "fill_tbd_completed", {
+                    "filled": len(fill_result.jd_candidates),
+                    "requested": len(tbd_slots),
+                })
+                self._json(HTTPStatus.OK, {
+                    "run_id": run_id,
+                    "model": model,
+                    "filled": fill_result.model_dump(mode="json"),
+                })
+                return
+
             source_task_description = str(payload.get("source_task_description") or "").strip() or None
             narrative_parent_run_id = str(payload.get("narrative_parent_run_id") or "").strip() or None
             if narrative_parent_run_id and not re.fullmatch(r"agent-[a-z0-9-]{6,64}", narrative_parent_run_id):
                 raise ValueError("invalid narrative_parent_run_id")
+            preferred_coverage = payload.get("preferred_coverage") or payload.get("target_coverage") or []
+            if not isinstance(preferred_coverage, list):
+                raise ValueError("preferred_coverage must be a list of A×L cell IDs")
             agent = ConfigAgent(api_key=api_key, model=model, provider=provider)
             result = agent.analyze(
                 task_description,
                 fixed_scenario=fixed_scenario,
+                preferred_coverage=[str(c) for c in preferred_coverage],
                 run_id=run_id,
                 progress=lambda event, details: _log_event(run_id, event, details),
             )

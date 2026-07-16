@@ -40,14 +40,17 @@ def test_explicit_socks_proxy_wins_over_mixed_environment(monkeypatch) -> None:
     assert proxy_client_args() == {"proxy": "socks5://127.0.0.1:7890", "trust_env": False}
 
 
-def test_ui_keeps_team_flow_and_adds_human_review_controls() -> None:
+def test_ui_keeps_team_flow_and_provider_checkpoint_controls() -> None:
+    """Our 5-step UX is primary; keep ZYY provider select + checkpoint semantics."""
     html = (ROOT / "pipeline.html").read_text(encoding="utf-8")
     assert "特定任务模版" in html
-    assert "可选：加载场景示例" in html
+    assert "文案与 A×L" in html
+    assert "随机一批" in html
+    assert "用户侧配置需求" in html
+    assert "世界侧配置需求" in html
     assert 'id="providerSelect"' in html
-    assert "changeCoverageLevel" in html
-    assert "人工补充 Runtime Dependency" in html
-    assert "完整 68 单元目录" in html
+    assert "provider: state.llmProvider" in html
     assert "let state = loadState();" in html
     assert "已开始新任务；手动检查点仍可加载" in html
     assert "已加载检查点 ✓" in html
+    assert "target_coverage" in html

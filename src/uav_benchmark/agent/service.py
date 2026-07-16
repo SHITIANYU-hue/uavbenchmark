@@ -23,6 +23,8 @@ from .models import (
     AgentRunResult,
     CoverageResult,
     ExtractionResult,
+    FillTbdResult,
+    JDCandidate,
     NarrativeDraft,
     NarrativeRunResult,
     ToolTrace,
@@ -39,16 +41,22 @@ from .providers import (
 NARRATIVE_SYSTEM_INSTRUCTION = """
 You are TaskNarrativeAgent, the first call in a two-call UAV benchmark pipeline.
 
-Input contains one fixed business scenario and a short, colloquial human task
-request. Expand them into a detailed Chinese task narrative for human review.
+Input contains one fixed business scenario, a short colloquial human task
+request, and optional target_coverage (human-selected ability levels with
+cumulative responsibilities). Expand them into a detailed Chinese task
+narrative for human review.
 
 Mandatory rules:
 - This call writes business prose only. Do not classify GAL or A×L and do not
   extract or display JD identifiers.
 - Do not mention A×L, GAL, jd-x.x, JSON, schema fields, prompts, or agent internals.
+- If target_coverage is provided, treat it as the intended scored responsibility
+  set. Shape nominal behavior, continuity, anomaly handling, human roles, and
+  outputs so they match those cumulative responsibilities. Do not invent
+  obligations for abilities that are absent from target_coverage.
 - Use the fixed scenario as context, but include only task modules requested or
-  necessarily implied by the short human request. A scene's available module is
-  not automatically part of this task.
+  necessarily implied by the short human request and target_coverage. A scene's
+  available module is not automatically part of this task.
 - Preserve the user's requested behavior, continuity, anomaly response, output,
   external responsibilities, and completion intent.
 - Separate SUT responsibility from external executor, external system, and human
@@ -112,13 +120,17 @@ Your ONLY job is to classify A×L coverage and responsibility boundaries from
 one confirmed task narrative. A later sub-call will extract JD candidates; do
 not emit any jd_candidates.
 
-Input contains: fixed_scenario, confirmed_task_narrative, and the compact GAL
+Input contains: fixed_scenario, confirmed_task_narrative, the compact GAL
 catalog (cell IDs, ability names, required JD IDs per cell, cumulative level
-count).
+count), and optional preferred_coverage (human-selected target cells).
 
 Rules:
-- Infer A and L from behavioral verbs, continuity, anomaly response, human
-  decision role, and requested outputs in the confirmed narrative.
+- If preferred_coverage is provided, emit exactly those cells as
+  coverage_candidates (same cell IDs and levels). Do not add extra scored A×L
+  cells unless the narrative clearly requires an anomaly/auxiliary cell; when
+  adding, mark role="anomaly" or "auxiliary" and explain in source_note.
+- If preferred_coverage is absent, infer A and L from behavioral verbs,
+  continuity, anomaly response, human decision role, and requested outputs.
 - A×L responsibility is cumulative. For L2/L3/L4 emit one responsibility per
   inherited level (the catalog tells you cumulative_level_count).
 - coverage_candidates[].evidence_quote MUST be an exact substring of
@@ -128,6 +140,29 @@ Rules:
   responsibility using responsibility_boundaries.
 - Express responsibilities in plain business Chinese.
 - Return Chinese content except fixed IDs.
+""".strip()
+
+
+FILL_TBD_INSTRUCTION = """
+You are the JDDomainFill sub-agent in a UAV benchmark pipeline.
+
+Your job is to REPLACE previously TBD JD slots with concrete variable domains.
+You receive the confirmed task narrative, optional scenario context, already
+resolved JD domains (for consistency), and the TBD slots that still need domains.
+
+For EACH TBD slot, choose binding_mode and fill the domain:
+1. fixed  — set value to one Chinese phrase inferred from the narrative/scenario
+2. enum   — set allowed_values (>=2) and optional default value
+3. range  — set numeric minimum/maximum when the slot is continuous
+4. TBD    — only if still impossible; then source_note MUST explain what is missing
+
+Rules:
+- Prefer fixed/enum/range over TBD. Infer qualitatively even when thresholds are unknown.
+- Keep names and slot_id exactly as provided; do not invent new slot IDs.
+- status="proposed" for inferred domains; evidence_quote from narrative when possible.
+- provenance="agent_extracted" (or scenario_fixed when clearly from scenario).
+- Return ONLY the slots that were TBD in the input (same slot_id set).
+- Express values in Chinese except numeric ranges and fixed IDs.
 """.strip()
 
 
@@ -336,6 +371,34 @@ def _lookup_required_jds(cell_id: str, gal_catalog: dict[str, Any]) -> list[str]
     return []
 
 
+def _resolve_target_coverage(cells: list[str] | None) -> list[dict[str, Any]]:
+    """Validate human-selected A×L cells and attach cumulative responsibilities."""
+
+    if not cells:
+        return []
+    index = gal_cell_index()
+    resolved: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for raw in cells:
+        cell = str(raw or "").strip()
+        if not cell or cell in seen:
+            continue
+        item = index.get(cell)
+        if not item:
+            raise ConfigAgentError(f"未知 coverage cell: {cell}")
+        seen.add(cell)
+        resolved.append({
+            "cell": item["cell"],
+            "a_id": item["a_id"],
+            "level": item["level"],
+            "ability": item["ability"],
+            "level_label": item["level_label"],
+            "cumulative_responsibilities": item.get("cumulative_responsibilities") or [],
+            "required_jd_ids": item.get("required_jd_ids") or [],
+        })
+    return resolved
+
+
 def _condensed_gal_catalog() -> dict[str, Any]:
     """Compact GAL catalog: cell IDs, ability names, required JDs — no full responsibility text."""
 
@@ -432,7 +495,7 @@ def validate_candidate(
     if candidate.catalog_versions and candidate.catalog_versions != catalog["source_versions"]:
         issues.append(ValidationIssue(
             code="CATALOG_VERSION_MISMATCH",
-            message="Candidate catalog versions do not match the active reviewed dictionaries.",
+            message="候选结果使用的目录版本与当前审定字典不一致。",
             path="catalog_versions",
         ))
 
@@ -440,7 +503,7 @@ def validate_candidate(
     if len(coverage_ids) != len(set(coverage_ids)):
         issues.append(ValidationIssue(
             code="DUPLICATE_GAL_CELL",
-            message="Coverage candidates contain a duplicate A×L cell.",
+            message="Coverage 中出现了重复的 A×L 单元。",
             path="coverage_candidates",
         ))
 
@@ -448,25 +511,25 @@ def validate_candidate(
         if item.cell not in allowed_cells:
             issues.append(ValidationIssue(
                 code="UNKNOWN_GAL_CELL",
-                message=f"{item.cell} is outside the reviewed demo catalog.",
+                message=f"{item.cell} 不在当前审定目录中。",
                 path=f"coverage_candidates[{index}].cell",
             ))
         elif len(item.responsibilities) < len(cells[item.cell]["cumulative_levels"]):
             issues.append(ValidationIssue(
                 code="INCOMPLETE_CUMULATIVE_RESPONSIBILITY",
-                message=f"{item.cell} must retain one explicit responsibility for each inherited level.",
+                message=f"{item.cell} 需为每个继承等级各写一条责任（累计覆盖）。",
                 path=f"coverage_candidates[{index}].responsibilities",
             ))
         if item.status != "TBD" and item.evidence_quote not in task_description:
             issues.append(ValidationIssue(
                 code="EVIDENCE_NOT_VERBATIM",
-                message="Coverage evidence is not an exact input substring.",
+                message="A×L 证据摘录不是任务文案中的原文子串。",
                 path=f"coverage_candidates[{index}].evidence_quote",
             ))
         if item.provenance == "human_edited" and not item.source_note:
             issues.append(ValidationIssue(
                 code="HUMAN_VALUE_MISSING_SOURCE",
-                message="Human-edited A×L levels require a source note.",
+                message="人工修改的 A×L 等级需要填写来源说明。",
                 path=f"coverage_candidates[{index}].source_note",
             ))
 
@@ -474,32 +537,32 @@ def validate_candidate(
         if item.slot_id not in allowed_jd:
             issues.append(ValidationIssue(
                 code="UNKNOWN_JD_SLOT",
-                message=f"{item.slot_id} is outside the reviewed demo catalog.",
+                message=f"{item.slot_id} 不在当前审定 JD 目录中。",
                 path=f"jd_candidates[{index}].slot_id",
             ))
         if item.provenance in {"human_added", "human_edited"} and item.status != "TBD" and not item.source_note:
             issues.append(ValidationIssue(
                 code="HUMAN_VALUE_MISSING_SOURCE",
-                message="Human-added or edited JD values require a source note.",
+                message="人工新增或修改的 JD 需要填写来源说明。",
                 path=f"jd_candidates[{index}].source_note",
             ))
         elif item.provenance == "scenario_fixed" and item.status == "given" and item.evidence_quote not in scenario_evidence:
             issues.append(ValidationIssue(
                 code="EVIDENCE_NOT_VERBATIM",
-                message="Scenario-fixed JD with status=given requires an exact fixed-scenario substring.",
+                message="场景固定 JD（status=given）的证据需是场景文本中的原文子串。",
                 path=f"jd_candidates[{index}].evidence_quote",
             ))
         elif item.provenance == "agent_extracted" and item.status == "given" and item.evidence_quote not in task_description:
             issues.append(ValidationIssue(
                 code="EVIDENCE_NOT_VERBATIM",
-                message="JD with status=given requires an exact input substring; use status=proposed for inferred values.",
+                message="JD 标为 given 时，证据需是任务文案原文；若为推断值请改用 proposed。",
                 path=f"jd_candidates[{index}].evidence_quote",
             ))
         canonical = jd_fields.get(item.slot_id)
         if canonical and item.name != canonical["name"]:
             issues.append(ValidationIssue(
                 code="JD_NAME_MISMATCH",
-                message=f"{item.slot_id} must use canonical name {canonical['name']}.",
+                message=f"{item.slot_id} 应使用规范名称「{canonical['name']}」。",
                 path=f"jd_candidates[{index}].name",
             ))
 
@@ -507,7 +570,7 @@ def validate_candidate(
     if len(emitted_ids) != len(set(emitted_ids)):
         issues.append(ValidationIssue(
             code="DUPLICATE_JD_SLOT",
-            message="JD candidates contain a duplicate slot ID.",
+            message="JD 候选中出现了重复的 slot ID。",
             path="jd_candidates",
         ))
 
@@ -515,25 +578,25 @@ def validate_candidate(
         if item.scored:
             issues.append(ValidationIssue(
                 code="RUNTIME_DEPENDENCY_MARKED_SCORED",
-                message="Runtime dependencies must remain unscored.",
+                message="运行时依赖必须保持不计分（scored=false）。",
                 path=f"runtime_dependencies[{index}].scored",
             ))
         if item.provenance in {"human_added", "human_edited"} and item.status != "TBD" and not item.source_note:
             issues.append(ValidationIssue(
                 code="HUMAN_VALUE_MISSING_SOURCE",
-                message="Human-added or edited dependencies require a source note.",
+                message="人工新增或修改的依赖需要填写来源说明。",
                 path=f"runtime_dependencies[{index}].source_note",
             ))
         elif item.provenance == "scenario_fixed" and item.status != "TBD" and item.evidence_quote not in scenario_evidence:
             issues.append(ValidationIssue(
                 code="EVIDENCE_NOT_VERBATIM",
-                message="Scenario-fixed dependency evidence is not an exact fixed-scenario substring.",
+                message="场景固定依赖的证据需是场景文本中的原文子串。",
                 path=f"runtime_dependencies[{index}].evidence_quote",
             ))
         elif item.provenance == "agent_extracted" and item.status != "TBD" and item.evidence_quote not in task_description:
             issues.append(ValidationIssue(
                 code="EVIDENCE_NOT_VERBATIM",
-                message="Dependency evidence is not an exact input substring.",
+                message="依赖证据不是任务文案中的原文子串。",
                 path=f"runtime_dependencies[{index}].evidence_quote",
             ))
 
@@ -545,20 +608,20 @@ def validate_candidate(
     for slot in sorted(required_slots - emitted_slots):
         issues.append(ValidationIssue(
             code="MISSING_REQUIRED_JD_SLOT",
-            message=f"Required template-backbone slot {slot} was omitted; emit it as TBD when unknown.",
+            message=f"缺少必填 JD 槽位 {slot}；未知时应以 TBD 形式输出。",
             path="jd_candidates",
         ))
     if re.search(r"(?:A\d+[a-z]?\s*[×x]\s*L[1-4]|\bjd-[0-9a-z.]+\b|\bGAL\b)", candidate.natural_language_template, re.IGNORECASE):
         issues.append(ValidationIssue(
             code="INTERNAL_LABEL_IN_NARRATIVE",
-            message="Natural-language template must keep A×L, GAL, and JD identifiers in structured review data only.",
+            message="自然语言模版不得出现 A×L、GAL、JD 标识，这些应只留在结构化字段中。",
             path="natural_language_template",
         ))
     paragraphs = [item.strip() for item in re.split(r"\n\s*\n", candidate.natural_language_template) if item.strip()]
     if len(paragraphs) < len(backbone["paragraph_sequence"]):
         issues.append(ValidationIssue(
             code="INCOMPLETE_TEMPLATE_STRUCTURE",
-            message="Natural-language template must follow the seven-paragraph DOCX backbone.",
+            message="自然语言模版需遵循七段式骨干结构。",
             path="natural_language_template",
         ))
     return issues
@@ -600,6 +663,7 @@ class NarrativeAgent:
         short_task_description: str,
         *,
         fixed_scenario: dict[str, Any] | None = None,
+        target_coverage: list[str] | None = None,
         run_id: str | None = None,
         progress: Callable[[str, dict[str, Any]], None] | None = None,
     ) -> NarrativeRunResult:
@@ -607,10 +671,18 @@ class NarrativeAgent:
             raise ConfigAgentError("任务描述过短；请用一到三句话说明希望无人机做什么。")
 
         fixed_scenario = fixed_scenario or load_fixed_scenario()
+        resolved_coverage = _resolve_target_coverage(target_coverage)
         emit = progress or (lambda _event, _details: None)
         agent_input = json.dumps({
             "fixed_scenario": fixed_scenario,
             "short_human_task_request": short_task_description,
+            "target_coverage": resolved_coverage,
+            "coverage_note": (
+                "Human-selected scored A×L targets. Match responsibilities in prose; "
+                "do not print cell IDs. Unlisted abilities are out of scope."
+                if resolved_coverage else
+                "No human coverage target; expand only from the short request."
+            ),
             "narrative_backbone": load_template_backbone()["paragraph_sequence"],
         }, ensure_ascii=False)
 
@@ -676,6 +748,7 @@ class ConfigAgent:
         task_description: str,
         *,
         fixed_scenario: dict[str, Any] | None = None,
+        preferred_coverage: list[str] | None = None,
         run_id: str | None = None,
         progress: Callable[[str, dict[str, Any]], None] | None = None,
     ) -> AgentRunResult:
@@ -683,6 +756,7 @@ class ConfigAgent:
             raise ConfigAgentError("确认后的任务文案过短；请先完成第一次文案扩充，并在人工复核后再进行能力分类。")
 
         fixed_scenario = fixed_scenario or load_fixed_scenario()
+        preferred = _resolve_target_coverage(preferred_coverage)
         emit = progress or (lambda _event, _details: None)
         trace: list[ToolTrace] = []
         total_usage: dict[str, int | float | str | None] = {}
@@ -704,6 +778,10 @@ class ConfigAgent:
         coverage_input = json.dumps({
             "fixed_scenario": fixed_scenario,
             "confirmed_task_narrative": task_description,
+            "preferred_coverage": [
+                {"cell": item["cell"], "a_id": item["a_id"], "level": item["level"], "ability": item["ability"]}
+                for item in preferred
+            ],
             "gal_catalog": gal_catalog,
         }, ensure_ascii=False)
 
@@ -806,6 +884,71 @@ class ConfigAgent:
             tool_trace=trace,
             usage=total_usage,
         )
+
+    def fill_tbd_domains(
+        self,
+        task_description: str,
+        *,
+        tbd_slots: list[dict[str, Any]],
+        resolved_slots: list[dict[str, Any]] | None = None,
+        fixed_scenario: dict[str, Any] | None = None,
+        run_id: str | None = None,
+        progress: Callable[[str, dict[str, Any]], None] | None = None,
+    ) -> FillTbdResult:
+        """Ask the model to propose domains for previously TBD JD slots only."""
+
+        if not tbd_slots:
+            return FillTbdResult(jd_candidates=[], warnings=["no_tbd_slots"])
+        if len(task_description.strip()) < 20:
+            raise ConfigAgentError("任务文案过短，无法智能填写 TBD 域。")
+
+        fixed_scenario = fixed_scenario or load_fixed_scenario()
+        emit = progress or (lambda _event, _details: None)
+        payload = {
+            "fixed_scenario": {
+                "scenario_id": fixed_scenario.get("scenario_id"),
+                "title": fixed_scenario.get("title"),
+                "summary": fixed_scenario.get("summary"),
+            },
+            "confirmed_task_narrative": task_description,
+            "resolved_jd_domains": resolved_slots or [],
+            "tbd_slots": tbd_slots,
+        }
+        messages = [
+            {"role": "system", "content": FILL_TBD_INSTRUCTION + _schema_instruction(FillTbdResult)},
+            {"role": "user", "content": json.dumps(payload, ensure_ascii=False)},
+        ]
+        rid = run_id or f"agent-fill-{uuid.uuid4().hex[:10]}"
+        _save_raw_request(rid, "fill_tbd", messages)
+        emit("model_request_started", {"model": self.model, "operation": "fill_tbd", "tbd_count": len(tbd_slots)})
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=messages,
+                temperature=0.2,
+                max_tokens=4096,
+                response_format={"type": "json_object"},
+            )
+        except Exception as exc:
+            emit("model_request_failed", {"error": str(exc)[:500]})
+            raise _model_error(exc) from exc
+        emit("model_response_received", {"model": self.model, "operation": "fill_tbd"})
+        raw = response.choices[0].message.content or ""
+        finish = getattr(response.choices[0], "finish_reason", None) if response.choices else None
+        reasoning = getattr(response.choices[0].message, "reasoning_content", None) or ""
+        result = _parse_model_json(
+            raw, FillTbdResult,
+            run_id=rid,
+            operation="fill_tbd",
+            finish_reason=finish,
+            reasoning=reasoning,
+            emit=emit,
+        )
+        allowed = {str(item.get("slot_id")) for item in tbd_slots if item.get("slot_id")}
+        filtered: list[JDCandidate] = [
+            item for item in result.jd_candidates if item.slot_id in allowed
+        ]
+        return FillTbdResult(jd_candidates=filtered, warnings=result.warnings)
 
 
 def save_narrative_run(
