@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light">
   <link rel="icon" href="data:,">
-  <title>UAV Benchmark Pipeline Console</title>
+  <title>UAV Benchmark Factory</title>
   <style>
     :root {
       --bg: #f3f6f8;
@@ -61,19 +61,20 @@
     }
     .brand { display: flex; align-items: center; gap: 11px; min-width: 0; }
     .brand-mark {
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 38px;
+      flex: 0 0 auto;
       display: grid;
       place-items: center;
-      color: var(--teal);
-      border: 1px solid rgba(8,125,121,.24);
-      border-radius: 11px;
-      background: var(--teal-soft);
-      font-size: 11px;
-      font-weight: 850;
-      letter-spacing: .08em;
+      color: #065f5c;
+      border: 1px solid rgba(8,125,121,.28);
+      border-radius: 12px;
+      background:
+        linear-gradient(155deg, #f3fbfa 0%, var(--teal-soft) 55%, #d7ecea 100%);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
     }
-    .brand b { display: block; font-size: 14px; }
+    .brand-mark svg { width: 24px; height: 24px; display: block; }
+    .brand b { display: block; font-size: 14px; letter-spacing: -.01em; }
     .brand span { display: block; color: var(--muted); font-size: 10px; }
     .header-actions { display: flex; align-items: center; gap: 8px; }
     .case-select {
@@ -127,7 +128,7 @@
     }
     .stage-rail {
       display: grid;
-      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      grid-template-columns: repeat(5, minmax(96px, 1fr));
       gap: 7px;
       max-width: 1500px;
       margin: 0 auto;
@@ -163,11 +164,15 @@
 
     .console {
       display: grid;
-      grid-template-columns: 250px minmax(520px, 1fr) 290px;
+      grid-template-columns: 250px minmax(520px, 1fr);
       gap: 16px;
       width: min(calc(100% - 32px), 1500px);
       margin: 18px auto 30px;
       align-items: start;
+      transition: grid-template-columns .2s ease;
+    }
+    .console.context-collapsed {
+      grid-template-columns: 52px minmax(520px, 1fr);
     }
     .panel {
       border: 1px solid var(--line);
@@ -185,6 +190,126 @@
       text-transform: uppercase;
     }
     .side-head h2 { margin: 5px 0 0; font-size: 16px; }
+    .context-toggle {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 14px 13px;
+      border: 0;
+      border-bottom: 1px solid rgba(8,125,121,.12);
+      background:
+        linear-gradient(180deg, #f4fbfa 0%, #eef7f6 100%);
+      text-align: left;
+      color: inherit;
+    }
+    .context-toggle:hover {
+      background: linear-gradient(180deg, #eef8f7 0%, #e5f3f1 100%);
+    }
+    .context-toggle:focus-visible {
+      outline: 3px solid rgba(8,125,121,.28);
+      outline-offset: -3px;
+    }
+    .context-toggle-main {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-width: 0;
+    }
+    .context-toggle-icon {
+      width: 34px;
+      height: 34px;
+      flex: 0 0 auto;
+      display: grid;
+      place-items: center;
+      color: var(--teal);
+      border: 1px solid rgba(8,125,121,.22);
+      border-radius: 10px;
+      background: #ffffff;
+      box-shadow: 0 1px 2px rgba(18, 35, 46, .04);
+    }
+    .context-toggle-icon svg { width: 18px; height: 18px; display: block; }
+    .context-toggle-copy { min-width: 0; }
+    .context-toggle .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--teal);
+      font-size: 9px;
+      font-weight: 850;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .context-toggle .eyebrow::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--teal);
+      box-shadow: 0 0 0 3px rgba(8,125,121,.14);
+    }
+    .context-toggle h2 {
+      margin: 4px 0 0;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: -.01em;
+      color: var(--text);
+    }
+    .context-chevron {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 30px;
+      padding: 0 10px;
+      color: var(--teal);
+      border: 1px solid rgba(8,125,121,.22);
+      border-radius: 999px;
+      background: rgba(255,255,255,.88);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      white-space: nowrap;
+    }
+    .context-chevron svg {
+      width: 12px;
+      height: 12px;
+      display: block;
+      transition: transform .18s ease;
+    }
+    .console.context-collapsed .context-panel { min-height: 132px; }
+    .console.context-collapsed .context-toggle {
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 12px;
+      min-height: 132px;
+      padding: 14px 8px;
+      border-bottom: 0;
+      background: linear-gradient(180deg, #f4fbfa 0%, #e7f3f1 100%);
+    }
+    .console.context-collapsed .context-toggle-main {
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .console.context-collapsed .context-toggle .eyebrow,
+    .console.context-collapsed .context-toggle h2 {
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      margin: 0;
+      letter-spacing: .12em;
+    }
+    .console.context-collapsed .context-toggle .eyebrow::before { display: none; }
+    .console.context-collapsed .context-toggle h2 { font-size: 13px; }
+    .console.context-collapsed .context-chevron {
+      padding: 8px;
+      writing-mode: horizontal-tb;
+    }
+    .console.context-collapsed .context-chevron .context-chevron-label { display: none; }
+    .console.context-collapsed .context-chevron svg { transform: rotate(-90deg); }
+    .console.context-collapsed #contextPanel { display: none; }
     .side-body { padding: 15px 18px 18px; }
     .context-block + .context-block { margin-top: 17px; padding-top: 15px; border-top: 1px solid var(--line); }
     .context-label { color: var(--muted); font-size: 9px; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
@@ -252,9 +377,143 @@
     .choice-card p { margin: 7px 0 0; color: var(--muted); font-size: 10px; }
     .group-label { margin: 18px 0 9px; color: var(--muted); font-size: 9px; font-weight: 850; letter-spacing: .1em; text-transform: uppercase; }
 
+    .level-legend { display: grid; gap: 8px; margin: 8px 0 14px; }
+    .level-legend-item {
+      display: grid;
+      grid-template-columns: 54px 1fr;
+      gap: 10px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--panel-soft);
+    }
+    .level-legend-item b { font-size: 11px; font-weight: 850; }
+    .level-legend-item span { display: block; color: var(--muted); font-size: 9px; line-height: 1.45; }
+    .level-legend-item em { display: block; margin-top: 3px; color: var(--text); font-style: normal; font-size: 10px; }
+    .level-legend-item.lv-L0 { border-color: #d5dbe1; background: #f4f6f8; }
+    .level-legend-item.lv-L0 b { color: #6b7a88; }
+    .level-legend-item.lv-L1 { border-color: #c8d5e7; background: var(--blue-soft); }
+    .level-legend-item.lv-L1 b { color: var(--blue); }
+    .level-legend-item.lv-L2 { border-color: #b9dcd9; background: var(--teal-soft); }
+    .level-legend-item.lv-L2 b { color: var(--teal); }
+    .level-legend-item.lv-L3 { border-color: #ebcea1; background: var(--amber-soft); }
+    .level-legend-item.lv-L3 b { color: var(--amber); }
+    .level-legend-item.lv-L4 { border-color: #d4e3b6; background: var(--green-soft); }
+    .level-legend-item.lv-L4 b { color: var(--green); }
+    .coverage-picker { width: 100%; border-collapse: collapse; font-size: 10px; margin-bottom: 10px; }
+    .coverage-picker th, .coverage-picker td { padding: 8px 6px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: middle; }
+    .coverage-picker th { color: var(--muted); font-size: 9px; letter-spacing: .07em; text-transform: uppercase; }
+    .coverage-picker select {
+      min-width: 118px; height: 32px; padding: 0 8px;
+      border: 1px solid var(--line-strong); border-radius: 8px; background: #fff; font: inherit; font-weight: 750;
+    }
+    .coverage-picker tr.lv-L0 { background: #f4f6f8; }
+    .coverage-picker tr.lv-L1 { background: var(--blue-soft); }
+    .coverage-picker tr.lv-L2 { background: var(--teal-soft); }
+    .coverage-picker tr.lv-L3 { background: var(--amber-soft); }
+    .coverage-picker tr.lv-L4 { background: var(--green-soft); }
+    .coverage-picker select.lv-L0 { color: #6b7a88; border-color: #c5ced6; background: #eef1f4; }
+    .coverage-picker select.lv-L1 { color: var(--blue); border-color: #9eb6d6; background: #e3ebf6; }
+    .coverage-picker select.lv-L2 { color: var(--teal); border-color: #8ec4c0; background: #d9efec; }
+    .coverage-picker select.lv-L3 { color: var(--amber); border-color: #e0b56a; background: #ffe8c4; }
+    .coverage-picker select.lv-L4 { color: var(--green); border-color: #a8c46a; background: #e4f0c8; }
+    .coverage-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 10px; }
+    .lvl-pill {
+      display: inline-flex; padding: 5px 10px; border-radius: 999px;
+      font-size: 10px; font-weight: 800; letter-spacing: .02em; white-space: nowrap;
+    }
+    .lvl-pill.lv-L0 { color: #6b7a88; background: #e8edf1; }
+    .lvl-pill.lv-L1 { color: var(--blue); background: var(--blue-soft); }
+    .lvl-pill.lv-L2 { color: var(--teal); background: var(--teal-soft); }
+    .lvl-pill.lv-L3 { color: var(--amber); background: var(--amber-soft); }
+    .lvl-pill.lv-L4 { color: var(--green); background: var(--green-soft); }
+    .lvl-text.lv-L0 { color: #6b7a88; font-weight: 750; }
+    .lvl-text.lv-L1 { color: var(--blue); font-weight: 800; }
+    .lvl-text.lv-L2 { color: var(--teal); font-weight: 800; }
+    .lvl-text.lv-L3 { color: var(--amber); font-weight: 800; }
+    .lvl-text.lv-L4 { color: var(--green); font-weight: 800; }
+
     .data-table { width: 100%; border-collapse: collapse; font-size: 10px; }
     .data-table th, .data-table td { padding: 10px 8px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
     .data-table th { color: var(--muted); font-size: 9px; letter-spacing: .07em; text-transform: uppercase; }
+    .data-table tr.row-tbd { background: var(--amber-soft); }
+    .data-table tr.row-issue { background: #fff7eb; }
+    .inline-hint {
+      margin-top: 5px; padding: 6px 8px; border-radius: 8px;
+      border: 1px solid #ebcea1; background: #fffbf4;
+      color: var(--amber); font-size: 9px; line-height: 1.4;
+    }
+    .inline-hint b { display: block; margin-bottom: 2px; font-size: 8px; letter-spacing: .06em; }
+    .hint-fold {
+      margin-top: 8px; border: 1px solid #ebcea1; border-radius: 10px;
+      background: #fffbf4; overflow: hidden;
+    }
+    .hint-fold > summary {
+      list-style: none; cursor: pointer; user-select: none;
+      display: flex; justify-content: space-between; gap: 10px; align-items: center;
+      padding: 9px 12px; color: var(--amber); font-size: 10px; font-weight: 800;
+    }
+    .hint-fold > summary::-webkit-details-marker { display: none; }
+    .hint-fold > summary::after {
+      content: "展开"; color: var(--muted); font-size: 9px; font-weight: 700;
+    }
+    .hint-fold[open] > summary::after { content: "收起"; }
+    .hint-fold-body { padding: 0 10px 10px; display: grid; gap: 6px; }
+    .hint-fold.compact { margin-top: 5px; }
+    .hint-fold.compact > summary { padding: 6px 8px; font-size: 9px; }
+    .spec-tpl-card {
+      margin-top: 12px; border: 1px solid #b9dcd9; border-radius: 13px;
+      background: var(--teal-soft); overflow: hidden;
+    }
+    .spec-tpl-card > summary {
+      list-style: none; cursor: pointer; user-select: none;
+      display: flex; justify-content: space-between; gap: 12px; align-items: center;
+      padding: 13px 14px; background: linear-gradient(180deg, #eef8f7, #e3f3f1);
+    }
+    .spec-tpl-card > summary::-webkit-details-marker { display: none; }
+    .spec-tpl-card > summary .spec-tpl-title { font-size: 13px; font-weight: 850; color: var(--text); }
+    .spec-tpl-card > summary .spec-tpl-meta { color: var(--muted); font-size: 10px; margin-top: 3px; }
+    .spec-tpl-card > summary .spec-tpl-toggle {
+      flex: 0 0 auto; color: var(--teal); border: 1px solid rgba(8,125,121,.22);
+      border-radius: 999px; background: #fff; padding: 5px 10px; font-size: 10px; font-weight: 800;
+    }
+    .spec-tpl-card > summary .spec-tpl-toggle::after { content: "展开"; }
+    .spec-tpl-card[open] > summary .spec-tpl-toggle::after { content: "收起"; }
+    .spec-tpl-body { padding: 0 14px 14px; }
+    .spec-desc {
+      margin-top: 10px; padding: 12px 13px; border: 1px solid #c9e0dd; border-radius: 11px;
+      background: #fff; color: #294354; font-size: 11px; line-height: 1.7; white-space: pre-wrap;
+    }
+    .spec-desc b { display: block; margin-bottom: 6px; color: var(--teal); font-size: 10px; letter-spacing: .06em; }
+    .spec-desc .coverage-chips { margin: 8px 0 0; }
+    .rel-note {
+      margin-top: 10px; padding: 9px 12px; border: 1px dashed #b9d3cf; border-radius: 10px;
+      background: #f2fbf9; color: #35586a; font-size: 10px; line-height: 1.7;
+    }
+    .rel-note b { color: var(--teal); }
+    .dom-cell { color: var(--muted); font-size: 9px; }
+    .narrative-ref > summary { color: var(--teal); font-weight: 600; }
+    .narrative-body {
+      white-space: pre-wrap; font-size: 11px; line-height: 1.75; color: #294354;
+      padding: 10px 12px; border: 1px solid #c9e0dd; border-radius: 10px; background: #fbfffe;
+    }
+    .side-block {
+      border: 1px solid var(--line); border-radius: 11px; padding: 10px 12px 12px; background: #fbfdff;
+    }
+    .side-block.side-world { background: #fbfcf8; border-color: #e3e7d6; }
+    .side-block-head {
+      display: flex; justify-content: space-between; align-items: baseline; gap: 8px;
+      font-size: 11px; font-weight: 600; color: var(--blue);
+    }
+    .side-block.side-world .side-block-head { color: #7a7f47; }
+    .side-block-head span { font-weight: 400; font-size: 9px; color: var(--muted); }
+    .tbd-banner {
+      margin: 10px 0 14px; padding: 12px 14px; border: 1px solid #ebcea1;
+      border-radius: 12px; background: var(--amber-soft);
+    }
+    .tbd-banner b { display: block; color: var(--amber); font-size: 11px; }
+    .tbd-banner p { margin: 5px 0 0; color: var(--muted); font-size: 9px; }
+    .tbd-banner .coverage-chips { margin-top: 8px; margin-bottom: 0; }
     .status-pill {
       display: inline-flex;
       padding: 3px 7px;
@@ -499,22 +758,38 @@
 
     @media (max-width: 1120px) {
       .console { grid-template-columns: 220px minmax(480px, 1fr); }
-      .review-panel { position: static; grid-column: 1 / -1; }
-      .review-panel .side-body { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      .console.context-collapsed { grid-template-columns: 52px minmax(480px, 1fr); }
     }
     @media (max-width: 820px) {
       .app-header { padding: 0 12px; }
       .header-actions .print-label, .brand span { display: none; }
       .stage-shell { padding: 10px 12px; }
       .stage-rail { display: flex; }
-      .stage-node { flex: 0 0 102px; }
-      .console { grid-template-columns: 1fr; width: min(calc(100% - 20px), 720px); }
+      .stage-node { flex: 0 0 88px; }
+      .console, .console.context-collapsed { grid-template-columns: 1fr; width: min(calc(100% - 20px), 720px); }
       .side-panel { position: static; }
+      .console.context-collapsed .context-toggle {
+        flex-direction: row;
+        align-items: center;
+        min-height: 0;
+        padding: 12px 14px;
+      }
+      .console.context-collapsed .context-toggle-main {
+        flex-direction: row;
+        align-items: center;
+      }
+      .console.context-collapsed .context-toggle .eyebrow,
+      .console.context-collapsed .context-toggle h2 {
+        writing-mode: horizontal-tb;
+        letter-spacing: .08em;
+      }
+      .console.context-collapsed .context-toggle h2 { font-size: 14px; }
+      .console.context-collapsed .context-chevron .context-chevron-label { display: inline; }
+      .console.context-collapsed .context-chevron svg { transform: rotate(180deg); }
       .context-panel .side-body { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
       .context-block + .context-block { margin: 0; padding: 0; border: 0; }
       .choice-grid, .sut-grid { grid-template-columns: 1fr; }
       .phase-list { grid-template-columns: 1fr; }
-      .review-panel .side-body { grid-template-columns: 1fr; }
       .review-overlay { padding: 8px; }
       .review-fields { grid-template-columns: 1fr; }
       .review-workspace-foot { align-items: stretch; flex-direction: column; }
@@ -536,21 +811,29 @@
       .app-header, .stage-shell, .context-panel, .workspace .action-row, .filter-row { display: none !important; }
       body { background: #ffffff; }
       .console { display: block; width: 100%; margin: 0; }
-      .workspace, .review-panel { box-shadow: none; border: 0; }
-      .review-panel { margin-top: 20px; }
+      .workspace { box-shadow: none; border: 0; }
     }
   </style>
 </head>
 <body>
   <header class="app-header">
     <div class="brand">
-      <div class="brand-mark">UAV</div>
-      <div><b>Benchmark Pipeline Console</b><span id="headerCaseTitle">固定业务场景加载中</span></div>
+      <div class="brand-mark" aria-hidden="true" title="UAV Benchmark Factory">
+        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 14.5h5.2l2.3-3.2h5l2.3 3.2H26" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M11.2 14.5 8.4 19.2M20.8 14.5l2.8 4.7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+          <circle cx="16" cy="15.2" r="2.1" fill="currentColor"/>
+          <path d="M7 22.5h4.2V26H7v-3.5Zm6.9 0H18V26h-4.1v-3.5Zm6.9 0H25V26h-4.2v-3.5Z" fill="currentColor" opacity=".88"/>
+          <path d="M5.5 26.5h21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" opacity=".45"/>
+        </svg>
+      </div>
+      <div>
+        <b>UAV Benchmark Factory</b>
+        <span id="headerCaseTitle">固定业务场景加载中</span>
+      </div>
     </div>
     <div class="header-actions">
-      <span class="mode-badge">Step1 任务域 → Step2 提取 → 任务域模版 → 特定任务模版</span>
       <button class="btn" id="resetButton" type="button">重新开始</button>
-      <button class="btn" type="button" onclick="window.print()"><span class="print-label">打印摘要</span></button>
     </div>
   </header>
 
@@ -560,7 +843,28 @@
 
   <main class="console">
     <aside class="panel side-panel context-panel">
-      <div class="side-head"><div class="eyebrow">Run Context</div><h2>本次运行</h2></div>
+      <button class="context-toggle" id="contextToggle" type="button" aria-expanded="true" aria-controls="contextPanel">
+        <div class="context-toggle-main">
+          <span class="context-toggle-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M4 7.5h16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              <path d="M4 12h10.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              <path d="M4 16.5h7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              <circle cx="18.2" cy="12" r="2.2" fill="currentColor"/>
+            </svg>
+          </span>
+          <span class="context-toggle-copy">
+            <span class="eyebrow">Run Context</span>
+            <h2>本次运行</h2>
+          </span>
+        </div>
+        <span class="context-chevron">
+          <span class="context-chevron-label">收起</span>
+          <svg viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path d="M3 7.5 6 4.5 9 7.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
+      </button>
       <div class="side-body" id="contextPanel"></div>
     </aside>
 
@@ -572,22 +876,17 @@
       <div class="workspace-body" id="workspaceBody"></div>
     </section>
 
-    <aside class="panel side-panel review-panel">
-      <div class="side-head"><div class="eyebrow">Evidence & Review</div><h2>证据与审核</h2></div>
-      <div class="side-body" id="reviewPanel"></div>
-    </aside>
   </main>
-
-  <div id="reviewWorkspaceHost"></div>
 
   <script>
     "use strict";
 
     const STAGES = [
-      ["STEP 1", "任务域选择",      "场景 + 简短描述"],
-      ["STEP 2", "扩充与提取",      "Agent 文案+A×L+JD域"],
-      ["STEP 3", "任务域模版", "域编辑器(每行选模式)"],
-      ["STEP 4", "特定任务模版",   "Seed→具体 JD 值"],
+      ["STEP 1", "任务域选择",   "场景 + 简短描述"],
+      ["STEP 2", "文案与 A×L",  "Coverage · 文案 · 分类"],
+      ["STEP 3", "JD 域提取",   "变量域按 A 分组"],
+      ["STEP 4", "任务域模版",   "域编辑器(每行选模式)"],
+      ["STEP 5", "特定任务模版", "Seed→具体 JD 值"],
     ];
 
     const SCENARIO_TASK_EXAMPLES = {
@@ -598,9 +897,16 @@
       other_inspection: "例如：让无人机沿指定河段持续查找异常漂浮物，发现后记录位置和图片并发出告警。",
     };
 
-    const STORAGE_KEY = "uav_pipeline_v6";
+    const STORAGE_KEY = "uav_pipeline_v7";
     const SCENARIO_NONE = "";
     const SCENARIO_FALLBACK_ID = "other_inspection";
+    // 巡检常用默认：L2 受令自主；进入 Step 2 后可改等级或改成「不覆盖」
+    const DEFAULT_TARGET_LEVELS = {
+      A1: "L2", A2: "L2", A3: "L2", A4: "L2", A5: "L2",
+      A6a: "L2", A7: "L2", A9a: "L2", A9b: "L2", A12: "L2", A14: "L2", A15: "L2",
+    };
+
+    function defaultTargetLevels() { return Object.assign({}, DEFAULT_TARGET_LEVELS); }
 
     function initialState() {
       return {
@@ -608,12 +914,16 @@
         serverStatus: "checking", healthInfo: null, catalogSummary: null,
         scenarioRegistry: null, selectedScenarioId: SCENARIO_NONE, fixedScenario: null,
         taskPrompt: "", modelTier: "flash",
+        targetLevels: defaultTargetLevels(),
         narrativeStatus: "idle", narrativeRunId: null, narrativeDraft: "", narrativeOriginal: "", narrativeError: null,
-        agentStatus: "idle", agentRunId: null, agentResult: null, agentError: null,
+        agentStatus: "idle", agentPhase: "idle", agentRunId: null, agentResult: null, agentError: null,
         domainEdits: {},
+        fillTbdLoading: false, fillTbdError: null, fillTbdNotice: null,
         instanceMode: "single", instanceSeed: 0, instanceBatchSeeds: "0-4",
+        instanceRandomCount: 5, instanceRandomSeeds: [],
         instanceResult: null, instanceResults: null, instanceError: null, instanceLoading: false,
         saveNotice: null,
+        contextCollapsed: false,
       };
     }
 
@@ -631,6 +941,16 @@
         if (!saved) return initialState();
         const s = Object.assign(initialState(), saved);
         s.completed = new Set(saved.completed || []);
+        if (!s.targetLevels || !Object.keys(s.targetLevels).length) s.targetLevels = defaultTargetLevels();
+        // 恢复后清掉「进行中」的瞬时标记，避免刷新后卡在 loading/disabled
+        s.fillTbdLoading = false;
+        s.instanceLoading = false;
+        if (s.narrativeStatus === "running") s.narrativeStatus = s.narrativeDraft ? "done" : "idle";
+        if (s.agentStatus === "running") s.agentStatus = s.agentResult ? "done" : "idle";
+        if (s.agentPhase === "running") s.agentPhase = s.agentResult ? "done" : "idle";
+        // 已解锁的步数至少覆盖所有已完成的步骤，保证已保存的步骤都能跳转
+        const comp = Array.from(s.completed);
+        s.maxUnlocked = Math.max(s.maxUnlocked || 0, comp.length ? Math.max.apply(null, comp) : 0);
         return s;
       } catch { return initialState(); }
     }
@@ -639,20 +959,46 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(Object.assign({}, state, {completed: Array.from(state.completed)})));
     }
 
-    let state = initialState();
+    let state = loadState();
     let pollTimer = null;
 
     function escapeHtml(v) { return String(v).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[c])); }
     function pill(text, cls) { return '<span class="status-pill ' + (cls || "proposed") + '">' + escapeHtml(text) + "</span>"; }
     function uid(p) { return p + Math.random().toString(36).substring(2, 10); }
 
+    function migrateCompletedSteps(steps, stageSchema, hasAgent) {
+      const arr = Array.from(steps || []);
+      if (!arr.length) return new Set();
+      // 旧 4 段：0选域 / 1扩充提取 / 2域模版 / 3特定模版 → 新 5 段插入 2b
+      if ((stageSchema == null || stageSchema < 5) && Math.max(...arr) <= 3) {
+        const migrated = arr.map(s => (s >= 1 ? s + 1 : s));
+        if (hasAgent) {
+          if (!migrated.includes(1)) migrated.push(1);
+          if (!migrated.includes(2)) migrated.push(2);
+        }
+        return new Set(migrated);
+      }
+      return new Set(arr);
+    }
+
+    function furthestUnlocked() {
+      const comp = Array.from(state.completed);
+      return Math.max(state.maxUnlocked || 0, comp.length ? Math.max.apply(null, comp) : 0);
+    }
+    function stageReachable(i) { return i <= furthestUnlocked() || state.completed.has(i); }
+
     function completeStage(i) { state.completed.add(i); state.maxUnlocked = Math.max(state.maxUnlocked, Math.min(i + 1, STAGES.length - 1)); state.currentStage = Math.min(i + 1, STAGES.length - 1); render(); }
-    function goToStage(i) { if (i <= state.maxUnlocked) { state.currentStage = i; render(); } }
+    function goToStage(i) { if (stageReachable(i)) { state.currentStage = i; render(); } }
 
     function renderStageRail() {
       document.getElementById("stageRail").innerHTML = STAGES.map((s, i) => {
-        const cls = i === state.currentStage ? "current" : state.completed.has(i) ? "done" : i <= state.maxUnlocked ? "" : "locked";
-        return '<button class="stage-node ' + cls + '" type="button" onclick="goToStage(' + i + ')"' + (i > state.maxUnlocked ? " disabled" : "") + "><span>" + s[0] + "</span><b>" + s[1] + "</b></button>";
+        const locked = !stageReachable(i);
+        const cls = i === state.currentStage ? "current" : state.completed.has(i) ? "done" : locked ? "locked" : "";
+        const tip = locked
+          ? ("需先完成「" + STAGES[Math.max(0, i - 1)][1] + "」后解锁（进度会自动保存）")
+          : ("进入 " + s[0] + " · " + s[1] + "（进度已自动保存，可随时跳转）");
+        return '<button class="stage-node ' + cls + '" type="button" title="' + escapeHtml(tip) + '" onclick="goToStage(' + i + ')"'
+          + (locked ? " disabled" : "") + "><span>" + s[0] + "</span><b>" + s[1] + "</b></button>";
       }).join("");
     }
 
@@ -667,10 +1013,12 @@
         const r = await fetch("/api/pipeline/save", {method: "POST", headers: {"Content-Type": "application/json"},
           body: JSON.stringify({
             selectedScenarioId: state.selectedScenarioId, taskPrompt: state.taskPrompt, modelTier: state.modelTier,
+            targetLevels: state.targetLevels,
             narrativeDraft: state.narrativeDraft, agentResult: state.agentResult, domainEdits: state.domainEdits,
             instanceMode: state.instanceMode, instanceSeed: state.instanceSeed, instanceBatchSeeds: state.instanceBatchSeeds,
+            instanceRandomCount: state.instanceRandomCount, instanceRandomSeeds: state.instanceRandomSeeds,
             instanceResult: state.instanceResult, instanceResults: state.instanceResults,
-            completedSteps: Array.from(state.completed), savedAt: new Date().toISOString(),
+            completedSteps: Array.from(state.completed), stageSchema: 5, savedAt: new Date().toISOString(),
           })});
         state.saveNotice = r.ok ? "已保存 ✓" : "保存失败";
       } catch(e) { state.saveNotice = "保存失败: " + e; }
@@ -685,15 +1033,26 @@
         if (d.selectedScenarioId !== undefined) applyScenarioSelection(d.selectedScenarioId || SCENARIO_NONE);
         if (d.taskPrompt !== undefined) state.taskPrompt = d.taskPrompt;
         if (d.modelTier) state.modelTier = d.modelTier;
+        if (d.targetLevels && typeof d.targetLevels === "object" && Object.keys(d.targetLevels).length) {
+          state.targetLevels = d.targetLevels;
+        } else if (!Object.keys(state.targetLevels || {}).length) {
+          state.targetLevels = defaultTargetLevels();
+        }
         if (d.narrativeDraft) { state.narrativeDraft = d.narrativeDraft; state.narrativeStatus = "done"; }
-        if (d.agentResult) { state.agentResult = d.agentResult; state.agentStatus = "done"; }
+        if (d.agentResult) { state.agentResult = d.agentResult; state.agentStatus = "done"; state.agentPhase = "done"; }
         if (d.domainEdits) state.domainEdits = d.domainEdits;
         if (d.instanceMode) state.instanceMode = d.instanceMode;
         if (d.instanceSeed !== undefined) state.instanceSeed = d.instanceSeed;
         if (d.instanceBatchSeeds) state.instanceBatchSeeds = d.instanceBatchSeeds;
+        if (d.instanceRandomCount) state.instanceRandomCount = d.instanceRandomCount;
+        if (Array.isArray(d.instanceRandomSeeds)) state.instanceRandomSeeds = d.instanceRandomSeeds;
         if (d.instanceResult) state.instanceResult = d.instanceResult;
         if (d.instanceResults) state.instanceResults = d.instanceResults;
-        if (d.completedSteps) { state.completed = new Set(d.completedSteps); state.maxUnlocked = Math.max(...d.completedSteps, 0); }
+        if (d.completedSteps) {
+          state.completed = migrateCompletedSteps(d.completedSteps, d.stageSchema, !!d.agentResult);
+          state.maxUnlocked = Math.max(state.maxUnlocked, ...Array.from(state.completed), 0);
+          if (state.agentStatus === "done") state.maxUnlocked = Math.max(state.maxUnlocked, 2);
+        }
         state.saveNotice = "已加载 ✓";
       } catch(e) { state.saveNotice = "加载失败: " + e; }
       render();
@@ -707,6 +1066,31 @@
 
     // ── STEP 1 ────────────────────────────────────────────────────────── //
 
+    function scenarioPromptText(scenarioId) {
+      if (!scenarioId) return "";
+      const found = ((state.scenarioRegistry && state.scenarioRegistry.scenarios) || [])
+        .find(s => s.scenario_id === scenarioId);
+      const task = scenarioExampleText(scenarioId).replace(/^例如：/, "").trim();
+      if (!found) return task;
+      const parts = [];
+      if (found.title) parts.push("场景：" + String(found.title).trim());
+      if (found.summary) parts.push(String(found.summary).trim());
+      const boundaries = found.fixed_boundary || [];
+      if (boundaries.length) {
+        parts.push("业务边界：\n" + boundaries.map(item => "- " + String(item).trim()).join("\n"));
+      }
+      const modules = found.available_task_modules || [];
+      if (modules.length) {
+        parts.push("可选任务模块：\n" + modules.map(m => {
+          const name = String((m && m.name) || "").trim();
+          const req = String((m && m.requirement) || "").trim();
+          return "- " + name + (req ? ("：" + req) : "");
+        }).join("\n"));
+      }
+      if (task) parts.push("任务：" + task);
+      return parts.join("\n\n");
+    }
+
     function applyScenarioSelection(scenarioId, { fillExample } = {}) {
       state.selectedScenarioId = scenarioId || SCENARIO_NONE;
       if (!scenarioId) {
@@ -717,87 +1101,283 @@
         state.fixedScenario = found || null;
       }
       if (fillExample && scenarioId) {
-        state.taskPrompt = scenarioExampleText(scenarioId).replace(/^例如：/, "");
+        state.taskPrompt = scenarioPromptText(scenarioId);
       }
     }
 
     function renderStep1() {
-      const locked = state.completed.has(0);
-      const sc = state.fixedScenario;
+      const alreadyDone = state.completed.has(0);
       const ready = !!(state.scenarioRegistry && state.scenarioRegistry.scenarios);
-      setHeader(0, locked ? "已确认" : "等待确认");
+      const promptOk = state.taskPrompt.trim().length >= 5;
+      setHeader(0, alreadyDone ? "可继续修改" : "等待确认");
       if (!ready) {
         document.getElementById("workspaceBody").innerHTML = '<div class="choice-card">读取场景示例中...</div>';
         return;
       }
-      const opts = ['<option value="' + SCENARIO_NONE + '"' + (!state.selectedScenarioId ? " selected" : "") + ">不加载示例（仅用下方描述）</option>"]
+      const opts = ['<option value="' + SCENARIO_NONE + '"' + (!state.selectedScenarioId ? " selected" : "") + ">自己写（不加载示例）</option>"]
         .concat(((state.scenarioRegistry && state.scenarioRegistry.scenarios) || []).map(s =>
           '<option value="' + s.scenario_id + '"' + (s.scenario_id === state.selectedScenarioId ? " selected" : "") + ">" +
           escapeHtml(s.title) + "</option>"
         )).join("");
-      const modules = (sc && sc.available_task_modules) || [];
-      const boundaries = (sc && sc.fixed_boundary) || [];
       let h = saveBar()
-        + '<p class="intro">以简短任务描述为主。场景示例可选加载，只提供业务语境参考；本步不展示 JD / A×L，变量提取在 Step 2。</p>'
-        + '<div class="field-label"><label>任务描述（主输入，1–3 句）</label><span>必填 · 覆盖示例</span></div>'
-        + '<textarea class="task-input" id="taskPrompt" style="min-height:160px" placeholder="' +
-          escapeHtml(scenarioExampleText(state.selectedScenarioId)) + '"' + (locked ? " disabled" : "") + ">" +
-          escapeHtml(state.taskPrompt) + "</textarea>"
-        + '<div class="field-label" style="margin-top:18px"><label>可选：加载场景示例</label><span>optional · 非 JD</span></div>'
-        + '<div class="control" style="margin-bottom:10px"><select id="scenarioSelect"' + (locked ? " disabled" : "") + ">" + opts + "</select></div>";
-      if (sc) {
-        h += '<div class="action-row" style="margin:0 0 12px"><span class="action-note">业务示例 · ' +
-          escapeHtml(sc.title) + "</span>"
-          + (locked ? "" : '<button class="btn small" type="button" id="fillExampleBtn">用示例描述覆盖输入框</button>')
-          + "</div>";
-        if (sc.summary) {
-          h += '<div class="choice-card" style="margin-bottom:12px"><b>场景摘要</b><p>' + escapeHtml(sc.summary) + "</p></div>";
-        }
-        if (boundaries.length) {
-          h += '<div class="field-label"><label>固定业务边界（参考）</label></div><ul class="boundary-list">';
-          boundaries.forEach(item => { h += "<li>" + escapeHtml(item) + "</li>"; });
-          h += "</ul>";
-        }
-        if (modules.length) {
-          h += '<div class="field-label"><label>可选任务模块（参考，非评分结论）</label></div>';
-          h += '<table class="data-table"><thead><tr><th>模块</th><th>业务要求</th></tr></thead><tbody>';
-          modules.forEach(m => {
-            h += "<tr><td>" + escapeHtml(m.name || "") + "</td><td>" + escapeHtml(m.requirement || "") + "</td></tr>";
-          });
-          h += "</tbody></table>";
-        }
-      } else {
-        h += '<div class="choice-card" style="margin-top:4px"><b>未加载场景示例</b><p>可直接写任务描述进入 Step 2；Agent 会从描述中提取 A×L 与 JD。</p></div>';
-      }
-      h += '<div class="action-row"><span class="action-note">确认后进入 Step 2</span><button class="btn primary" type="button" onclick="confirmStep1()"' +
-        (locked || state.taskPrompt.trim().length < 5 ? " disabled" : "") + ">确认 →</button></div>";
+        + '<p class="intro">写清任务即可。需要示例时，从下拉选一个场景，内容会直接填进文本框，可再改。</p>'
+        + '<div class="field-label"><label>加载示例（可选）</label><span>选中即写入文本框</span></div>'
+        + '<div class="control" style="margin-bottom:14px"><select id="scenarioSelect">' + opts + "</select></div>"
+        + '<div class="field-label"><label>任务描述</label><span>必填 · 至少 5 个字</span></div>'
+        + '<textarea class="task-input" id="taskPrompt" style="min-height:220px" placeholder="用几句话说明让无人机做什么、关注什么异常、希望得到什么结果。">' +
+          escapeHtml(state.taskPrompt) + "</textarea>";
+      const note = promptOk
+        ? (alreadyDone ? "可修改后再次确认，或直接进入下一步" : "确认后进入下一步")
+        : "请先输入至少 5 个字的任务描述";
+      h += '<div class="action-row"><span class="action-note" id="step1Note">' + note + '</span>'
+        + '<button class="btn primary" type="button" id="confirmStep1Btn" onclick="confirmStep1()"' +
+        (promptOk ? "" : " disabled") + ">" + (alreadyDone ? "进入下一步 →" : "确认 →") + "</button></div>";
       document.getElementById("workspaceBody").innerHTML = h;
       const sel = document.getElementById("scenarioSelect");
       if (sel) sel.addEventListener("change", () => {
-        applyScenarioSelection(sel.value, { fillExample: false });
-        render();
-      });
-      const fillBtn = document.getElementById("fillExampleBtn");
-      if (fillBtn) fillBtn.addEventListener("click", () => {
-        applyScenarioSelection(state.selectedScenarioId, { fillExample: true });
+        applyScenarioSelection(sel.value, { fillExample: !!sel.value });
         render();
       });
       const ta = document.getElementById("taskPrompt");
       if (ta) ta.addEventListener("input", () => {
         state.taskPrompt = ta.value;
-        const btn = document.querySelector("#workspaceBody .btn.primary");
-        if (btn) btn.disabled = locked || state.taskPrompt.trim().length < 5;
+        const ok = state.taskPrompt.trim().length >= 5;
+        const btn = document.getElementById("confirmStep1Btn");
+        const tip = document.getElementById("step1Note");
+        if (btn) btn.disabled = !ok;
+        if (tip) tip.textContent = ok
+          ? (state.completed.has(0) ? "可修改后再次确认，或直接进入下一步" : "确认后进入下一步")
+          : "请先输入至少 5 个字的任务描述";
       });
     }
-    function confirmStep1() { if (state.taskPrompt.trim().length >= 5) completeStage(0); }
+    function confirmStep1() {
+      if (state.taskPrompt.trim().length < 5) return;
+      completeStage(0);
+    }
 
     // ── STEP 2 ────────────────────────────────────────────────────────── //
 
+    function selectedCoverageCells() {
+      return Object.entries(state.targetLevels || {})
+        .filter(([, level]) => level)
+        .map(([aId, level]) => aId + "×" + level);
+    }
+
+    function levelClass(level) {
+      const lv = String(level || "L0").toUpperCase();
+      return "lv-" + (["L0", "L1", "L2", "L3", "L4"].includes(lv) ? lv : "L0");
+    }
+
+    function cellLevelClass(cell) {
+      const m = String(cell || "").match(/×(L[0-4])$/i);
+      return levelClass(m ? m[1] : "L0");
+    }
+
+    function indexValidationIssues() {
+      const issues = (state.agentResult && state.agentResult.validation_issues) || [];
+      const jds = (state.agentResult && state.agentResult.candidate && state.agentResult.candidate.jd_candidates) || [];
+      const cov = (state.agentResult && state.agentResult.candidate && state.agentResult.candidate.coverage_candidates) || [];
+      const byJd = {};
+      const byCell = {};
+      const other = [];
+      issues.forEach(v => {
+        const path = String(v.path || "");
+        const jdIdx = path.match(/^jd_candidates\[(\d+)\]/);
+        if (jdIdx) {
+          const slot = jds[parseInt(jdIdx[1], 10)] && jds[parseInt(jdIdx[1], 10)].slot_id;
+          if (slot) {
+            if (!byJd[slot]) byJd[slot] = [];
+            byJd[slot].push(v);
+            return;
+          }
+        }
+        const miss = String(v.message || "").match(/\b(jd-[0-9a-z.]+)\b/i);
+        if (v.code === "MISSING_REQUIRED_JD_SLOT" && miss) {
+          const slot = miss[1];
+          if (!byJd[slot]) byJd[slot] = [];
+          byJd[slot].push(v);
+          return;
+        }
+        const covIdx = path.match(/^coverage_candidates\[(\d+)\]/);
+        if (covIdx) {
+          const cell = cov[parseInt(covIdx[1], 10)] && cov[parseInt(covIdx[1], 10)].cell;
+          if (cell) {
+            if (!byCell[cell]) byCell[cell] = [];
+            byCell[cell].push(v);
+            return;
+          }
+        }
+        other.push(v);
+      });
+      return { byJd, byCell, other, all: issues };
+    }
+
+    const ISSUE_ZH = {
+      CATALOG_VERSION_MISMATCH: { title: "目录版本不一致", msg: "候选结果使用的目录版本与当前审定字典不一致。" },
+      DUPLICATE_GAL_CELL: { title: "重复 A×L", msg: "Coverage 中出现了重复的 A×L 单元。" },
+      UNKNOWN_GAL_CELL: { title: "未知 A×L", msg: "该 A×L 不在当前审定目录中。" },
+      INCOMPLETE_CUMULATIVE_RESPONSIBILITY: { title: "累计责任不完整", msg: "需为每个继承等级各写一条责任（如 L3 含 L1–L3）。" },
+      EVIDENCE_NOT_VERBATIM: { title: "证据非原文", msg: "证据摘录需是任务/场景文案中的原文；若为推断请改用 proposed。" },
+      HUMAN_VALUE_MISSING_SOURCE: { title: "缺少来源说明", msg: "人工新增或修改的值需要填写来源说明。" },
+      UNKNOWN_JD_SLOT: { title: "未知 JD", msg: "该 JD 槽位不在当前审定目录中。" },
+      JD_NAME_MISMATCH: { title: "JD 名称不符", msg: "JD 名称与规范名称不一致。" },
+      DUPLICATE_JD_SLOT: { title: "重复 JD", msg: "JD 候选中出现了重复的 slot ID。" },
+      RUNTIME_DEPENDENCY_MARKED_SCORED: { title: "依赖被计分", msg: "运行时依赖必须保持不计分。" },
+      MISSING_REQUIRED_JD_SLOT: { title: "缺少必填 JD", msg: "缺少必填 JD 槽位；未知时应以 TBD 输出。" },
+      INTERNAL_LABEL_IN_NARRATIVE: { title: "文案含内部标识", msg: "文案/模版不得出现 A×L、GAL、JD 标识。" },
+      INCOMPLETE_TEMPLATE_STRUCTURE: { title: "结构不完整", msg: "文案/模版段落结构不完整。" },
+    };
+
+    function issueTitle(v) {
+      const hit = ISSUE_ZH[v && v.code];
+      return (hit && hit.title) || (v && v.code) || "提示";
+    }
+
+    function issueMessage(v) {
+      const raw = String((v && v.message) || "");
+      // 已是中文（后端新消息或旧中文）直接用；英文则回退到词典
+      if (/[\u4e00-\u9fff]/.test(raw)) return raw;
+      const hit = ISSUE_ZH[v && v.code];
+      return (hit && hit.msg) || raw || "需要人工检查该项。";
+    }
+
+    function renderInlineHints(list, opts) {
+      if (!list || !list.length) return "";
+      const items = list.map(v =>
+        '<div class="inline-hint"><b>' + escapeHtml(issueTitle(v)) + '</b>'
+        + escapeHtml(issueMessage(v)) + '</div>'
+      ).join("");
+      if (opts && opts.plain) return items;
+      const title = (opts && opts.title) || ("校验提示 · " + list.length + " 条");
+      const openAttr = (opts && opts.open) ? " open" : "";
+      const compact = (opts && opts.compact) ? " compact" : "";
+      return '<details class="hint-fold' + compact + '"' + openAttr + '>'
+        + '<summary>' + escapeHtml(title) + '</summary>'
+        + '<div class="hint-fold-body">' + items + '</div></details>';
+    }
+
+    function renderCoverageHints(byCell) {
+      const cells = Object.keys(byCell || {});
+      if (!cells.length) return "";
+      const total = cells.reduce((n, c) => n + byCell[c].length, 0);
+      const body = cells.map(cell =>
+        '<div class="inline-hint"><b>' + escapeHtml(cell) + ' · ' + byCell[cell].length + ' 条</b>'
+        + byCell[cell].map(v => escapeHtml(issueTitle(v)) + " · " + escapeHtml(issueMessage(v))).join("<br>")
+        + '</div>'
+      ).join("");
+      return '<details class="hint-fold">'
+        + '<summary>A×L 校验提示 · ' + total + ' 条 / ' + cells.length + ' 个单元</summary>'
+        + '<div class="hint-fold-body">' + body + '</div></details>';
+    }
+
+    function levelPolicyEntries() {
+      const levels = (state.catalogSummary && state.catalogSummary.level_policy && state.catalogSummary.level_policy.levels) || {};
+      const scored = ["L1", "L2", "L3", "L4"].map(id => {
+        const meta = levels[id] || {};
+        const inherits = (meta.inherits || []).join(" + ");
+        return {
+          id,
+          label: meta.label || id,
+          boundary: meta.general_boundary || "",
+          inheritsNote: inherits ? ("累计含 " + inherits + " + " + id) : ("仅 " + id),
+        };
+      });
+      return [{
+        id: "L0",
+        label: "不覆盖",
+        boundary: "该能力本次不计分、不进入正式 A×L coverage；外部/执行器条件若需要，放在 runtime dependency。",
+        inheritsNote: "下拉选「不覆盖」= L0",
+      }].concat(scored);
+    }
+
+    function renderCoveragePickerHtml(opts) {
+      const editable = !!(opts && opts.editable);
+      const cells = selectedCoverageCells();
+      let h = '<div class="field-label" style="margin-top:10px"><label>目标 Coverage（先选再扩充）</label></div>';
+      h += '<p class="intro" style="margin-top:4px">默认已预填巡检常用 <b>L2</b>，可逐项改等级。选 L3 = 累计 L1–L3；选「不覆盖」= <b>L0</b>（本次不考该能力）。</p>';
+      h += '<div class="group-label">L 等级含义</div><div class="level-legend">';
+      levelPolicyEntries().forEach(lv => {
+        h += '<div class="level-legend-item ' + levelClass(lv.id) + '"><b>' + escapeHtml(lv.id) + '</b><span><em>'
+          + escapeHtml(lv.label) + '</em>' + escapeHtml(lv.boundary)
+          + '<br>' + escapeHtml(lv.inheritsNote) + '</span></div>';
+      });
+      h += '</div>';
+      const abs = (state.catalogSummary && state.catalogSummary.abilities) || [];
+      h += '<div class="group-label">能力列表 · 已选 ' + cells.length + '</div>';
+      if (editable) {
+        h += '<div class="action-row" style="margin:0 0 10px">'
+          + '<span class="action-note">灰=L0 · 蓝=L1 · 青=L2 · 琥珀=L3 · 绿=L4</span><div>'
+          + '<button class="btn" type="button" onclick="resetCoverageDefaults()">恢复默认</button> '
+          + '<button class="btn" type="button" onclick="clearCoverageSelection()">全部清空</button>'
+          + '</div></div>';
+      }
+      if (cells.length) {
+        h += '<div class="coverage-chips">' + cells.map(c => '<span class="lvl-pill ' + cellLevelClass(c) + '">'
+          + escapeHtml(c) + '</span>').join("") + '</div>';
+      }
+      h += '<table class="coverage-picker"><thead><tr><th>A</th><th>能力</th><th>目标等级</th></tr></thead><tbody>';
+      abs.forEach(a => {
+        const cur = state.targetLevels[a.a_id] || "";
+        const tone = levelClass(cur || "L0");
+        h += '<tr class="' + tone + '"><td class="mono">' + escapeHtml(a.a_id)
+          + '</td><td>' + escapeHtml(a.ability || "") + '</td><td>';
+        if (editable) {
+          h += '<select class="' + tone + '" data-cov-a="' + escapeHtml(a.a_id) + '">'
+            + '<option value="">L0 · 不覆盖</option>'
+            + ["L1", "L2", "L3", "L4"].map(lv => '<option value="' + lv + '"' + (cur === lv ? " selected" : "") + ">"
+              + lv + " · " + escapeHtml((levelPolicyEntries().find(x => x.id === lv) || {}).label || lv)
+              + "</option>").join("")
+            + "</select>";
+        } else {
+          h += cur
+            ? '<span class="lvl-text ' + tone + '">' + escapeHtml(cur) + '</span>'
+            : '<span class="lvl-text lv-L0">L0 · 不覆盖</span>';
+        }
+        h += "</td></tr>";
+      });
+      h += "</tbody></table>";
+      return h;
+    }
+
+    function bindCoveragePicker() {
+      document.querySelectorAll("select[data-cov-a]").forEach(sel => {
+        sel.addEventListener("change", () => {
+          const aId = sel.getAttribute("data-cov-a");
+          if (!aId) return;
+          if (sel.value) state.targetLevels[aId] = sel.value;
+          else delete state.targetLevels[aId];
+          render();
+        });
+      });
+    }
+
+    function resetCoverageDefaults() {
+      state.targetLevels = defaultTargetLevels();
+      render();
+    }
+
+    function clearCoverageSelection() {
+      state.targetLevels = {};
+      render();
+    }
+
     async function runNarrative() {
+      const cells = selectedCoverageCells();
+      if (!cells.length) {
+        state.narrativeError = "请先至少选择 1 个目标 A×L coverage，再运行文案扩充。";
+        render();
+        return;
+      }
       state.narrativeStatus = "running"; state.narrativeError = null; state.narrativeRunId = uid("agent-"); render();
       try {
         const r = await fetch("/api/config-agent/expand", {method: "POST", headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({task_description: state.taskPrompt, scenario_id: effectiveScenarioId(), model_tier: state.modelTier, run_id: state.narrativeRunId})});
+          body: JSON.stringify({
+            task_description: state.taskPrompt,
+            scenario_id: effectiveScenarioId(),
+            model_tier: state.modelTier,
+            run_id: state.narrativeRunId,
+            target_coverage: cells,
+          })});
         const d = await r.json();
         if (!r.ok) throw new Error(d.message || d.error);
         state.narrativeStatus = "done"; state.narrativeDraft = d.result.draft.expanded_narrative; state.narrativeOriginal = state.narrativeDraft;
@@ -805,58 +1385,272 @@
       render();
     }
 
+    function stopAgentPoll() {
+      if (pollTimer) { clearTimeout(pollTimer); pollTimer = null; }
+    }
+
+    function startAgentPoll(runId) {
+      stopAgentPoll();
+      const tick = async () => {
+        if (state.agentStatus !== "running" || state.agentRunId !== runId) return;
+        try {
+          const s = await (await fetch("/api/config-agent/status?run_id=" + encodeURIComponent(runId), {cache: "no-store"})).json();
+          const op = (s.details && s.details.operation) || "";
+          const event = s.event || "";
+          if (op === "coverage") {
+            state.agentPhase = event === "model_response_received" ? "coverage_done" : "coverage";
+          } else if (op === "extraction") {
+            state.agentPhase = event === "model_response_received" ? "extraction_done" : "extraction";
+          } else if (s.status === "completed") {
+            state.agentPhase = "done";
+          }
+          if (state.currentStage === 1 || state.currentStage === 2) render();
+        } catch (_) { /* ignore transient poll errors */ }
+        if (state.agentStatus === "running" && state.agentRunId === runId) {
+          pollTimer = setTimeout(tick, 700);
+        }
+      };
+      pollTimer = setTimeout(tick, 350);
+    }
+
+    function phaseStatus(phaseKey) {
+      const p = state.agentPhase || "idle";
+      if (state.agentStatus === "done" || p === "done") return "done";
+      if (state.agentStatus !== "running") return "idle";
+      if (phaseKey === "coverage") {
+        if (p === "coverage") return "running";
+        if (p === "coverage_done" || p === "extraction" || p === "extraction_done") return "done";
+        return "pending";
+      }
+      if (phaseKey === "extraction") {
+        if (p === "extraction") return "running";
+        if (p === "extraction_done") return "done";
+        if (p === "coverage" || p === "coverage_done") return "pending";
+        return "pending";
+      }
+      return "idle";
+    }
+
+    function renderSubstepCard(code, title, note, status) {
+      const label = status === "running" ? "调用中..." : status === "done" ? "完成" : status === "pending" ? "等待中" : "待运行";
+      const pillCls = status === "running" ? "proposed" : status === "done" ? "given" : "tbd";
+      return '<div class="choice-card' + (status === "running" ? " selected" : "") + '" style="margin-top:8px">'
+        + '<div style="display:flex;justify-content:space-between;gap:10px;align-items:center">'
+        + '<b>' + escapeHtml(code + " · " + title) + '</b>' + pill(label, pillCls) + '</div>'
+        + '<p>' + escapeHtml(note) + '</p></div>';
+    }
+
     async function runClassification() {
-      state.agentStatus = "running"; state.agentError = null; state.agentRunId = uid("agent-"); render();
+      state.agentStatus = "running";
+      state.agentPhase = "coverage";
+      state.agentError = null;
+      state.agentRunId = uid("agent-");
+      render();
+      startAgentPoll(state.agentRunId);
       try {
         const r = await fetch("/api/config-agent/analyze", {method: "POST", headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({task_description: state.narrativeDraft, scenario_id: effectiveScenarioId(), model_tier: state.modelTier, run_id: state.agentRunId, source_task_description: state.taskPrompt, narrative_parent_run_id: state.narrativeRunId})});
+          body: JSON.stringify({
+            task_description: state.narrativeDraft,
+            scenario_id: effectiveScenarioId(),
+            model_tier: state.modelTier,
+            run_id: state.agentRunId,
+            source_task_description: state.taskPrompt,
+            narrative_parent_run_id: state.narrativeRunId,
+            preferred_coverage: selectedCoverageCells(),
+          })});
         const d = await r.json();
         if (!r.ok) throw new Error(d.message || d.error);
-        state.agentStatus = "done"; state.agentResult = d.result;
-      } catch(e) { state.agentStatus = "idle"; state.agentError = String(e.message || e); }
+        state.agentStatus = "done";
+        state.agentPhase = "done";
+        state.agentResult = d.result;
+        state.maxUnlocked = Math.max(state.maxUnlocked, 2);
+      } catch(e) {
+        state.agentStatus = "idle";
+        state.agentPhase = "idle";
+        state.agentError = String(e.message || e);
+      }
+      stopAgentPoll();
       render();
     }
 
-    function renderStep2() {
-      setHeader(1, state.completed.has(1) ? "已完成" : state.agentStatus === "done" ? "待确认" : state.narrativeStatus === "done" ? "文案待确认" : "等待运行");
+    function renderStep2a() {
+      setHeader(1, state.completed.has(1) ? "已完成" : state.agentStatus === "done" ? "A×L 待确认" : state.narrativeStatus === "done" ? "文案待确认" : "等待运行");
       const hasN = state.narrativeStatus === "done", hasA = state.agentStatus === "done";
-      let h = saveBar() + '<p class="intro">两次模型调用：① 扩充文案（可编辑）→ ② 分类 A×L + 提取 JD 变量域。</p>';
+      const canEditCov = !hasN && state.narrativeStatus !== "running";
+      let h = saveBar() + '<p class="intro">STEP 2：选目标 Coverage → 扩充文案 → 跑 A×L 分类。完成后进入 STEP 3 看 JD。</p>';
+      h += renderCoveragePickerHtml({ editable: canEditCov });
       h += '<div class="field-label" style="margin-top:10px"><label>① 文案扩充</label></div>';
       if (state.narrativeStatus === "running") h += '<div class="choice-card selected"><b>调用中...</b></div>';
       else if (hasN) {
         h += '<textarea class="task-input" id="narEdit" style="min-height:180px">' + escapeHtml(state.narrativeDraft) + '</textarea>';
-        h += '<div class="action-row"><span class="action-note">可直接修改</span><button class="btn primary" onclick="confirmNar()">确认文案 →</button></div>';
+        h += '<div class="action-row"><span class="action-note">可直接修改文案；若要改 coverage，请点「重选 coverage 再扩充」</span>'
+          + '<button class="btn" type="button" onclick="resetNarrativeForCoverage()">重选 coverage 再扩充</button>'
+          + '<button class="btn primary" onclick="confirmNar()"'+ (state.agentStatus === "running" ? " disabled" : "") + '>确认文案 → 跑分类</button></div>';
       } else {
-        h += '<button class="btn primary" onclick="runNarrative()"' + (state.serverStatus !== "ready" ? " disabled" : "") + ">运行文案扩充</button>";
+        const ready = state.serverStatus === "ready" && selectedCoverageCells().length > 0;
+        h += '<button class="btn primary" onclick="runNarrative()"' + (ready ? "" : " disabled") + ">运行文案扩充</button>";
+        if (!selectedCoverageCells().length) h += '<p class="intro" style="margin-top:8px">请先在上方选择至少一个 A×L。</p>';
         if (state.narrativeError) h += '<div class="choice-card dependency selected" style="margin-top:8px"><b>错误</b><p>' + escapeHtml(state.narrativeError) + "</p></div>";
       }
-      if (state.agentStatus === "running") { h += '<div class="field-label" style="margin-top:16px"><label>② 分类与提取</label></div><div class="choice-card selected"><b>调用中...</b></div>'; }
+      if (state.agentStatus === "running" || hasA) {
+        h += '<div class="field-label" style="margin-top:16px"><label>② A×L 分类</label></div>';
+        h += renderSubstepCard("STEP 2", "A×L 分类", "按目标 coverage 与文案确定计分 A×L 与责任边界", phaseStatus("coverage"));
+        h += renderSubstepCard("STEP 3", "JD 域提取", "后台同步准备，结果在 STEP 3 查看", phaseStatus("extraction"));
+      }
       if (hasA) {
         const c = state.agentResult.candidate;
-        h += '<div class="field-label" style="margin-top:16px"><label>② A×L 覆盖</label></div>';
-        h += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">' + (c.coverage_candidates || []).map(x => '<span class="status-pill proposed" style="padding:5px 10px;font-size:10px">' + escapeHtml(x.cell) + "</span>").join("") + '</div>';
-        h += '<div class="field-label"><label>③ JD 变量域（' + (c.jd_candidates || []).length + ' 个）</label></div>';
-        h += '<p class="intro" style="margin-top:4px">JD 域应由 Agent 从确认文案分析得出；TBD 仅表示暂时推不出来，可在 Step 3 人工补全。</p>';
-        h += '<table class="data-table"><thead><tr><th>Slot</th><th>Name</th><th>Domain（Agent 分析结果）</th><th>Mode</th></tr></thead><tbody>'
-          + (c.jd_candidates || []).map(j => {
-              const bm = j.binding_mode || "fixed";
-              let v = "—";
-              if (bm === "enum") v = (j.allowed_values || []).map(escapeHtml).join(", ") || "—";
-              else if (bm === "range") v = (j.minimum != null && j.maximum != null) ? ("[" + j.minimum + "~" + j.maximum + "]") : "—";
-              else if (j.value) v = escapeHtml(String(j.value));
-              else if (bm === "TBD") v = escapeHtml(j.source_note || "Agent 未推出域 · Step 3 可补");
-              return "<tr><td class='mono'>" + escapeHtml(j.slot_id) + "</td><td>" + escapeHtml(j.name) + "</td><td>" + v + "</td><td>" + pill(bm) + "</td></tr>";
-            }).join("") + '</tbody></table>';
-        h += '<div class="action-row" style="margin-top:14px"><span class="action-note">确认后进入 Step 3 编辑任务域模版</span><button class="btn primary" onclick="completeStage(1)">确认 →</button></div>';
+        const issueIdx = indexValidationIssues();
+        h += '<div class="field-label" style="margin-top:16px"><label>结果 · A×L 覆盖（' + (c.coverage_candidates || []).length + '）</label></div>';
+        h += '<div class="coverage-chips">' + (c.coverage_candidates || []).map(x => '<span class="lvl-pill ' + cellLevelClass(x.cell) + '">' + escapeHtml(x.cell) + "</span>").join("") + '</div>';
+        h += renderCoverageHints(issueIdx.byCell);
+        if (issueIdx.other.length) {
+          h += renderInlineHints(issueIdx.other.slice(0, 8), { title: "其他校验 · " + issueIdx.other.length + " 条" });
+        }
+        h += '<div class="action-row" style="margin-top:14px"><span class="action-note">确认 A×L 后进入 STEP 3 查看 JD 变量域</span>'
+          + '<button class="btn primary" onclick="completeStage(1)">确认 → STEP 3</button></div>';
       }
       if (state.agentError) h += '<div class="choice-card dependency selected" style="margin-top:8px"><b>分类错误</b><p>' + escapeHtml(state.agentError) + "</p></div>";
       document.getElementById("workspaceBody").innerHTML = h;
+      bindCoveragePicker();
       const ne = document.getElementById("narEdit");
       if (ne) ne.addEventListener("input", () => { state.narrativeDraft = ne.value; });
     }
-    function confirmNar() { state.narrativeStatus = "done"; runClassification(); }
 
-    // ── STEP 3 ────────────────────────────────────────────────────────── //
+    function renderStep2b() {
+      setHeader(2, state.completed.has(2) ? "已完成" : state.agentStatus === "done" ? "待确认" : "等待 STEP 2");
+      const hasA = state.agentStatus === "done" && state.agentResult && state.agentResult.candidate;
+      let h = saveBar() + '<p class="intro">STEP 3：查看并确认 JD 变量域（由 STEP 2 的 coverage 提取）。TBD 可在 STEP 4 智能填写。</p>';
+      if (state.agentStatus === "running") {
+        h += renderSubstepCard("STEP 3", "JD 域提取", "正在根据 A×L 提取 JD 变量域…", phaseStatus("extraction"));
+      } else if (!hasA) {
+        h += '<div class="choice-card dependency selected"><b>尚未完成 STEP 2</b><p>请先在 STEP 2 完成文案确认与 A×L 分类。</p></div>';
+        h += '<div class="action-row" style="margin-top:12px"><button class="btn" type="button" onclick="goToStage(1)">← 回 STEP 2</button></div>';
+      } else {
+        const c = state.agentResult.candidate;
+        const issueIdx = indexValidationIssues();
+        const tbdSlots = (c.jd_candidates || []).filter(j => (j.binding_mode || "") === "TBD");
+        h += '<div class="field-label" style="margin-top:8px"><label>来自 STEP 2 的 A×L</label></div>';
+        h += '<div class="coverage-chips">' + (c.coverage_candidates || []).map(x => '<span class="lvl-pill ' + cellLevelClass(x.cell) + '">' + escapeHtml(x.cell) + "</span>").join("") + '</div>';
+        h += '<div class="field-label"><label>结果 · JD 变量域（' + (c.jd_candidates || []).length + ' 个，按 A 分类）</label></div>';
+        if (tbdSlots.length) {
+          h += '<div class="tbd-banner"><b>待补全 TBD · ' + tbdSlots.length + ' 个</b>'
+            + '<p>琥珀色行即 TBD；进入 STEP 4 可「智能填写 TBD」或手改。</p>'
+            + '<div class="coverage-chips">' + tbdSlots.map(j =>
+              '<span class="lvl-pill lv-L3">' + escapeHtml(j.slot_id) + '</span>'
+            ).join("") + '</div></div>';
+        }
+        groupJdItems(c.jd_candidates || [], j => j.slot_id).forEach(g => {
+          h += '<div class="group-label" style="margin-top:14px">' + escapeHtml(g.title)
+            + (g.subtitle ? (' · ' + escapeHtml(g.subtitle)) : "")
+            + ' · ' + g.items.length + '</div>';
+          h += '<table class="data-table"><thead><tr><th>Slot</th><th>Name</th><th>Domain（Agent 分析结果）</th><th>Mode</th></tr></thead><tbody>'
+            + g.items.map(j => {
+                const bm = j.binding_mode || "fixed";
+                const hints = issueIdx.byJd[j.slot_id] || [];
+                let v = "—";
+                if (bm === "enum") v = (j.allowed_values || []).map(escapeHtml).join(", ") || "—";
+                else if (bm === "range") v = (j.minimum != null && j.maximum != null) ? ("[" + j.minimum + "~" + j.maximum + "]") : "—";
+                else if (j.value) v = escapeHtml(String(j.value));
+                else if (bm === "TBD") v = escapeHtml(j.source_note || "Agent 未推出域 · STEP 4 可补");
+                const rowCls = bm === "TBD" ? "row-tbd" : (hints.length ? "row-issue" : "");
+                return "<tr class='" + rowCls + "'><td class='mono'>" + escapeHtml(j.slot_id) + "</td><td>" + escapeHtml(j.name)
+                  + "</td><td>" + v + renderInlineHints(hints, { title: "提示 · " + hints.length, compact: true })
+                  + "</td><td>" + pill(bm) + "</td></tr>";
+              }).join("") + '</tbody></table>';
+        });
+        h += '<div class="action-row" style="margin-top:14px"><span class="action-note">确认后进入 STEP 4 编辑任务域模版</span>'
+          + '<button class="btn primary" onclick="completeStage(2)">确认 → STEP 4</button></div>';
+      }
+      if (state.agentError) h += '<div class="choice-card dependency selected" style="margin-top:8px"><b>提取错误</b><p>' + escapeHtml(state.agentError) + "</p></div>";
+      document.getElementById("workspaceBody").innerHTML = h;
+    }
+    function confirmNar() { state.narrativeStatus = "done"; runClassification(); }
+    function resetNarrativeForCoverage() {
+      state.narrativeStatus = "idle";
+      state.narrativeDraft = "";
+      state.narrativeOriginal = "";
+      state.narrativeError = null;
+      stopAgentPoll();
+      state.agentStatus = "idle";
+      state.agentPhase = "idle";
+      state.agentResult = null;
+      state.agentError = null;
+      render();
+    }
+
+    // ── JD grouping by A ───────────────────────────────────────────────── //
+
+    function cellAbilityId(cell) {
+      const text = String(cell || "");
+      const m = text.match(/^(A\d+[a-z]?)/i);
+      return m ? m[1] : "";
+    }
+
+    function abilityMeta(aId) {
+      const abs = (state.catalogSummary && state.catalogSummary.abilities) || [];
+      return abs.find(a => a.a_id === aId) || null;
+    }
+
+    function jdOwnerOf(slotId) {
+      const fields = (state.catalogSummary && state.catalogSummary.jd_fields) || [];
+      const hit = fields.find(f => f.id === slotId);
+      if (!hit) return "OTHER";
+      return hit.owner_a || "GLOBAL";
+    }
+
+    function groupJdItems(items, getSlotId) {
+      const coverageOrder = [];
+      const seen = new Set();
+      ((state.agentResult && state.agentResult.candidate && state.agentResult.candidate.coverage_candidates) || []).forEach(c => {
+        const a = cellAbilityId(c.cell);
+        if (a && !seen.has(a)) { seen.add(a); coverageOrder.push(a); }
+      });
+      const buckets = { GLOBAL: [], OTHER: [] };
+      items.forEach(item => {
+        const owner = jdOwnerOf(getSlotId(item));
+        if (!buckets[owner]) buckets[owner] = [];
+        buckets[owner].push(item);
+      });
+      const groups = [];
+      if (buckets.GLOBAL.length) {
+        groups.push({ key: "GLOBAL", title: "全局 JD", subtitle: "跨能力共享变量", items: buckets.GLOBAL, primary: true });
+      }
+      coverageOrder.forEach(aId => {
+        if (!(buckets[aId] || []).length) return;
+        const meta = abilityMeta(aId);
+        groups.push({
+          key: aId,
+          title: aId + (meta ? (" · " + meta.ability) : ""),
+          subtitle: "本次覆盖相关",
+          items: buckets[aId],
+          primary: true,
+        });
+        delete buckets[aId];
+      });
+      const abs = (state.catalogSummary && state.catalogSummary.abilities) || [];
+      abs.forEach(a => {
+        if (!(buckets[a.a_id] || []).length) return;
+        groups.push({
+          key: a.a_id,
+          title: a.a_id + " · " + a.ability,
+          subtitle: "其他能力",
+          items: buckets[a.a_id],
+          primary: false,
+        });
+        delete buckets[a.a_id];
+      });
+      Object.keys(buckets).forEach(key => {
+        if (key === "GLOBAL" || key === "OTHER") return;
+        if (!buckets[key].length) return;
+        groups.push({ key: key, title: key, subtitle: "", items: buckets[key], primary: false });
+      });
+      if ((buckets.OTHER || []).length) {
+        groups.push({ key: "OTHER", title: "未归类 JD", subtitle: "", items: buckets.OTHER, primary: false });
+      }
+      return groups;
+    }
+
+    // ── STEP 4: 任务域模版 ────────────────────────────────────────────── //
 
     function getEdits() {
       const c = state.agentResult ? state.agentResult.candidate : null;
@@ -870,47 +1664,138 @@
     }
     function setEdit(id, f, v) { if (!state.domainEdits[id]) state.domainEdits[id] = {}; state.domainEdits[id][f] = f === "allowed_values" ? v.split(/[,，]/).map(s => s.trim()).filter(Boolean) : v; }
 
+    function tbdEdits() {
+      return getEdits().filter(e => e.binding_mode === "TBD");
+    }
+
+    async function fillTbdDomains() {
+      const tbds = tbdEdits();
+      if (!tbds.length) { state.fillTbdNotice = "没有 TBD 项需要填写"; render(); return; }
+      const narrative = state.narrativeDraft || state.taskPrompt;
+      if (!narrative || narrative.trim().length < 20) {
+        state.fillTbdError = "缺少确认文案，无法智能填写";
+        render();
+        return;
+      }
+      state.fillTbdLoading = true; state.fillTbdError = null; state.fillTbdNotice = null; render();
+      try {
+        const resolved = getEdits().filter(e => e.binding_mode !== "TBD").map(e => ({
+          slot_id: e.slot_id, name: e.name, binding_mode: e.binding_mode,
+          value: e.value, allowed_values: e.allowed_values, minimum: e.minimum, maximum: e.maximum,
+        }));
+        const r = await fetch("/api/config-agent/fill-tbd", {
+          method: "POST", headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({
+            task_description: narrative,
+            scenario_id: effectiveScenarioId(),
+            model_tier: state.modelTier,
+            run_id: uid("agent-fill-"),
+            tbd_slots: tbds.map(e => ({slot_id: e.slot_id, name: e.name, source_note: "TBD"})),
+            resolved_slots: resolved,
+          }),
+        });
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.message || d.error || JSON.stringify(d));
+        const filled = (d.filled && d.filled.jd_candidates) || [];
+        let applied = 0;
+        filled.forEach(j => {
+          if (!j || !j.slot_id) return;
+          if ((j.binding_mode || "TBD") === "TBD") {
+            if (j.source_note) setEdit(j.slot_id, "binding_mode", "TBD");
+            return;
+          }
+          setEdit(j.slot_id, "binding_mode", j.binding_mode);
+          if (j.binding_mode === "fixed") setEdit(j.slot_id, "value", j.value || "");
+          if (j.binding_mode === "enum") setEdit(j.slot_id, "allowed_values", (j.allowed_values || []).join(", "));
+          if (j.binding_mode === "range") {
+            setEdit(j.slot_id, "minimum", j.minimum);
+            setEdit(j.slot_id, "maximum", j.maximum);
+          }
+          if (state.agentResult && state.agentResult.candidate && state.agentResult.candidate.jd_candidates) {
+            const idx = state.agentResult.candidate.jd_candidates.findIndex(x => x.slot_id === j.slot_id);
+            if (idx >= 0) state.agentResult.candidate.jd_candidates[idx] = Object.assign({}, state.agentResult.candidate.jd_candidates[idx], j);
+          }
+          applied += 1;
+        });
+        state.fillTbdNotice = "已智能填写 " + applied + " / " + tbds.length + " 个 TBD 域";
+      } catch (e) {
+        state.fillTbdError = String(e.message || e);
+      }
+      state.fillTbdLoading = false;
+      render();
+    }
+
     function renderStep3() {
-      setHeader(2, state.completed.has(2) ? "已确认" : "编辑取值域");
+      setHeader(3, state.completed.has(3) ? "已确认" : "编辑取值域");
       const edits = getEdits();
-      let h = saveBar() + '<p class="intro">域编辑器：为每个 JD 变量选模式。fixed=固定；enum=离散选项；range=数值区间；TBD=未知。域越丰富，Step 4 特定任务模版的具体 JD 取值越多样。</p>';
+      const tbdCount = edits.filter(e => e.binding_mode === "TBD").length;
+      let h = saveBar() + '<p class="intro">域编辑器：为每个 JD 变量选模式。fixed=固定；enum=离散选项；range=数值区间；TBD=未知。可对 TBD 一键智能填写。</p>';
+      h += narrativeReferencePanel({ open: false });
       const c = state.agentResult ? state.agentResult.candidate : null;
       if (c && c.coverage_candidates) {
         h += '<div class="field-label" style="margin-top:8px"><label>A×L（' + c.coverage_candidates.length + ' 个）</label></div>';
-        h += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">' + c.coverage_candidates.map(x => '<span class="status-pill proposed" style="padding:5px 10px">' + escapeHtml(x.cell) + '</span>').join("") + '</div>';
+        h += '<div class="coverage-chips">' + c.coverage_candidates.map(x => '<span class="lvl-pill ' + cellLevelClass(x.cell) + '">' + escapeHtml(x.cell) + '</span>').join("") + '</div>';
       }
-      h += '<table class="data-table"><thead><tr><th>Slot</th><th>Name</th><th>Mode</th><th>Domain</th></tr></thead><tbody>';
-      for (const e of edits) {
-        const bm = e.binding_mode;
-        const sid = escapeHtml(e.slot_id);
-        const styleSelect = "padding:4px 8px;border:1px solid var(--line-strong);border-radius:6px;font-size:10px";
-        const styleInput = "width:100%;padding:4px 8px;border:1px solid var(--line-strong);border-radius:6px;font-size:10px";
-        const styleNum = "width:55px;padding:4px;border:1px solid var(--line-strong);border-radius:6px;font-size:10px";
-        h += "<tr><td class='mono'>" + sid + "</td><td>" + escapeHtml(e.name) + "</td>";
-        h += "<td><select data-slot=\"" + sid + "\" data-field=\"binding_mode\" class=\"domain-edit\" style=\"" + styleSelect + "\">";
-        h += ["fixed", "enum", "range", "TBD"].map(m =>
-          "<option value=\"" + m + "\"" + (m === bm ? " selected" : "") + ">" + m + "</option>"
-        ).join("") + "</select></td>";
-        if (bm === "fixed") {
-          h += "<td><input type=\"text\" data-slot=\"" + sid + "\" data-field=\"value\" class=\"domain-edit\" value=\"" +
-            escapeHtml(e.value || "") + "\" style=\"" + styleInput + "\"></td>";
-        } else if (bm === "enum") {
-          h += "<td><input type=\"text\" data-slot=\"" + sid + "\" data-field=\"allowed_values\" class=\"domain-edit\" value=\"" +
-            escapeHtml((e.allowed_values || []).join(", ")) + "\" placeholder=\"A, B, C\" style=\"" + styleInput + "\"></td>";
-        } else if (bm === "range") {
-          h += "<td><input type=\"number\" data-slot=\"" + sid + "\" data-field=\"minimum\" class=\"domain-edit\" value=\"" +
-            (e.minimum != null ? e.minimum : "") + "\" style=\"" + styleNum + "\"> ~ <input type=\"number\" data-slot=\"" +
-            sid + "\" data-field=\"maximum\" class=\"domain-edit\" value=\"" +
-            (e.maximum != null ? e.maximum : "") + "\" style=\"" + styleNum + "\"></td>";
-        } else {
-          const note = (state.agentResult.candidate.jd_candidates || []).find(j => j.slot_id === e.slot_id);
-          h += "<td>" + escapeHtml((note && note.source_note) || "待 Agent/人工补全域") + "</td>";
-        }
-        h += "</tr>";
+      const issueIdx = indexValidationIssues();
+      const tbdList = edits.filter(e => e.binding_mode === "TBD");
+      if (tbdCount) {
+        h += '<div class="tbd-banner"><b>待处理 TBD · ' + tbdCount + ' 个</b>'
+          + '<p>琥珀色行为 TBD。可点「智能填写 TBD」，或在行内改 Mode/Domain。对应校验提示已挂在行下。</p>'
+          + '<div class="coverage-chips">' + tbdList.map(e =>
+            '<span class="lvl-pill lv-L3">' + escapeHtml(e.slot_id) + '</span>'
+          ).join("") + '</div></div>';
       }
-      h += '</tbody></table>';
+      h += '<div class="action-row" style="margin:0 0 12px"><span class="action-note">当前 TBD ' + tbdCount + ' 个</span>'
+        + '<button class="btn" type="button" onclick="fillTbdDomains()"' +
+        (state.fillTbdLoading || tbdCount === 0 || state.serverStatus !== "ready" ? " disabled" : "") + ">" +
+        (state.fillTbdLoading ? "智能填写中..." : "智能填写 TBD") + "</button></div>";
+      if (state.fillTbdError) h += '<div class="choice-card dependency selected" style="margin-bottom:10px"><b>智能填写失败</b><p>' + escapeHtml(state.fillTbdError) + "</p></div>";
+      if (state.fillTbdNotice) h += '<div class="choice-card selected" style="margin-bottom:10px"><b>' + escapeHtml(state.fillTbdNotice) + "</b></div>";
+      const styleSelect = "padding:4px 8px;border:1px solid var(--line-strong);border-radius:6px;font-size:10px";
+      const styleInput = "width:100%;padding:4px 8px;border:1px solid var(--line-strong);border-radius:6px;font-size:10px";
+      const styleNum = "width:55px;padding:4px;border:1px solid var(--line-strong);border-radius:6px;font-size:10px";
+      groupJdItems(edits, e => e.slot_id).forEach(g => {
+        const gTbd = g.items.filter(e => e.binding_mode === "TBD").length;
+        h += '<div class="group-label" style="margin-top:14px">' + escapeHtml(g.title)
+          + (g.subtitle ? (' · ' + escapeHtml(g.subtitle)) : "")
+          + ' · ' + g.items.length + (gTbd ? (' · TBD ' + gTbd) : "") + '</div>';
+        h += '<table class="data-table"><thead><tr><th>Slot</th><th>Name</th><th>Mode</th><th>Domain</th></tr></thead><tbody>';
+        g.items.forEach(e => {
+          const bm = e.binding_mode;
+          const sid = escapeHtml(e.slot_id);
+          const hints = issueIdx.byJd[e.slot_id] || [];
+          const rowCls = bm === "TBD" ? "row-tbd" : (hints.length ? "row-issue" : "");
+          h += "<tr class=\"" + rowCls + "\"><td class='mono'>" + sid + "</td><td>" + escapeHtml(e.name) + "</td>";
+          h += "<td><select data-slot=\"" + sid + "\" data-field=\"binding_mode\" class=\"domain-edit\" style=\"" + styleSelect + "\">";
+          h += ["fixed", "enum", "range", "TBD"].map(m =>
+            "<option value=\"" + m + "\"" + (m === bm ? " selected" : "") + ">" + m + "</option>"
+          ).join("") + "</select></td>";
+          if (bm === "fixed") {
+            h += "<td><input type=\"text\" data-slot=\"" + sid + "\" data-field=\"value\" class=\"domain-edit\" value=\"" +
+              escapeHtml(e.value || "") + "\" style=\"" + styleInput + "\">"
+              + renderInlineHints(hints, { title: "提示 · " + hints.length, compact: true }) + "</td>";
+          } else if (bm === "enum") {
+            h += "<td><input type=\"text\" data-slot=\"" + sid + "\" data-field=\"allowed_values\" class=\"domain-edit\" value=\"" +
+              escapeHtml((e.allowed_values || []).join(", ")) + "\" placeholder=\"A, B, C\" style=\"" + styleInput + "\">"
+              + renderInlineHints(hints, { title: "提示 · " + hints.length, compact: true }) + "</td>";
+          } else if (bm === "range") {
+            h += "<td><input type=\"number\" data-slot=\"" + sid + "\" data-field=\"minimum\" class=\"domain-edit\" value=\"" +
+              (e.minimum != null ? e.minimum : "") + "\" style=\"" + styleNum + "\"> ~ <input type=\"number\" data-slot=\"" +
+              sid + "\" data-field=\"maximum\" class=\"domain-edit\" value=\"" +
+              (e.maximum != null ? e.maximum : "") + "\" style=\"" + styleNum + "\">"
+              + renderInlineHints(hints, { title: "提示 · " + hints.length, compact: true }) + "</td>";
+          } else {
+            const note = ((state.agentResult && state.agentResult.candidate && state.agentResult.candidate.jd_candidates) || [])
+              .find(j => j.slot_id === e.slot_id);
+            h += "<td><div>" + escapeHtml((note && note.source_note) || "待智能填写 / 人工补全域") + "</div>"
+              + renderInlineHints(hints, { title: "提示 · " + hints.length, compact: true }) + "</td>";
+          }
+          h += "</tr>";
+        });
+        h += '</tbody></table>';
+      });
       const variable = edits.filter(e => e.binding_mode === "enum" || e.binding_mode === "range").length;
-      h += '<div class="action-row" style="margin-top:14px"><span class="action-note">' + variable + ' 个可变域</span><button class="btn primary" onclick="completeStage(2)">确认任务域模版 →</button></div>';
+      h += '<div class="action-row" style="margin-top:14px"><span class="action-note">' + variable + ' 个可变域 · TBD ' + tbdCount + '</span><button class="btn primary" onclick="completeStage(3)">确认 → STEP 5</button></div>';
       document.getElementById("workspaceBody").innerHTML = h;
       document.querySelectorAll(".domain-edit").forEach(el => {
         const apply = () => {
@@ -926,7 +1811,7 @@
       });
     }
 
-    // ── STEP 4: 任务域模版 + Seed → 特定任务模版（具体 JD 值）──────────── //
+    // ── STEP 5: 任务域模版 + Seed → 特定任务模版（具体 JD 值）──────────── //
 
     function buildDomainTemplate() {
       const c = state.agentResult ? state.agentResult.candidate : null;
@@ -936,6 +1821,7 @@
         template_version: "0.1.0",
         title: c.task_title || "domain_tpl",
         scenario_summary: c.scenario_summary || "",
+        natural_language_template: narrativeText(),
         coverage: c.coverage_candidates || [],
         jd_slots: getEdits().map(e => {
           const b = {mode: e.binding_mode, status: "verified"};
@@ -948,19 +1834,38 @@
       };
     }
 
+    function randomizeSeeds(n) {
+      const count = Math.max(1, Math.min(50, parseInt(n) || 5));
+      const pool = new Set();
+      while (pool.size < count) pool.add(Math.floor(Math.random() * 100000));
+      state.instanceRandomSeeds = Array.from(pool);
+      return state.instanceRandomSeeds;
+    }
+
+    function rerollSeeds() {
+      randomizeSeeds(state.instanceRandomCount);
+      persistState();
+      render();
+    }
+
     async function genTaskTemplate() {
       const domain = buildDomainTemplate();
-      if (!domain) { state.instanceError = "缺少任务域模版（请先完成 Step 2–3）"; render(); return; }
+      if (!domain) { state.instanceError = "缺少任务域模版（请先完成 STEP 2–4）"; render(); return; }
+      if (state.instanceMode === "random" && !(state.instanceRandomSeeds || []).length) {
+        randomizeSeeds(state.instanceRandomCount);
+      }
       state.instanceLoading = true; state.instanceError = null; state.instanceResult = null; state.instanceResults = null; render();
       try {
-        const ep = state.instanceMode === "traverse" ? "/api/task-template/traverse"
-          : state.instanceMode === "batch" ? "/api/task-template/batch"
+        const ep = (state.instanceMode === "traverse") ? "/api/task-template/traverse"
+          : (state.instanceMode === "batch" || state.instanceMode === "random") ? "/api/task-template/batch"
           : "/api/task-template/generate";
         const body = state.instanceMode === "single"
           ? {domain_template: domain, seed: parseInt(state.instanceSeed) || 0}
           : state.instanceMode === "batch"
             ? {domain_template: domain, seeds: state.instanceBatchSeeds}
-            : {domain_template: domain, steps_per_range: 3};
+            : state.instanceMode === "random"
+              ? {domain_template: domain, seeds: state.instanceRandomSeeds}
+              : {domain_template: domain, steps_per_range: 3};
         const r = await fetch(ep, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)});
         const d = await r.json(); if (!r.ok) throw new Error(d.message || d.error || JSON.stringify(d));
         if (state.instanceMode === "single") state.instanceResult = d.task_template || d.instance;
@@ -969,35 +1874,230 @@
       state.instanceLoading = false; render();
     }
 
+    function jdNameOf(slotId) {
+      const edit = (getEdits() || []).find(e => e.slot_id === slotId);
+      if (edit && edit.name) return edit.name;
+      const fields = (state.catalogSummary && state.catalogSummary.jd_fields) || [];
+      const hit = fields.find(f => f.id === slotId);
+      return (hit && hit.name) || slotId;
+    }
+
+    // 确认后的自然语言任务描述：既是 A×L / JD 提取的依据，也是后续特定任务模版的来源。
+    function narrativeText() {
+      const c = state.agentResult && state.agentResult.candidate;
+      return state.narrativeDraft || (c && c.natural_language_template) || "";
+    }
+
+    function narrativeReferencePanel(opts) {
+      const text = narrativeText();
+      if (!text) return "";
+      const open = !!(opts && opts.open);
+      const title = (opts && opts.title) || "自然语言任务描述（特定模版的来源）";
+      return '<details class="hint-fold narrative-ref"' + (open ? " open" : "") + ' style="margin:8px 0 14px">'
+        + '<summary>' + escapeHtml(title) + '</summary>'
+        + '<div class="hint-fold-body"><div class="narrative-body">' + escapeHtml(text) + '</div></div></details>';
+    }
+
+    // 世界侧（仿真/环境/平台需实例化的配置，含隐藏真值来源）。其余归用户侧（交给 SUT 的任务与接口契约）。
+    const WORLD_SIDE_JD = new Set([
+      "jd-0.2", "jd-0.3", "jd-0.4", "jd-0.8", "jd-0.9",
+      "jd-2.2",
+      "jd-5.1", "jd-5.2", "jd-5.3",
+      "jd-6a.1", "jd-6a.2", "jd-6b.1", "jd-6b.2",
+      "jd-7.2", "jd-8.1", "jd-8.2",
+      "jd-10.1", "jd-10.2", "jd-11.1",
+      "jd-13.1", "jd-13.2", "jd-13.3",
+      "jd-15.1",
+    ]);
+
+    function jdSide(slotId) {
+      return WORLD_SIDE_JD.has(slotId) ? "world" : "user";
+    }
+
+    function jdSideLabel(side) {
+      return side === "world" ? "世界侧" : "用户侧";
+    }
+
+    // 某 JD 在「任务域模版」里规定的取值范围（fixed/enum/range/TBD）。特定模版就是在这个范围里按 Seed 取定一个值。
+    function jdDomainSummary(slotId) {
+      const e = (getEdits() || []).find(x => x.slot_id === slotId);
+      if (!e) return "—";
+      if (e.binding_mode === "fixed") return "固定 = " + (e.value != null && e.value !== "" ? e.value : "—");
+      if (e.binding_mode === "enum") return "枚举 { " + ((e.allowed_values || []).join(" | ") || "—") + " }";
+      if (e.binding_mode === "range") return "区间 [" + (e.minimum != null ? e.minimum : "?") + " ~ " + (e.maximum != null ? e.maximum : "?") + "]";
+      return "TBD（待定）";
+    }
+
+    function coverageLevelChips() {
+      const cov = (state.agentResult && state.agentResult.candidate && state.agentResult.candidate.coverage_candidates) || [];
+      if (!cov.length) return "";
+      return '<div class="coverage-chips" style="margin-top:6px">'
+        + cov.map(x => '<span class="lvl-pill ' + cellLevelClass(x.cell) + '">' + escapeHtml(x.cell) + "</span>").join("")
+        + '</div>';
+    }
+
+    function formatJdValue(value) {
+      if (value == null) return "—";
+      if (typeof value === "string") return value;
+      try { return JSON.stringify(value); } catch (_) { return String(value); }
+    }
+
+    function buildSpecificTemplateDescription(tpl) {
+      const c = state.agentResult && state.agentResult.candidate;
+      const title = (c && c.task_title) || (tpl.template_ref && tpl.template_ref.template_id) || "特定任务模版";
+      const summary = (c && c.scenario_summary) || "";
+      const narrative = (c && c.natural_language_template) || state.narrativeDraft || "";
+      const firstPara = narrative.split(/\n\s*\n/).map(s => s.trim()).filter(Boolean)[0] || "";
+      const bindings = (tpl.slot_bindings || []).filter(s => s.status !== "TBD" && s.value != null && s.value !== "");
+      const cov = (c && c.coverage_candidates) || [];
+      const priorityIds = ["jd-0.1", "jd-0.2", "jd-0.3", "jd-0.4", "jd-0.7", "jd-0.9", "jd-5.1", "jd-2.2", "jd-11.1"];
+      function bulletsFor(side) {
+        const rows = bindings.filter(s => jdSide(s.slot_id) === side);
+        rows.sort((a, b) => {
+          const ia = priorityIds.indexOf(a.slot_id), ib = priorityIds.indexOf(b.slot_id);
+          return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+        });
+        return rows.slice(0, 8).map(s => "- " + jdNameOf(s.slot_id) + "：" + formatJdValue(s.value));
+      }
+      const userBullets = bulletsFor("user");
+      const worldBullets = bulletsFor("world");
+      const lines = [];
+      lines.push("【" + title + " · Seed " + tpl.seed + "】");
+      if (summary) lines.push(summary);
+      else if (firstPara) lines.push(firstPara);
+      lines.push("");
+      if (cov.length) lines.push("能力等级（A×L）：" + cov.map(x => x.cell).join("、"));
+      lines.push("");
+      lines.push("① 用户侧配置需求（交给 SUT 的任务与接口）：");
+      lines.push(userBullets.length ? userBullets.join("\n") : "- 暂无已赋值 JD");
+      lines.push("");
+      lines.push("② 世界侧配置需求（仿真/环境/平台需实例化）：");
+      lines.push(worldBullets.length ? worldBullets.join("\n") : "- 暂无已赋值 JD");
+      const tbdCount = (tpl.slot_bindings || []).filter(s => s.status === "TBD").length;
+      if (tbdCount) lines.push("\n另有 " + tbdCount + " 个 JD 仍为 TBD，需补齐后整套配置才能跑起来。");
+      return lines.join("\n");
+    }
+
+    function renderSpecificTemplateCard(tpl, opts) {
+      const open = !!(opts && opts.open);
+      const bindings = tpl.slot_bindings || [];
+      const resolved = bindings.filter(s => s.status !== "TBD").length;
+      const desc = buildSpecificTemplateDescription(tpl);
+      let h = '<details class="spec-tpl-card"' + (open ? " open" : "") + '>';
+      h += '<summary><div><div class="spec-tpl-title">特定任务模版 · Seed '
+        + escapeHtml(String(tpl.seed)) + '</div><div class="spec-tpl-meta mono">'
+        + escapeHtml(tpl.instance_id || "") + ' · 已赋值 ' + resolved + '/' + bindings.length
+        + '</div></div><span class="spec-tpl-toggle"></span></summary>';
+      const domainTitle = (state.agentResult && state.agentResult.candidate && state.agentResult.candidate.task_title) || "任务域模版";
+      h += '<div class="spec-tpl-body">';
+      h += '<div class="rel-note">这张卡是<b>「' + escapeHtml(domainTitle) + '」任务域模版</b>在 <b>Seed ' + escapeHtml(String(tpl.seed))
+        + '</b> 下采样出的<b>一个具体实例</b>。域模版规定每个 JD 的<b>取值范围</b>（fixed / enum / range / TBD），本卡在范围内<b>取定一组具体值</b>；同一 Seed 结果可复现。完整取值域见页面底部「参考：STEP 4 任务域模版」。</div>';
+      h += '<div class="spec-desc"><b>模版文字说明</b>' + escapeHtml(desc) + coverageLevelChips() + '</div>';
+      h += '<div class="field-label" style="margin-top:12px"><label>JD 取值域 → 具体值（按配置侧分组）</label><span>左：域模版范围 · 右：本实例取值</span></div>';
+      [
+        { side: "user", title: "① 用户侧配置需求", note: "交给 SUT 的任务与接口契约" },
+        { side: "world", title: "② 世界侧配置需求", note: "仿真/环境/平台需实例化，含隐藏真值来源" },
+      ].forEach(sec => {
+        const sideItems = bindings.filter(s => jdSide(s.slot_id) === sec.side);
+        if (!sideItems.length) return;
+        const sideTbd = sideItems.filter(s => s.status === "TBD").length;
+        h += '<div class="side-block side-' + sec.side + '" style="margin-top:12px">';
+        h += '<div class="side-block-head">' + escapeHtml(sec.title) + ' · ' + sideItems.length + ' 个'
+          + (sideTbd ? (' · TBD ' + sideTbd) : "") + '<span>' + escapeHtml(sec.note) + '</span></div>';
+        groupJdItems(sideItems, s => s.slot_id).forEach(g => {
+          h += '<details class="hint-fold compact" style="margin-top:8px">';
+          h += '<summary>' + escapeHtml(g.title) + ' · ' + g.items.length + ' 个具体值</summary>';
+          h += '<div class="hint-fold-body"><table class="data-table"><thead><tr><th>JD</th><th>名称</th><th>取值域(域模版)</th><th>具体值(本实例)</th><th>Status</th></tr></thead><tbody>';
+          h += g.items.map(s => {
+            const rowCls = s.status === "TBD" ? "row-tbd" : "";
+            return "<tr class='" + rowCls + "'><td class='mono'>" + escapeHtml(s.slot_id)
+              + "</td><td>" + escapeHtml(jdNameOf(s.slot_id))
+              + "</td><td class='dom-cell'>" + escapeHtml(jdDomainSummary(s.slot_id))
+              + "</td><td><b>" + escapeHtml(formatJdValue(s.value)) + "</b></td><td>"
+              + pill(s.status) + "</td></tr>";
+          }).join("");
+          h += '</tbody></table></div></details>';
+        });
+        h += '</div>';
+      });
+      h += '</div></details>';
+      return h;
+    }
+
     function renderStep4() {
       const hasOne = !!state.instanceResult;
       const hasMany = !!(state.instanceResults && state.instanceResults.length);
-      setHeader(3, hasOne || hasMany ? "已生成" : "等待 Seed");
+      setHeader(4, hasOne || hasMany ? "已生成" : "等待 Seed");
       const domain = buildDomainTemplate();
-      let h = saveBar() + '<p class="intro">任务域模版 + Seed → 特定任务模版：为每个 JD 槽位取出具体值。同一 Seed 始终产生相同结果。</p>';
-      if (domain) {
-        h += '<table class="data-table"><thead><tr><th>Slot</th><th>Mode</th><th>Domain</th></tr></thead><tbody>'
-          + domain.jd_slots.map(s => {
-              let v = "—";
-              if (s.binding.mode === "fixed") v = escapeHtml(String(s.binding.value));
-              else if (s.binding.mode === "enum") v = escapeHtml((s.binding.allowed_values || []).join(" | "));
-              else if (s.binding.mode === "range") v = "[" + s.binding.minimum + "~" + s.binding.maximum + "]";
-              return "<tr><td class='mono'>" + escapeHtml(s.slot_id) + "</td><td>" + pill(s.binding.mode) + "</td><td>" + v + "</td></tr>";
-            }).join("")
-          + '</tbody></table>';
+      let h = saveBar() + '<p class="intro">STEP 5 重点是<strong>特定任务模版</strong>：每个 Seed 下各 JD 取到的具体值。同一 Seed 结果可复现。</p>';
+      h += narrativeReferencePanel({ open: false, title: "自然语言任务描述（所有特定模版共同的来源）" });
+
+      h += '<div class="field-label" style="margin-top:8px"><label>生成控制</label></div>';
+      h += '<div class="control" style="margin-bottom:8px"><select id="im">'
+        + [["single","单个 Seed"],["random","随机一批"],["batch","批量范围"],["traverse","全遍历"]].map(m =>
+          "<option value='" + m[0] + "'" + (m[0] === state.instanceMode ? " selected" : "") + ">" + m[1] + "</option>"
+        ).join("") + "</select></div>";
+      if (state.instanceMode === "single") {
+        h += '<input type="number" min="0" value="' + state.instanceSeed + '" id="is" style="padding:4px 8px;width:100px;border:1px solid var(--line-strong);border-radius:6px">';
+      } else if (state.instanceMode === "random") {
+        h += '<div class="control" style="gap:8px;align-items:center;flex-wrap:wrap">'
+          + '<span class="action-note">随机</span>'
+          + '<input type="number" min="1" max="50" value="' + (state.instanceRandomCount || 5) + '" id="irc" style="padding:4px 8px;width:70px;border:1px solid var(--line-strong);border-radius:6px">'
+          + '<span class="action-note">个不同 Seed</span>'
+          + '<button class="btn" type="button" onclick="rerollSeeds()">换一批</button></div>';
+        const seeds = state.instanceRandomSeeds || [];
+        if (seeds.length) {
+          h += '<div class="coverage-chips" style="margin-top:8px">'
+            + seeds.map(s => '<span class="lvl-pill lv-L2 mono">' + escapeHtml(String(s)) + '</span>').join("")
+            + '</div>';
+        } else {
+          h += '<p class="intro" style="margin-top:6px">点「换一批」或直接生成，会随机抽取一组互不相同的 Seed。</p>';
+        }
+      } else if (state.instanceMode === "batch") {
+        h += '<input type="text" value="' + escapeHtml(state.instanceBatchSeeds) + '" id="ib" style="padding:4px 8px;width:200px;border:1px solid var(--line-strong);border-radius:6px" placeholder="如 0-4">';
       }
-      h += '<div class="field-label" style="margin-top:16px"><label>模式</label></div><div class="control" style="margin-bottom:8px"><select id="im">'
-        + [["single","单个 Seed"],["batch","批量范围"],["traverse","全遍历"]].map(m => "<option value='" + m[0] + "'" + (m[0] === state.instanceMode ? " selected" : "") + ">" + m[1] + "</option>").join("") + "</select></div>";
-      if (state.instanceMode === "single") h += '<input type="number" min="0" value="' + state.instanceSeed + '" id="is" style="padding:4px 8px;width:100px;border:1px solid var(--line-strong);border-radius:6px">';
-      else if (state.instanceMode === "batch") h += '<input type="text" value="' + escapeHtml(state.instanceBatchSeeds) + '" id="ib" style="padding:4px 8px;width:200px;border:1px solid var(--line-strong);border-radius:6px">';
-      h += '<div class="action-row" style="margin-top:10px"><button class="btn primary" onclick="genTaskTemplate()"' + (state.instanceLoading ? " disabled" : "") + ">" + (state.instanceLoading ? "生成中..." : "生成特定任务模版") + "</button></div>";
-      if (state.instanceError) h += '<div class="choice-card dependency selected" style="margin-top:10px"><b>错误</b><p>' + escapeHtml(state.instanceError) + "</p></div>";
-      else if (state.instanceResult) h += '<div class="choice-card selected" style="margin-top:10px"><b>特定任务模版 · SEED ' + state.instanceResult.seed + '</b><p class="mono" style="font-size:11px">' + escapeHtml(state.instanceResult.instance_id) + '</p><table class="data-table"><thead><tr><th>JD Slot</th><th>具体值</th><th>Status</th></tr></thead><tbody>' + (state.instanceResult.slot_bindings || []).map(s => "<tr><td class='mono'>" + escapeHtml(s.slot_id) + "</td><td>" + escapeHtml(JSON.stringify(s.value)) + "</td><td>" + pill(s.status) + "</td></tr>").join("") + '</tbody></table></div>';
-      else if (state.instanceResults) h += '<div class="choice-card selected" style="margin-top:10px"><b>' + state.instanceResults.length + ' 个特定任务模版</b><table class="data-table"><thead><tr><th>模版</th><th>Seed</th><th>已赋值 JD</th></tr></thead><tbody>' + state.instanceResults.map(i => "<tr><td class='mono'>" + escapeHtml(i.instance_id) + "</td><td>" + i.seed + "</td><td>" + (i.slot_bindings || []).filter(s => s.status !== "TBD").length + "/" + (i.slot_bindings || []).length + "</td></tr>").join("") + '</tbody></table></div>';
+      h += '<div class="action-row" style="margin-top:10px"><span class="action-note">基于 STEP 4 已确认的任务域模版</span>'
+        + '<button class="btn primary" onclick="genTaskTemplate()"' + (state.instanceLoading || !domain ? " disabled" : "") + ">"
+        + (state.instanceLoading ? "生成中..." : "生成特定任务模版") + "</button></div>";
+
+      if (state.instanceError) {
+        h += '<div class="choice-card dependency selected" style="margin-top:10px"><b>错误</b><p>' + escapeHtml(state.instanceError) + "</p></div>";
+      } else if (state.instanceResult) {
+        h += '<div class="field-label" style="margin-top:18px"><label>特定任务模版（具体 JD 值）</label></div>';
+        h += renderSpecificTemplateCard(state.instanceResult, { open: true });
+      } else if (hasMany) {
+        h += '<div class="field-label" style="margin-top:18px"><label>特定任务模版列表 · ' + state.instanceResults.length + '</label></div>';
+        h += '<p class="intro" style="margin-top:4px">点开每个 Seed 查看该模版下 JD 的具体取值。</p>';
+        state.instanceResults.forEach((tpl, idx) => {
+          h += renderSpecificTemplateCard(tpl, { open: idx === 0 });
+        });
+      } else {
+        h += '<div class="choice-card" style="margin-top:14px"><b>尚未生成</b><p>选好 Seed 后点「生成特定任务模版」，这里会列出每个模版的具体 JD 值。</p></div>';
+      }
+
+      if (domain) {
+        const slotCount = (domain.jd_slots || []).length;
+        h += '<details class="hint-fold" style="margin-top:18px"><summary>参考：STEP 4 任务域模版（上面所有特定模版的共同来源 · 取值域 · ' + slotCount + '）</summary><div class="hint-fold-body">';
+        groupJdItems(domain.jd_slots, s => s.slot_id).forEach(g => {
+          h += '<div class="group-label" style="margin-top:8px">' + escapeHtml(g.title) + ' · ' + g.items.length + '</div>';
+          h += '<table class="data-table"><thead><tr><th>Slot</th><th>Mode</th><th>Domain</th></tr></thead><tbody>'
+            + g.items.map(s => {
+                let v = "—";
+                if (s.binding.mode === "fixed") v = escapeHtml(String(s.binding.value));
+                else if (s.binding.mode === "enum") v = escapeHtml((s.binding.allowed_values || []).join(" | "));
+                else if (s.binding.mode === "range") v = "[" + s.binding.minimum + "~" + s.binding.maximum + "]";
+                return "<tr><td class='mono'>" + escapeHtml(s.slot_id) + "</td><td>" + pill(s.binding.mode) + "</td><td>" + v + "</td></tr>";
+              }).join("")
+            + '</tbody></table>';
+        });
+        h += '</div></details>';
+      }
+
       document.getElementById("workspaceBody").innerHTML = h;
       const im = document.getElementById("im"); if (im) im.addEventListener("change", () => { state.instanceMode = im.value; render(); });
       const is = document.getElementById("is"); if (is) is.addEventListener("change", () => { state.instanceSeed = parseInt(is.value) || 0; });
       const ib = document.getElementById("ib"); if (ib) ib.addEventListener("change", () => { state.instanceBatchSeeds = ib.value; });
+      const irc = document.getElementById("irc"); if (irc) irc.addEventListener("change", () => { state.instanceRandomCount = Math.max(1, Math.min(50, parseInt(irc.value) || 5)); persistState(); });
     }
 
     // ── Sidebars ──────────────────────────────────────────────────────── //
@@ -1030,7 +2130,17 @@
       return (hit && hit.id) || "deepseek-chat";
     }
 
+    function syncContextCollapsed() {
+      const consoleEl = document.querySelector("main.console");
+      const toggle = document.getElementById("contextToggle");
+      const label = toggle && toggle.querySelector(".context-chevron-label");
+      if (consoleEl) consoleEl.classList.toggle("context-collapsed", !!state.contextCollapsed);
+      if (toggle) toggle.setAttribute("aria-expanded", state.contextCollapsed ? "false" : "true");
+      if (label) label.textContent = state.contextCollapsed ? "展开" : "收起";
+    }
+
     function renderContext() {
+      syncContextCollapsed();
       const narStatus = state.narrativeError ? "error" : state.narrativeStatus;
       const clsStatus = state.agentError ? "error" : state.agentStatus;
       const busy = narStatus === "running" || clsStatus === "running";
@@ -1059,10 +2169,15 @@
       h += "</select>";
       if (lastModel) h += '<div class="action-note" style="margin-top:4px">上次实际调用 · <span class="mono">' + escapeHtml(lastModel) + "</span></div>";
       h += "</div>";
-      h += '<div>① 文案扩充 ' + llmPhasePill(narStatus) +
+      h += '<div>STEP 2 文案扩充 ' + llmPhasePill(narStatus) +
         (state.narrativeRunId ? ' <span class="mono" style="font-size:9px;color:var(--muted)">' + escapeHtml(state.narrativeRunId) + "</span>" : "") + "</div>";
-      h += '<div>② 分类提取 ' + llmPhasePill(clsStatus) +
-        (state.agentRunId ? ' <span class="mono" style="font-size:9px;color:var(--muted)">' + escapeHtml(state.agentRunId) + "</span>" : "") + "</div>";
+      if (state.agentStatus === "running") {
+        h += '<div>STEP 2 A×L 分类 ' + llmPhasePill(phaseStatus("coverage")) + "</div>";
+        h += '<div>STEP 3 JD 域提取 ' + llmPhasePill(phaseStatus("extraction")) + "</div>";
+      } else {
+        h += '<div>STEP 2/3 分类提取 ' + llmPhasePill(clsStatus) +
+          (state.agentRunId ? ' <span class="mono" style="font-size:9px;color:var(--muted)">' + escapeHtml(state.agentRunId) + "</span>" : "") + "</div>";
+      }
       if (valStatus) {
         h += '<div>校验 ' + pill(valStatus, valStatus === "pass" ? "given" : "tbd") +
           (jdCount ? (' · JD ' + jdCount + (tbdCount ? ' · TBD ' + tbdCount : "")) : "") + "</div>";
@@ -1083,17 +2198,13 @@
       if (ms) ms.addEventListener("change", () => { state.modelTier = ms.value; render(); });
     }
 
-    function renderReview() {
-      const items = [];
-      if (state.narrativeError) items.push({t:"pending",l:"文案错误",d:state.narrativeError});
-      if (state.agentError) items.push({t:"pending",l:"分类错误",d:state.agentError});
-      if (state.agentResult && state.agentResult.validation_issues) state.agentResult.validation_issues.forEach(v => items.push({t:"pending",l:v.code,d:v.message}));
-      document.getElementById("reviewPanel").innerHTML = items.length ? '<div class="review-list">' + items.slice(0,10).map(i => '<div class="review-item ' + i.t + '"><div class="review-type ' + i.t + '">' + escapeHtml(i.l) + '</div><b>' + escapeHtml(i.l) + '</b><p>' + escapeHtml(i.d) + '</p></div>').join("") + '</div>' : '<div class="review-item info"><div class="review-type info">INFO</div><b>无待处理项</b></div>';
-    }
-
-    function render() { renderStageRail(); renderContext(); renderReview(); [renderStep1, renderStep2, renderStep3, renderStep4][state.currentStage](); persistState(); }
+    function render() { renderStageRail(); renderContext(); [renderStep1, renderStep2a, renderStep2b, renderStep3, renderStep4][state.currentStage](); persistState(); }
 
     document.getElementById("resetButton").addEventListener("click", () => { if (pollTimer) clearTimeout(pollTimer); state = initialState(); render(); init(); });
+    document.getElementById("contextToggle").addEventListener("click", () => {
+      state.contextCollapsed = !state.contextCollapsed;
+      render();
+    });
 
     async function init() {
       try {
@@ -1111,10 +2222,10 @@
             if (d.taskPrompt) state.taskPrompt = d.taskPrompt;
             if (d.modelTier) state.modelTier = d.modelTier;
             if (d.narrativeDraft) { state.narrativeDraft = d.narrativeDraft; state.narrativeStatus = "done"; }
-            state.agentResult = d.agentResult; state.agentStatus = "done";
+            state.agentResult = d.agentResult; state.agentStatus = "done"; state.agentPhase = "done";
             if (d.domainEdits) state.domainEdits = d.domainEdits;
-            state.completed = new Set(d.completedSteps || [0, 1]);
-            state.maxUnlocked = Math.max(...(d.completedSteps || [0, 1]), 0);
+            state.completed = migrateCompletedSteps(d.completedSteps || [0, 1], d.stageSchema, true);
+            state.maxUnlocked = Math.max(...Array.from(state.completed), 2, 0);
             state.saveNotice = "已自动加载";
           }
         }

@@ -109,6 +109,13 @@ class ExtractionResult(StrictModel):
     warnings: list[str] = Field(default_factory=list)
 
 
+class FillTbdResult(StrictModel):
+    """Focused refill for previously TBD JD domains."""
+
+    jd_candidates: list[JDCandidate] = Field(default_factory=list)
+    warnings: list[str] = Field(default_factory=list)
+
+
 class ValidationIssue(StrictModel):
     code: str
     message: str
