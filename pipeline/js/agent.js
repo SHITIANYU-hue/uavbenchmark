@@ -34,16 +34,16 @@ function startAgentPoll(runId) {
     if (state.agentStatus !== "running" || state.agentRunId !== runId) return;
     try {
       const s = await (await fetch("/api/config-agent/status?run_id=" + encodeURIComponent(runId), {cache: "no-store"})).json();
-      const op = (s.details && s.details.operation) || "";
+      const det = s.details || {};
+      const op = det.operation || "";
       const event = s.event || "";
       if (op === "coverage") {
         state.agentPhase = event === "model_response_received" ? "coverage_done" : "coverage";
-      } else if (op === "extraction") {
-        state.agentPhase = event === "model_response_received" ? "extraction_done" : "extraction";
+        if (det.chunk_total) state.coverageProgress = { chunk: det.chunk, total: det.chunk_total };
       } else if (s.status === "completed") {
         state.agentPhase = "done";
       }
-      if (state.currentStage === 1 || state.currentStage === 2) render();
+      if (state.currentStage === 1) render();
     } catch (_) { /* ignore transient poll errors */ }
     if (state.agentStatus === "running" && state.agentRunId === runId) {
       pollTimer = setTimeout(tick, 700);
@@ -52,68 +52,110 @@ function startAgentPoll(runId) {
   pollTimer = setTimeout(tick, 350);
 }
 
-function phaseStatus(phaseKey) {
-  const p = state.agentPhase || "idle";
-  if (state.agentStatus === "done" || p === "done") return "done";
-  if (state.agentStatus !== "running") return "idle";
-  if (phaseKey === "coverage") {
-    if (p === "coverage") return "running";
-    if (p === "coverage_done" || p === "extraction" || p === "extraction_done") return "done";
-    return "pending";
-  }
-  if (phaseKey === "extraction") {
-    if (p === "extraction") return "running";
-    if (p === "extraction_done") return "done";
-    if (p === "coverage" || p === "coverage_done") return "pending";
-    return "pending";
-  }
-  return "idle";
+function startExtractionPoll(runId) {
+  stopAgentPoll();
+  const tick = async () => {
+    if (state.extractionStatus !== "running" || state.extractionRunId !== runId) return;
+    try {
+      const s = await (await fetch("/api/config-agent/status?run_id=" + encodeURIComponent(runId), {cache: "no-store"})).json();
+      const det = s.details || {};
+      if (det.operation === "extraction" && det.chunk_total) {
+        state.extractionProgress = { chunk: det.chunk, total: det.chunk_total };
+        if (state.currentStage === 2) render();
+      }
+    } catch (_) { /* ignore transient poll errors */ }
+    if (state.extractionStatus === "running" && state.extractionRunId === runId) {
+      pollTimer = setTimeout(tick, 700);
+    }
+  };
+  pollTimer = setTimeout(tick, 350);
 }
 
-function renderSubstepCard(code, title, note, status) {
-  const label = status === "running" ? "调用中..." : status === "done" ? "完成" : status === "pending" ? "等待中" : "待运行";
-  const pillCls = status === "running" ? "proposed" : status === "done" ? "given" : "tbd";
-  return '<div class="choice-card' + (status === "running" ? " selected" : "") + '" style="margin-top:8px">'
-    + '<div style="display:flex;justify-content:space-between;gap:10px;align-items:center">'
-    + '<b>' + escapeHtml(code + " · " + title) + '</b>' + pill(label, pillCls) + '</div>'
-    + '<p>' + escapeHtml(note) + '</p></div>';
-}
-
-async function runClassification() {
+// STEP 2: A×L coverage classification only (no JD extraction here).
+async function runCoverage() {
   state.agentStatus = "running";
   state.agentPhase = "coverage";
   state.agentError = null;
+  state.coverageProgress = null;
   state.agentRunId = uid("agent-");
   render();
   startAgentPoll(state.agentRunId);
   try {
-    const r = await fetch("/api/config-agent/analyze", {method: "POST", headers: {"Content-Type": "application/json"},
+    const r = await fetch("/api/config-agent/classify", {method: "POST", headers: {"Content-Type": "application/json"},
       body: JSON.stringify({
         task_description: state.narrativeDraft,
         scenario_id: effectiveScenarioId(),
         provider: state.llmProvider,
         model_tier: state.modelTier,
         run_id: state.agentRunId,
-        source_task_description: state.taskPrompt,
-        narrative_parent_run_id: state.narrativeRunId,
         preferred_coverage: selectedCoverageCells(),
       })});
     const d = await r.json();
     if (!r.ok) throw new Error(d.message || d.error);
     state.agentStatus = "done";
     state.agentPhase = "done";
+    state.coverageProgress = null;
     state.agentResult = d.result;
+    // Coverage changed → any earlier JD extraction is now stale.
+    state.extractionStatus = "idle";
+    state.extractionError = null;
+    state.extractionProgress = null;
     state.maxUnlocked = Math.max(state.maxUnlocked, 2);
   } catch(e) {
     state.agentStatus = "idle";
     state.agentPhase = "idle";
+    state.coverageProgress = null;
     state.agentError = String(e.message || e);
   }
   stopAgentPoll();
   render();
 }
 
-function confirmNar() { state.narrativeStatus = "done"; runClassification(); }
+// STEP 3: JD variable-domain extraction, chunked server-side (retriable).
+async function runExtraction() {
+  const c = state.agentResult && state.agentResult.candidate;
+  if (!c || !((c.coverage_candidates || []).length)) {
+    state.extractionError = "缺少已确认的 A×L 覆盖，请先在 STEP 2 完成分类。";
+    render();
+    return;
+  }
+  state.extractionStatus = "running";
+  state.extractionError = null;
+  state.extractionProgress = null;
+  state.extractionRunId = uid("agent-");
+  render();
+  startExtractionPoll(state.extractionRunId);
+  try {
+    const r = await fetch("/api/config-agent/extract", {method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        task_description: state.narrativeDraft,
+        scenario_id: effectiveScenarioId(),
+        provider: state.llmProvider,
+        model_tier: state.modelTier,
+        run_id: state.extractionRunId,
+        source_task_description: state.taskPrompt,
+        narrative_parent_run_id: state.narrativeRunId,
+        coverage_candidates: c.coverage_candidates,
+        task_title: c.task_title,
+        scenario_summary: c.scenario_summary,
+        responsibility_boundaries: c.responsibility_boundaries || [],
+      })});
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.message || d.error);
+    state.agentResult = d.result;
+    state.extractionStatus = "done";
+    state.extractionProgress = null;
+    state.maxUnlocked = Math.max(state.maxUnlocked, 2);
+  } catch(e) {
+    state.extractionStatus = "idle";
+    state.extractionError = String(e.message || e);
+  }
+  stopAgentPoll();
+  render();
+}
+
+// STEP 2: confirm the expanded narrative, then run coverage classification.
+function confirmNar() { state.narrativeStatus = "done"; runCoverage(); }
 
 function resetNarrativeForCoverage() {
   state.narrativeStatus = "idle";
@@ -123,8 +165,12 @@ function resetNarrativeForCoverage() {
   stopAgentPoll();
   state.agentStatus = "idle";
   state.agentPhase = "idle";
+  state.coverageProgress = null;
   state.agentResult = null;
   state.agentError = null;
+  state.extractionStatus = "idle";
+  state.extractionError = null;
+  state.extractionProgress = null;
   render();
 }
 

@@ -68,6 +68,23 @@ def test_ui_keeps_team_flow_and_provider_checkpoint_controls() -> None:
     assert "target_coverage" in blob
 
 
+def test_ui_splits_coverage_step2_from_jd_extraction_step3() -> None:
+    """STEP 2 runs coverage only; JD extraction runs on demand in STEP 3."""
+    blob = _ui_blob()
+    # dedicated endpoints for the two-step split
+    assert "/api/config-agent/classify" in blob
+    assert "/api/config-agent/extract" in blob
+    # STEP 3 runs (and can retry) extraction on its own
+    assert "runExtraction" in blob
+    assert "运行 JD 域提取" in blob
+
+
+def test_server_exposes_classify_and_extract_endpoints() -> None:
+    server_src = (ROOT / "src" / "uav_benchmark" / "agent" / "server.py").read_text(encoding="utf-8")
+    assert '"/api/config-agent/classify"' in server_src
+    assert '"/api/config-agent/extract"' in server_src
+
+
 def test_pipeline_ui_is_split_into_modules() -> None:
     js_dir = ROOT / "pipeline" / "js"
     expected = {

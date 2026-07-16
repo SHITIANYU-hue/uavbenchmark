@@ -4,17 +4,18 @@
 
 本项目研究如何将无人机行业任务描述转化为结构明确、可机器校验、可复现并可扩展的 benchmark artifacts。框架以 GAL（能力与自主等级）描述受测能力边界，以 JD（任务变量）描述场景配置，并显式区分 SUT、Fixture/Harness、外部执行器、Ground Truth 与 Grader 的责任。
 
-当前网页演示按四步完成配置到具体化：
+当前网页演示按五步完成配置到具体化：
 
 ```text
-Step 1: 任务域选择         简短描述 + 可选场景示例    [保存] [加载]
-Step 2: 扩充与提取         Agent 文案+A×L+JD域       [保存] [加载]
-Step 3: 任务域模版    域编辑器(每行选模式)      [保存] [加载]
-Step 4: 特定任务模版      Seed→具体 JD 值               [保存] [加载]
+STEP 1  任务域选择      任务描述 + 可选场景示例
+STEP 2  文案与 A×L      选目标 Coverage → 扩充文案 → 分类
+STEP 3  JD 域提取       按 A 查看变量域
+STEP 4  任务域模版      为每个 JD 选 fixed / enum / range / TBD
+STEP 5  特定任务模版    Seed → 具体 JD 值（可复现）
 ```
 
-产品命名：Step 3 产出 任务域模版（取值域）；Step 4 用 Seed 从域中抽出具体值，得到特定任务模版。  
-Wire 合同里 Step 4 产物仍使用 `task_instance` schema（兼容已有 artifact 合同）。Ground Truth、SUT Trace、Grader 与真实 Fixture/Harness 仍属后续实现。
+产品命名：STEP 4 产出**任务域模版**（取值域）；STEP 5 用 Seed 抽样得到**特定任务模版**。  
+Wire 合同里特定任务模版仍用 `task_instance` schema。真实 SUT / simulator / GT / Grader 尚未接入页面。
 
 ## 研究目标
 
@@ -43,21 +44,17 @@ Wire 合同里 Step 4 产物仍使用 `task_instance` schema（兼容已有 arti
 Config Agent 负责候选生成，不负责批准业务规则。确定性校验与人工复核共同构成模板进入后续运行链之前的质量门。
 架构图中的 Config Agent 在当前网页中实现为两个处理阶段：先生成可编辑业务文案，再对人工确认稿进行能力分类与变量提取；后一个阶段内部将 coverage 与 JD/dependency extraction 分开执行。
 
-## 实现状态
+## 实现状态（网页已有）
 
-| 模块 | 状态 | 说明 |
-|---|---|---|
-| 双阶段 Config Agent | 已实现 | 可选 Gemini / DeepSeek：文案扩充 + A×L/JD 域提取；分类与变量提取使用独立结构化请求 |
-| 业务场景注册表 | 已实现 | Step 1 可选加载高速、油气、桥梁、园区和其他巡检示例；简短任务描述是主输入 |
-| A×L 人工复核 | 已实现 | Step 2 可在同一能力 A 下修正 L1–L4，并按受审目录同步累计责任和必需 JD |
-| Runtime Dependency 复核 | 已实现 | 可补充或移除外部执行器、外部系统与人工决定接口，始终不计入 SUT 评分 |
-| 任务域模版编辑器 | 已实现 | Step 3 按行选择 fixed/enum/range/TBD |
-| 特定任务模版（Seed） | 已实现 | Step 4：任务域模版 + Seed → 具体 JD 值；支持 single/batch/traverse |
-| 确定性校验 | 已实现 | Agent 候选校验 + 特定任务模版 schema 校验 |
-| YAML Intake Compiler | 已实现 | 将人工填写的案例配置编译为完整 schema 级模板 JSON |
-| Artifact Schemas | 已实现 | Template、Instance、GT、Trace、Grader Result |
-| Fixture/Harness 与 Mock SUT | 待实现 | 执行阶段机并生成标准 Trace |
-| Grader | 待实现 | 基于 GT/Trace 进行能力归因和 task-level gate 判断 |
+| 能力 | 说明 |
+|---|---|
+| 五步 Pipeline UI | `pipeline.html` + `pipeline/` 模块；侧栏可选 DeepSeek / Gemini |
+| 目标 Coverage | STEP 2 选 A×L（含 Seed 随机）；再扩充文案并分类 |
+| JD 域与任务域模版 | STEP 3 查看域；STEP 4 编辑 fixed/enum/range/TBD，可智能填 TBD |
+| 特定任务模版 | STEP 5：单个 / 随机一批 / 批量范围 / 全遍历；卡片分用户侧·世界侧 |
+| 进度保存 | 浏览器自动暂存；手动「保存/加载」检查点；「重新开始」不清检查点 |
+| Config Agent API | 文案扩充、A×L/JD 提取、fill-tbd、任务模版生成 |
+| 离线 compiler / schemas | YAML intake、artifact schema（见下文）；GT/SUT/Grader 未接页面 |
 
 ## 任务模板
 
@@ -100,12 +97,13 @@ http://127.0.0.1:8765
 
 ## 演示流程
 
-1. **Step 1 任务域选择**：输入 1–3 句任务描述；行业场景示例可选加载；
-2. **Step 2 扩充与提取**：选择 Gemini 或 DeepSeek，扩充可编辑文案，再提取 A×L、JD 域与外部依赖；人工可修正 L1–L4 或补充 Runtime Dependency；
-3. **Step 3 任务域模版**：在域编辑器中为每个 JD 选 fixed/enum/range/TBD；
-4. **Step 4 特定任务模版**：输入 Seed（或 batch/traverse），生成带具体 JD 值的特定任务模版。
+1. **STEP 1**：写任务描述（可选加载场景示例）→ 确认；
+2. **STEP 2**：选目标 A×L（可按 Seed 随机）→ 确认并扩充文案 → 确认文案并分类；
+3. **STEP 3**：查看按 A 分组的 JD 变量域 → 确认；
+4. **STEP 4**：编辑取值域；TBD 可智能填写 → 确认；
+5. **STEP 5**：选 Seed 生成特定任务模版；重点看每个实例的具体 JD 值。
 
-每一步都有 [保存] / [加载]。Agent 阶段的黄色 `needs_review` 表示确定性校验有待处理项，不等于模型调用失败。
+每步可「保存/加载」。操作细节见 [Config Agent 演示说明](docs/config_agent_quickstart.md)。
 
 ## 离线任务配置
 
@@ -136,7 +134,7 @@ PYTHONPATH=src python3 -m uav_benchmark.compiler \
 | Artifact / 产品名 | Schema | 作用 |
 |---|---|---|
 | Domain / 完整模板 | `schemas/task_template.schema.json` | 能力边界、JD 域、依赖与阶段（离线 compiler 完整形态） |
-| 特定任务模版（Step 4） | `schemas/task_instance.schema.json` | Seed 具体化后的 JD 槽位绑定（wire：`task_instance`） |
+| 特定任务模版（STEP 5） | `schemas/task_instance.schema.json` | Seed 具体化后的 JD 槽位绑定（wire：`task_instance`） |
 | Ground Truth | `schemas/ground_truth.schema.json` | 仅 Fixture/Grader 可见的世界真值 |
 | SUT Trace | `schemas/sut_trace.schema.json` | SUT 运行期间的结构化事件与输出 |
 | Grader Result | `schemas/grader_result.schema.json` | 能力归因、reason code、指标状态和 task-level gate |

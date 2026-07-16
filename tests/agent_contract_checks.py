@@ -6,6 +6,7 @@ Run with:
 
 from __future__ import annotations
 
+import json
 import unittest
 from types import SimpleNamespace
 from uav_benchmark.agent.catalog import load_fixed_scenario, load_reference_catalog, load_scenario_registry
@@ -15,7 +16,11 @@ from uav_benchmark.agent.service import (
     ConfigAgentError,
     ConfigAgent,
     NarrativeAgent,
+    _chunk_coverage_for_extraction,
+    _chunk_preferred_coverage,
     _extract_tool_trace,
+    _parse_model_json,
+    _prune_model_extras,
     structured_output_schema,
     validate_candidate,
     validate_narrative_draft,
@@ -313,6 +318,148 @@ class AgentContractChecks(unittest.TestCase):
         self.assertEqual(result.candidate.natural_language_template, confirmed_narrative)
         self.assertEqual(result.candidate.task_title, "城市道路车辆巡检")
         self.assertTrue(len(result.candidate.jd_candidates) > 0)
+
+    def test_classify_coverage_uses_one_request_and_omits_jd(self) -> None:
+        calls: list[str] = []
+        cand = candidate("持续识别车辆并维护跨帧身份")
+        coverage = CoverageResult(
+            task_title=cand.task_title,
+            scenario_summary=cand.scenario_summary,
+            coverage_candidates=cand.coverage_candidates,
+            responsibility_boundaries=cand.responsibility_boundaries,
+        )
+        agent = ConfigAgent(
+            api_key="unused",
+            model="fake-deepseek",
+            provider="deepseek",
+            transport=FakeTransport([coverage], calls),
+        )
+        result = agent.classify_coverage(cand.natural_language_template)
+        self.assertEqual(calls, ["CoverageResult"])
+        self.assertTrue(len(result.candidate.coverage_candidates) > 0)
+        self.assertEqual(result.candidate.jd_candidates, [])
+        # JD-missing issues must not surface before STEP 3 runs extraction.
+        self.assertNotIn("MISSING_REQUIRED_JD_SLOT", {i.code for i in result.validation_issues})
+
+    def test_extract_jd_runs_extraction_only_and_merges(self) -> None:
+        calls: list[str] = []
+        cand = candidate("持续识别车辆并维护跨帧身份")
+        extraction = ExtractionResult(
+            jd_candidates=cand.jd_candidates,
+            runtime_dependencies=cand.runtime_dependencies,
+            open_questions=cand.open_questions,
+            warnings=cand.warnings,
+        )
+        agent = ConfigAgent(
+            api_key="unused",
+            model="fake-deepseek",
+            provider="deepseek",
+            transport=FakeTransport([extraction], calls),
+        )
+        result = agent.extract_jd(
+            cand.natural_language_template,
+            coverage_candidates=[c.model_dump() for c in cand.coverage_candidates],
+            task_title=cand.task_title,
+            scenario_summary=cand.scenario_summary,
+            responsibility_boundaries=[b.model_dump() for b in cand.responsibility_boundaries],
+        )
+        self.assertEqual(calls, ["ExtractionResult"])
+        self.assertTrue(len(result.candidate.jd_candidates) > 0)
+        self.assertEqual(result.candidate.task_title, cand.task_title)
+        self.assertEqual(
+            [item.tool for item in result.tool_trace if item.status == "completed"],
+            ["lookup_gal_catalog", "lookup_jd_catalog"],
+        )
+
+    def test_extract_jd_requires_coverage(self) -> None:
+        agent = ConfigAgent(api_key="unused", model="fake", transport=FakeTransport([]))
+        with self.assertRaises(ConfigAgentError):
+            agent.extract_jd(
+                candidate("持续识别车辆并维护跨帧身份").natural_language_template,
+                coverage_candidates=[],
+                task_title="t",
+                scenario_summary="s",
+            )
+
+    def test_chunking_splits_large_coverage_but_keeps_single_cell_whole(self) -> None:
+        summary = [
+            {"cell": "A1×L2", "required_jd_ids": ["jd-1.1", "jd-1.2", "jd-1.3", "jd-1.4", "jd-1.5", "jd-1.6"]},
+            {"cell": "A2×L2", "required_jd_ids": ["jd-2.1", "jd-2.2", "jd-2.3", "jd-2.4", "jd-2.5", "jd-2.6"]},
+            {"cell": "A3×L2", "required_jd_ids": ["jd-3.1", "jd-3.2", "jd-3.3", "jd-3.4", "jd-3.5", "jd-3.6"]},
+        ]
+        chunks = _chunk_coverage_for_extraction(summary, ["jd-0.2", "jd-0.7"], max_slots_per_chunk=10)
+        self.assertGreater(len(chunks), 1)
+        # every cell appears exactly once across all chunks
+        flat = [entry["cell"] for chunk in chunks for entry in chunk]
+        self.assertEqual(sorted(flat), ["A1×L2", "A2×L2", "A3×L2"])
+
+    def test_chunking_single_cell_is_one_chunk(self) -> None:
+        summary = [{"cell": "A5×L2", "required_jd_ids": ["jd-5.1", "jd-5.2"]}]
+        chunks = _chunk_coverage_for_extraction(summary, ["jd-0.2", "jd-0.7"])
+        self.assertEqual(len(chunks), 1)
+
+    def test_preferred_coverage_chunking_splits_and_preserves(self) -> None:
+        pref = [{"cell": f"A{i}×L2"} for i in range(1, 9)]
+        chunks = _chunk_preferred_coverage(pref, max_cells_per_chunk=6)
+        self.assertEqual(len(chunks), 2)
+        flat = [entry["cell"] for chunk in chunks for entry in chunk]
+        self.assertEqual(len(flat), 8)
+
+    def test_preferred_coverage_chunking_empty_is_single_inference_call(self) -> None:
+        self.assertEqual(_chunk_preferred_coverage([]), [[]])
+
+    def test_extraction_tolerates_hallucinated_extra_fields(self) -> None:
+        # DeepSeek sometimes adds an extra per-slot "open_question" key.
+        raw = json.dumps({
+            "jd_candidates": [{
+                "slot_id": "jd-0.2", "name": "工作空间结构", "value": "高速公路走廊",
+                "binding_mode": "fixed", "status": "given", "evidence_quote": "高速公路走廊",
+                "open_question": "平台参数表的具体内容是什么？",  # extra, must be dropped
+            }],
+            "runtime_dependencies": [],
+            "open_questions": [],
+            "warnings": [],
+        }, ensure_ascii=False)
+        parsed = _parse_model_json(
+            raw, ExtractionResult, run_id="agent-test", operation="extraction", finish_reason="stop",
+        )
+        self.assertEqual(len(parsed.jd_candidates), 1)
+        self.assertEqual(parsed.jd_candidates[0].slot_id, "jd-0.2")
+
+    def test_prune_model_extras_keeps_only_known_keys(self) -> None:
+        cleaned = _prune_model_extras(
+            {"slot_id": "jd-0.2", "name": "n", "value": "v", "status": "given",
+             "evidence_quote": "", "bogus": 1},
+            ExtractionResult.model_fields["jd_candidates"].annotation,
+        )
+        self.assertNotIn("bogus", cleaned[0] if isinstance(cleaned, list) else cleaned)
+
+    def test_classify_coverage_batches_large_selection(self) -> None:
+        calls: list[str] = []
+        cells1 = ["A1×L2", "A2×L2", "A3×L2", "A4×L2", "A5×L2", "A6a×L2"]
+        cells2 = ["A7×L2", "A9a×L2"]
+
+        def make(cells: list[str]) -> CoverageResult:
+            return CoverageResult(
+                task_title="城市道路车辆巡检",
+                scenario_summary="连续车辆巡检与定位退化处置",
+                coverage_candidates=[{
+                    "cell": c, "role": "primary",
+                    "responsibilities": ["r1", "r2"],
+                    "evidence_quote": "", "status": "proposed",
+                } for c in cells],
+                responsibility_boundaries=[],
+            )
+
+        agent = ConfigAgent(
+            api_key="unused", model="fake", provider="deepseek",
+            transport=FakeTransport([make(cells1), make(cells2)], calls),
+        )
+        narrative = candidate("持续识别车辆并维护跨帧身份").natural_language_template
+        result = agent.classify_coverage(narrative, preferred_coverage=cells1 + cells2)
+        self.assertEqual(calls, ["CoverageResult", "CoverageResult"])
+        got = {c.cell for c in result.candidate.coverage_candidates}
+        self.assertEqual(got, set(cells1 + cells2))
 
 
 if __name__ == "__main__":

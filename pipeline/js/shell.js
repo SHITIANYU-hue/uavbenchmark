@@ -88,7 +88,8 @@ function renderContext() {
   syncContextCollapsed();
   const narStatus = state.narrativeError ? "error" : state.narrativeStatus;
   const clsStatus = state.agentError ? "error" : state.agentStatus;
-  const busy = narStatus === "running" || clsStatus === "running";
+  const extStatus = state.extractionError ? "error" : state.extractionStatus;
+  const busy = narStatus === "running" || clsStatus === "running" || extStatus === "running";
   const conn = connectionMeta();
   const valStatus = state.agentResult ? state.agentResult.validation_status : null;
   const jdCount = state.agentResult && state.agentResult.candidate
@@ -124,19 +125,21 @@ function renderContext() {
   h += "</div>";
   h += '<div>STEP 2 文案扩充 ' + llmPhasePill(narStatus) +
     (state.narrativeRunId ? ' <span class="mono" style="font-size:9px;color:var(--muted)">' + escapeHtml(state.narrativeRunId) + "</span>" : "") + "</div>";
-  if (state.agentStatus === "running") {
-    h += '<div>STEP 2 A×L 分类 ' + llmPhasePill(phaseStatus("coverage")) + "</div>";
-    h += '<div>STEP 3 JD 域提取 ' + llmPhasePill(phaseStatus("extraction")) + "</div>";
-  } else {
-    h += '<div>STEP 2/3 分类提取 ' + llmPhasePill(clsStatus) +
-      (state.agentRunId ? ' <span class="mono" style="font-size:9px;color:var(--muted)">' + escapeHtml(state.agentRunId) + "</span>" : "") + "</div>";
-  }
-  if (valStatus) {
+  const covProgLabel = (clsStatus === "running" && state.coverageProgress && state.coverageProgress.total > 1)
+    ? (" · 第 " + state.coverageProgress.chunk + "/" + state.coverageProgress.total + " 批") : "";
+  h += '<div>STEP 2 A×L 分类 ' + llmPhasePill(clsStatus) + escapeHtml(covProgLabel) +
+    (state.agentRunId ? ' <span class="mono" style="font-size:9px;color:var(--muted)">' + escapeHtml(state.agentRunId) + "</span>" : "") + "</div>";
+  const extProgLabel = (extStatus === "running" && state.extractionProgress && state.extractionProgress.total)
+    ? (" · 第 " + state.extractionProgress.chunk + "/" + state.extractionProgress.total + " 批") : "";
+  h += '<div>STEP 3 JD 域提取 ' + llmPhasePill(extStatus) + escapeHtml(extProgLabel) +
+    (state.extractionRunId ? ' <span class="mono" style="font-size:9px;color:var(--muted)">' + escapeHtml(state.extractionRunId) + "</span>" : "") + "</div>";
+  if (valStatus && jdCount) {
     h += '<div>校验 ' + pill(valStatus, valStatus === "pass" ? "given" : "tbd") +
-      (jdCount ? (' · JD ' + jdCount + (tbdCount ? ' · TBD ' + tbdCount : "")) : "") + "</div>";
+      (' · JD ' + jdCount + (tbdCount ? ' · TBD ' + tbdCount : "")) + "</div>";
   }
   if (state.narrativeError) h += '<div style="color:var(--red);font-size:10px">' + escapeHtml(state.narrativeError) + "</div>";
-  else if (state.agentError) h += '<div style="color:var(--red);font-size:10px">' + escapeHtml(state.agentError) + "</div>";
+  if (state.agentError) h += '<div style="color:var(--red);font-size:10px">' + escapeHtml(state.agentError) + "</div>";
+  if (state.extractionError) h += '<div style="color:var(--red);font-size:10px">' + escapeHtml(state.extractionError) + "</div>";
   h += "</div></div>";
 
   if (state.agentResult && state.agentResult.candidate) {
