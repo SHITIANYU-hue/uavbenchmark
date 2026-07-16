@@ -8,9 +8,9 @@ from __future__ import annotations
 
 import unittest
 from types import SimpleNamespace
-
 from uav_benchmark.agent.catalog import load_fixed_scenario, load_reference_catalog, load_scenario_registry
-from uav_benchmark.agent.models import AgentCandidate, NarrativeDraft
+from uav_benchmark.agent.models import AgentCandidate, CoverageResult, ExtractionResult, NarrativeDraft
+from uav_benchmark.agent.providers import StructuredResponse
 from uav_benchmark.agent.service import (
     ConfigAgentError,
     ConfigAgent,
@@ -26,6 +26,19 @@ TASK = (
     "无人机在高速公路执行巡检，系统持续识别车辆并维护跨帧身份。"
     "外部执行器负责固定航段推进和悬停。定位退化后，系统标记位姿不可信并上报异常。"
 )
+
+
+class FakeTransport:
+    def __init__(self, payloads: list[object], calls: list[str] | None = None) -> None:
+        self.payloads = list(payloads)
+        self.calls = calls if calls is not None else []
+
+    def generate(self, *, response_model: type, **_kwargs: object) -> StructuredResponse:
+        self.calls.append(response_model.__name__)
+        value = self.payloads.pop(0)
+        raw_text = value.model_dump_json() if hasattr(value, "model_dump_json") else str(value)
+        return StructuredResponse(raw_text=raw_text, parsed=value, finish_reason="stop", reasoning=None,
+                                  usage={"prompt_tokens": 100, "completion_tokens": 50, "total_tokens": 150})
 
 
 def candidate(evidence: str) -> AgentCandidate:
@@ -76,7 +89,7 @@ def candidate(evidence: str) -> AgentCandidate:
 
 class AgentContractChecks(unittest.TestCase):
     def test_client_construction_does_not_raise(self) -> None:
-        agent = ConfigAgent(api_key="test-key", model="test-model")
+        agent = ConfigAgent(api_key="test-key", model="test-model", transport=FakeTransport([]))
         self.assertEqual(agent.model, "test-model")
 
     def test_transport_schema_removes_unsupported_additional_properties(self) -> None:
@@ -98,25 +111,16 @@ class AgentContractChecks(unittest.TestCase):
         prose = candidate("持续识别车辆并维护跨帧身份").natural_language_template
         calls: list[str] = []
 
-        class FakeCompletions:
-            def create(self, *, model: str, messages: object, **kwargs: object) -> object:
-                calls.append(model)
-                draft_obj = NarrativeDraft(
-                    task_title="高速公路车辆巡检",
-                    expanded_narrative=prose.replace("\n", "\\n"),
-                    open_questions=["具体观察时长是多少？"],
-                )
-                return SimpleNamespace(
-                    choices=[SimpleNamespace(message=SimpleNamespace(content=draft_obj.model_dump_json()))],
-                    usage=None,
-                )
-
-        agent = NarrativeAgent.__new__(NarrativeAgent)
-        agent.model = "fake-deepseek"
-        agent.client = SimpleNamespace(chat=SimpleNamespace(completions=FakeCompletions()))
+        draft_obj = NarrativeDraft(
+            task_title="高速公路车辆巡检",
+            expanded_narrative=prose.replace("\n", "\\n"),
+            open_questions=["具体观察时长是多少？"],
+        )
+        transport = FakeTransport([draft_obj], calls)
+        agent = NarrativeAgent(api_key="unused", model="fake-deepseek", provider="deepseek", transport=transport)
         result = agent.expand("巡查高速路，持续记录病害，遇到异常先通知调度。")
 
-        self.assertEqual(calls, ["fake-deepseek"])
+        self.assertEqual(calls, ["NarrativeDraft"])
         self.assertEqual(result.draft.expanded_narrative, prose)
         self.assertNotRegex(result.draft.expanded_narrative, r"A\d+[a-z]?×L[1-4]|jd-")
 
@@ -272,47 +276,31 @@ class AgentContractChecks(unittest.TestCase):
         self.assertNotIn("lookup_jd_catalog", [item.tool for item in trace])
 
     def test_orchestrator_uses_two_model_requests_after_two_local_tools(self) -> None:
-        from uav_benchmark.agent.service import ConfigAgent, CoverageResult, ExtractionResult
-
         calls: list[str] = []
-
-        class FakeCompletions:
-            def __init__(self) -> None:
-                self._call = 0
-
-            def create(self, *, model: str, messages: object, **kwargs: object) -> object:
-                self._call += 1
-                calls.append(f"call_{self._call}")
-                cand = candidate("持续识别车辆并维护跨帧身份")
-                if self._call == 1:
-                    cov = CoverageResult(
-                        task_title=cand.task_title,
-                        scenario_summary=cand.scenario_summary,
-                        coverage_candidates=cand.coverage_candidates,
-                        responsibility_boundaries=cand.responsibility_boundaries,
-                    )
-                    payload = cov.model_dump_json()
-                else:
-                    ext = ExtractionResult(
-                        jd_candidates=cand.jd_candidates,
-                        runtime_dependencies=cand.runtime_dependencies,
-                        open_questions=cand.open_questions,
-                        warnings=cand.warnings,
-                    )
-                    payload = ext.model_dump_json()
-                return SimpleNamespace(
-                    choices=[SimpleNamespace(message=SimpleNamespace(content=payload))],
-                    usage=SimpleNamespace(prompt_tokens=100, completion_tokens=50, total_tokens=150),
-                )
-
-        agent = ConfigAgent.__new__(ConfigAgent)
-        agent.model = "fake-deepseek"
-        agent.client = SimpleNamespace(chat=SimpleNamespace(completions=FakeCompletions()))
+        cand = candidate("持续识别车辆并维护跨帧身份")
+        coverage = CoverageResult(
+            task_title=cand.task_title,
+            scenario_summary=cand.scenario_summary,
+            coverage_candidates=cand.coverage_candidates,
+            responsibility_boundaries=cand.responsibility_boundaries,
+        )
+        extraction = ExtractionResult(
+            jd_candidates=cand.jd_candidates,
+            runtime_dependencies=cand.runtime_dependencies,
+            open_questions=cand.open_questions,
+            warnings=cand.warnings,
+        )
+        agent = ConfigAgent(
+            api_key="unused",
+            model="fake-deepseek",
+            provider="deepseek",
+            transport=FakeTransport([coverage, extraction], calls),
+        )
         events: list[str] = []
-        confirmed_narrative = candidate("持续识别车辆并维护跨帧身份").natural_language_template
+        confirmed_narrative = cand.natural_language_template
         result = agent.analyze(confirmed_narrative, progress=lambda event, _details: events.append(event))
 
-        self.assertEqual(calls, ["call_1", "call_2"])
+        self.assertEqual(calls, ["CoverageResult", "ExtractionResult"])
         self.assertEqual(
             [item.tool for item in result.tool_trace if item.status == "completed"],
             ["lookup_gal_catalog", "lookup_jd_catalog"],

@@ -28,6 +28,13 @@ class DomainTemplateTests(unittest.TestCase):
             task_title="油田管廊缺陷巡检",
             scenario_summary="油气巡检",
             coverage=[{"cell": "A5xL2", "role": "primary", "responsibilities": ["检测"]}],
+            runtime_dependencies=[{
+                "dependency_id": "external_executor",
+                "provider": "executor",
+                "responsibilities": ["执行固定航段"],
+                "scored": True,
+                "status": "proposed",
+            }],
             jd_edits=[
                 {"slot_id": "jd-enum", "name": "天气", "binding_mode": "enum", "allowed_values": ["晴", "阴"]},
                 {"slot_id": "jd-fixed", "name": "高度", "binding_mode": "fixed", "value": "80m"},
@@ -35,6 +42,8 @@ class DomainTemplateTests(unittest.TestCase):
             ],
         )
         self.assertEqual(domain["template_id"], "domain_tpl")
+        self.assertFalse(domain["runtime_dependencies"][0]["scored"])
+        self.assertEqual(domain["interfaces"]["executor_responsibilities"], ["执行固定航段"])
         artifact = generate_instance(domain, 7)
         self.assertEqual(artifact["artifact_type"], "task_instance")
         self.assertTrue(artifact["instance_id"].startswith("domain_tpl-s7"))
@@ -45,6 +54,10 @@ class DomainTemplateTests(unittest.TestCase):
         self.assertEqual(values["jd-fixed"], "80m")
         self.assertGreaterEqual(values["jd-range"], 20)
         self.assertLessEqual(values["jd-range"], 100)
+        self.assertEqual(
+            artifact["executor_profile"]["extensions"]["runtime_dependencies"],
+            domain["runtime_dependencies"],
+        )
 
     def test_normalize_empty_phases(self) -> None:
         raw = {

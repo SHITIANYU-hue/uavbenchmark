@@ -1,4 +1,4 @@
-"""Local HTTP server for pipeline.html and the DeepSeek Config Agent."""
+"""Local HTTP server for pipeline.html and selectable Config Agent providers."""
 
 from __future__ import annotations
 
@@ -36,7 +36,7 @@ RUN_STATUS_LOCK = threading.Lock()
 
 def _safe_exception_text(exc: Exception) -> str:
     text = f"{type(exc).__name__}: {exc}"
-    for name in ("DEEPSEEK_API_KEY",):
+    for name in ("DEEPSEEK_API_KEY", "GEMINI_API_KEY"):
         secret = os.environ.get(name)
         if secret:
             text = text.replace(secret, "<redacted>")
@@ -64,12 +64,53 @@ def _log_event(run_id: str, event: str, details: dict[str, Any] | None = None) -
     print(f"[{run_id}] {event}{detail_text}", flush=True)
 
 
-def _model_for_tier(tier: str) -> str:
-    if tier == "pro":
-        return os.environ.get("DEEPSEEK_PRO_MODEL", "deepseek-chat")
-    if tier == "lite":
-        return os.environ.get("DEEPSEEK_LITE_MODEL", "deepseek-chat")
-    return os.environ.get("DEEPSEEK_FLASH_MODEL", "deepseek-chat")
+PROVIDER_CONFIG = {
+    "deepseek": {
+        "label": "DeepSeek",
+        "key_env": "DEEPSEEK_API_KEY",
+        "models": {
+            "flash": ("DEEPSEEK_FLASH_MODEL", "deepseek-chat"),
+            "lite": ("DEEPSEEK_LITE_MODEL", "deepseek-chat"),
+            "pro": ("DEEPSEEK_PRO_MODEL", "deepseek-chat"),
+        },
+    },
+    "gemini": {
+        "label": "Gemini",
+        "key_env": "GEMINI_API_KEY",
+        "models": {
+            "flash": ("GEMINI_FLASH_MODEL", "gemini-3.5-flash"),
+            "lite": ("GEMINI_LITE_MODEL", "gemini-3.1-flash-lite"),
+            "pro": ("GEMINI_PRO_MODEL", "gemini-2.5-pro"),
+        },
+    },
+}
+
+
+def _model_for_tier(provider: str, tier: str) -> str:
+    env_name, fallback = PROVIDER_CONFIG[provider]["models"][tier]
+    return os.environ.get(env_name, fallback)
+
+
+def _provider_health() -> dict[str, dict[str, Any]]:
+    return {
+        provider: {
+            "label": config["label"],
+            "ready": bool(os.environ.get(config["key_env"])),
+            "models": {tier: _model_for_tier(provider, tier) for tier in ("flash", "lite", "pro")},
+        }
+        for provider, config in PROVIDER_CONFIG.items()
+    }
+
+
+def _default_provider(providers: dict[str, dict[str, Any]] | None = None) -> str:
+    providers = providers or _provider_health()
+    requested = os.environ.get("UAV_LLM_PROVIDER", "deepseek").strip().lower()
+    if requested in PROVIDER_CONFIG and providers[requested]["ready"]:
+        return requested
+    for provider in ("deepseek", "gemini"):
+        if providers[provider]["ready"]:
+            return provider
+    return requested if requested in PROVIDER_CONFIG else "deepseek"
 
 
 class PipelineRequestHandler(SimpleHTTPRequestHandler):
@@ -94,12 +135,16 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
         parsed = urlparse(self.path)
         if parsed.path == "/api/health":
             catalog = load_reference_catalog()
+            providers = _provider_health()
+            default_provider = _default_provider(providers)
             self._json(HTTPStatus.OK, {
-                "status": "ready" if os.environ.get("DEEPSEEK_API_KEY") else "missing_api_key",
-                "agent_ready": bool(os.environ.get("DEEPSEEK_API_KEY")),
-                "flash_model": _model_for_tier("flash"),
-                "lite_model": _model_for_tier("lite"),
-                "pro_model": _model_for_tier("pro"),
+                "status": "ready" if any(item["ready"] for item in providers.values()) else "missing_api_key",
+                "agent_ready": any(item["ready"] for item in providers.values()),
+                "default_provider": default_provider,
+                "providers": providers,
+                "flash_model": providers[default_provider]["models"]["flash"],
+                "lite_model": providers[default_provider]["models"]["lite"],
+                "pro_model": providers[default_provider]["models"]["pro"],
                 "catalog_version": catalog["catalog_version"],
                 "catalog_scope": catalog["scope"],
                 "catalog_counts": catalog["counts"],
@@ -229,6 +274,7 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                     task_title=str(candidate.get("task_title") or payload.get("task_title") or "domain_tpl"),
                     scenario_summary=str(candidate.get("scenario_summary") or ""),
                     coverage=candidate.get("coverage_candidates") or [],
+                    runtime_dependencies=candidate.get("runtime_dependencies") or [],
                     jd_edits=jd_edits,
                 )
                 self._json(HTTPStatus.OK, {"domain_template": domain})
@@ -245,6 +291,7 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                         task_title=str(candidate.get("task_title") or "domain_tpl"),
                         scenario_summary=str(candidate.get("scenario_summary") or ""),
                         coverage=candidate.get("coverage_candidates") or [],
+                        runtime_dependencies=candidate.get("runtime_dependencies") or [],
                         jd_edits=payload.get("jd_edits") or candidate.get("jd_candidates") or [],
                     )
                 if not isinstance(template, dict):
@@ -329,11 +376,15 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                 })
                 return
 
-            api_key = os.environ.get("DEEPSEEK_API_KEY")
+            provider = str(payload.get("provider") or _default_provider()).strip().lower()
+            if provider not in PROVIDER_CONFIG:
+                raise ValueError("provider must be deepseek or gemini")
+            api_key = os.environ.get(PROVIDER_CONFIG[provider]["key_env"])
             if not api_key:
                 self._json(HTTPStatus.SERVICE_UNAVAILABLE, {
                     "error": "missing_api_key",
-                    "message": "本地 Agent 服务未设置 DEEPSEEK_API_KEY。",
+                    "provider": provider,
+                    "message": f"本地 Agent 服务未设置 {PROVIDER_CONFIG[provider]['key_env']}。",
                 })
                 return
             tier = str(payload.get("model_tier") or "flash").lower()
@@ -341,12 +392,13 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                 raise ValueError("model_tier must be flash, lite, or pro")
             requested_run_id = str(payload.get("run_id") or "")
             run_id = requested_run_id if re.fullmatch(r"agent-[a-z0-9-]{6,64}", requested_run_id) else f"agent-{uuid.uuid4().hex[:12]}"
-            model = _model_for_tier(tier)
+            model = _model_for_tier(provider, tier)
             operation = {
                 "/api/config-agent/expand": "narrative_expand",
                 "/api/config-agent/fill-tbd": "fill_tbd_domains",
             }.get(self.path, "classification_and_extraction")
             _log_event(run_id, "request_received", {
+                "provider": provider,
                 "model": model,
                 "scenario_id": scenario_id,
                 "operation": operation,
@@ -357,7 +409,7 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                 target_coverage = payload.get("target_coverage") or []
                 if not isinstance(target_coverage, list):
                     raise ValueError("target_coverage must be a list of A×L cell IDs")
-                narrative_agent = NarrativeAgent(api_key=api_key, model=model)
+                narrative_agent = NarrativeAgent(api_key=api_key, model=model, provider=provider)
                 narrative_result = narrative_agent.expand(
                     task_description,
                     fixed_scenario=fixed_scenario,
@@ -384,7 +436,7 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                 resolved_slots = payload.get("resolved_slots") or []
                 if not isinstance(tbd_slots, list) or not tbd_slots:
                     raise ValueError("tbd_slots must be a non-empty list")
-                agent = ConfigAgent(api_key=api_key, model=model)
+                agent = ConfigAgent(api_key=api_key, model=model, provider=provider)
                 fill_result = agent.fill_tbd_domains(
                     task_description,
                     tbd_slots=tbd_slots,
@@ -414,7 +466,7 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
             preferred_coverage = payload.get("preferred_coverage") or payload.get("target_coverage") or []
             if not isinstance(preferred_coverage, list):
                 raise ValueError("preferred_coverage must be a list of A×L cell IDs")
-            agent = ConfigAgent(api_key=api_key, model=model)
+            agent = ConfigAgent(api_key=api_key, model=model, provider=provider)
             result = agent.analyze(
                 task_description,
                 fixed_scenario=fixed_scenario,
@@ -462,7 +514,7 @@ def main() -> None:
     port = int(os.environ.get("UAV_AGENT_PORT", "8765"))
     server = ThreadingHTTPServer((host, port), PipelineRequestHandler)
     print(f"UAV Benchmark Config Agent: http://{host}:{port}")
-    print("API Key is read from DEEPSEEK_API_KEY and is never sent to pipeline.html.")
+    print("API Keys are read from DEEPSEEK_API_KEY / GEMINI_API_KEY and are never sent to pipeline.html.")
     print(f"Event log: {LOG_PATH.relative_to(ROOT)}")
     try:
         server.serve_forever()

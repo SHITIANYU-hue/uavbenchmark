@@ -913,7 +913,7 @@
         currentStage: 0, maxUnlocked: 0, completed: new Set(),
         serverStatus: "checking", healthInfo: null, catalogSummary: null,
         scenarioRegistry: null, selectedScenarioId: SCENARIO_NONE, fixedScenario: null,
-        taskPrompt: "", modelTier: "flash",
+        taskPrompt: "", llmProvider: "deepseek", modelTier: "flash",
         targetLevels: defaultTargetLevels(),
         narrativeStatus: "idle", narrativeRunId: null, narrativeDraft: "", narrativeOriginal: "", narrativeError: null,
         agentStatus: "idle", agentPhase: "idle", agentRunId: null, agentResult: null, agentError: null,
@@ -1008,19 +1008,29 @@
       document.getElementById("workspaceState").textContent = st || "";
     }
 
+    function runtimeSnapshot() {
+      return {
+        serverStatus: state.serverStatus, healthInfo: state.healthInfo, catalogSummary: state.catalogSummary,
+        scenarioRegistry: state.scenarioRegistry, llmProvider: state.llmProvider, modelTier: state.modelTier,
+      };
+    }
+
     async function savePipeline() {
       try {
         const r = await fetch("/api/pipeline/save", {method: "POST", headers: {"Content-Type": "application/json"},
           body: JSON.stringify({
-            selectedScenarioId: state.selectedScenarioId, taskPrompt: state.taskPrompt, modelTier: state.modelTier,
+            selectedScenarioId: state.selectedScenarioId, taskPrompt: state.taskPrompt,
+            llmProvider: state.llmProvider, modelTier: state.modelTier,
             targetLevels: state.targetLevels,
-            narrativeDraft: state.narrativeDraft, agentResult: state.agentResult, domainEdits: state.domainEdits,
+            narrativeRunId: state.narrativeRunId, narrativeDraft: state.narrativeDraft,
+            agentRunId: state.agentRunId, agentResult: state.agentResult, domainEdits: state.domainEdits,
             instanceMode: state.instanceMode, instanceSeed: state.instanceSeed, instanceBatchSeeds: state.instanceBatchSeeds,
             instanceRandomCount: state.instanceRandomCount, instanceRandomSeeds: state.instanceRandomSeeds,
             instanceResult: state.instanceResult, instanceResults: state.instanceResults,
+            currentStage: state.currentStage, maxUnlocked: state.maxUnlocked,
             completedSteps: Array.from(state.completed), stageSchema: 5, savedAt: new Date().toISOString(),
           })});
-        state.saveNotice = r.ok ? "已保存 ✓" : "保存失败";
+        state.saveNotice = r.ok ? "已保存检查点 ✓" : "保存失败";
       } catch(e) { state.saveNotice = "保存失败: " + e; }
       render();
     }
@@ -1030,16 +1040,26 @@
         const r = await fetch("/api/pipeline/load", {cache: "no-store"});
         if (!r.ok) { state.saveNotice = "没有已保存的进度"; render(); return; }
         const d = await r.json();
-        if (d.selectedScenarioId !== undefined) applyScenarioSelection(d.selectedScenarioId || SCENARIO_NONE);
+        const runtime = runtimeSnapshot();
+        state = Object.assign(initialState(), runtime);
+        state.selectedScenarioId = d.selectedScenarioId || SCENARIO_NONE;
+        applyScenarioSelection(state.selectedScenarioId);
         if (d.taskPrompt !== undefined) state.taskPrompt = d.taskPrompt;
+        if (d.llmProvider) state.llmProvider = d.llmProvider;
         if (d.modelTier) state.modelTier = d.modelTier;
         if (d.targetLevels && typeof d.targetLevels === "object" && Object.keys(d.targetLevels).length) {
           state.targetLevels = d.targetLevels;
         } else if (!Object.keys(state.targetLevels || {}).length) {
           state.targetLevels = defaultTargetLevels();
         }
-        if (d.narrativeDraft) { state.narrativeDraft = d.narrativeDraft; state.narrativeStatus = "done"; }
-        if (d.agentResult) { state.agentResult = d.agentResult; state.agentStatus = "done"; state.agentPhase = "done"; }
+        if (d.narrativeDraft) {
+          state.narrativeRunId = d.narrativeRunId || null;
+          state.narrativeDraft = d.narrativeDraft; state.narrativeOriginal = d.narrativeDraft; state.narrativeStatus = "done";
+        }
+        if (d.agentResult) {
+          state.agentRunId = d.agentRunId || null;
+          state.agentResult = d.agentResult; state.agentStatus = "done"; state.agentPhase = "done";
+        }
         if (d.domainEdits) state.domainEdits = d.domainEdits;
         if (d.instanceMode) state.instanceMode = d.instanceMode;
         if (d.instanceSeed !== undefined) state.instanceSeed = d.instanceSeed;
@@ -1048,18 +1068,19 @@
         if (Array.isArray(d.instanceRandomSeeds)) state.instanceRandomSeeds = d.instanceRandomSeeds;
         if (d.instanceResult) state.instanceResult = d.instanceResult;
         if (d.instanceResults) state.instanceResults = d.instanceResults;
-        if (d.completedSteps) {
-          state.completed = migrateCompletedSteps(d.completedSteps, d.stageSchema, !!d.agentResult);
-          state.maxUnlocked = Math.max(state.maxUnlocked, ...Array.from(state.completed), 0);
-          if (state.agentStatus === "done") state.maxUnlocked = Math.max(state.maxUnlocked, 2);
-        }
-        state.saveNotice = "已加载 ✓";
+        state.completed = migrateCompletedSteps(d.completedSteps || [], d.stageSchema, !!d.agentResult);
+        const completedArr = Array.from(state.completed);
+        const computedUnlocked = completedArr.length ? Math.min(Math.max.apply(null, completedArr) + 1, STAGES.length - 1) : 0;
+        state.maxUnlocked = Number.isInteger(d.maxUnlocked) ? Math.min(Math.max(d.maxUnlocked, computedUnlocked), STAGES.length - 1) : computedUnlocked;
+        if (state.agentStatus === "done") state.maxUnlocked = Math.max(state.maxUnlocked, 2);
+        state.currentStage = Number.isInteger(d.currentStage) ? Math.min(Math.max(d.currentStage, 0), state.maxUnlocked) : state.maxUnlocked;
+        state.saveNotice = "已加载检查点 ✓";
       } catch(e) { state.saveNotice = "加载失败: " + e; }
       render();
     }
 
     function saveBar() {
-      return '<div class="action-row" style="margin-bottom:16px"><span class="action-note">' + escapeHtml(state.saveNotice || "随时保存，重启后加载继续") + '</span>'
+      return '<div class="action-row" style="margin-bottom:16px"><span class="action-note">' + escapeHtml(state.saveNotice || "浏览器自动暂存；保存可建立手动检查点") + '</span>'
         + '<div><button class="btn" type="button" onclick="loadPipeline()">加载</button> '
         + '<button class="btn primary" type="button" onclick="savePipeline()">保存</button></div></div>';
     }
@@ -1374,6 +1395,7 @@
           body: JSON.stringify({
             task_description: state.taskPrompt,
             scenario_id: effectiveScenarioId(),
+            provider: state.llmProvider,
             model_tier: state.modelTier,
             run_id: state.narrativeRunId,
             target_coverage: cells,
@@ -1452,6 +1474,7 @@
           body: JSON.stringify({
             task_description: state.narrativeDraft,
             scenario_id: effectiveScenarioId(),
+            provider: state.llmProvider,
             model_tier: state.modelTier,
             run_id: state.agentRunId,
             source_task_description: state.taskPrompt,
@@ -1487,7 +1510,7 @@
           + '<button class="btn" type="button" onclick="resetNarrativeForCoverage()">重选 coverage 再扩充</button>'
           + '<button class="btn primary" onclick="confirmNar()"'+ (state.agentStatus === "running" ? " disabled" : "") + '>确认文案 → 跑分类</button></div>';
       } else {
-        const ready = state.serverStatus === "ready" && selectedCoverageCells().length > 0;
+        const ready = providerReady() && selectedCoverageCells().length > 0;
         h += '<button class="btn primary" onclick="runNarrative()"' + (ready ? "" : " disabled") + ">运行文案扩充</button>";
         if (!selectedCoverageCells().length) h += '<p class="intro" style="margin-top:8px">请先在上方选择至少一个 A×L。</p>';
         if (state.narrativeError) h += '<div class="choice-card dependency selected" style="margin-top:8px"><b>错误</b><p>' + escapeHtml(state.narrativeError) + "</p></div>";
@@ -1688,6 +1711,7 @@
           body: JSON.stringify({
             task_description: narrative,
             scenario_id: effectiveScenarioId(),
+            provider: state.llmProvider,
             model_tier: state.modelTier,
             run_id: uid("agent-fill-"),
             tbd_slots: tbds.map(e => ({slot_id: e.slot_id, name: e.name, source_note: "TBD"})),
@@ -1747,7 +1771,7 @@
       }
       h += '<div class="action-row" style="margin:0 0 12px"><span class="action-note">当前 TBD ' + tbdCount + ' 个</span>'
         + '<button class="btn" type="button" onclick="fillTbdDomains()"' +
-        (state.fillTbdLoading || tbdCount === 0 || state.serverStatus !== "ready" ? " disabled" : "") + ">" +
+        (state.fillTbdLoading || tbdCount === 0 || !providerReady() ? " disabled" : "") + ">" +
         (state.fillTbdLoading ? "智能填写中..." : "智能填写 TBD") + "</button></div>";
       if (state.fillTbdError) h += '<div class="choice-card dependency selected" style="margin-bottom:10px"><b>智能填写失败</b><p>' + escapeHtml(state.fillTbdError) + "</p></div>";
       if (state.fillTbdNotice) h += '<div class="choice-card selected" style="margin-bottom:10px"><b>' + escapeHtml(state.fillTbdNotice) + "</b></div>";
@@ -1823,6 +1847,7 @@
         scenario_summary: c.scenario_summary || "",
         natural_language_template: narrativeText(),
         coverage: c.coverage_candidates || [],
+        runtime_dependencies: c.runtime_dependencies || [],
         jd_slots: getEdits().map(e => {
           const b = {mode: e.binding_mode, status: "verified"};
           if (e.binding_mode === "fixed") b.value = e.value;
@@ -2109,25 +2134,47 @@
       return pill(status || "idle", "tbd");
     }
 
+    function providerOptions() {
+      const providers = (state.healthInfo && state.healthInfo.providers) || {};
+      return ["deepseek", "gemini"].map(id => ({
+        id: id,
+        label: (providers[id] && providers[id].label) || (id === "gemini" ? "Gemini" : "DeepSeek"),
+        ready: !!(providers[id] && providers[id].ready),
+      }));
+    }
+
+    function selectedProviderInfo() {
+      return state.healthInfo && state.healthInfo.providers && state.healthInfo.providers[state.llmProvider];
+    }
+
+    function providerReady() {
+      const info = selectedProviderInfo();
+      return state.serverStatus === "ready" && !!(info && info.ready);
+    }
+
     function connectionMeta() {
-      if (state.serverStatus === "ready") return { label: "connected", cls: "given", detail: "DeepSeek API Key 已就绪" };
-      if (state.serverStatus === "missing_api_key") return { label: "no_api_key", cls: "tbd", detail: "本地服务在线，但未设置 DEEPSEEK_API_KEY" };
+      const info = selectedProviderInfo();
+      if (info && info.ready) return { label: "connected", cls: "given", detail: info.label + " API Key 已就绪" };
+      if (state.serverStatus === "missing_api_key" || info) {
+        return { label: "no_api_key", cls: "tbd", detail: "本地服务在线，但 " + ((info && info.label) || state.llmProvider) + " 尚未配置 Key" };
+      }
       if (state.serverStatus === "offline") return { label: "offline", cls: "risk", detail: "无法连接本地 Agent 服务" };
       return { label: "checking", cls: "proposed", detail: "正在检查连接…" };
     }
 
     function modelOptions() {
-      const hi = state.healthInfo || {};
+      const hi = selectedProviderInfo() || {};
+      const models = hi.models || {};
       return [
-        { tier: "flash", label: "Flash", id: hi.flash_model || "deepseek-chat" },
-        { tier: "lite", label: "Lite", id: hi.lite_model || "deepseek-chat" },
-        { tier: "pro", label: "Pro", id: hi.pro_model || "deepseek-chat" },
+        { tier: "flash", label: "Flash", id: models.flash || "未配置" },
+        { tier: "lite", label: "Lite", id: models.lite || "未配置" },
+        { tier: "pro", label: "Pro", id: models.pro || "未配置" },
       ];
     }
 
     function selectedModelId() {
       const hit = modelOptions().find(m => m.tier === state.modelTier);
-      return (hit && hit.id) || "deepseek-chat";
+      return (hit && hit.id) || "未配置";
     }
 
     function syncContextCollapsed() {
@@ -2151,6 +2198,7 @@
       const tbdCount = state.agentResult && state.agentResult.candidate
         ? (state.agentResult.candidate.jd_candidates || []).filter(j => (j.binding_mode || "") === "TBD").length : 0;
       const lastModel = state.agentResult && state.agentResult.model;
+      const lastProvider = state.agentResult && state.agentResult.provider;
 
       let h = '<div class="context-block"><div class="context-label">Server</div><div class="context-value">' + pill(state.serverStatus, state.serverStatus === "ready" ? "given" : "tbd") + '</div></div>';
       if (state.catalogSummary) h += '<div class="context-block"><div class="context-label">Catalog</div><div class="context-value">' + state.catalogSummary.counts.abilities + "A · " + state.catalogSummary.counts.gal_cells + " A×L · " + state.catalogSummary.counts.jd_fields + " JD</div></div>";
@@ -2158,16 +2206,23 @@
       h += '<div class="context-block"><div class="context-label">LLM Analysis</div><div class="context-value" style="display:grid;gap:8px">';
       h += '<div>Connection ' + pill(conn.label, conn.cls) +
         '<div class="action-note" style="margin-top:4px">' + escapeHtml(conn.detail) + "</div></div>";
+      h += '<div><div class="field-label" style="margin:0 0 5px"><label>Provider</label><span>按本机 Key 可用</span></div>';
+      h += '<select id="providerSelect" class="case-select" style="width:100%;max-width:none;min-height:34px;font-size:11px"' + (busy ? " disabled" : "") + '>';
+      providerOptions().forEach(p => {
+        h += '<option value="' + p.id + '"' + (p.id === state.llmProvider ? " selected" : "") + ">" +
+          escapeHtml(p.label + (p.ready ? " · ready" : " · no key")) + "</option>";
+      });
+      h += "</select></div>";
       h += '<div><div class="field-label" style="margin:0 0 5px"><label>模型</label><span>' +
         escapeHtml(selectedModelId()) + "</span></div>";
       h += '<select id="modelTierSelect" class="case-select" style="width:100%;max-width:none;min-height:34px;font-size:11px"' +
-        (busy || state.serverStatus !== "ready" ? " disabled" : "") + ">";
+        (busy || !providerReady() ? " disabled" : "") + ">";
       modelOptions().forEach(m => {
         h += '<option value="' + m.tier + '"' + (m.tier === state.modelTier ? " selected" : "") + ">" +
           escapeHtml(m.label + " · " + m.id) + "</option>";
       });
       h += "</select>";
-      if (lastModel) h += '<div class="action-note" style="margin-top:4px">上次实际调用 · <span class="mono">' + escapeHtml(lastModel) + "</span></div>";
+      if (lastModel) h += '<div class="action-note" style="margin-top:4px">上次实际调用 · <span class="mono">' + escapeHtml((lastProvider || state.llmProvider) + " / " + lastModel) + "</span></div>";
       h += "</div>";
       h += '<div>STEP 2 文案扩充 ' + llmPhasePill(narStatus) +
         (state.narrativeRunId ? ' <span class="mono" style="font-size:9px;color:var(--muted)">' + escapeHtml(state.narrativeRunId) + "</span>" : "") + "</div>";
@@ -2194,13 +2249,24 @@
       }
       h += '<div class="context-block"><div class="context-label">Progress</div><div class="progress-track"><div class="progress-fill" style="width:' + (state.completed.size / STAGES.length * 100) + '%"></div></div><div class="action-note">' + state.completed.size + '/' + STAGES.length + '</div></div>';
       document.getElementById("contextPanel").innerHTML = h;
+      const ps = document.getElementById("providerSelect");
+      if (ps) ps.addEventListener("change", () => { state.llmProvider = ps.value; render(); });
       const ms = document.getElementById("modelTierSelect");
       if (ms) ms.addEventListener("change", () => { state.modelTier = ms.value; render(); });
     }
 
     function render() { renderStageRail(); renderContext(); [renderStep1, renderStep2a, renderStep2b, renderStep3, renderStep4][state.currentStage](); persistState(); }
 
-    document.getElementById("resetButton").addEventListener("click", () => { if (pollTimer) clearTimeout(pollTimer); state = initialState(); render(); init(); });
+    document.getElementById("resetButton").addEventListener("click", () => {
+      if (!window.confirm("开始一个新任务？当前页面进度会清空，但手动保存的检查点仍可通过「加载」恢复。")) return;
+      if (pollTimer) clearTimeout(pollTimer);
+      const runtime = runtimeSnapshot();
+      localStorage.removeItem(STORAGE_KEY);
+      state = Object.assign(initialState(), runtime);
+      applyScenarioSelection(SCENARIO_NONE);
+      state.saveNotice = "已开始新任务；手动检查点仍可加载";
+      render();
+    });
     document.getElementById("contextToggle").addEventListener("click", () => {
       state.contextCollapsed = !state.contextCollapsed;
       render();
@@ -2211,24 +2277,13 @@
         const h = await (await fetch("/api/health", {cache:"no-store"})).json();
         state.healthInfo = h;
         state.serverStatus = h.agent_ready ? "ready" : "missing_api_key";
+        if (!h.providers || !h.providers[state.llmProvider] || (!h.providers[state.llmProvider].ready && h.default_provider)) {
+          state.llmProvider = h.default_provider || "deepseek";
+        }
         state.catalogSummary = await (await fetch("/api/catalog", {cache:"no-store"})).json();
         const reg = await (await fetch("/api/scenarios", {cache:"no-store"})).json(); state.scenarioRegistry = reg;
         applyScenarioSelection(state.selectedScenarioId || SCENARIO_NONE);
-        const sv = await fetch("/api/pipeline/load", {cache:"no-store"});
-        if (sv.ok) {
-          const d = await sv.json();
-          if (d.agentResult && !state.agentResult) {
-            if (d.selectedScenarioId !== undefined) applyScenarioSelection(d.selectedScenarioId || SCENARIO_NONE);
-            if (d.taskPrompt) state.taskPrompt = d.taskPrompt;
-            if (d.modelTier) state.modelTier = d.modelTier;
-            if (d.narrativeDraft) { state.narrativeDraft = d.narrativeDraft; state.narrativeStatus = "done"; }
-            state.agentResult = d.agentResult; state.agentStatus = "done"; state.agentPhase = "done";
-            if (d.domainEdits) state.domainEdits = d.domainEdits;
-            state.completed = migrateCompletedSteps(d.completedSteps || [0, 1], d.stageSchema, true);
-            state.maxUnlocked = Math.max(...Array.from(state.completed), 2, 0);
-            state.saveNotice = "已自动加载";
-          }
-        }
+        // 手动检查点仅通过「加载」恢复；浏览器草稿已由 loadState() 接管
       } catch(e) { state.serverStatus = "offline"; }
       render();
     }
