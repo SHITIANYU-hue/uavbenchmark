@@ -26,6 +26,24 @@ const DEFAULT_TARGET_LEVELS = {
 
 function defaultTargetLevels() { return Object.assign({}, DEFAULT_TARGET_LEVELS); }
 
+// 校验码 → 中文标题/说明。后端多数消息已是中文（issueMessage 会直接用），
+// 这里主要为标题以及少量英文回退提供词典。
+const ISSUE_ZH = {
+  CATALOG_VERSION_MISMATCH: { title: "目录版本不一致", msg: "候选结果使用的目录版本与当前审定字典不一致。" },
+  DUPLICATE_GAL_CELL: { title: "重复 A×L", msg: "Coverage 中出现了重复的 A×L 单元。" },
+  UNKNOWN_GAL_CELL: { title: "未知 A×L", msg: "该 A×L 不在当前审定目录中。" },
+  INCOMPLETE_CUMULATIVE_RESPONSIBILITY: { title: "累计责任不完整", msg: "需为每个继承等级各写一条责任（如 L3 含 L1–L3）。" },
+  EVIDENCE_NOT_VERBATIM: { title: "证据非原文", msg: "证据摘录需是任务/场景文案中的原文；若为推断请改用 proposed。" },
+  HUMAN_VALUE_MISSING_SOURCE: { title: "缺少来源说明", msg: "人工新增或修改的值需要填写来源说明。" },
+  UNKNOWN_JD_SLOT: { title: "未知 JD", msg: "该 JD 槽位不在当前审定目录中。" },
+  JD_NAME_MISMATCH: { title: "JD 名称不符", msg: "JD 名称与规范名称不一致。" },
+  DUPLICATE_JD_SLOT: { title: "重复 JD", msg: "JD 候选中出现了重复的 slot ID。" },
+  RUNTIME_DEPENDENCY_MARKED_SCORED: { title: "依赖被计分", msg: "运行时依赖必须保持不计分。" },
+  MISSING_REQUIRED_JD_SLOT: { title: "缺少必填 JD", msg: "缺少必填 JD 槽位；未知时应以 TBD 输出。" },
+  INTERNAL_LABEL_IN_NARRATIVE: { title: "文案含内部标识", msg: "文案/模版不得出现 A×L、GAL、JD 标识。" },
+  INCOMPLETE_TEMPLATE_STRUCTURE: { title: "结构不完整", msg: "文案/模版段落结构不完整。" },
+};
+
 const WORLD_SIDE_JD = new Set([
   "jd-0.2", "jd-0.3", "jd-0.4", "jd-0.8", "jd-0.9",
   "jd-2.2",
