@@ -54,7 +54,7 @@ function renderStep2a() {
   setHeader(1, state.completed.has(1) ? "已完成" : state.agentStatus === "done" ? "A×L 待确认" : state.narrativeStatus === "done" ? "文案待确认" : "等待运行");
   const hasN = state.narrativeStatus === "done", hasA = state.agentStatus === "done";
   const canEditCov = !hasN && state.narrativeStatus !== "running";
-  let h = saveBar() + '<p class="intro">STEP 2：选目标 Coverage 并确认 → 扩充文案 → 确认文案后跑 A×L 分类。完成后进入 STEP 3 看 JD。</p>';
+  let h = saveBar() + '<p class="intro">STEP 2：选目标 Coverage 并确认 → 扩充文案（自动保存）→ 确认文案后只跑 A×L 分类（按已选 A×L 分批进行，可看进度）。JD 域提取放到 STEP 3 单独运行。</p>';
   h += renderCoveragePickerHtml({ editable: canEditCov });
   h += '<div class="field-label" style="margin-top:10px"><label>① 文案扩充</label></div>';
   if (state.narrativeStatus === "running") h += '<div class="choice-card selected"><b>调用中...</b></div>';
@@ -76,10 +76,15 @@ function renderStep2a() {
       + "确认 Coverage → 运行文案扩充</button></div>";
     if (state.narrativeError) h += '<div class="choice-card dependency selected" style="margin-top:8px"><b>错误</b><p>' + escapeHtml(state.narrativeError) + "</p></div>";
   }
-  if (state.agentStatus === "running" || hasA) {
+  if (state.agentStatus === "running") {
+    const cp = state.coverageProgress;
+    const cpNote = cp && cp.total > 1 ? ("A×L 分类调用中…第 " + cp.chunk + "/" + cp.total + " 批") : "A×L 分类调用中...";
+    const cpBody = cp && cp.total > 1
+      ? "已选 A×L 分批分类，可看到进度并降低单次返回被截断的风险。"
+      : "按目标 coverage 与文案确定计分 A×L 与责任边界。";
     h += '<div class="field-label" style="margin-top:16px"><label>② A×L 分类</label></div>';
-    h += renderSubstepCard("STEP 2", "A×L 分类", "按目标 coverage 与文案确定计分 A×L 与责任边界", phaseStatus("coverage"));
-    h += renderSubstepCard("STEP 3", "JD 域提取", "后台同步准备，结果在 STEP 3 查看", phaseStatus("extraction"));
+    h += '<div class="choice-card selected" style="margin-top:8px"><b>' + escapeHtml(cpNote) + '</b>'
+      + '<p>' + escapeHtml(cpBody) + '</p></div>';
   }
   if (hasA) {
     const c = state.agentResult.candidate;
@@ -90,8 +95,8 @@ function renderStep2a() {
     if (issueIdx.other.length) {
       h += renderInlineHints(issueIdx.other.slice(0, 8), { title: "其他校验 · " + issueIdx.other.length + " 条" });
     }
-    h += '<div class="action-row" style="margin-top:14px"><span class="action-note">确认 A×L 后进入 STEP 3 查看 JD 变量域</span>'
-      + '<button class="btn primary" onclick="completeStage(1)">确认 → STEP 3</button></div>';
+    h += '<div class="action-row" style="margin-top:14px"><span class="action-note">确认 A×L 后进入 STEP 3，单独运行 JD 域提取</span>'
+      + '<button class="btn primary" onclick="completeStage(1)">确认 A×L → STEP 3</button></div>';
   }
   if (state.agentError) h += '<div class="choice-card dependency selected" style="margin-top:8px"><b>分类错误</b><p>' + escapeHtml(state.agentError) + "</p></div>";
   document.getElementById("workspaceBody").innerHTML = h;
@@ -101,20 +106,43 @@ function renderStep2a() {
 }
 
 function renderStep2b() {
-  setHeader(2, state.completed.has(2) ? "已完成" : state.agentStatus === "done" ? "待确认" : "等待 STEP 2");
-  const hasA = state.agentStatus === "done" && state.agentResult && state.agentResult.candidate;
-  let h = saveBar() + '<p class="intro">STEP 3：查看并确认 JD 变量域（由 STEP 2 的 coverage 提取）。TBD 可在 STEP 4 智能填写。</p>';
-  if (state.agentStatus === "running") {
-    h += renderSubstepCard("STEP 3", "JD 域提取", "正在根据 A×L 提取 JD 变量域…", phaseStatus("extraction"));
-  } else if (!hasA) {
+  const hasCoverage = state.agentResult && state.agentResult.candidate && (state.agentResult.candidate.coverage_candidates || []).length;
+  const hasJd = state.extractionStatus === "done" && state.agentResult && state.agentResult.candidate && (state.agentResult.candidate.jd_candidates || []).length;
+  setHeader(2, state.completed.has(2) ? "已完成" : hasJd ? "待确认" : state.extractionStatus === "running" ? "提取中" : hasCoverage ? "待运行提取" : "等待 STEP 2");
+  let h = saveBar() + '<p class="intro">STEP 3：在这里单独运行 JD 域提取（由 STEP 2 的 coverage 决定）。提取分批进行，避免一次返回过长被截断；失败可直接重试。</p>';
+  if (!hasCoverage) {
     h += '<div class="choice-card dependency selected"><b>尚未完成 STEP 2</b><p>请先在 STEP 2 完成文案确认与 A×L 分类。</p></div>';
     h += '<div class="action-row" style="margin-top:12px"><button class="btn" type="button" onclick="goToStage(1)">← 回 STEP 2</button></div>';
-  } else {
+    document.getElementById("workspaceBody").innerHTML = h;
+    return;
+  }
+  const cov = state.agentResult.candidate.coverage_candidates || [];
+  h += '<div class="field-label" style="margin-top:8px"><label>来自 STEP 2 的 A×L（' + cov.length + '）</label></div>';
+  h += '<div class="coverage-chips">' + cov.map(x => '<span class="lvl-pill ' + cellLevelClass(x.cell) + '">' + escapeHtml(x.cell) + "</span>").join("") + '</div>';
+
+  if (state.extractionStatus === "running") {
+    const pr = state.extractionProgress;
+    const note = pr && pr.total ? ("正在提取 JD 变量域…第 " + pr.chunk + "/" + pr.total + " 批") : "正在根据 A×L 提取 JD 变量域…";
+    h += '<div class="choice-card selected" style="margin-top:12px"><b>' + escapeHtml(note) + '</b>'
+      + '<p>分批调用可避免单次响应过长被截断，请稍候。</p></div>';
+  } else if (!hasJd) {
+    const label = state.extractionError ? "重试 JD 域提取" : "运行 JD 域提取";
+    const note = state.extractionError ? "上次提取失败，可直接重试（不需重跑 STEP 2）" : "点下方按钮，根据已确认的 A×L 提取 JD 变量域";
+    if (state.extractionError) {
+      h += '<div class="choice-card dependency selected" style="margin-top:12px"><b>提取失败</b><p>' + escapeHtml(state.extractionError) + "</p></div>";
+    }
+    h += '<div class="action-row" style="margin-top:12px"><span class="action-note">' + escapeHtml(note) + '</span>'
+      + '<button class="btn primary" type="button" onclick="runExtraction()"' + (providerReady() ? "" : " disabled") + ">" + escapeHtml(label) + "</button></div>";
+    document.getElementById("workspaceBody").innerHTML = h;
+    return;
+  }
+
+  {
     const c = state.agentResult.candidate;
     const issueIdx = indexValidationIssues();
     const tbdSlots = (c.jd_candidates || []).filter(j => (j.binding_mode || "") === "TBD");
-    h += '<div class="field-label" style="margin-top:8px"><label>来自 STEP 2 的 A×L</label></div>';
-    h += '<div class="coverage-chips">' + (c.coverage_candidates || []).map(x => '<span class="lvl-pill ' + cellLevelClass(x.cell) + '">' + escapeHtml(x.cell) + "</span>").join("") + '</div>';
+    h += '<div class="action-row" style="margin-top:10px"><span class="action-note">已提取 ' + (c.jd_candidates || []).length + ' 个 JD 域；如需重跑可重试</span>'
+      + '<button class="btn" type="button" onclick="runExtraction()"' + (providerReady() ? "" : " disabled") + ">重跑提取</button></div>";
     h += '<div class="field-label"><label>结果 · JD 变量域（' + (c.jd_candidates || []).length + ' 个，按 A 分类）</label></div>';
     if (tbdSlots.length) {
       h += '<div class="tbd-banner"><b>待补全 TBD · ' + tbdSlots.length + ' 个</b>'
@@ -145,7 +173,6 @@ function renderStep2b() {
     h += '<div class="action-row" style="margin-top:14px"><span class="action-note">确认后进入 STEP 4 编辑任务域模版</span>'
       + '<button class="btn primary" onclick="completeStage(2)">确认 → STEP 4</button></div>';
   }
-  if (state.agentError) h += '<div class="choice-card dependency selected" style="margin-top:8px"><b>提取错误</b><p>' + escapeHtml(state.agentError) + "</p></div>";
   document.getElementById("workspaceBody").innerHTML = h;
 }
 

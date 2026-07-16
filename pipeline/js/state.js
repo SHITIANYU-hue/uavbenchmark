@@ -12,6 +12,8 @@ function initialState() {
     coverageSeed: 0,
     narrativeStatus: "idle", narrativeRunId: null, narrativeDraft: "", narrativeOriginal: "", narrativeError: null,
     agentStatus: "idle", agentPhase: "idle", agentRunId: null, agentResult: null, agentError: null,
+    coverageProgress: null,
+    extractionStatus: "idle", extractionRunId: null, extractionError: null, extractionProgress: null,
     domainEdits: {},
     fillTbdLoading: false, fillTbdError: null, fillTbdNotice: null,
     instanceMode: "single", instanceSeed: 0, instanceBatchSeeds: "0-4",
@@ -43,6 +45,10 @@ function loadState() {
     if (s.narrativeStatus === "running") s.narrativeStatus = s.narrativeDraft ? "done" : "idle";
     if (s.agentStatus === "running") s.agentStatus = s.agentResult ? "done" : "idle";
     if (s.agentPhase === "running") s.agentPhase = s.agentResult ? "done" : "idle";
+    const hasJd = !!(s.agentResult && s.agentResult.candidate && (s.agentResult.candidate.jd_candidates || []).length);
+    if (s.extractionStatus === "running") s.extractionStatus = hasJd ? "done" : "idle";
+    s.extractionProgress = null;
+    s.coverageProgress = null;
     // 已解锁的步数至少覆盖所有已完成的步骤，保证已保存的步骤都能跳转
     const comp = Array.from(s.completed);
     s.maxUnlocked = Math.max(s.maxUnlocked || 0, comp.length ? Math.max.apply(null, comp) : 0);

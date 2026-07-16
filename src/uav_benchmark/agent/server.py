@@ -223,6 +223,8 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
     def do_POST(self) -> None:  # noqa: N802
         if self.path not in {
             "/api/config-agent/expand",
+            "/api/config-agent/classify",
+            "/api/config-agent/extract",
             "/api/config-agent/analyze",
             "/api/config-agent/fill-tbd",
             "/api/config-agent/revise",
@@ -395,6 +397,8 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
             model = _model_for_tier(provider, tier)
             operation = {
                 "/api/config-agent/expand": "narrative_expand",
+                "/api/config-agent/classify": "coverage_classification",
+                "/api/config-agent/extract": "jd_extraction",
                 "/api/config-agent/fill-tbd": "fill_tbd_domains",
             }.get(self.path, "classification_and_extraction")
             _log_event(run_id, "request_received", {
@@ -456,6 +460,63 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                     "run_id": run_id,
                     "model": model,
                     "filled": fill_result.model_dump(mode="json"),
+                })
+                return
+
+            if self.path == "/api/config-agent/classify":
+                preferred_coverage = payload.get("preferred_coverage") or payload.get("target_coverage") or []
+                if not isinstance(preferred_coverage, list):
+                    raise ValueError("preferred_coverage must be a list of A×L cell IDs")
+                agent = ConfigAgent(api_key=api_key, model=model, provider=provider)
+                result = agent.classify_coverage(
+                    task_description,
+                    fixed_scenario=fixed_scenario,
+                    preferred_coverage=[str(c) for c in preferred_coverage],
+                    run_id=run_id,
+                    progress=lambda event, details: _log_event(run_id, event, details),
+                )
+                with RUN_STATUS_LOCK:
+                    RUN_STATUS.setdefault(run_id, {})["result"] = result.model_dump(mode="json")
+                    RUN_STATUS[run_id]["status"] = "completed"
+                _log_event(run_id, "coverage_completed", {
+                    "cells": len(result.candidate.coverage_candidates),
+                })
+                self._json(HTTPStatus.OK, {"result": result.model_dump(mode="json")})
+                return
+
+            if self.path == "/api/config-agent/extract":
+                coverage_candidates = payload.get("coverage_candidates") or []
+                if not isinstance(coverage_candidates, list) or not coverage_candidates:
+                    raise ValueError("coverage_candidates must be a non-empty list")
+                source_task_description = str(payload.get("source_task_description") or "").strip() or None
+                narrative_parent_run_id = str(payload.get("narrative_parent_run_id") or "").strip() or None
+                if narrative_parent_run_id and not re.fullmatch(r"agent-[a-z0-9-]{6,64}", narrative_parent_run_id):
+                    raise ValueError("invalid narrative_parent_run_id")
+                agent = ConfigAgent(api_key=api_key, model=model, provider=provider)
+                result = agent.extract_jd(
+                    task_description,
+                    coverage_candidates=coverage_candidates,
+                    task_title=str(payload.get("task_title") or "").strip() or "任务域模版",
+                    scenario_summary=str(payload.get("scenario_summary") or "").strip(),
+                    responsibility_boundaries=payload.get("responsibility_boundaries") or [],
+                    fixed_scenario=fixed_scenario,
+                    run_id=run_id,
+                    progress=lambda event, details: _log_event(run_id, event, details),
+                )
+                run_path = save_agent_run(
+                    task_description,
+                    result,
+                    fixed_scenario,
+                    source_task_description=source_task_description,
+                    narrative_parent_run_id=narrative_parent_run_id,
+                )
+                with RUN_STATUS_LOCK:
+                    RUN_STATUS.setdefault(run_id, {})["result"] = result.model_dump(mode="json")
+                    RUN_STATUS[run_id]["status"] = "completed"
+                _log_event(run_id, "run_saved", {"path": str(run_path.relative_to(ROOT))})
+                self._json(HTTPStatus.OK, {
+                    "result": result.model_dump(mode="json"),
+                    "local_record": str(run_path.relative_to(ROOT)),
                 })
                 return
 

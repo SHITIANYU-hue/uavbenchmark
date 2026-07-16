@@ -6,7 +6,7 @@ import json
 import re
 import uuid
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, get_args
 
 from .catalog import (
     ROOT,
@@ -21,12 +21,16 @@ from .catalog import (
 from .models import (
     AgentCandidate,
     AgentRunResult,
+    CoverageCandidate,
     CoverageResult,
     ExtractionResult,
     FillTbdResult,
     JDCandidate,
     NarrativeDraft,
     NarrativeRunResult,
+    OpenQuestion,
+    ResponsibilityBoundary,
+    RuntimeDependencyCandidate,
     ToolTrace,
     ValidationIssue,
 )
@@ -216,8 +220,10 @@ Rules:
   scenario, and UAV domain knowledge. Only use TBD when truly nothing can be
   inferred even qualitatively.
 - If binding_mode="TBD", you MUST set source_note to a short Chinese reason
-  (what is missing) and preferably add an open_question. Never emit TBD with
-  an empty explanation.
+  (what is missing). If you want to raise an open question, add it to the
+  top-level open_questions array — NEVER add an "open_question" (or any other)
+  field inside a jd_candidates item. Each jd_candidates item must contain ONLY
+  the schema fields; do not invent extra keys.
 - For scenario-fixed facts (workspace, object types from scenario): use
   provenance="scenario_fixed". For task-inferred domains: provenance="agent_extracted".
 - Use canonical JD names exactly as given in the catalog.
@@ -292,6 +298,45 @@ def _save_debug_response(run_id: str, operation: str, raw_text: str, finish_reas
     return debug_path
 
 
+def _nested_model(annotation: Any):
+    """Return the pydantic model class referenced by an annotation, if any."""
+
+    if isinstance(annotation, type) and hasattr(annotation, "model_fields"):
+        return annotation
+    for arg in get_args(annotation):
+        found = _nested_model(arg)
+        if found is not None:
+            return found
+    return None
+
+
+def _prune_model_extras(data: Any, annotation: Any) -> Any:
+    """Recursively drop keys not defined on the target model.
+
+    DeepSeek's JSON mode occasionally hallucinates extra fields (e.g. a
+    per-slot ``open_question`` on a JD candidate). Our models are strict
+    (``extra="forbid"``), so those extras would otherwise fail validation.
+    Pruning to known fields keeps the schema strict for our own code while
+    tolerating harmless model noise.
+    """
+
+    if isinstance(data, dict):
+        model = _nested_model(annotation)
+        if model is not None:
+            fields = model.model_fields
+            return {
+                key: _prune_model_extras(value, fields[key].annotation)
+                for key, value in data.items()
+                if key in fields
+            }
+        return data
+    if isinstance(data, list):
+        args = get_args(annotation)
+        inner = args[0] if args else None
+        return [_prune_model_extras(item, inner) for item in data]
+    return data
+
+
 def _parse_model_json(
     raw_text: str,
     model_cls: type,
@@ -306,6 +351,15 @@ def _parse_model_json(
     """Parse a JSON response into *model_cls*, saving a debug dump on failure."""
 
     text = _extract_json(raw_text)
+    try:
+        return model_cls.model_validate_json(text)
+    except Exception:
+        # Tolerate hallucinated extra fields by pruning to known keys.
+        try:
+            pruned = _prune_model_extras(json.loads(text), model_cls)
+            return model_cls.model_validate(pruned)
+        except Exception:
+            pass
     try:
         return model_cls.model_validate_json(text)
     except Exception as exc:
@@ -369,6 +423,54 @@ def _lookup_required_jds(cell_id: str, gal_catalog: dict[str, Any]) -> list[str]
         if c.get("cell") == cell_id:
             return c.get("required_jd_ids", [])
     return []
+
+
+def _chunk_coverage_for_extraction(
+    coverage_summary: list[dict[str, Any]],
+    base_slots: list[str],
+    max_slots_per_chunk: int = 16,
+) -> list[list[dict[str, Any]]]:
+    """Split coverage cells so each extraction call emits a bounded slot set.
+
+    A single 8k-token JSON response gets truncated once too many JD slots are
+    requested at once (the common "返回被截断，JSON 不完整" failure). Grouping the
+    required slots into smaller batches keeps every extraction response complete
+    while still covering every cell. A single cell is never split, so a chunk may
+    exceed the soft cap when one cell alone requires many slots.
+    """
+
+    if not coverage_summary:
+        return [[]]
+    chunks: list[list[dict[str, Any]]] = []
+    current: list[dict[str, Any]] = []
+    current_ids: set[str] = set(base_slots)
+    for entry in coverage_summary:
+        ids = set(entry.get("required_jd_ids") or [])
+        if current and len(current_ids | ids) > max_slots_per_chunk:
+            chunks.append(current)
+            current = []
+            current_ids = set()
+        current.append(entry)
+        current_ids |= ids
+    if current:
+        chunks.append(current)
+    return chunks or [[]]
+
+
+def _chunk_preferred_coverage(
+    preferred: list[dict[str, Any]],
+    max_cells_per_chunk: int = 6,
+) -> list[list[dict[str, Any]]]:
+    """Split human-selected A×L cells into batches for progressive classification.
+
+    Running coverage in batches gives visible per-batch progress and keeps each
+    response small, so large selections cannot overflow a single call. When no
+    cells are preselected the model infers coverage in one call.
+    """
+
+    if not preferred:
+        return [[]]
+    return [preferred[i:i + max_cells_per_chunk] for i in range(0, len(preferred), max_cells_per_chunk)]
 
 
 def _resolve_target_coverage(cells: list[str] | None) -> list[dict[str, Any]]:
@@ -775,88 +877,27 @@ class ConfigAgent:
         emit("tool_completed", {"tool": "lookup_jd_catalog"})
 
         # --- Sub-call 2a: coverage classification ------------------------- #
-        coverage_input = json.dumps({
-            "fixed_scenario": fixed_scenario,
-            "confirmed_task_narrative": task_description,
-            "preferred_coverage": [
-                {"cell": item["cell"], "a_id": item["a_id"], "level": item["level"], "ability": item["ability"]}
-                for item in preferred
-            ],
-            "gal_catalog": gal_catalog,
-        }, ensure_ascii=False)
-
-        cov_sys = COVERAGE_INSTRUCTION
-        cov_messages = [
-            {"role": "system", "content": cov_sys},
-            {"role": "user", "content": coverage_input},
-        ]
-        _save_raw_request(run_id or "unknown", "coverage", cov_messages)
-        emit("model_request_started", {"model": self.model, "operation": "coverage", "timeout_seconds": 90})
-        try:
-            cov_response = self.transport.generate(
-                system_instruction=cov_sys,
-                user_content=coverage_input,
-                response_model=CoverageResult,
-                temperature=0.15,
-                max_output_tokens=8192,
-            )
-        except ProviderError as exc:
-            emit("model_request_failed", {"error": str(exc)[:500]})
-            raise ConfigAgentError(str(exc)) from exc
-        emit("model_response_received", {"provider": self.provider, "model": self.model, "operation": "coverage"})
-        total_usage = _merge_usage(total_usage, cov_response.usage)
-
-        coverage_result = _validated_response(
-            cov_response,
-            CoverageResult,
+        coverage_result, cov_usage = self._run_coverage(
+            task_description=task_description,
+            fixed_scenario=fixed_scenario,
+            preferred=preferred,
+            gal_catalog=gal_catalog,
             run_id=run_id or "unknown",
-            operation="coverage",
-            provider_name=self.provider,
             emit=emit,
         )
+        total_usage = _merge_usage(total_usage, cov_usage)
 
-        # --- Sub-call 2b: JD / dependency extraction ---------------------- #
-        coverage_summary = [
-            {"cell": c.cell, "required_jd_ids": _lookup_required_jds(c.cell, gal_catalog)}
-            for c in coverage_result.coverage_candidates
-        ]
-        extraction_input = json.dumps({
-            "fixed_scenario": fixed_scenario,
-            "confirmed_task_narrative": task_description,
-            "coverage_cells": coverage_summary,
-            "base_backbone_slots": load_template_backbone().get("base_slots", ["jd-0.2", "jd-0.7"]),
-            "jd_catalog": jd_catalog,
-        }, ensure_ascii=False)
-
-        ext_sys = EXTRACTION_INSTRUCTION
-        ext_messages = [
-            {"role": "system", "content": ext_sys},
-            {"role": "user", "content": extraction_input},
-        ]
-        _save_raw_request(run_id or "unknown", "extraction", ext_messages)
-        emit("model_request_started", {"model": self.model, "operation": "extraction", "timeout_seconds": 90})
-        try:
-            ext_response = self.transport.generate(
-                system_instruction=ext_sys,
-                user_content=extraction_input,
-                response_model=ExtractionResult,
-                temperature=0.15,
-                max_output_tokens=8192,
-            )
-        except ProviderError as exc:
-            emit("model_request_failed", {"error": str(exc)[:500]})
-            raise ConfigAgentError(str(exc)) from exc
-        emit("model_response_received", {"provider": self.provider, "model": self.model, "operation": "extraction"})
-        total_usage = _merge_usage(total_usage, ext_response.usage)
-
-        extraction_result = _validated_response(
-            ext_response,
-            ExtractionResult,
+        # --- Sub-call 2b: JD / dependency extraction (chunked) ----------- #
+        extraction_result, ext_usage = self._run_extraction(
+            task_description=task_description,
+            fixed_scenario=fixed_scenario,
+            coverage_cells=coverage_result.coverage_candidates,
+            gal_catalog=gal_catalog,
+            jd_catalog=jd_catalog,
             run_id=run_id or "unknown",
-            operation="extraction",
-            provider_name=self.provider,
             emit=emit,
         )
+        total_usage = _merge_usage(total_usage, ext_usage)
 
         # --- Merge sub-results into AgentCandidate ------------------------ #
         candidate = AgentCandidate(
@@ -883,6 +924,334 @@ class ConfigAgent:
             validation_issues=issues,
             tool_trace=trace,
             usage=total_usage,
+        )
+
+    # ------------------------------------------------------------------ #
+    # Shared sub-calls (also used by the split STEP 2 / STEP 3 endpoints) #
+    # ------------------------------------------------------------------ #
+    def _run_coverage(
+        self,
+        *,
+        task_description: str,
+        fixed_scenario: dict[str, Any],
+        preferred: list[dict[str, Any]],
+        gal_catalog: dict[str, Any],
+        run_id: str,
+        emit: Callable[[str, dict[str, Any]], None],
+    ) -> tuple[CoverageResult, dict[str, Any]]:
+        """Classify A×L coverage in batches so progress is visible and each
+        response stays small. Preselected cells are split into chunks; with no
+        selection the model infers coverage in a single call."""
+
+        chunks = _chunk_preferred_coverage(preferred)
+        total_chunks = len(chunks)
+
+        title: str | None = None
+        summary: str | None = None
+        merged_cells: dict[str, CoverageCandidate] = {}
+        merged_boundaries: dict[str, ResponsibilityBoundary] = {}
+        usage: dict[str, Any] = {}
+
+        for idx, chunk in enumerate(chunks):
+            operation = "coverage" if total_chunks == 1 else f"coverage_{idx + 1}of{total_chunks}"
+            coverage_input = json.dumps({
+                "fixed_scenario": fixed_scenario,
+                "confirmed_task_narrative": task_description,
+                "preferred_coverage": [
+                    {"cell": item["cell"], "a_id": item["a_id"], "level": item["level"], "ability": item["ability"]}
+                    for item in chunk
+                ],
+                "gal_catalog": gal_catalog,
+            }, ensure_ascii=False)
+            cov_messages = [
+                {"role": "system", "content": COVERAGE_INSTRUCTION},
+                {"role": "user", "content": coverage_input},
+            ]
+            _save_raw_request(run_id, operation, cov_messages)
+            emit("model_request_started", {
+                "model": self.model, "operation": "coverage", "timeout_seconds": 90,
+                "chunk": idx + 1, "chunk_total": total_chunks,
+            })
+            try:
+                cov_response = self.transport.generate(
+                    system_instruction=COVERAGE_INSTRUCTION,
+                    user_content=coverage_input,
+                    response_model=CoverageResult,
+                    temperature=0.15,
+                    max_output_tokens=8192,
+                )
+            except ProviderError as exc:
+                emit("model_request_failed", {"error": str(exc)[:500]})
+                raise ConfigAgentError(str(exc)) from exc
+            emit("model_response_received", {
+                "provider": self.provider, "model": self.model, "operation": "coverage",
+                "chunk": idx + 1, "chunk_total": total_chunks,
+            })
+            usage = _merge_usage(usage, cov_response.usage)
+            part = _validated_response(
+                cov_response,
+                CoverageResult,
+                run_id=run_id,
+                operation=operation,
+                provider_name=self.provider,
+                emit=emit,
+            )
+            if title is None:
+                title = part.task_title
+            if summary is None:
+                summary = part.scenario_summary
+            for cell in part.coverage_candidates:
+                merged_cells.setdefault(cell.cell, cell)
+            for boundary in part.responsibility_boundaries:
+                existing = merged_boundaries.get(boundary.actor)
+                if existing is None:
+                    merged_boundaries[boundary.actor] = boundary
+                else:
+                    merged_boundaries[boundary.actor] = existing.model_copy(update={
+                        "responsible_for": list(dict.fromkeys(
+                            existing.responsible_for + boundary.responsible_for)),
+                        "explicitly_not_responsible_for": list(dict.fromkeys(
+                            existing.explicitly_not_responsible_for + boundary.explicitly_not_responsible_for)),
+                    })
+
+        coverage_result = CoverageResult(
+            task_title=title or "任务域模版",
+            scenario_summary=summary or "",
+            coverage_candidates=list(merged_cells.values()),
+            responsibility_boundaries=list(merged_boundaries.values()),
+        )
+        return coverage_result, usage
+
+    def _run_extraction(
+        self,
+        *,
+        task_description: str,
+        fixed_scenario: dict[str, Any],
+        coverage_cells: list[CoverageCandidate],
+        gal_catalog: dict[str, Any],
+        jd_catalog: dict[str, Any],
+        run_id: str,
+        emit: Callable[[str, dict[str, Any]], None],
+    ) -> tuple[ExtractionResult, dict[str, Any]]:
+        """Extract JD domains in bounded chunks so responses never truncate."""
+
+        base_slots = load_template_backbone().get("base_slots", ["jd-0.2", "jd-0.7"])
+        coverage_summary = [
+            {"cell": c.cell, "required_jd_ids": _lookup_required_jds(c.cell, gal_catalog)}
+            for c in coverage_cells
+        ]
+        chunks = _chunk_coverage_for_extraction(coverage_summary, base_slots)
+        total_chunks = len(chunks)
+
+        merged_jd: dict[str, JDCandidate] = {}
+        merged_deps: dict[str, RuntimeDependencyCandidate] = {}
+        merged_questions: dict[str, OpenQuestion] = {}
+        merged_warnings: list[str] = []
+        usage: dict[str, Any] = {}
+
+        for idx, chunk in enumerate(chunks):
+            operation = "extraction" if total_chunks == 1 else f"extraction_{idx + 1}of{total_chunks}"
+            extraction_input = json.dumps({
+                "fixed_scenario": fixed_scenario,
+                "confirmed_task_narrative": task_description,
+                "coverage_cells": chunk,
+                # Emit the shared backbone slots only once (first chunk).
+                "base_backbone_slots": base_slots if idx == 0 else [],
+                "jd_catalog": jd_catalog,
+            }, ensure_ascii=False)
+            ext_messages = [
+                {"role": "system", "content": EXTRACTION_INSTRUCTION},
+                {"role": "user", "content": extraction_input},
+            ]
+            _save_raw_request(run_id, operation, ext_messages)
+            emit("model_request_started", {
+                "model": self.model, "operation": "extraction", "timeout_seconds": 90,
+                "chunk": idx + 1, "chunk_total": total_chunks,
+            })
+            try:
+                ext_response = self.transport.generate(
+                    system_instruction=EXTRACTION_INSTRUCTION,
+                    user_content=extraction_input,
+                    response_model=ExtractionResult,
+                    temperature=0.15,
+                    max_output_tokens=8192,
+                )
+            except ProviderError as exc:
+                emit("model_request_failed", {"error": str(exc)[:500]})
+                raise ConfigAgentError(str(exc)) from exc
+            emit("model_response_received", {
+                "provider": self.provider, "model": self.model, "operation": "extraction",
+                "chunk": idx + 1, "chunk_total": total_chunks,
+            })
+            usage = _merge_usage(usage, ext_response.usage)
+            part = _validated_response(
+                ext_response,
+                ExtractionResult,
+                run_id=run_id,
+                operation=operation,
+                provider_name=self.provider,
+                emit=emit,
+            )
+            for jd in part.jd_candidates:
+                merged_jd.setdefault(jd.slot_id, jd)
+            for dep in part.runtime_dependencies:
+                merged_deps.setdefault(dep.dependency_id, dep)
+            for question in part.open_questions:
+                merged_questions.setdefault(question.question_id, question)
+            for warning in part.warnings:
+                if warning not in merged_warnings:
+                    merged_warnings.append(warning)
+
+        merged = ExtractionResult(
+            jd_candidates=list(merged_jd.values()),
+            runtime_dependencies=list(merged_deps.values()),
+            open_questions=list(merged_questions.values()),
+            warnings=merged_warnings,
+        )
+        return merged, usage
+
+    def classify_coverage(
+        self,
+        task_description: str,
+        *,
+        fixed_scenario: dict[str, Any] | None = None,
+        preferred_coverage: list[str] | None = None,
+        run_id: str | None = None,
+        progress: Callable[[str, dict[str, Any]], None] | None = None,
+    ) -> AgentRunResult:
+        """STEP 2: classify A×L coverage only (no JD extraction).
+
+        Splitting coverage from extraction keeps STEP 2 small and fast, and lets
+        the heavier JD extraction run — and be retried — on its own in STEP 3.
+        """
+
+        if len(task_description.strip()) < 300:
+            raise ConfigAgentError("确认后的任务文案过短；请先完成第一次文案扩充，并在人工复核后再进行能力分类。")
+
+        fixed_scenario = fixed_scenario or load_fixed_scenario()
+        preferred = _resolve_target_coverage(preferred_coverage)
+        emit = progress or (lambda _event, _details: None)
+        trace: list[ToolTrace] = []
+
+        emit("tool_called", {"tool": "lookup_gal_catalog"})
+        trace.append(ToolTrace(tool="lookup_gal_catalog", status="called"))
+        gal_catalog = _condensed_gal_catalog()
+        trace.append(ToolTrace(tool="lookup_gal_catalog", status="completed"))
+        emit("tool_completed", {"tool": "lookup_gal_catalog"})
+
+        coverage_result, usage = self._run_coverage(
+            task_description=task_description,
+            fixed_scenario=fixed_scenario,
+            preferred=preferred,
+            gal_catalog=gal_catalog,
+            run_id=run_id or "unknown",
+            emit=emit,
+        )
+
+        candidate = AgentCandidate(
+            catalog_versions=load_reference_catalog()["source_versions"].copy(),
+            task_title=coverage_result.task_title,
+            scenario_summary=coverage_result.scenario_summary,
+            coverage_candidates=coverage_result.coverage_candidates,
+            responsibility_boundaries=coverage_result.responsibility_boundaries,
+            jd_candidates=[],
+            natural_language_template=task_description,
+        )
+        # JD-specific issues are irrelevant until STEP 3 runs extraction.
+        issues = [
+            issue for issue in validate_candidate(candidate, task_description, fixed_scenario)
+            if issue.code != "MISSING_REQUIRED_JD_SLOT" and not (issue.path or "").startswith("jd_candidates")
+        ]
+        emit("candidate_validated", {"issue_count": len(issues)})
+        return AgentRunResult(
+            run_id=run_id or f"agent-{uuid.uuid4().hex[:12]}",
+            provider=self.provider,
+            model=self.model,
+            candidate=candidate,
+            validation_status="needs_review" if issues else "pass",
+            validation_issues=issues,
+            tool_trace=trace,
+            usage=usage,
+        )
+
+    def extract_jd(
+        self,
+        task_description: str,
+        *,
+        coverage_candidates: list[dict[str, Any]],
+        task_title: str,
+        scenario_summary: str,
+        responsibility_boundaries: list[dict[str, Any]] | None = None,
+        fixed_scenario: dict[str, Any] | None = None,
+        run_id: str | None = None,
+        progress: Callable[[str, dict[str, Any]], None] | None = None,
+    ) -> AgentRunResult:
+        """STEP 3: extract JD variable domains for confirmed A×L coverage.
+
+        Runs the extraction in bounded chunks so large coverage sets never
+        overflow a single response. Safe to retry on its own without redoing
+        the STEP 2 coverage classification.
+        """
+
+        if len(task_description.strip()) < 300:
+            raise ConfigAgentError("确认后的任务文案过短；请先完成第一次文案扩充并确认 A×L。")
+        if not coverage_candidates:
+            raise ConfigAgentError("缺少已确认的 A×L 覆盖，无法提取 JD 域。请先完成 STEP 2。")
+
+        fixed_scenario = fixed_scenario or load_fixed_scenario()
+        emit = progress or (lambda _event, _details: None)
+        try:
+            coverage_objs = [CoverageCandidate.model_validate(c) for c in coverage_candidates]
+            boundary_objs = [ResponsibilityBoundary.model_validate(b) for b in (responsibility_boundaries or [])]
+        except Exception as exc:
+            raise ConfigAgentError(f"已确认的 A×L 覆盖数据无效：{str(exc)[:240]}") from exc
+
+        trace: list[ToolTrace] = []
+        emit("tool_called", {"tool": "lookup_gal_catalog"})
+        trace.append(ToolTrace(tool="lookup_gal_catalog", status="called"))
+        gal_catalog = _condensed_gal_catalog()
+        trace.append(ToolTrace(tool="lookup_gal_catalog", status="completed"))
+        emit("tool_completed", {"tool": "lookup_gal_catalog"})
+
+        emit("tool_called", {"tool": "lookup_jd_catalog"})
+        trace.append(ToolTrace(tool="lookup_jd_catalog", status="called"))
+        jd_catalog = _condensed_jd_catalog()
+        trace.append(ToolTrace(tool="lookup_jd_catalog", status="completed"))
+        emit("tool_completed", {"tool": "lookup_jd_catalog"})
+
+        extraction_result, usage = self._run_extraction(
+            task_description=task_description,
+            fixed_scenario=fixed_scenario,
+            coverage_cells=coverage_objs,
+            gal_catalog=gal_catalog,
+            jd_catalog=jd_catalog,
+            run_id=run_id or "unknown",
+            emit=emit,
+        )
+
+        candidate = AgentCandidate(
+            catalog_versions=load_reference_catalog()["source_versions"].copy(),
+            task_title=task_title,
+            scenario_summary=scenario_summary,
+            coverage_candidates=coverage_objs,
+            responsibility_boundaries=boundary_objs,
+            jd_candidates=extraction_result.jd_candidates,
+            runtime_dependencies=extraction_result.runtime_dependencies,
+            open_questions=extraction_result.open_questions,
+            warnings=extraction_result.warnings,
+            natural_language_template=task_description,
+        )
+        issues = validate_candidate(candidate, task_description, fixed_scenario)
+        emit("candidate_validated", {"issue_count": len(issues)})
+        return AgentRunResult(
+            run_id=run_id or f"agent-{uuid.uuid4().hex[:12]}",
+            provider=self.provider,
+            model=self.model,
+            candidate=candidate,
+            validation_status="needs_review" if issues else "pass",
+            validation_issues=issues,
+            tool_trace=trace,
+            usage=usage,
         )
 
     def fill_tbd_domains(
