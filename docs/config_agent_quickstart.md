@@ -3,7 +3,7 @@
 本文是当前 `pipeline.html` 的正式操作文档。网页按四步完成：
 
 ```text
-Step 1: 任务域选择         场景 + 简短描述           [保存] [加载]
+Step 1: 任务域选择         简短描述 + 可选场景示例    [保存] [加载]
 Step 2: 扩充与提取         Agent 文案+A×L+JD域       [保存] [加载]
 Step 3: 任务域模版    域编辑器(每行选模式)      [保存] [加载]
 Step 4: 特定任务模版      Seed→具体 JD 值               [保存] [加载]
@@ -23,7 +23,7 @@ cd uavbenchmark
 ./scripts/start_agent_demo.sh
 ```
 
-如果终端要求输入 `DEEPSEEK_API_KEY`，粘贴后按回车。也可预先写入本地 `.env`。Key 只保存在本地服务进程中。
+在本地 `.env` 中配置 `GEMINI_API_KEY`、`DEEPSEEK_API_KEY`，或同时配置两者。Key 只保存在本地服务进程中；页面只选择 Provider，不读取 Key。
 
 看到地址后，在浏览器打开：
 
@@ -37,10 +37,9 @@ http://127.0.0.1:8765
 
 ## 2. Step 1：任务域选择
 
-1. 在“业务场景”下拉框中选择场景；
-2. 查看该场景已锁定的变量绑定；
-3. 用 1–3 句话描述本次任务（不要手写 A×L/JD 编号）；
-4. 点击确认进入 Step 2。
+1. 用 1–3 句话描述本次任务（不要手写 A×L/JD 编号）；
+2. 如需业务语境，可从下拉框加载高速、油气、桥梁、园区等可选示例；
+3. 点击确认进入 Step 2。
 
 随时可用顶部 **保存 / 加载**。
 
@@ -54,10 +53,13 @@ http://127.0.0.1:8765
 
 ## 3. Step 2：扩充与提取
 
-1. 运行文案扩充（DeepSeek），得到可编辑完整业务文案；
-2. 人工修改并确认文案；
-3. 再运行分类与提取，得到 A×L 覆盖与 JD 变量域候选；
-4. 确认后进入 Step 3。
+1. 在左侧选择 Gemini 或 DeepSeek，以及本机配置的模型档位；
+2. 运行文案扩充，得到可编辑完整业务文案；
+3. 人工修改并确认文案；
+4. 运行分类与提取，得到 A×L、JD 变量域和 Runtime Dependency 候选；
+5. 对每个候选能力复核 L1–L4。若人工改级，填写确认依据；
+6. 按需移除或补充外部执行器、外部系统、人工决定接口。新增项固定为不评分，并填写确认依据；
+7. 确认人工复核后进入 Step 3。
 
 黄色 `needs_review` 表示确定性校验有待处理项，不等于模型调用失败。
 
@@ -87,7 +89,7 @@ API：`POST /api/task-template/generate`（兼容旧路径 `/api/instance/genera
 | 现象 | 处理 |
 |---|---|
 | 页面打不开 API | 用 `http://127.0.0.1:8765` 打开，不要用 file:// |
-| `missing_api_key` | 设置 `DEEPSEEK_API_KEY` 后重启 `./scripts/start_agent_demo.sh` |
+| `missing_api_key` | 设置所选 Provider 的 `GEMINI_API_KEY` 或 `DEEPSEEK_API_KEY` 后重启服务 |
 | Step 4 报 schema 错误 | 检查任务域模版的 enum/range 是否填完整；查看服务终端日志 |
 | 中文任务标题 | 服务端会把 template id 规范成 ASCII，不影响展示标题 |
 

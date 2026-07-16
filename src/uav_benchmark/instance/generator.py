@@ -275,10 +275,12 @@ def _resolve_platform_profile(template: Mapping[str, Any], seed: int) -> dict[st
 def _resolve_executor_profile(template: Mapping[str, Any]) -> dict[str, Any]:
     interfaces = template.get("interfaces", {})
     responsibilities = interfaces.get("executor_responsibilities", [])
+    dependencies = list(template.get("runtime_dependencies") or [])
     return {
         "profile_id": "external_executor",
         "responsibilities": responsibilities or ["TBD"],
-        "status": "verified" if responsibilities else "TBD",
+        "status": "verified" if responsibilities and responsibilities != ["TBD"] else "TBD",
+        "extensions": {"runtime_dependencies": dependencies},
     }
 
 

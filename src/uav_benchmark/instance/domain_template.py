@@ -58,6 +58,7 @@ def build_domain_template(
     task_title: str,
     scenario_summary: str = "",
     coverage: Sequence[Mapping[str, Any]] | None = None,
+    runtime_dependencies: Sequence[Mapping[str, Any]] | None = None,
     jd_edits: Sequence[Mapping[str, Any]] | None = None,
     template_version: str = "0.1.0",
 ) -> dict[str, Any]:
@@ -72,6 +73,14 @@ def build_domain_template(
         if not cell:
             continue
         coverage_list.append(dict(item))
+
+    dependency_list: list[dict[str, Any]] = []
+    for item in runtime_dependencies or []:
+        dependency = dict(item)
+        if not dependency.get("dependency_id"):
+            continue
+        dependency["scored"] = False
+        dependency_list.append(dependency)
 
     jd_slots: list[dict[str, Any]] = []
     for edit in jd_edits or []:
@@ -91,12 +100,20 @@ def build_domain_template(
             }],
         })
 
+    executor_responsibilities = [
+        responsibility
+        for item in dependency_list
+        if item.get("provider") == "executor"
+        for responsibility in item.get("responsibilities", [])
+    ]
+
     return {
         "template_id": template_id,
         "template_version": template_version,
         "title": task_title or template_id,
         "scenario_summary": scenario_summary or "",
         "coverage": coverage_list,
+        "runtime_dependencies": dependency_list,
         "jd_slots": jd_slots,
         "phases": [{
             "phase_id": "phase_default",
@@ -106,7 +123,7 @@ def build_domain_template(
             "minimum_duration": {"value": None, "unit": "TBD", "status": "TBD"},
         }],
         "disturbances": [],
-        "interfaces": {"executor_responsibilities": ["TBD"]},
+        "interfaces": {"executor_responsibilities": executor_responsibilities or ["TBD"]},
         "provenance": [{
             "source_id": "pipeline:step3_domain_template",
             "locator": template_id,
@@ -125,6 +142,7 @@ def normalize_domain_template(template: Mapping[str, Any]) -> dict[str, Any]:
     data.setdefault("template_version", "0.1.0")
     data.setdefault("title", data["template_id"])
     data.setdefault("coverage", [])
+    data.setdefault("runtime_dependencies", [])
     data.setdefault("jd_slots", [])
     data.setdefault("disturbances", [])
     if not data.get("phases"):

@@ -122,6 +122,7 @@ class ToolTrace(StrictModel):
 
 class AgentRunResult(StrictModel):
     run_id: str
+    provider: Literal["deepseek", "gemini"] = "deepseek"
     model: str
     candidate: AgentCandidate
     validation_status: Literal["pass", "needs_review"]
@@ -132,6 +133,7 @@ class AgentRunResult(StrictModel):
 
 class NarrativeRunResult(StrictModel):
     run_id: str
+    provider: Literal["deepseek", "gemini"] = "deepseek"
     model: str
     draft: NarrativeDraft
     validation_status: Literal["pass", "needs_review"]

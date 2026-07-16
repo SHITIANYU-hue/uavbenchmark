@@ -26,7 +26,7 @@ def load_template_backbone() -> dict[str, Any]:
 
 @lru_cache(maxsize=1)
 def load_scenario_registry() -> dict[str, Any]:
-    """Return the versioned registry used by Stage 0."""
+    """Return the versioned registry used for optional scenario examples."""
 
     return json.loads(SCENARIO_REGISTRY_PATH.read_text(encoding="utf-8"))
 

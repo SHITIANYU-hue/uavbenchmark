@@ -1,15 +1,12 @@
-"""DeepSeek Config Agent and deterministic post-validation."""
+"""Provider-neutral Config Agent and deterministic post-validation."""
 
 from __future__ import annotations
 
 import json
-import os
 import re
 import uuid
 from pathlib import Path
 from typing import Any, Callable
-
-from openai import OpenAI
 
 from .catalog import (
     ROOT,
@@ -30,6 +27,12 @@ from .models import (
     NarrativeRunResult,
     ToolTrace,
     ValidationIssue,
+)
+from .providers import (
+    ProviderError,
+    StructuredResponse,
+    create_provider,
+    response_schema,
 )
 
 
@@ -88,7 +91,7 @@ Mandatory rules:
   required_jd_ids list.
 - If a required slot has no exact task evidence, emit value=null,
   status=TBD, and evidence_quote=""; never omit the slot.
-- Stage 0 must not preselect A×L. Do not copy the historical case coverage.
+- Optional scenario context must not preselect A×L. Do not copy historical case coverage.
 - Do not invent thresholds, numeric business rules, simulator APIs, or levels.
 - Unsupported or missing information becomes TBD or an open question.
 - Keep scored coverage separate from runtime dependencies and external actors.
@@ -194,70 +197,10 @@ class ConfigAgentError(RuntimeError):
     """A user-safe Config Agent failure."""
 
 
-def structured_output_schema(model: type[AgentCandidate] | type[NarrativeDraft] = AgentCandidate) -> dict[str, Any]:
-    """Return a JSON Schema describing the expected structured response.
+def structured_output_schema(model: type = AgentCandidate) -> dict[str, Any]:
+    """Backward-compatible public helper for transport schema inspection."""
 
-    Pydantic emits ``additionalProperties: false`` for ``extra='forbid'``.
-    The schema is embedded in the system prompt so DeepSeek produces JSON
-    that conforms to it. ``AgentCandidate.model_validate`` still rejects
-    extra fields after the response returns.
-    """
-
-    def sanitize(value: Any) -> Any:
-        if isinstance(value, dict):
-            return {
-                key: sanitize(item)
-                for key, item in value.items()
-                if key != "additionalProperties"
-            }
-        if isinstance(value, list):
-            return [sanitize(item) for item in value]
-        return value
-
-    return sanitize(model.model_json_schema())
-
-
-def _schema_instruction(model_cls: type[AgentCandidate] | type[NarrativeDraft]) -> str:
-    schema = structured_output_schema(model_cls)
-    schema_text = json.dumps(schema, ensure_ascii=False, indent=2)
-    return (
-        "\n\nYou must respond with a single valid JSON object that strictly "
-        "conforms to the following JSON Schema. Output ONLY the raw JSON "
-        "object—no markdown fences, no commentary, no surrounding text:\n\n"
-        + schema_text
-    )
-
-
-def _create_client(api_key: str) -> Any:
-    base_url = os.environ.get("DEEPSEEK_BASE_URL", "https://api.deepseek.com")
-    return OpenAI(api_key=api_key, base_url=base_url, timeout=90.0, max_retries=0)
-
-
-def _model_error(exc: Exception) -> ConfigAgentError:
-    from openai import APIConnectionError, APIStatusError, AuthenticationError, RateLimitError
-
-    message = str(exc)
-    if isinstance(exc, AuthenticationError) or "401" in message or "403" in message:
-        return ConfigAgentError("DeepSeek API Key 无效、无权限或对应模型不可用。")
-    if isinstance(exc, RateLimitError) or "429" in message or "RESOURCE_EXHAUSTED" in message:
-        return ConfigAgentError("DeepSeek 请求频率已达到当前额度（429）。请至少等待一分钟后再重试。")
-    if isinstance(exc, APIConnectionError):
-        return ConfigAgentError(f"无法连接 DeepSeek 服务：{message[:240]}")
-    if "503" in message or "UNAVAILABLE" in message:
-        return ConfigAgentError("DeepSeek 当前临时高负载（503）。本次输入与 Run ID 已保存，请稍后重试。")
-    return ConfigAgentError(f"DeepSeek 调用失败：{message[:240]}")
-
-
-def _usage_dict(response: Any) -> dict[str, int | float | str | None]:
-    usage = getattr(response, "usage", None)
-    if usage is None:
-        return {}
-    result: dict[str, int | float | str | None] = {}
-    for attr in ("prompt_tokens", "completion_tokens", "total_tokens"):
-        val = getattr(usage, attr, None)
-        if isinstance(val, (int, float)):
-            result[attr] = val
-    return result
+    return response_schema(model)
 
 
 def _normalize_narrative_linebreaks(value: str) -> str:
@@ -322,6 +265,7 @@ def _parse_model_json(
     operation: str,
     finish_reason: str | None,
     reasoning: str | None = None,
+    provider_name: str = "model",
     emit: Callable[[str, dict[str, Any]], None] | None = None,
 ):
     """Parse a JSON response into *model_cls*, saving a debug dump on failure."""
@@ -333,17 +277,48 @@ def _parse_model_json(
         debug_path = _save_debug_response(run_id, operation, raw_text, finish_reason, reasoning)
         snippet = raw_text[:300].replace("\n", "\\n")
         detail = str(exc)[:500]
-        if finish_reason == "length":
+        label = "Gemini" if provider_name == "gemini" else "DeepSeek" if provider_name == "deepseek" else "模型"
+        if finish_reason and "length" in str(finish_reason).lower():
             raise ConfigAgentError(
-                f"DeepSeek 返回被截断（finish_reason=length），JSON 不完整。"
+                f"{label} 返回被截断，JSON 不完整。"
                 f"原始响应已保存到 {debug_path.name}。"
             ) from exc
         raise ConfigAgentError(
-            f"DeepSeek 返回的 JSON 无法解析为 {model_cls.__name__}。\n"
+            f"{label} 返回的 JSON 无法解析为 {model_cls.__name__}。\n"
             f"错误：{detail}\n"
             f"原始响应已保存到 {debug_path.name}。\n"
             f"响应片段（前300字符）：{snippet}"
         ) from exc
+
+
+def _validated_response(
+    response: StructuredResponse,
+    model_cls: type,
+    *,
+    run_id: str,
+    operation: str,
+    provider_name: str,
+    emit: Callable[[str, dict[str, Any]], None] | None = None,
+):
+    if response.parsed is not None:
+        try:
+            if isinstance(response.parsed, model_cls):
+                return response.parsed
+            return model_cls.model_validate(response.parsed)
+        except Exception:
+            # Fall through to raw-text parsing so the debug artifact remains
+            # consistent across providers.
+            pass
+    return _parse_model_json(
+        response.raw_text,
+        model_cls,
+        run_id=run_id,
+        operation=operation,
+        finish_reason=response.finish_reason,
+        reasoning=response.reasoning,
+        provider_name=provider_name,
+        emit=emit,
+    )
 
 
 def _merge_usage(base: dict[str, Any], extra: dict[str, Any]) -> dict[str, Any]:
@@ -615,9 +590,10 @@ def validate_narrative_draft(draft: NarrativeDraft) -> list[ValidationIssue]:
 class NarrativeAgent:
     """Call 1: turn a short human request into editable business prose."""
 
-    def __init__(self, api_key: str, model: str) -> None:
+    def __init__(self, api_key: str, model: str, *, provider: str = "deepseek", transport: Any | None = None) -> None:
         self.model = model
-        self.client = _create_client(api_key)
+        self.provider = provider
+        self.transport = transport or create_provider(provider, api_key=api_key, model=model)
 
     def expand(
         self,
@@ -638,7 +614,7 @@ class NarrativeAgent:
             "narrative_backbone": load_template_backbone()["paragraph_sequence"],
         }, ensure_ascii=False)
 
-        system_content = NARRATIVE_SYSTEM_INSTRUCTION + _schema_instruction(NarrativeDraft)
+        system_content = NARRATIVE_SYSTEM_INSTRUCTION
         messages = [
             {"role": "system", "content": system_content},
             {"role": "user", "content": agent_input},
@@ -651,25 +627,24 @@ class NarrativeAgent:
             "input_chars": len(system_content) + len(agent_input),
         })
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=messages,
+            response = self.transport.generate(
+                system_instruction=system_content,
+                user_content=agent_input,
+                response_model=NarrativeDraft,
                 temperature=0.2,
-                max_tokens=8192,
-                response_format={"type": "json_object"},
+                max_output_tokens=8192,
             )
-        except Exception as exc:
+        except ProviderError as exc:
             emit("model_request_failed", {"error": str(exc)[:500]})
-            raise _model_error(exc) from exc
-        emit("model_response_received", {"model": self.model, "operation": "narrative_expand"})
+            raise ConfigAgentError(str(exc)) from exc
+        emit("model_response_received", {"provider": self.provider, "model": self.model, "operation": "narrative_expand"})
 
-        raw_text = response.choices[0].message.content or ""
-        finish_reason = getattr(response.choices[0], "finish_reason", None) if response.choices else None
-        draft = _parse_model_json(
-            raw_text, NarrativeDraft,
+        draft = _validated_response(
+            response,
+            NarrativeDraft,
             run_id=run_id or "unknown",
             operation="narrative_expand",
-            finish_reason=finish_reason,
+            provider_name=self.provider,
             emit=emit,
         )
 
@@ -681,18 +656,20 @@ class NarrativeAgent:
         emit("narrative_validated", {"issue_count": len(issues)})
         return NarrativeRunResult(
             run_id=run_id or f"agent-draft-{uuid.uuid4().hex[:12]}",
+            provider=self.provider,
             model=self.model,
             draft=draft,
             validation_status="needs_review" if issues else "pass",
             validation_issues=issues,
-            usage=_usage_dict(response),
+            usage=response.usage,
         )
 
 
 class ConfigAgent:
-    def __init__(self, api_key: str, model: str) -> None:
+    def __init__(self, api_key: str, model: str, *, provider: str = "deepseek", transport: Any | None = None) -> None:
         self.model = model
-        self.client = _create_client(api_key)
+        self.provider = provider
+        self.transport = transport or create_provider(provider, api_key=api_key, model=model)
 
     def analyze(
         self,
@@ -730,7 +707,7 @@ class ConfigAgent:
             "gal_catalog": gal_catalog,
         }, ensure_ascii=False)
 
-        cov_sys = COVERAGE_INSTRUCTION + _schema_instruction(CoverageResult)
+        cov_sys = COVERAGE_INSTRUCTION
         cov_messages = [
             {"role": "system", "content": cov_sys},
             {"role": "user", "content": coverage_input},
@@ -738,28 +715,25 @@ class ConfigAgent:
         _save_raw_request(run_id or "unknown", "coverage", cov_messages)
         emit("model_request_started", {"model": self.model, "operation": "coverage", "timeout_seconds": 90})
         try:
-            cov_response = self.client.chat.completions.create(
-                model=self.model,
-                messages=cov_messages,
+            cov_response = self.transport.generate(
+                system_instruction=cov_sys,
+                user_content=coverage_input,
+                response_model=CoverageResult,
                 temperature=0.15,
-                max_tokens=8192,
-                response_format={"type": "json_object"},
+                max_output_tokens=8192,
             )
-        except Exception as exc:
+        except ProviderError as exc:
             emit("model_request_failed", {"error": str(exc)[:500]})
-            raise _model_error(exc) from exc
-        emit("model_response_received", {"model": self.model, "operation": "coverage"})
-        total_usage = _merge_usage(total_usage, _usage_dict(cov_response))
+            raise ConfigAgentError(str(exc)) from exc
+        emit("model_response_received", {"provider": self.provider, "model": self.model, "operation": "coverage"})
+        total_usage = _merge_usage(total_usage, cov_response.usage)
 
-        cov_raw = cov_response.choices[0].message.content or ""
-        cov_finish = getattr(cov_response.choices[0], "finish_reason", None) if cov_response.choices else None
-        cov_reasoning = getattr(cov_response.choices[0].message, "reasoning_content", None) or ""
-        coverage_result = _parse_model_json(
-            cov_raw, CoverageResult,
+        coverage_result = _validated_response(
+            cov_response,
+            CoverageResult,
             run_id=run_id or "unknown",
             operation="coverage",
-            finish_reason=cov_finish,
-            reasoning=cov_reasoning,
+            provider_name=self.provider,
             emit=emit,
         )
 
@@ -776,7 +750,7 @@ class ConfigAgent:
             "jd_catalog": jd_catalog,
         }, ensure_ascii=False)
 
-        ext_sys = EXTRACTION_INSTRUCTION + _schema_instruction(ExtractionResult)
+        ext_sys = EXTRACTION_INSTRUCTION
         ext_messages = [
             {"role": "system", "content": ext_sys},
             {"role": "user", "content": extraction_input},
@@ -784,28 +758,25 @@ class ConfigAgent:
         _save_raw_request(run_id or "unknown", "extraction", ext_messages)
         emit("model_request_started", {"model": self.model, "operation": "extraction", "timeout_seconds": 90})
         try:
-            ext_response = self.client.chat.completions.create(
-                model=self.model,
-                messages=ext_messages,
+            ext_response = self.transport.generate(
+                system_instruction=ext_sys,
+                user_content=extraction_input,
+                response_model=ExtractionResult,
                 temperature=0.15,
-                max_tokens=8192,
-                response_format={"type": "json_object"},
+                max_output_tokens=8192,
             )
-        except Exception as exc:
+        except ProviderError as exc:
             emit("model_request_failed", {"error": str(exc)[:500]})
-            raise _model_error(exc) from exc
-        emit("model_response_received", {"model": self.model, "operation": "extraction"})
-        total_usage = _merge_usage(total_usage, _usage_dict(ext_response))
+            raise ConfigAgentError(str(exc)) from exc
+        emit("model_response_received", {"provider": self.provider, "model": self.model, "operation": "extraction"})
+        total_usage = _merge_usage(total_usage, ext_response.usage)
 
-        ext_raw = ext_response.choices[0].message.content or ""
-        ext_finish = getattr(ext_response.choices[0], "finish_reason", None) if ext_response.choices else None
-        ext_reasoning = getattr(ext_response.choices[0].message, "reasoning_content", None) or ""
-        extraction_result = _parse_model_json(
-            ext_raw, ExtractionResult,
+        extraction_result = _validated_response(
+            ext_response,
+            ExtractionResult,
             run_id=run_id or "unknown",
             operation="extraction",
-            finish_reason=ext_finish,
-            reasoning=ext_reasoning,
+            provider_name=self.provider,
             emit=emit,
         )
 
@@ -827,6 +798,7 @@ class ConfigAgent:
         emit("candidate_validated", {"issue_count": len(issues)})
         return AgentRunResult(
             run_id=run_id or f"agent-{uuid.uuid4().hex[:12]}",
+            provider=self.provider,
             model=self.model,
             candidate=candidate,
             validation_status="needs_review" if issues else "pass",
