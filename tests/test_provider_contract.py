@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 from uav_benchmark.agent.models import CoverageResult
@@ -40,17 +41,41 @@ def test_explicit_socks_proxy_wins_over_mixed_environment(monkeypatch) -> None:
     assert proxy_client_args() == {"proxy": "socks5://127.0.0.1:7890", "trust_env": False}
 
 
+def _ui_blob() -> str:
+    html = (ROOT / "pipeline.html").read_text(encoding="utf-8")
+    js_dir = ROOT / "pipeline" / "js"
+    js = "\n".join(path.read_text(encoding="utf-8") for path in sorted(js_dir.glob("*.js")))
+    css = (ROOT / "pipeline" / "css" / "app.css").read_text(encoding="utf-8")
+    return html + "\n" + js + "\n" + css
+
+
 def test_ui_keeps_team_flow_and_provider_checkpoint_controls() -> None:
     """Our 5-step UX is primary; keep ZYY provider select + checkpoint semantics."""
+    blob = _ui_blob()
     html = (ROOT / "pipeline.html").read_text(encoding="utf-8")
-    assert "特定任务模版" in html
-    assert "文案与 A×L" in html
-    assert "随机一批" in html
-    assert "用户侧配置需求" in html
-    assert "世界侧配置需求" in html
-    assert 'id="providerSelect"' in html
-    assert "provider: state.llmProvider" in html
-    assert "let state = loadState();" in html
-    assert "已开始新任务；手动检查点仍可加载" in html
-    assert "已加载检查点 ✓" in html
-    assert "target_coverage" in html
+    assert 'href="pipeline/css/app.css"' in html
+    assert 'src="pipeline/js/main.js"' in html
+    assert "特定任务模版" in blob
+    assert "文案与 A×L" in blob
+    assert "随机一批" in blob
+    assert "用户侧配置需求" in blob
+    assert "世界侧配置需求" in blob
+    assert 'id="providerSelect"' in blob
+    assert "provider: state.llmProvider" in blob
+    assert "let state = loadState();" in blob or "state = loadState();" in blob
+    assert "已开始新任务；手动检查点仍可加载" in blob
+    assert "已加载检查点 ✓" in blob
+    assert "target_coverage" in blob
+
+
+def test_pipeline_ui_is_split_into_modules() -> None:
+    js_dir = ROOT / "pipeline" / "js"
+    expected = {
+        "constants.js", "utils.js", "state.js", "scenarios.js", "coverage.js",
+        "jd.js", "agent.js", "persistence.js", "steps.js", "shell.js", "main.js",
+    }
+    assert expected <= {p.name for p in js_dir.glob("*.js")}
+    assert (ROOT / "pipeline" / "css" / "app.css").is_file()
+    html = (ROOT / "pipeline.html").read_text(encoding="utf-8")
+    assert "<style>" not in html
+    assert not re.search(r"<script(?![^>]*src=)", html)
