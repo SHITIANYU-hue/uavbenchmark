@@ -23,7 +23,8 @@ from .service import (
     save_narrative_run,
     validate_candidate,
 )
-from ..instance.generator import generate_instance
+from ..instance.generator import generate_instance, validate_instance
+from ..instance.domain_template import build_domain_template, normalize_domain_template
 from ..instance.batch import generate_batch, traverse_domain
 
 
@@ -181,6 +182,10 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
             "/api/instance/generate",
             "/api/instance/batch",
             "/api/instance/traverse",
+            "/api/task-template/generate",
+            "/api/task-template/batch",
+            "/api/task-template/traverse",
+            "/api/domain-template/build",
             "/api/pipeline/save",
         }:
             self._json(HTTPStatus.NOT_FOUND, {"error": "not_found"})
@@ -203,30 +208,78 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                 self._json(HTTPStatus.OK, {"status": "saved", "savedAt": record["savedAt"]})
                 return
 
-            if self.path in {"/api/instance/generate", "/api/instance/batch", "/api/instance/traverse"}:
-                template = payload.get("template") or payload.get("task_template")
+            if self.path == "/api/domain-template/build":
+                candidate = payload.get("candidate") or {}
+                jd_edits = payload.get("jd_edits") or payload.get("domain_edits") or []
+                if isinstance(jd_edits, dict):
+                    # UI may send {slot_id: patch}; merge onto candidate slots.
+                    base = {
+                        j.get("slot_id"): dict(j)
+                        for j in (candidate.get("jd_candidates") or [])
+                        if j.get("slot_id")
+                    }
+                    for slot_id, patch in jd_edits.items():
+                        merged = dict(base.get(slot_id) or {"slot_id": slot_id})
+                        merged.update(patch or {})
+                        base[slot_id] = merged
+                    jd_edits = list(base.values())
+                domain = build_domain_template(
+                    task_title=str(candidate.get("task_title") or payload.get("task_title") or "domain_tpl"),
+                    scenario_summary=str(candidate.get("scenario_summary") or ""),
+                    coverage=candidate.get("coverage_candidates") or [],
+                    jd_edits=jd_edits,
+                )
+                self._json(HTTPStatus.OK, {"domain_template": domain})
+                return
+
+            if self.path in {
+                "/api/instance/generate", "/api/instance/batch", "/api/instance/traverse",
+                "/api/task-template/generate", "/api/task-template/batch", "/api/task-template/traverse",
+            }:
+                template = payload.get("domain_template") or payload.get("template") or payload.get("task_template")
+                if not isinstance(template, dict) and payload.get("candidate"):
+                    candidate = payload.get("candidate") or {}
+                    template = build_domain_template(
+                        task_title=str(candidate.get("task_title") or "domain_tpl"),
+                        scenario_summary=str(candidate.get("scenario_summary") or ""),
+                        coverage=candidate.get("coverage_candidates") or [],
+                        jd_edits=payload.get("jd_edits") or candidate.get("jd_candidates") or [],
+                    )
                 if not isinstance(template, dict):
-                    raise ValueError("Missing 'template' (task_template JSON object).")
-                if self.path == "/api/instance/generate":
+                    raise ValueError("Missing Domain Template ('domain_template' / 'template').")
+                domain = normalize_domain_template(template)
+                path = self.path
+                if path.endswith("/generate"):
                     seed = int(payload.get("seed", 0))
-                    instance = generate_instance(template, seed)
-                    self._json(HTTPStatus.OK, {"instance": instance})
-                elif self.path == "/api/instance/batch":
+                    artifact = generate_instance(domain, seed)
+                    if payload.get("validate", True):
+                        validate_instance(artifact, schema_path=ROOT / "schemas" / "task_instance.schema.json")
+                    # Product name: Task Template. Wire alias: instance.
+                    self._json(HTTPStatus.OK, {
+                        "task_template": artifact,
+                        "domain_template": domain,
+                        "instance": artifact,
+                    })
+                elif path.endswith("/batch"):
                     seeds = payload.get("seeds", [0])
                     if isinstance(seeds, str):
                         from ..instance.batch import parse_seed_spec
                         seeds = parse_seed_spec(seeds)
-                    instances = generate_batch(template, seeds)
+                    artifacts = generate_batch(domain, seeds)
                     self._json(HTTPStatus.OK, {
-                        "count": len(instances),
-                        "instances": instances,
+                        "count": len(artifacts),
+                        "task_templates": artifacts,
+                        "domain_template": domain,
+                        "instances": artifacts,
                     })
                 else:
                     steps = int(payload.get("steps_per_range", 3))
-                    instances = traverse_domain(template, steps_per_range=steps)
+                    artifacts = traverse_domain(domain, steps_per_range=steps)
                     self._json(HTTPStatus.OK, {
-                        "count": len(instances),
-                        "instances": instances,
+                        "count": len(artifacts),
+                        "task_templates": artifacts,
+                        "domain_template": domain,
+                        "instances": artifacts,
                     })
                 return
 
@@ -343,12 +396,17 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                 "local_record": str(run_path.relative_to(ROOT)),
             })
         except (ValueError, json.JSONDecodeError) as exc:
-            self._json(HTTPStatus.BAD_REQUEST, {"error": "invalid_request", "message": str(exc)})
-        except ConfigAgentError as exc:
-            if "run_id" in locals():
-                _log_event(run_id, "run_failed", {"error": str(exc)[:500]})
-            self._json(HTTPStatus.BAD_GATEWAY, {"error": "agent_error", "message": str(exc)})
+            self._json(HTTPStatus.BAD_REQUEST, {"error": "invalid_request", "message": str(exc)[:800]})
         except Exception as exc:
+            from jsonschema.exceptions import ValidationError
+            if isinstance(exc, ValidationError):
+                self._json(HTTPStatus.BAD_REQUEST, {"error": "invalid_request", "message": str(exc)[:800]})
+                return
+            if isinstance(exc, ConfigAgentError):
+                if "run_id" in locals():
+                    _log_event(run_id, "run_failed", {"error": str(exc)[:500]})
+                self._json(HTTPStatus.BAD_GATEWAY, {"error": "agent_error", "message": str(exc)})
+                return
             if "run_id" in locals():
                 _log_event(run_id, "run_failed", {"error": _safe_exception_text(exc)})
             self._json(HTTPStatus.INTERNAL_SERVER_ERROR, {

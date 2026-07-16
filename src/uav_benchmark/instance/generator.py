@@ -1,8 +1,17 @@
-"""Core deterministic engine: task_template + seed -> task_instance.
+"""Core deterministic engine: Domain Template + seed -> Task Template.
 
-Given the same (template, seed) pair this module ALWAYS produces a byte-identical
-task_instance JSON.  Per-slot sub-seeds derived from (global_seed, slot_id)
-guarantee that adding or removing a slot does not shift the values of other slots.
+Product naming
+--------------
+- Domain Template (Step 3): JD binding domains
+- Task Template (Step 4): concrete values resolved by seed
+
+Wire format: the Task Template artifact uses ``artifact_type: task_instance``
+so it remains compatible with ``task_instance.schema.json``.
+
+Given the same (domain template, seed) pair this module ALWAYS produces a
+byte-identical Task Template JSON.  Per-slot sub-seeds derived from
+(global_seed, slot_id) guarantee that adding or removing a slot does not shift
+the values of other slots.
 """
 
 from __future__ import annotations
@@ -15,6 +24,8 @@ from pathlib import Path
 from typing import Any, Mapping, Union
 
 from jsonschema import Draft202012Validator
+
+from .domain_template import normalize_domain_template, slug_id
 
 
 COMPILER_NAME = "uav-benchmark-deterministic-instance-generator"
@@ -154,6 +165,14 @@ def _materialise_phases(
     template: Mapping[str, Any],
     timebase: dict[str, Any],
 ) -> list[dict[str, Any]]:
+    phases = list(template.get("phases") or [])
+    if not phases:
+        phases = [{
+            "phase_id": "phase_default",
+            "order": 1,
+            "minimum_duration": {"value": None, "unit": "TBD", "status": "TBD"},
+        }]
+
     tick_s = timebase.get("tick_duration_s")
     if tick_s is None:
         return [
@@ -164,12 +183,12 @@ def _materialise_phases(
                 "end_tick": None,
                 "timing_status": "TBD",
             }
-            for p in template.get("phases", [])
+            for p in phases
         ]
 
     cursor = 0
     schedule: list[dict[str, Any]] = []
-    for p in sorted(template.get("phases", []), key=lambda x: x.get("order", 0)):
+    for p in sorted(phases, key=lambda x: x.get("order", 0)):
         dur = p.get("minimum_duration", {})
         dur_val = dur.get("value")
         dur_unit = dur.get("unit", "TBD")
@@ -295,13 +314,12 @@ def generate_instance(
     *,
     overrides: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Produce one deterministic task_instance from a task_template and seed.
+    """Produce one deterministic Task Template from a Domain Template and seed.
 
     Parameters
     ----------
     template : Mapping
-        A dict conforming to ``task_template.schema.json`` (or a minimal dict
-        with at least ``template_id`` and ``jd_slots``).
+        Domain Template (Step 3): at least ``template_id`` and ``jd_slots``.
     seed : int >= 0
         The global randomness seed.
     overrides : dict, optional
@@ -311,15 +329,18 @@ def generate_instance(
     Returns
     -------
     dict
-        A task_instance conforming to ``task_instance.schema.json``.
+        Task Template (Step 4).  Wire ``artifact_type`` remains ``task_instance``
+        for schema compatibility.
     """
 
     if seed < 0:
         raise InstanceError("seed must be >= 0")
 
-    template_hash = hash_template(template)
-    template_id = template.get("template_id", "unnamed_template")
+    template = normalize_domain_template(template)
+    template_id = slug_id(str(template.get("template_id") or "unnamed_template"))
+    template["template_id"] = template_id
     template_version = template.get("template_version", "0.1.0")
+    template_hash = hash_template(template)
 
     slot_bindings = _build_slot_bindings(template, seed, overrides)
     timebase = _resolve_timebase(template, seed)
@@ -353,10 +374,10 @@ def generate_instance(
         },
         "validation_audit": _build_audit(template, slot_bindings),
         "provenance": [{
-            "source_id": f"task_template:{template_id}",
+            "source_id": f"domain_template:{template_id}",
             "locator": f"sha256:{template_hash[:16]}",
             "status": "verified",
-            "notes": f"Generated from seed {seed}",
+            "notes": f"Task Template generated from seed {seed}",
         }],
     }
 

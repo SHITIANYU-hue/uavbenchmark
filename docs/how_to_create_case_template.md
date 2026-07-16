@@ -37,21 +37,18 @@ Python compiler 会：
 
 输出示例：`examples/case2_oilfield_corridor/task_template.generated.json`。
 
-### C. Task Instance：Config Agent 后续生成
+### C. 特定任务模版（Step 4）：任务域模版 + Seed
 
-Config Agent 的输入是 Task Template，而不是原始长篇 Markdown。
-
-它负责：
+网页产品路径：
 
 ```text
-读取 jd_slots / allowed_values / constraints
-→ 按 enumerate 或 seed sampling 选择取值
-→ 可选使用 LM 补充复杂自然语言/场景描述
-→ 确定性 validator 检查边界和兼容性
-→ 输出 task_instance
+任务域模版（JD 取值域）
+→ Seed / batch / traverse
+→ 确定性引擎生成特定任务模版（具体 JD 值）
+→ 按 task_instance.schema.json 校验（wire 合同名）
 ```
 
-Config Agent 不得修改固定 A×L、创造 threshold 或发明 simulator 接口。
+这是确定性 Python 引擎（`uav_benchmark.instance`），不是 LLM。不得修改固定 A×L、创造 threshold 或发明 simulator 接口。
 
 ## 2. 当前命令
 

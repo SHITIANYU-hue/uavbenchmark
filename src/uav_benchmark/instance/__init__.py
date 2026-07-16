@@ -1,4 +1,4 @@
-"""Deterministic task instance generator for UAV benchmark."""
+"""Deterministic Domain Template → Task Template (seed) engine."""
 
 from .generator import (
     COMPILER_NAME,
@@ -8,6 +8,7 @@ from .generator import (
     hash_template,
     validate_instance,
 )
+from .domain_template import build_domain_template, normalize_domain_template, slug_id
 from .batch import generate_batch, traverse_domain, parse_seed_spec
 
 __all__ = [
@@ -17,6 +18,9 @@ __all__ = [
     "generate_instance",
     "hash_template",
     "validate_instance",
+    "build_domain_template",
+    "normalize_domain_template",
+    "slug_id",
     "generate_batch",
     "traverse_domain",
     "parse_seed_spec",

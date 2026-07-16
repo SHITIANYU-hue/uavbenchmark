@@ -164,12 +164,22 @@ For EACH required JD slot, choose a binding_mode and define its domain:
 Rules:
 - Emit every required JD slot (from coverage required_jd_ids AND base backbone
   ["jd-0.2", "jd-0.7"]). Never omit a slot.
+- You MUST analyze the confirmed_task_narrative and propose a domain for each
+  slot. Empty "—" / null domains are a failure mode, not the default.
+- Especially for task-derived slots such as jd-0.7 (任务完成判据), jd-0.1
+  (任务时长), object catalogs, and completion/safety criteria: infer a
+  fixed value or enum/range from the narrative. Do not leave them TBD just
+  because a numeric threshold is missing — propose the qualitative criterion
+  or a closed option set instead.
 - PREFER enum or range over fixed when the variable could legitimately vary
   across benchmark instances. The more variables have non-trivial domains,
-  the more diverse instances the benchmark can generate.
+  the more diverse later 特定任务模版 seeds can be.
 - PREFER fixed or enum over TBD. Infer reasonable domains from task context,
   scenario, and UAV domain knowledge. Only use TBD when truly nothing can be
-  inferred.
+  inferred even qualitatively.
+- If binding_mode="TBD", you MUST set source_note to a short Chinese reason
+  (what is missing) and preferably add an open_question. Never emit TBD with
+  an empty explanation.
 - For scenario-fixed facts (workspace, object types from scenario): use
   provenance="scenario_fixed". For task-inferred domains: provenance="agent_extracted".
 - Use canonical JD names exactly as given in the catalog.
