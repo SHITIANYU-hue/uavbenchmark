@@ -143,10 +143,15 @@ function renderContext() {
   h += "</div></div>";
 
   if (state.agentResult && state.agentResult.candidate) {
-    h += '<div class="context-block"><div class="context-label">Coverage</div><div class="mini-tags">' +
-      (state.agentResult.candidate.coverage_candidates || []).map(c =>
-        '<span class="mini-tag scored">' + escapeHtml(c.cell) + "</span>"
-      ).join("") + "</div></div>";
+    const covGroups = groupCoverageByG(state.agentResult.candidate.coverage_candidates || []);
+    h += '<div class="context-block"><div class="context-label">Coverage · 按 G 分组</div>';
+    covGroups.forEach(g => {
+      h += '<div class="cov-g-row"><span class="cov-g-label">' + escapeHtml(g.title) + '</span>'
+        + '<div class="mini-tags">' + g.cells.map(cell =>
+          '<span class="mini-tag scored ' + cellLevelClass(cell) + '">' + escapeHtml(cell) + "</span>"
+        ).join("") + "</div></div>";
+    });
+    h += "</div>";
   }
   h += '<div class="context-block"><div class="context-label">Progress</div><div class="progress-track"><div class="progress-fill" style="width:' + (state.completed.size / STAGES.length * 100) + '%"></div></div><div class="action-note">' + state.completed.size + '/' + STAGES.length + '</div></div>';
   document.getElementById("contextPanel").innerHTML = h;

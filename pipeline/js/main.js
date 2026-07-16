@@ -1,6 +1,16 @@
 /* pipeline/js/main.js */
 function render() { renderStageRail(); renderContext(); [renderStep1, renderStep2a, renderStep2b, renderStep3, renderStep4][state.currentStage](); persistState(); }
 
+// Stable delegation on #stageRail: rail innerHTML is rewritten on render, but the
+// nav element itself is not. pointerdown fires before click and survives better
+// if a late render races the gesture.
+document.getElementById("stageRail").addEventListener("pointerdown", (e) => {
+  const btn = e.target && e.target.closest ? e.target.closest("button.stage-node[data-stage]") : null;
+  if (!btn || btn.disabled) return;
+  e.preventDefault();
+  goToStage(btn.getAttribute("data-stage"));
+});
+
 document.getElementById("resetButton").addEventListener("click", () => {
   if (!window.confirm("开始一个新任务？当前页面进度会清空，但手动保存的检查点仍可通过「加载」恢复。")) return;
   if (pollTimer) clearTimeout(pollTimer);
@@ -28,6 +38,8 @@ async function init() {
     const reg = await (await fetch("/api/scenarios", {cache:"no-store"})).json(); state.scenarioRegistry = reg;
     applyScenarioSelection(state.selectedScenarioId || SCENARIO_NONE);
     // 手动检查点仅通过「加载」恢复；浏览器草稿已由 loadState() 接管
+    // 若上次运行因刷新/断连中断但服务端已跑完，尝试恢复结果
+    await resumeInterruptedRuns();
   } catch(e) { state.serverStatus = "offline"; }
   render();
 }

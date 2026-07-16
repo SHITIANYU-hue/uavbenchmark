@@ -317,6 +317,20 @@ button:disabled { cursor: not-allowed; opacity: .48; }
 }
 .mini-tag.scored { color: var(--teal); border-color: #b9dcd9; background: var(--teal-soft); }
 .mini-tag.dep { color: var(--blue); border-color: #c8d5e7; background: var(--blue-soft); }
+.mini-tag.lv-L1 { color: var(--blue); border-color: #c8d5e7; background: var(--blue-soft); }
+.mini-tag.lv-L2 { color: var(--teal); border-color: #b9dcd9; background: var(--teal-soft); }
+.mini-tag.lv-L3 { color: var(--amber); border-color: #ebcea1; background: var(--amber-soft); }
+.mini-tag.lv-L4 { color: var(--green); border-color: #d4e3b6; background: var(--green-soft); }
+.cov-g-row { margin-top: 8px; }
+.cov-g-row + .cov-g-row { margin-top: 10px; }
+.cov-g-label {
+  display: block;
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .08em;
+}
+.cov-g-row .mini-tags { margin-top: 4px; }
 .pending-count { color: var(--amber); font-size: 23px; font-weight: 850; }
 .progress-track { height: 7px; overflow: hidden; margin-top: 8px; border-radius: 999px; background: #edf1f3; }
 .progress-fill { height: 100%; border-radius: inherit; background: var(--teal); transition: width .25s ease; }

@@ -83,7 +83,7 @@ function renderStep2a() {
       ? "已选 A×L 分批分类，可看到进度并降低单次返回被截断的风险。"
       : "按目标 coverage 与文案确定计分 A×L 与责任边界。";
     h += '<div class="field-label" style="margin-top:16px"><label>② A×L 分类</label></div>';
-    h += '<div class="choice-card selected" style="margin-top:8px"><b>' + escapeHtml(cpNote) + '</b>'
+    h += '<div class="choice-card selected" id="coverageProgressCard" style="margin-top:8px"><b>' + escapeHtml(cpNote) + '</b>'
       + '<p>' + escapeHtml(cpBody) + '</p></div>';
   }
   if (hasA) {
@@ -123,8 +123,8 @@ function renderStep2b() {
   if (state.extractionStatus === "running") {
     const pr = state.extractionProgress;
     const note = pr && pr.total ? ("正在提取 JD 变量域…第 " + pr.chunk + "/" + pr.total + " 批") : "正在根据 A×L 提取 JD 变量域…";
-    h += '<div class="choice-card selected" style="margin-top:12px"><b>' + escapeHtml(note) + '</b>'
-      + '<p>分批调用可避免单次响应过长被截断，请稍候。</p></div>';
+    h += '<div class="choice-card selected" id="extractionProgressCard" style="margin-top:12px"><b>' + escapeHtml(note) + '</b>'
+      + '<p>分批调用可避免单次响应过长被截断，请稍候。提取期间可随时点上方 STEP 跳转。</p></div>';
   } else if (!hasJd) {
     const label = state.extractionError ? "重试 JD 域提取" : "运行 JD 域提取";
     const note = state.extractionError ? "上次提取失败，可直接重试（不需重跑 STEP 2）" : "点下方按钮，根据已确认的 A×L 提取 JD 变量域";

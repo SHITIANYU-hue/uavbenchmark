@@ -10,6 +10,41 @@ function abilityMeta(aId) {
   return abs.find(a => a.a_id === aId) || null;
 }
 
+function abilityGroupOf(aId) {
+  const meta = abilityMeta(aId);
+  return (meta && meta.g_group) || "OTHER";
+}
+
+/** Group A×L cells by GAL G (G1–G6); sort within each group by A then L. */
+function groupCoverageByG(cells) {
+  const buckets = {};
+  (cells || []).forEach(item => {
+    const cell = typeof item === "string" ? item : (item && item.cell);
+    if (!cell) return;
+    const g = abilityGroupOf(cellAbilityId(cell));
+    if (!buckets[g]) buckets[g] = [];
+    buckets[g].push(cell);
+  });
+  const order = ["G1", "G2", "G3", "G4", "G5", "G6", "OTHER"];
+  function cellSortKey(cell) {
+    const m = String(cell).match(/^(A)(\d+)([a-z]?)(?:×|x)L(\d+)$/i);
+    if (!m) return [999, "", 9, cell];
+    return [parseInt(m[2], 10), m[3] || "", parseInt(m[4], 10), cell];
+  }
+  return order.filter(g => (buckets[g] || []).length).map(g => ({
+    key: g,
+    title: g === "OTHER" ? "其他" : g,
+    cells: buckets[g].slice().sort((a, b) => {
+      const ka = cellSortKey(a), kb = cellSortKey(b);
+      for (let i = 0; i < ka.length; i++) {
+        if (ka[i] < kb[i]) return -1;
+        if (ka[i] > kb[i]) return 1;
+      }
+      return 0;
+    }),
+  }));
+}
+
 function jdOwnerOf(slotId) {
   const fields = (state.catalogSummary && state.catalogSummary.jd_fields) || [];
   const hit = fields.find(f => f.id === slotId);

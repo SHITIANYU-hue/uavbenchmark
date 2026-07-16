@@ -28,6 +28,71 @@ function stopAgentPoll() {
   if (pollTimer) { clearTimeout(pollTimer); pollTimer = null; }
 }
 
+/** Update progress text in-place. Do NOT full-render — that recreates the stage
+ *  rail and eats mid-click navigation while classification/extraction is running. */
+function patchRunningProgressUi() {
+  renderContext();
+  const covEl = document.getElementById("coverageProgressCard");
+  if (covEl && state.agentStatus === "running") {
+    const cp = state.coverageProgress;
+    const title = covEl.querySelector("b");
+    const note = covEl.querySelector("p");
+    if (title) {
+      title.textContent = cp && cp.total > 1
+        ? ("A×L 分类调用中…第 " + cp.chunk + "/" + cp.total + " 批")
+        : "A×L 分类调用中...";
+    }
+    if (note) {
+      note.textContent = cp && cp.total > 1
+        ? "已选 A×L 分批分类，可看到进度并降低单次返回被截断的风险。"
+        : "按目标 coverage 与文案确定计分 A×L 与责任边界。";
+    }
+  }
+  const extEl = document.getElementById("extractionProgressCard");
+  if (extEl && state.extractionStatus === "running") {
+    const pr = state.extractionProgress;
+    const title = extEl.querySelector("b");
+    if (title) {
+      title.textContent = pr && pr.total
+        ? ("正在提取 JD 变量域…第 " + pr.chunk + "/" + pr.total + " 批")
+        : "正在根据 A×L 提取 JD 变量域…";
+    }
+  }
+  const ws = document.getElementById("workspaceState");
+  if (ws) {
+    if (state.currentStage === 1 && state.agentStatus === "running") ws.textContent = "分类中";
+    if (state.currentStage === 2 && state.extractionStatus === "running") ws.textContent = "提取中";
+  }
+}
+
+// Adopt a completed coverage result. Idempotent: safe whether the POST resolved
+// normally or the result was recovered from the status poll after a lost connection.
+function adoptCoverageResult(result) {
+  if (!result || state.agentStatus === "done") return;
+  stopAgentPoll();
+  state.agentStatus = "done";
+  state.agentPhase = "done";
+  state.coverageProgress = null;
+  state.agentError = null;
+  state.agentResult = result;
+  state.extractionStatus = "idle";
+  state.extractionError = null;
+  state.extractionProgress = null;
+  state.maxUnlocked = Math.max(state.maxUnlocked, 2);
+  render();
+}
+
+function adoptExtractionResult(result) {
+  if (!result || state.extractionStatus === "done") return;
+  stopAgentPoll();
+  state.agentResult = result;
+  state.extractionStatus = "done";
+  state.extractionProgress = null;
+  state.extractionError = null;
+  state.maxUnlocked = Math.max(state.maxUnlocked, 2);
+  render();
+}
+
 function startAgentPoll(runId) {
   stopAgentPoll();
   const tick = async () => {
@@ -43,7 +108,9 @@ function startAgentPoll(runId) {
       } else if (s.status === "completed") {
         state.agentPhase = "done";
       }
-      if (state.currentStage === 1) render();
+      // Finalize even if the POST connection was lost (reload / preview refresh).
+      if (s.status === "completed" && s.result) { adoptCoverageResult(s.result); return; }
+      patchRunningProgressUi();
     } catch (_) { /* ignore transient poll errors */ }
     if (state.agentStatus === "running" && state.agentRunId === runId) {
       pollTimer = setTimeout(tick, 700);
@@ -61,14 +128,40 @@ function startExtractionPoll(runId) {
       const det = s.details || {};
       if (det.operation === "extraction" && det.chunk_total) {
         state.extractionProgress = { chunk: det.chunk, total: det.chunk_total };
-        if (state.currentStage === 2) render();
       }
+      // Finalize even if the POST connection was lost (reload / preview refresh).
+      if (s.status === "completed" && s.result) { adoptExtractionResult(s.result); return; }
+      patchRunningProgressUi();
     } catch (_) { /* ignore transient poll errors */ }
     if (state.extractionStatus === "running" && state.extractionRunId === runId) {
       pollTimer = setTimeout(tick, 700);
     }
   };
   pollTimer = setTimeout(tick, 350);
+}
+
+// After a reload/preview refresh, a long run may have finished server-side while
+// the page was gone. Recover the completed result from the status endpoint.
+async function resumeInterruptedRuns() {
+  async function fetchStatus(runId) {
+    if (!runId) return null;
+    try {
+      const r = await fetch("/api/config-agent/status?run_id=" + encodeURIComponent(runId), {cache: "no-store"});
+      if (!r.ok) return null;
+      return await r.json();
+    } catch (_) { return null; }
+  }
+  const c = state.agentResult && state.agentResult.candidate;
+  const hasCoverage = c && (c.coverage_candidates || []).length;
+  const hasJd = c && (c.jd_candidates || []).length;
+  if (hasCoverage && !hasJd && state.extractionStatus !== "done" && state.extractionRunId) {
+    const s = await fetchStatus(state.extractionRunId);
+    if (s && s.status === "completed" && s.result) { adoptExtractionResult(s.result); return; }
+  }
+  if (!hasCoverage && state.agentStatus !== "done" && state.agentRunId) {
+    const s = await fetchStatus(state.agentRunId);
+    if (s && s.status === "completed" && s.result) { adoptCoverageResult(s.result); }
+  }
 }
 
 // STEP 2: A×L coverage classification only (no JD extraction here).
@@ -102,10 +195,14 @@ async function runCoverage() {
     state.extractionProgress = null;
     state.maxUnlocked = Math.max(state.maxUnlocked, 2);
   } catch(e) {
-    state.agentStatus = "idle";
-    state.agentPhase = "idle";
-    state.coverageProgress = null;
-    state.agentError = String(e.message || e);
+    // If the status poll already recovered a completed result (connection lost
+    // after the server finished), keep the "done" state instead of clobbering it.
+    if (state.agentStatus === "running") {
+      state.agentStatus = "idle";
+      state.agentPhase = "idle";
+      state.coverageProgress = null;
+      state.agentError = String(e.message || e);
+    }
   }
   stopAgentPoll();
   render();
@@ -147,8 +244,12 @@ async function runExtraction() {
     state.extractionProgress = null;
     state.maxUnlocked = Math.max(state.maxUnlocked, 2);
   } catch(e) {
-    state.extractionStatus = "idle";
-    state.extractionError = String(e.message || e);
+    // If the status poll already recovered a completed result (connection lost
+    // after the server finished), keep the "done" state instead of clobbering it.
+    if (state.extractionStatus === "running") {
+      state.extractionStatus = "idle";
+      state.extractionError = String(e.message || e);
+    }
   }
   stopAgentPoll();
   render();

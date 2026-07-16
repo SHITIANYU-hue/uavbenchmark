@@ -84,7 +84,13 @@ function stageReachable(i) { return i <= furthestUnlocked() || state.completed.h
 
 function completeStage(i) { state.completed.add(i); state.maxUnlocked = Math.max(state.maxUnlocked, Math.min(i + 1, STAGES.length - 1)); state.currentStage = Math.min(i + 1, STAGES.length - 1); render(); }
 
-function goToStage(i) { if (stageReachable(i)) { state.currentStage = i; render(); } }
+function goToStage(i) {
+  const idx = Number(i);
+  if (!Number.isInteger(idx) || !stageReachable(idx)) return;
+  if (state.currentStage === idx) return;
+  state.currentStage = idx;
+  render();
+}
 
 function renderStageRail() {
   document.getElementById("stageRail").innerHTML = STAGES.map((s, i) => {
@@ -93,7 +99,9 @@ function renderStageRail() {
     const tip = locked
       ? ("需先完成「" + STAGES[Math.max(0, i - 1)][1] + "」后解锁（进度会自动保存）")
       : ("进入 " + s[0] + " · " + s[1] + "（进度已自动保存，可随时跳转）");
-    return '<button class="stage-node ' + cls + '" type="button" title="' + escapeHtml(tip) + '" onclick="goToStage(' + i + ')"'
+    // data-stage + delegated listener on #stageRail (see main.js). Avoid inline onclick so
+    // progress polls that rewrite the rail cannot strand a half-clicked button.
+    return '<button class="stage-node ' + cls + '" type="button" data-stage="' + i + '" title="' + escapeHtml(tip) + '"'
       + (locked ? " disabled" : "") + "><span>" + s[0] + "</span><b>" + s[1] + "</b></button>";
   }).join("");
 }
