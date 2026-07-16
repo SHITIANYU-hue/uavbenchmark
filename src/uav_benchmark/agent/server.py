@@ -162,13 +162,12 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                 return
             self._json(HTTPStatus.OK, status)
             return
-        if parsed.path == "/api/template/saved":
-            saved_path = ROOT / "saved_template.json"
-            if saved_path.exists():
-                data = json.loads(saved_path.read_text(encoding="utf-8"))
-                self._json(HTTPStatus.OK, data)
+        if parsed.path == "/api/pipeline/load":
+            p = ROOT / "saved_pipeline.json"
+            if p.exists():
+                self._json(HTTPStatus.OK, json.loads(p.read_text(encoding="utf-8")))
             else:
-                self._json(HTTPStatus.NOT_FOUND, {"error": "no_saved_template"})
+                self._json(HTTPStatus.NOT_FOUND, {"error": "no_saved_pipeline"})
             return
         if self.path == "/":
             self.path = "/pipeline.html"
@@ -182,7 +181,7 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
             "/api/instance/generate",
             "/api/instance/batch",
             "/api/instance/traverse",
-            "/api/template/save",
+            "/api/pipeline/save",
         }:
             self._json(HTTPStatus.NOT_FOUND, {"error": "not_found"})
             return
@@ -196,22 +195,12 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
         try:
             payload = json.loads(self.rfile.read(length).decode("utf-8"))
 
-            if self.path == "/api/template/save":
-                candidate_data = payload.get("candidate")
-                task_description = payload.get("task_description", "")
-                if not candidate_data:
-                    raise ValueError("Missing 'candidate'.")
-                record = {
-                    "saved_at": datetime.now(timezone.utc).isoformat(),
-                    "task_description": task_description,
-                    "candidate": candidate_data,
-                }
-                save_path = ROOT / "saved_template.json"
-                save_path.write_text(
-                    json.dumps(record, ensure_ascii=False, indent=2),
-                    encoding="utf-8",
-                )
-                self._json(HTTPStatus.OK, {"status": "saved", "path": str(save_path.relative_to(ROOT))})
+            if self.path == "/api/pipeline/save":
+                record = dict(payload)
+                record["savedAt"] = datetime.now(timezone.utc).isoformat()
+                save_path = ROOT / "saved_pipeline.json"
+                save_path.write_text(json.dumps(record, ensure_ascii=False, indent=2), encoding="utf-8")
+                self._json(HTTPStatus.OK, {"status": "saved", "savedAt": record["savedAt"]})
                 return
 
             if self.path in {"/api/instance/generate", "/api/instance/batch", "/api/instance/traverse"}:

@@ -8,6 +8,8 @@ __pycache__/
 !.env.example
 .agent_runs/
 outputs/
+saved_pipeline.json
+saved_template.json
 *.egg-info/
 
 # Local research/source materials; not part of the public runnable repository.

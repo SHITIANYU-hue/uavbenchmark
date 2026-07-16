@@ -127,7 +127,7 @@
     }
     .stage-rail {
       display: grid;
-      grid-template-columns: repeat(6, minmax(110px, 1fr));
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
       gap: 7px;
       max-width: 1500px;
       margin: 0 auto;
@@ -581,1658 +581,323 @@
   <div id="reviewWorkspaceHost"></div>
 
   <script>
-    const OILFIELD_PROMPT = [
-      "在油田长距离管廊环境中，一架满足既定执行包络的无人机沿指定管廊巡检航段实际执行缺陷巡检任务。系统在正常巡检阶段持续维护无人机与管廊中心线、管线或指定检查面的相对距离、方位、横向/垂向偏差和观测质量，并对当前观察窗口中的腐蚀、泄漏、保温层破损、结构破损或异物侵入等缺陷进行识别，输出缺陷类别、置信度、图像或热成像证据、管廊区段 ID 和发现时间。",
-      "任务运行至中段后，世界侧通过持续逆风、可用电池容量下降、载荷功耗增加或其他资源消耗偏差，使实际能源消耗逐步偏离初始预算。系统需持续估算剩余电量、剩余飞行时间、返航或备降所需资源和安全储备；当继续完成原巡检任务已无法满足安全储备或可达性约束时，系统应自主决定继续、缩短巡检、返航或前往预定义安全备降点。",
-      "A11 负责判断何时应停止或缩短巡检、选择哪一种资源兜底策略，并验证处置后的资源与终态是否安全；A7 负责执行已选定的固定巡检、返航或备降航迹；A8 底层速度、姿态和稳定控制由外部飞控或仿真执行器提供。本案例不等待人工批准后再处置，不评价自然语言交互或人工接管能力。"
-    ].join("\n\n");
+    "use strict";
 
     const STAGES = [
-      ["SCENARIO", "固定业务场景"],
-      ["TASK", "简短任务输入"],
-      ["NARRATIVE", "任务文案复核"],
-      ["COVERAGE", "能力等级复核"],
-      ["JD", "变量提取"],
-      ["TEMPLATE", "任务模板"],
-      ["INSTANCE", "任务实例化"]
+      ["STEP 1", "任务域选择",     "场景 + 简短描述"],
+      ["STEP 2", "扩充与提取",     "Agent 文案 + A×L + JD"],
+      ["STEP 3", "Domain Template", "JD 取值域 + 确认 A×L"],
+      ["STEP 4", "Task Template",  "Seed → 具体值"],
     ];
 
     const SCENARIO_TASK_EXAMPLES = {
-      highway_inspection: "例如：让无人机巡查指定高速路段，持续识别和记录违法停车车辆。同一辆车短时遮挡后再次出现时不要重复上报；遇到定位异常先安全保持并通知调度人员，最后生成按路段整理的违停巡检报告。",
-      oil_gas_inspection: "例如：让无人机沿油气管道巡检并持续记录发现的异常。电量不足以安全完成任务时，由它自己决定缩短巡检、返航还是去安全点，并告诉我最后是否安全结束。",
-      bridge_inspection: "例如：让无人机检查桥底和指定结构件，把发现的病害标在桥梁三维模型上并持续更新。不能确定的病害留给人工确认，不要直接给出维修结论。",
-      campus_inspection: "例如：让无人机巡查园区道路和设施，发现异常后持续更新告警。需要近距离查看时通知机器狗去复核，最后把无人机和机器狗的结果汇总起来。",
-      other_inspection: "例如：这是河道巡检。让无人机沿指定河段持续查找异常漂浮物，发现后记录位置和图片并发出告警；遇到突发情况时给调度人员一个应急航线建议。"
+      highway_inspection: "例如：让无人机巡查指定高速路段，持续识别和记录违法停车车辆。同一辆车短时遮挡后再次出现时不要重复上报；遇到定位异常先安全保持并通知调度人员。",
+      oil_gas_inspection: "例如：让无人机沿油气管道巡检并持续记录发现的异常。电量不足以安全完成任务时，由它自己决定缩短巡检、返航还是去安全点。",
+      bridge_inspection: "例如：让无人机检查桥底和指定结构件，把发现的病害标在桥梁三维模型上并持续更新。",
+      campus_inspection: "例如：让无人机巡查园区道路和设施，发现异常后持续更新告警。需要近距离查看时通知机器狗去复核。",
+      other_inspection: "例如：让无人机沿指定河段持续查找异常漂浮物，发现后记录位置和图片并发出告警。",
     };
 
-    const CITY_PROMPT = [
-      "请让无人机沿固定道路航段持续巡检违停车辆。车辆出现、短时遮挡或重新出现时，系统应保持同一目标身份，合并重复观测并持续更新巡检报告。",
-      "正常阶段持续维护自身位姿和定位质量。当定位观测明显退化或不同来源相互矛盾时，系统应标记当前位姿不可信，停止依赖该位姿进行高风险推进，请求外部执行器进入安全保持，并通过结构化接口上报异常后等待外部决定。",
-      "系统只输出航路风险、航段偏差和飞行状态建议，不自主修改航路，也不执行低层飞行控制。具体时长、定位可信阈值和安全包络数值尚未确定。"
-    ].join("\n\n");
+    const STORAGE_KEY = "uav_pipeline_v5";
 
-    const OILFIELD_COVERAGE = [
-      { id: "a5_l1", code: "A5×L1", name: "缺陷识别", detail: "当前观察窗口内输出缺陷类别、证据、区段与时间。", kind: "scored" },
-      { id: "a6b_l2", code: "A6b×L2", name: "相对几何维护", detail: "连续维护距离、方位、横向/垂向偏差和观测质量。", kind: "scored" },
-      { id: "a7_l2", code: "A7×L2", name: "航迹执行与切换", detail: "执行固定巡检航迹，并按 A11 指令切换返航或备降路线。", kind: "scored" },
-      { id: "a11_l4", code: "A11×L4", name: "资源兜底决策", detail: "持续估算资源，自主选择策略与目标，并验证安全终态。", kind: "scored" },
-      { id: "a6a_dep", code: "A6a", name: "外部基础位姿", detail: "由外部系统提供基础绝对位姿和航向；本案例不评分。", kind: "dependency" },
-      { id: "a8_dep", code: "A8", name: "外部低层飞控", detail: "由外部执行器完成速度、姿态、位置与着陆控制；本案例不评分。", kind: "dependency" }
-    ];
+    function initialState() {
+      return {
+        currentStage: 0, maxUnlocked: 0, completed: new Set(),
+        serverStatus: "checking", catalogSummary: null,
+        scenarioRegistry: null, selectedScenarioId: "highway_inspection", fixedScenario: null,
+        taskPrompt: "", modelTier: "flash",
+        narrativeStatus: "idle", narrativeRunId: null, narrativeDraft: "", narrativeOriginal: "", narrativeError: null,
+        agentStatus: "idle", agentRunId: null, agentResult: null, agentError: null,
+        domainEdits: {},
+        instanceMode: "single", instanceSeed: 0, instanceBatchSeeds: "0-4",
+        instanceResult: null, instanceResults: null, instanceError: null, instanceLoading: false,
+        saveNotice: null,
+      };
+    }
 
-    const CITY_COVERAGE = [
-      { id: "a5_l2", code: "A5×L2", name: "连续车辆感知", detail: "连续检测、跨帧身份保持、去重并持续更新巡检报告。", kind: "scored" },
-      { id: "a6a_l3", code: "A6a×L3", name: "定位退化责任", detail: "识别退化、标记不可信、请求保护、上报并等待外部决定。", kind: "scored" },
-      { id: "a7_l1", code: "A7×L1", name: "局部运动目标", detail: "维护局部运动目标并输出航路可行性、约束、风险与偏差提示；外部 Executor 执行。", kind: "scored" },
-      { id: "a8_l1", code: "A8×L1", name: "控制状态建议", detail: "理解飞控控制状态、识别质量偏差并输出调整建议；不闭环控制。", kind: "scored" },
-      { id: "executor_dep", code: "Executor", name: "外部保护执行", detail: "推进固定航段，执行暂停或等效安全保持；不计 SUT coverage。", kind: "dependency" },
-      { id: "decision_dep", code: "External Decision", name: "外部决定接口", detail: "接收异常上报并返回继续、返航或终止等外部决定；协议 TBD。", kind: "dependency" }
-    ];
-
-    const OILFIELD_JD_ROWS = [
-      ["jd-0.2", "工作空间结构", "油田线性或分段线性管廊", "原始任务 + 案例二文档", "given"],
-      ["jd-2.2", "平台参数表", "platform_profile_registry", "平台 profile 待项目组提供", "tbd"],
-      ["jd-7.1", "航路拓扑", "固定巡检、返航与安全备降路线", "原始任务", "proposed"],
-      ["jd-0.9", "载荷集", "RGB；可选热红外/深度/测距", "原始任务", "proposed"],
-      ["jd-5.1", "业务对象类目", "腐蚀、泄漏、破损、异物侵入", "原始任务", "given"],
-      ["jd-6b.1", "相对几何先验", "中心线、检查面、目标观察距离", "案例二文档", "proposed"],
-      ["jd-0.3", "资源偏差窗口", "resource_deviation_profile", "Fixture profile 待确认", "tbd"],
-      ["jd-0.10", "安全包络", "最低储备与可达性规则", "不得由 Agent 编造", "tbd"],
-      ["jd-0.7", "任务完成判据", "结构已定义；业务数值未标定", "案例二文档", "proposed"]
-    ];
-
-    const CITY_JD_ROWS = [
-      ["jd-0.2", "工作空间结构", "城市高楼峡谷与固定道路航段", "交接文件当前确认边界", "given"],
-      ["jd-5.1", "业务对象类目", "车辆与违停标签", "案例一合同示例", "given"],
-      ["vehicle_layout", "车辆布局", "vehicle_layout_profile", "实例变量域待确认", "proposed"],
-      ["occlusion_profile", "遮挡配置", "occlusion_profile", "实例变量域待确认", "proposed"],
-      ["localization_fault", "定位退化", "localization_degradation_profile", "异常窗口与强度待确认", "tbd"],
-      ["platform_profile", "平台与保护动作兼容性", "platform_profile_registry", "平台 profile 待项目组提供", "tbd"],
-      ["external_decision_port", "外部决定接口", "协议与返回枚举未定义", "不得由 Agent 编造", "tbd"],
-      ["jd-0.7", "任务完成判据", "五段责任链结构已定义", "交接文件当前确认边界", "proposed"]
-    ];
-
-    const OILFIELD_SUTS = [
-      { id: "good_resource_sut", name: "good_resource_sut", label: "正确责任链", description: "持续估算资源，在合理窗口选择可达策略，A7 完成路线后由 A11 验证终态。", expected: "预期：责任链完整；未标定指标仍为 TBD。" },
-      { id: "always_return_sut", name: "always_return_sut", label: "过早返航", description: "不考虑当前安全余量，无论偏差强度都立即返航。", expected: "预期：EARLY_TERMINATION / UNNECESSARY_ABORT。" },
-      { id: "late_decision_sut", name: "late_decision_sut", label: "延迟决策", description: "资源风险已经可见后仍继续巡检，超过安全窗口才切换模式。", expected: "预期：LATE_DECISION / LATE_MODE_SWITCH。" }
-    ];
-
-    const CITY_SUTS = [
-      { id: "good_sut", name: "good_sut", label: "正确责任链", description: "持续维护车辆身份，定位退化后标记不可信、请求保护、上报并等待外部决定。", expected: "预期：A5/A6a 责任链完整；阈值项保持 TBD。" },
-      { id: "identity_switch_sut", name: "identity_switch_sut", label: "身份切换", description: "同一车辆发生 ID switch 并被重复计入巡检报告。", expected: "预期：IDENTITY_SWITCH / DUPLICATE_COUNT。" },
-      { id: "unsafe_continue_sut", name: "unsafe_continue_sut", label: "异常后继续", description: "已识别定位异常，但不请求保护并继续沿固定航段推进。", expected: "预期：UNSAFE_CONTINUATION / MISSING_PROTECTION_REQUEST。" }
-    ];
-
-    const OILFIELD_PHASES = [
-      ["INIT", "初始化", "加载任务、路线、外部位姿与资源初始状态", "Harness"],
-      ["NOMINAL", "正常巡检", "缺陷识别、相对几何、航迹与资源估算持续输出", "SUT"],
-      ["DEVIATION", "资源偏差", "Fixture 注入可观察遥测偏差；隐藏真值不暴露", "Fixture"],
-      ["DECIDE", "自主决策", "A11 选择策略和目标，向 A7 发出模式切换", "SUT"],
-      ["VERIFY", "执行与验证", "A7 路线执行、外部飞控闭环、A11 验证终态", "Executor + SUT"]
-    ];
-
-    const CITY_PHASES = [
-      ["TASK START", "任务启动", "加载固定航段、车辆场景与外部执行端口", "Harness"],
-      ["NOMINAL", "正常巡检", "持续车辆检测、身份维护、定位质量与辅助建议", "SUT"],
-      ["FAULT", "定位退化", "Fixture 在正常巡检后注入隐藏 fault window", "Fixture"],
-      ["PROTECT", "识别与保护", "A6a 标记不可信并请求外部暂停或安全保持", "SUT + Executor"],
-      ["REPORT", "上报与等待", "异常上报、进入等待并记录外部决定", "SUT + External"]
-    ];
-
-    const CASES = {
-      custom: {
-        key: "custom",
-        label: "新任务",
-        title: "自由业务描述",
-        status: "等待 Agent 分析",
-        prompt: "",
-        naturalTemplate: "",
-        coverage: [],
-        jdRows: [],
-        suts: [],
-        phases: [],
-        pendingCount: 0,
-        templateId: "agent_generated_template",
-        variables: {},
-        attributionRules: [],
-        taskGates: []
-      },
-      case1: {
-        key: "case1",
-        label: "固定场景",
-        title: "城市高楼峡谷道路巡检",
-        status: "会议确认基线",
-        prompt: CITY_PROMPT,
-        naturalTemplate: "",
-        coverage: CITY_COVERAGE,
-        jdRows: CITY_JD_ROWS,
-        suts: CITY_SUTS,
-        phases: CITY_PHASES,
-        pendingCount: 3,
-        templateId: "case1_illegal_parking_template",
-        variables: {
-          vehicle_layout: ["layout-A", "layout-B", "layout-C"],
-          occlusion: ["occlusion-A", "occlusion-B", "occlusion-C"],
-          localization_fault: ["drift", "source-disagreement", "intermittent-loss"],
-          decision_branch: ["continue", "return", "terminate"]
-        },
-        attributionRules: ["sut_executor_action_split", "a6a_report_wait_chain"],
-        taskGates: ["protection_report_external_decision_chain"]
-      },
-      case2: {
-        key: "case2",
-        label: "案例二",
-        title: "油田管廊缺陷巡检",
-        status: "候选 · 待确认",
-        prompt: OILFIELD_PROMPT,
-        naturalTemplate: "",
-        coverage: OILFIELD_COVERAGE,
-        jdRows: OILFIELD_JD_ROWS,
-        suts: OILFIELD_SUTS,
-        phases: OILFIELD_PHASES,
-        pendingCount: 3,
-        templateId: "case2_oilfield_corridor_template",
-        variables: {
-          corridor: ["corridor-A", "corridor-B", "corridor-C"],
-          defect: ["corrosion-window", "leak-window", "insulation-damage"],
-          deviation: ["headwind-drift", "capacity-drop", "payload-power-rise"],
-          branch: ["continue-safe", "shorten-return", "safe-divert"]
-        },
-        attributionRules: ["a11_decision_a7_execution_split", "safe_terminal_single_gate"],
-        taskGates: ["safe_terminal"]
-      }
-    };
-
-    function activeCase() { return CASES.case1; }
-
-    const initialState = () => ({
-      caseKey: "case1",
-      currentStage: 0,
-      maxUnlocked: 0,
-      completed: new Set(),
-      runId: "fixed-scenario-demo-001",
-      prompt: "",
-      inputVersion: null,
-      selectedCoverage: new Set(),
-      modelTier: "flash",
-      serverStatus: "checking",
-      serverModels: null,
-      catalogSummary: null,
-      scenarioRegistry: null,
-      selectedScenarioId: "highway_inspection",
-      fixedScenario: null,
-      narrativeStatus: "idle",
-      narrativeRunId: null,
-      narrativeEvent: null,
-      narrativeEventDetails: null,
-      narrativeResult: null,
-      narrativeDraft: "",
-      narrativeOriginal: "",
-      narrativeEdited: false,
-      narrativeError: null,
-      agentStatus: "idle",
-      agentEvent: null,
-      agentEventDetails: null,
-      agentResult: null,
-      proposedCoverageCells: [],
-      coverageEdited: false,
-      coverageSaving: false,
-      agentError: null,
-      baseRunId: null,
-      revisionId: null,
-      revisionNumber: 0,
-      revisionHistory: [],
-      reviewOpen: false,
-      reviewTab: "tbd",
-      reviewDraft: null,
-      reviewNote: "",
-      reviewSaveError: null,
-      jdConfirmed: false,
-      template: null,
-      templateView: "natural",
-      templateValidated: false,
-      instanceSeed: 0,
-      instanceBatchSeeds: "0-4",
-      instanceMode: "single",
-      instanceResult: null,
-      instanceResults: null,
-      instanceError: null,
-      instanceLoading: false,
-      templateSavedNotice: null,
-      instances: [],
-      selectedInstance: null,
-      selectedSut: null,
-      runStatus: "not_started",
-      runPhase: -1,
-      runLog: [],
-      evidenceFilter: "all",
-      evidence: [],
-      grader: null
-    });
-
-    const STORAGE_KEY = "uav_benchmark_pipeline_state_v4";
-
-    function loadStoredState() {
+    function loadState() {
       try {
         const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "null");
         if (!saved) return initialState();
-        const restored = Object.assign(initialState(), saved, { caseKey: "case1" });
-        restored.completed = new Set(saved.completed || []);
-        restored.selectedCoverage = new Set(saved.selectedCoverage || []);
-        restored.narrativeDraft = normalizeNarrativeText(restored.narrativeDraft || "");
-        restored.narrativeOriginal = normalizeNarrativeText(restored.narrativeOriginal || "");
-        reconcileNarrativeValidation(restored.narrativeResult, restored.narrativeDraft);
-        restored.serverStatus = "checking";
-        return restored;
-      } catch (error) {
-        return initialState();
-      }
+        const s = Object.assign(initialState(), saved);
+        s.completed = new Set(saved.completed || []);
+        return s;
+      } catch { return initialState(); }
     }
 
     function persistState() {
-      const snapshot = Object.assign({}, state, {
-        completed: Array.from(state.completed),
-        selectedCoverage: Array.from(state.selectedCoverage)
-      });
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(Object.assign({}, state, {completed: Array.from(state.completed)})));
     }
 
-    let state = loadStoredState();
-    let runTimer = null;
-    let pendingPollTimer = null;
+    let state = initialState();
+    let pollTimer = null;
 
-    function escapeHtml(value) {
-      return String(value).replace(/[&<>"']/g, char => ({
-        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
-      })[char]);
-    }
+    function escapeHtml(v) { return String(v).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[c])); }
+    function pill(text, cls) { return '<span class="status-pill ' + (cls || "proposed") + '">' + escapeHtml(text) + "</span>"; }
+    function uid(p) { return p + Math.random().toString(36).substring(2, 10); }
 
-    function statusPill(text, style) {
-      return '<span class="status-pill ' + style + '">' + escapeHtml(text) + "</span>";
-    }
-
-    function agentCandidate() {
-      return state.agentResult ? state.agentResult.candidate : null;
-    }
-
-    function coverageItems() {
-      const candidate = agentCandidate();
-      if (!candidate) return [];
-      const scored = (candidate.coverage_candidates || []).map((item, index) => {
-        const catalogCell = state.catalogSummary && state.catalogSummary.gal_cells.find(row => row.cell === item.cell);
-        return {
-          id: "scored_" + index,
-          candidateIndex: index,
-          code: item.cell,
-          aId: item.cell.split("×")[0],
-          level: item.cell.split("×")[1],
-          proposedCode: state.proposedCoverageCells[index] || item.cell,
-          name: catalogCell ? catalogCell.ability : item.role === "primary" ? "主要评分能力" : item.role === "anomaly" ? "异常处置能力" : "辅助评分能力",
-          detail: (item.responsibilities || []).join("；") + (item.status === "TBD" ? "（TBD）" : ""),
-          evidence: item.evidence_quote,
-          kind: "scored"
-        };
-      });
-      const dependencies = (candidate.runtime_dependencies || []).map((item, index) => ({
-        id: "dependency_" + index,
-        candidateIndex: index,
-        code: item.dependency_id,
-        name: item.provider,
-        detail: (item.responsibilities || []).join("；") + (item.status === "TBD" ? "（TBD）" : ""),
-        evidence: item.evidence_quote,
-        kind: "dependency"
-      }));
-      return scored.concat(dependencies);
-    }
-
-    function jdRows() {
-      const candidate = agentCandidate();
-      if (!candidate) return [];
-      return (candidate.jd_candidates || []).map(item => [
-        item.slot_id,
-        item.name,
-        item.value || "TBD",
-        item.source_note || item.evidence_quote || "等待人工补充",
-        item.status === "given" ? "given" : item.status === "TBD" ? "tbd" : "proposed"
-      ]);
-    }
-
-    function currentTitle() {
-      return agentCandidate() ? agentCandidate().task_title : activeCase().title;
-    }
-
-    const RUN_EVENT_LABELS = {
-      request_submitted: "请求已提交，等待本地服务接收",
-      request_received: "本地服务已接收任务",
-      tool_called: "正在读取受审目录",
-      tool_completed: "受审目录读取完成",
-      model_request_started: "GAL / JD 已就绪，等待 DeepSeek 返回",
-      model_response_received: "DeepSeek 已返回，正在解析候选",
-      candidate_validated: "候选已完成确定性校验",
-      run_saved: "运行结果已保存"
-    };
-
-    const NARRATIVE_EVENT_LABELS = {
-      request_submitted: "简短任务已提交",
-      request_received: "本地服务已接收简短任务",
-      model_request_started: "正在扩充完整业务文案",
-      model_response_received: "文案已返回，正在解析",
-      narrative_validated: "扩充文案已完成本地检查",
-      run_saved: "扩充文案与运行记录已保存"
-    };
-
-    const JD_DISPLAY_NAMES = {
-      "jd-0.2": "工作空间结构", "jd-0.3": "扰动谱", "jd-0.5": "人机确认协议/结构化外部事件接口",
-      "jd-0.7": "任务完成判据", "jd-0.9": "载荷集", "jd-0.10": "安全包络先验", "jd-5.1": "业务对象类目",
-      "jd-6a.1": "定位源需求", "jd-6a.3": "定位策略适用集/允许保护动作集", "jd-6b.1": "相对几何先验",
-      "jd-6b.2": "相对几何感知机制", "jd-7.1": "航路拓扑", "jd-7.2": "导航工作机制",
-      "jd-8.1": "控制质量先验", "jd-8.2": "控制工作机制", "jd-8.3": "控制处置策略适用集"
-    };
-
-    const ISSUE_COPY = {
-      MISSING_REQUIRED_JD_SLOT: ["JD 表缺少必需字段", "把缺失字段补入 JD 表；未知值可以继续保留 TBD。"],
-      MISSING_REQUIRED_JD_IN_TEMPLATE: ["模板正文缺少 JD 标注", "在自然语言模板相应位置加入标准【jd-x.x 字段＝值】标注。"],
-      HUMAN_VALUE_MISSING_SOURCE: ["人工填写值缺少确认依据", "填写业务确认人、会议纪要、文档章节或其他可追溯来源。"],
-      EVIDENCE_NOT_VERBATIM: ["Agent 证据不是原文片段", "核对候选值与原始业务描述，必要时改为人工补充并记录来源。"],
-      INCOMPLETE_TEMPLATE_STRUCTURE: ["自然语言模板结构不完整", "按七段式模板骨架补全任务环境、责任、异常和完成条件。"],
-      MISSING_COVERAGE_IN_TEMPLATE: ["模板未写明已选 A×L", "在正文中明确能力编号、责任和不测项。"],
-      RUNTIME_DEPENDENCY_MARKED_SCORED: ["外部依赖被错误计分", "Runtime Dependency 必须保持 scored=false。"],
-      JD_NAME_MISMATCH: ["JD 名称与当前字典版本不一致", "按当前 66 槽位字典修正名称，不要沿用旧版同 ID 含义。"],
-      CATALOG_VERSION_MISMATCH: ["知识目录版本不一致", "使用当前本地 A×L 与 JD 字典重新生成候选。"],
-      TAGGED_JD_NOT_EMITTED: ["模板引用了 JD，但 JD 表缺少该项", "把正文已引用的 JD 同步加入结构化 JD 表。"],
-      DUPLICATE_GAL_CELL: ["能力候选重复", "合并相同 A×L 的候选责任与证据。"],
-      DUPLICATE_JD_SLOT: ["JD 槽位重复", "同一 JD ID 在候选表中只保留一项。"],
-      INTERNAL_LABEL_IN_NARRATIVE: ["业务正文包含内部编号", "从自然语言正文移除 A×L、GAL 和 JD 编号；这些信息只在结构化复核区显示。"],
-      INCOMPLETE_CUMULATIVE_RESPONSIBILITY: ["等级责任累计不完整", "目标等级必须显式保留从 L1 到当前等级的每层责任。"]
-    };
-
-    function issueCopy(issue) {
-      const copy = ISSUE_COPY[issue.code] || [issue.code, issue.message];
-      const slot = (issue.message || "").match(/jd-[0-9a-z.]+/i);
-      return { title: copy[0] + (slot ? " · " + slot[0] : ""), detail: copy[1] };
-    }
-
-    function issueReviewTab(issue) {
-      if ((issue.path || "").startsWith("runtime_dependencies")) return "dependencies";
-      if (["INCOMPLETE_TEMPLATE_STRUCTURE", "INTERNAL_LABEL_IN_NARRATIVE"].includes(issue.code)) return "template";
-      return "tbd";
-    }
-
-    function currentRunLabel(kind) {
-      const narrative = kind === "narrative";
-      const event = narrative ? state.narrativeEvent : state.agentEvent;
-      const details = narrative ? state.narrativeEventDetails : state.agentEventDetails;
-      const label = (narrative ? NARRATIVE_EVENT_LABELS[event] : RUN_EVENT_LABELS[event]) || (narrative ? "正在准备任务文案 Agent" : "正在准备分类 Agent");
-      const tool = details && details.tool;
-      return tool ? label + " · " + tool : label;
-    }
-
-    function normalizeNarrativeText(value) {
-      return String(value || "").replace(/\\r\\n/g, "\n").replace(/\\n/g, "\n").trim();
-    }
-
-    function reconcileNarrativeValidation(result, narrative) {
-      if (!result || !Array.isArray(result.validation_issues)) return;
-      const paragraphCount = narrative.split(/\n\s*\n/).map(item => item.trim()).filter(Boolean).length;
-      if (paragraphCount < 7) return;
-      result.validation_issues = result.validation_issues.filter(item => item.code !== "INCOMPLETE_TEMPLATE_STRUCTURE");
-      result.validation_status = result.validation_issues.length ? "needs_review" : "pass";
-    }
-
-    function applyNarrativeResult(result) {
-      const normalizedNarrative = normalizeNarrativeText(result.draft.expanded_narrative);
-      result.draft.expanded_narrative = normalizedNarrative;
-      reconcileNarrativeValidation(result, normalizedNarrative);
-      state.narrativeResult = result;
-      state.narrativeRunId = result.run_id;
-      state.narrativeStatus = "done";
-      state.narrativeEvent = "run_saved";
-      state.narrativeOriginal = normalizedNarrative;
-      state.narrativeDraft = normalizedNarrative;
-      state.narrativeEdited = false;
-      state.narrativeError = null;
-    }
-
-    function applyAgentResult(result) {
-      state.agentResult = result;
-      state.runId = result.run_id;
-      state.agentStatus = "done";
-      state.agentEvent = "run_saved";
-      state.inputVersion = "input-v1";
-      state.template = result.candidate;
-      state.baseRunId = result.run_id;
-      state.revisionId = null;
-      state.revisionNumber = 0;
-      state.revisionHistory = [];
-      state.reviewDraft = null;
-      state.proposedCoverageCells = (result.candidate.coverage_candidates || []).map(item => item.cell);
-      state.coverageEdited = false;
-      state.selectedCoverage = new Set(coverageItems().map(item => item.id));
-    }
-
-    async function pollRunStatus(kind) {
-      const narrative = kind === "narrative";
-      const statusKey = narrative ? "narrativeStatus" : "agentStatus";
-      const runId = narrative ? state.narrativeRunId : state.runId;
-      if (state[statusKey] !== "running" || !runId || !runId.startsWith("agent-")) return;
-      try {
-        const response = await fetch("/api/config-agent/status?run_id=" + encodeURIComponent(runId), { cache: "no-store" });
-        if (response.ok) {
-          const status = await response.json();
-          if (narrative) {
-            state.narrativeEvent = status.event || state.narrativeEvent;
-            state.narrativeEventDetails = status.details || null;
-          } else {
-            state.agentEvent = status.event || state.agentEvent;
-            state.agentEventDetails = status.details || null;
-          }
-          if (status.status === "completed" && status.result) {
-            if (narrative) {
-              applyNarrativeResult(status.result);
-              state.completed.add(1);
-              state.maxUnlocked = Math.max(state.maxUnlocked, 2);
-              state.currentStage = 2;
-            } else {
-              applyAgentResult(status.result);
-              state.completed.add(2);
-              state.maxUnlocked = Math.max(state.maxUnlocked, 3);
-              state.currentStage = 3;
-            }
-          } else if (status.status === "failed") {
-            state[statusKey] = "error";
-            const errorText = (status.details && status.details.error) || "Agent 运行失败，请查看终端日志。";
-            if (narrative) state.narrativeError = errorText;
-            else state.agentError = errorText;
-          }
-          render();
-        }
-      } catch (error) {
-        // A transient polling error does not cancel the model request.
-      }
-      if (state[statusKey] === "running") {
-        pendingPollTimer = setTimeout(() => pollRunStatus(kind), 1500);
-      }
-    }
-
-    function startRunPolling(kind) {
-      if (pendingPollTimer) clearTimeout(pendingPollTimer);
-      pendingPollTimer = setTimeout(() => pollRunStatus(kind), 300);
-    }
-
-    function cloneCandidate() {
-      return JSON.parse(JSON.stringify(agentCandidate()));
-    }
-
-    function openReviewWorkspace(tab) {
-      if (!agentCandidate()) return;
-      state.reviewOpen = true;
-      state.reviewTab = tab || "tbd";
-      state.reviewDraft = cloneCandidate();
-      state.reviewNote = "";
-      state.reviewSaveError = null;
-      render();
-    }
-
-    function missingRequiredSlots() {
-      const issues = (state.agentResult && state.agentResult.validation_issues) || [];
-      return Array.from(new Set(issues.filter(item => item.code === "MISSING_REQUIRED_JD_SLOT").map(item => {
-        const match = (item.message || "").match(/jd-[0-9a-z.]+/i);
-        return match ? match[0] : null;
-      }).filter(Boolean)));
-    }
-
-    function autoAddMissingSlots() {
-      const existing = new Set((state.reviewDraft.jd_candidates || []).map(item => item.slot_id));
-      missingRequiredSlots().forEach(slot => {
-        if (!existing.has(slot)) {
-          state.reviewDraft.jd_candidates.push({
-            slot_id: slot,
-            name: JD_DISPLAY_NAMES[slot] || slot,
-            value: null,
-            status: "TBD",
-            evidence_quote: "",
-            provenance: "auto_fixed",
-            source_note: "当前版本化 A×L/JD 目录要求的必需槽位"
-          });
-        }
-      });
-      renderReviewWorkspace();
-      persistState();
-    }
-
-    function renderTbdReview() {
-      const missing = missingRequiredSlots().filter(slot => !(state.reviewDraft.jd_candidates || []).some(item => item.slot_id === slot));
-      const tbd = (state.reviewDraft.jd_candidates || []).filter(item => item.status === "TBD" || item.value === null);
-      const missingHtml = missing.length ?
-        '<div class="review-form-card pending"><div class="review-form-card-head"><div><b>JD 表还缺 ' + missing.length + ' 个骨架字段</b><span>' + missing.join(" · ") + '</span></div><button class="btn" id="autoAddMissingSlots" type="button">全部补为 TBD</button></div><p class="review-help">这里只补字段和名称，不生成任何业务值或阈值。</p></div>' : "";
-      const rows = tbd.map(item => '<div class="review-form-card"><div class="review-form-card-head"><div><b>' +
-        escapeHtml(item.name) + '</b><span>' + escapeHtml(item.slot_id) + ' · ' + escapeHtml(item.provenance || "agent_extracted") + '</span></div>' +
-        statusPill("TBD", "tbd") + '</div><div class="review-fields"><div class="review-field"><label>人工确认值（留空则继续 TBD）</label>' +
-        '<input data-review-jd-value="' + item.slot_id + '" value="' + escapeHtml(item.value || "") + '" placeholder="例如：平台类型仍待确认"></div>' +
-        '<div class="review-field"><label>确认依据（填写值时必填）</label><input data-review-jd-source="' + item.slot_id + '" value="' +
-        escapeHtml(item.source_note || "") + '" placeholder="例如：7月13日项目会议纪要 / 业务负责人确认"></div></div></div>').join("");
-      return '<h3 class="review-section-title">统一补录 TBD</h3><p class="review-help">能确认的值统一填写；不能确认的继续留空。保存不会调用 DeepSeek。</p>' +
-        '<div class="review-form-list">' + missingHtml + (rows || '<div class="review-empty">当前没有 TBD 字段。</div>') + '</div>';
-    }
-
-    function renderDependencyReview() {
-      const items = (state.reviewDraft.runtime_dependencies || []).map((item, index) => '<div class="review-dependency"><div><b>' +
-        escapeHtml(item.dependency_id) + '</b><span>' + escapeHtml(item.provider) + ' · 不评分 · ' + escapeHtml((item.responsibilities || []).join("；")) +
-        '</span></div><button class="btn" data-remove-dependency="' + index + '" type="button">移除</button></div>').join("");
-      return '<h3 class="review-section-title">Runtime Dependencies · 人工补充</h3><p class="review-help">补充任务运行需要、但不计入 SUT 评分的执行器、外部系统或外部决定接口。</p>' +
-        '<div class="review-dependency-list">' + (items || '<div class="review-empty">尚无外部依赖。</div>') + '</div>' +
-        '<div class="review-form-card"><div class="review-fields"><div class="review-field"><label>Dependency ID</label><input id="newDependencyId" placeholder="例如：external_decision_port"></div>' +
-        '<div class="review-field"><label>提供者</label><select id="newDependencyProvider"><option value="human_or_external_decision">外部决定接口</option><option value="executor">外部执行器</option><option value="external_system">外部系统</option></select></div>' +
-        '<div class="review-field"><label>责任（用分号分隔）</label><textarea id="newDependencyResponsibilities" placeholder="接收结构化异常事件；返回继续、返航或终止"></textarea></div>' +
-        '<div class="review-field"><label>人工确认依据</label><textarea id="newDependencySource" placeholder="任务原文、会议纪要或业务负责人确认"></textarea></div></div>' +
-        '<div class="action-row"><span class="action-note">新增项固定 scored=false，并记录为 human_added。</span><button class="btn" id="addDependency" type="button">添加外部依赖</button></div></div>';
-    }
-
-    function renderTemplateReview() {
-      return '<h3 class="review-section-title">编辑自然语言 Task Template</h3><p class="review-help">可修正 JD 标注、责任归因和语义表述。未知数值仍使用 TBD。</p>' +
-        '<div class="review-field"><label>模板正文</label><textarea class="review-template-editor" id="reviewTemplateEditor">' +
-        escapeHtml(state.reviewDraft.natural_language_template || "") + '</textarea></div>';
-    }
-
-    function bindReviewWorkspace() {
-      document.querySelectorAll("[data-review-tab]").forEach(button => button.addEventListener("click", () => {
-        state.reviewTab = button.dataset.reviewTab;
-        renderReviewWorkspace();
-        persistState();
-      }));
-      const close = document.getElementById("closeReviewWorkspace");
-      if (close) close.addEventListener("click", () => { state.reviewOpen = false; state.reviewDraft = null; render(); });
-      const auto = document.getElementById("autoAddMissingSlots");
-      if (auto) auto.addEventListener("click", autoAddMissingSlots);
-      document.querySelectorAll("[data-review-jd-value]").forEach(input => input.addEventListener("input", () => {
-        const item = state.reviewDraft.jd_candidates.find(row => row.slot_id === input.dataset.reviewJdValue);
-        const value = input.value.trim();
-        item.value = value || null;
-        item.status = value ? "proposed" : "TBD";
-        item.provenance = value ? "human_edited" : item.provenance;
-      }));
-      document.querySelectorAll("[data-review-jd-source]").forEach(input => input.addEventListener("input", () => {
-        const item = state.reviewDraft.jd_candidates.find(row => row.slot_id === input.dataset.reviewJdSource);
-        item.source_note = input.value.trim() || null;
-      }));
-      document.querySelectorAll("[data-remove-dependency]").forEach(button => button.addEventListener("click", () => {
-        state.reviewDraft.runtime_dependencies.splice(Number(button.dataset.removeDependency), 1);
-        renderReviewWorkspace();
-      }));
-      const add = document.getElementById("addDependency");
-      if (add) add.addEventListener("click", () => {
-        const id = document.getElementById("newDependencyId").value.trim();
-        const responsibilities = document.getElementById("newDependencyResponsibilities").value.split(/[；;\n]/).map(item => item.trim()).filter(Boolean);
-        const source = document.getElementById("newDependencySource").value.trim();
-        if (!id || !responsibilities.length || !source) {
-          state.reviewSaveError = "新增外部依赖需要填写 ID、责任和人工确认依据。";
-          renderReviewWorkspace();
-          return;
-        }
-        state.reviewDraft.runtime_dependencies.push({
-          dependency_id: id,
-          provider: document.getElementById("newDependencyProvider").value,
-          responsibilities,
-          evidence_quote: "",
-          scored: false,
-          status: "proposed",
-          provenance: "human_added",
-          source_note: source
-        });
-        state.reviewSaveError = null;
-        renderReviewWorkspace();
-      });
-      const editor = document.getElementById("reviewTemplateEditor");
-      if (editor) editor.addEventListener("input", () => { state.reviewDraft.natural_language_template = editor.value; });
-      const note = document.getElementById("reviewNote");
-      if (note) note.addEventListener("input", () => { state.reviewNote = note.value; });
-      const save = document.getElementById("saveHumanRevision");
-      if (save) save.addEventListener("click", saveHumanRevision);
-    }
-
-    function renderReviewWorkspace() {
-      const host = document.getElementById("reviewWorkspaceHost");
-      if (!state.reviewOpen || !state.reviewDraft) { host.innerHTML = ""; return; }
-      const tabBody = state.reviewTab === "dependencies" ? renderDependencyReview() : state.reviewTab === "template" ? renderTemplateReview() : renderTbdReview();
-      host.innerHTML = '<div class="review-overlay"><section class="review-workspace" role="dialog" aria-modal="true" aria-label="人工审核工作台">' +
-        '<div class="review-workspace-head"><div><span class="revision-badge">Draft v' + (state.revisionNumber + 2) + ' · HUMAN REVIEW</span><h2>人工审核工作台</h2>' +
-        '<p>所有修改形成新版本；Agent 原始输出保持不变。</p></div><button class="btn" id="closeReviewWorkspace" type="button">关闭</button></div>' +
-        '<div class="review-tabs"><button class="review-tab ' + (state.reviewTab === "tbd" ? "active" : "") + '" data-review-tab="tbd" type="button">统一补录 TBD</button>' +
-        '<button class="review-tab ' + (state.reviewTab === "dependencies" ? "active" : "") + '" data-review-tab="dependencies" type="button">外部依赖</button>' +
-        '<button class="review-tab ' + (state.reviewTab === "template" ? "active" : "") + '" data-review-tab="template" type="button">模板编辑</button></div>' +
-        '<div class="review-workspace-body">' + tabBody + (state.reviewSaveError ? '<div class="disclaimer">' + escapeHtml(state.reviewSaveError) + '</div>' : "") +
-        '<div class="review-field" style="margin-top:14px"><label>本次修改说明</label><input id="reviewNote" value="' + escapeHtml(state.reviewNote || "") + '" placeholder="例如：补充控制接口与外部决定端口，保留安全阈值 TBD"></div></div>' +
-        '<div class="review-workspace-foot"><span class="action-note">保存后本地重新校验，不调用 DeepSeek，不消耗 RPM。</span><button class="btn primary" id="saveHumanRevision" type="button">保存为新版本并重新校验</button></div>' +
-        '</section></div>';
-      bindReviewWorkspace();
-    }
-
-    async function saveHumanRevision() {
-      state.reviewSaveError = null;
-      try {
-        const response = await fetch("/api/config-agent/revise", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            parent_run_id: state.baseRunId || state.agentResult.run_id,
-            revision_number: state.revisionNumber + 1,
-            scenario_id: state.selectedScenarioId,
-            task_description: state.narrativeDraft,
-            candidate: state.reviewDraft,
-            change_summary: [state.reviewNote || "人工审核修改"]
-          })
-        });
-        const payload = await response.json();
-        if (!response.ok) throw new Error(payload.message || "人工修订保存失败。");
-        state.agentResult.candidate = payload.candidate;
-        state.agentResult.validation_status = payload.validation_status;
-        state.agentResult.validation_issues = payload.validation_issues;
-        state.revisionNumber += 1;
-        state.revisionId = payload.revision_id;
-        state.revisionHistory.push({ revision_id: payload.revision_id, note: state.reviewNote || "人工审核修改", status: payload.validation_status });
-        state.template = payload.candidate;
-        state.selectedCoverage = new Set(coverageItems().map(item => item.id));
-        state.reviewOpen = false;
-        state.reviewDraft = null;
-        state.reviewNote = "";
-        render();
-      } catch (error) {
-        state.reviewSaveError = error.message || String(error);
-        renderReviewWorkspace();
-      }
-    }
-
-    function completeStage(index) {
-      state.completed.add(index);
-      state.maxUnlocked = Math.max(state.maxUnlocked, Math.min(index + 1, STAGES.length - 1));
-      state.currentStage = Math.min(index + 1, STAGES.length - 1);
-      render();
-    }
-
-    function goToStage(index) {
-      if (index <= state.maxUnlocked) {
-        state.currentStage = index;
-        render();
-      }
-    }
+    function completeStage(i) { state.completed.add(i); state.maxUnlocked = Math.max(state.maxUnlocked, Math.min(i + 1, STAGES.length - 1)); state.currentStage = Math.min(i + 1, STAGES.length - 1); render(); }
+    function goToStage(i) { if (i <= state.maxUnlocked) { state.currentStage = i; render(); } }
 
     function renderStageRail() {
-      const rail = document.getElementById("stageRail");
-      rail.innerHTML = STAGES.map((stage, index) => {
-        const done = state.completed.has(index);
-        const current = state.currentStage === index;
-        const locked = index > state.maxUnlocked;
-        const cls = done ? "done" : current ? "current" : locked ? "locked" : "";
-        const marker = done ? "✓ DONE" : current ? "● CURRENT" : locked ? "LOCKED" : "READY";
-        return '<button class="stage-node ' + cls + '" type="button" data-stage="' + index + '"' +
-          (locked ? " disabled" : "") + '><span>' + marker + '</span><b>' +
-          String(index).padStart(2, "0") + " · " + stage[1] + "</b></button>";
+      document.getElementById("stageRail").innerHTML = STAGES.map((s, i) => {
+        const cls = i === state.currentStage ? "current" : state.completed.has(i) ? "done" : i <= state.maxUnlocked ? "" : "locked";
+        return '<button class="stage-node ' + cls + '" type="button" onclick="goToStage(' + i + ')"' + (i > state.maxUnlocked ? " disabled" : "") + "><span>" + s[0] + "</span><b>" + s[1] + "</b></button>";
       }).join("");
-      rail.querySelectorAll("[data-stage]").forEach(button => {
-        button.addEventListener("click", () => goToStage(Number(button.dataset.stage)));
+    }
+
+    function setHeader(i, st) {
+      document.getElementById("workspaceEyebrow").textContent = STAGES[i][0] + " · " + STAGES[i][2];
+      document.getElementById("workspaceTitle").textContent = STAGES[i][1];
+      document.getElementById("workspaceState").textContent = st || "";
+    }
+
+    async function savePipeline() {
+      try {
+        const r = await fetch("/api/pipeline/save", {method: "POST", headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({selectedScenarioId: state.selectedScenarioId, taskPrompt: state.taskPrompt,
+            narrativeDraft: state.narrativeDraft, agentResult: state.agentResult, domainEdits: state.domainEdits,
+            completedSteps: Array.from(state.completed), savedAt: new Date().toISOString()})});
+        state.saveNotice = r.ok ? "已保存 ✓" : "保存失败";
+      } catch(e) { state.saveNotice = "保存失败: " + e; }
+      render();
+    }
+
+    async function loadPipeline() {
+      try {
+        const r = await fetch("/api/pipeline/load", {cache: "no-store"});
+        if (!r.ok) { state.saveNotice = "没有已保存的进度"; render(); return; }
+        const d = await r.json();
+        if (d.selectedScenarioId) state.selectedScenarioId = d.selectedScenarioId;
+        if (d.taskPrompt !== undefined) state.taskPrompt = d.taskPrompt;
+        if (d.narrativeDraft) { state.narrativeDraft = d.narrativeDraft; state.narrativeStatus = "done"; }
+        if (d.agentResult) { state.agentResult = d.agentResult; state.agentStatus = "done"; }
+        if (d.domainEdits) state.domainEdits = d.domainEdits;
+        if (d.completedSteps) { state.completed = new Set(d.completedSteps); state.maxUnlocked = Math.max(...d.completedSteps, 0); }
+        state.saveNotice = "已加载 ✓";
+      } catch(e) { state.saveNotice = "加载失败: " + e; }
+      render();
+    }
+
+    function saveBar() {
+      return '<div class="action-row" style="margin-bottom:16px"><span class="action-note">' + escapeHtml(state.saveNotice || "随时保存，重启后加载继续") + '</span>'
+        + '<div><button class="btn" type="button" onclick="loadPipeline()">加载</button> '
+        + '<button class="btn primary" type="button" onclick="savePipeline()">保存</button></div></div>';
+    }
+
+    // ── STEP 1 ────────────────────────────────────────────────────────── //
+
+    function renderStep1() {
+      const locked = state.completed.has(0);
+      const sc = state.fixedScenario;
+      setHeader(0, locked ? "已确认" : "等待确认");
+      if (!sc) { document.getElementById("workspaceBody").innerHTML = '<div class="choice-card">读取场景中...</div>'; return; }
+      const opts = ((state.scenarioRegistry && state.scenarioRegistry.scenarios) || [])
+        .map(s => '<option value="' + s.scenario_id + '"' + (s.scenario_id === state.selectedScenarioId ? " selected" : "") + ">" + escapeHtml(s.title) + "</option>").join("");
+      const rows = (sc.variable_bindings || []).map(b => "<tr><td class='mono'>" + escapeHtml(b.slot_id) + "</td><td>" + escapeHtml(b.name) + "</td><td>" + escapeHtml(b.value_or_domain) + "</td><td>" + pill(b.binding_mode, b.binding_mode === "fixed_value" ? "given" : "proposed") + "</td></tr>").join("");
+      document.getElementById("workspaceBody").innerHTML = saveBar()
+        + '<p class="intro">选择业务场景并输入简短任务描述。这一步不调用模型。</p>'
+        + '<div class="field-label"><label>业务场景</label></div><div class="control" style="margin-bottom:14px"><select id="scenarioSelect"' + (locked ? " disabled" : "") + ">" + opts + "</select></div>"
+        + '<table class="data-table"><thead><tr><th>Slot</th><th>Name</th><th>Domain</th><th>Mode</th></tr></thead><tbody>' + rows + '</tbody></table>'
+        + '<div class="field-label" style="margin-top:18px"><label>简短任务描述（1–3句）</label></div>'
+        + '<textarea class="task-input" id="taskPrompt" placeholder="' + escapeHtml(SCENARIO_TASK_EXAMPLES[state.selectedScenarioId] || "") + '"' + (locked ? " disabled" : "") + ">" + escapeHtml(state.taskPrompt) + '</textarea>'
+        + '<div class="action-row"><span class="action-note">确认后进入 Step 2</span><button class="btn primary" type="button" onclick="confirmStep1()"' + (locked || state.taskPrompt.trim().length < 5 ? " disabled" : "") + ">确认 →</button></div>";
+      const sel = document.getElementById("scenarioSelect");
+      if (sel) sel.addEventListener("change", () => { state.selectedScenarioId = sel.value; const f = state.scenarioRegistry.scenarios.find(s => s.scenario_id === sel.value); if (f) state.fixedScenario = f; render(); });
+      const ta = document.getElementById("taskPrompt");
+      if (ta) ta.addEventListener("input", () => { state.taskPrompt = ta.value; });
+    }
+    function confirmStep1() { if (state.taskPrompt.trim().length >= 5) completeStage(0); }
+
+    // ── STEP 2 ────────────────────────────────────────────────────────── //
+
+    async function runNarrative() {
+      state.narrativeStatus = "running"; state.narrativeError = null; state.narrativeRunId = uid("agent-"); render();
+      try {
+        const r = await fetch("/api/config-agent/expand", {method: "POST", headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({task_description: state.taskPrompt, scenario_id: state.selectedScenarioId, model_tier: state.modelTier, run_id: state.narrativeRunId})});
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.message || d.error);
+        state.narrativeStatus = "done"; state.narrativeDraft = d.result.draft.expanded_narrative; state.narrativeOriginal = state.narrativeDraft;
+      } catch(e) { state.narrativeStatus = "idle"; state.narrativeError = String(e.message || e); }
+      render();
+    }
+
+    async function runClassification() {
+      state.agentStatus = "running"; state.agentError = null; state.agentRunId = uid("agent-"); render();
+      try {
+        const r = await fetch("/api/config-agent/analyze", {method: "POST", headers: {"Content-Type": "application/json"},
+          body: JSON.stringify({task_description: state.narrativeDraft, scenario_id: state.selectedScenarioId, model_tier: state.modelTier, run_id: state.agentRunId, source_task_description: state.taskPrompt, narrative_parent_run_id: state.narrativeRunId})});
+        const d = await r.json();
+        if (!r.ok) throw new Error(d.message || d.error);
+        state.agentStatus = "done"; state.agentResult = d.result;
+      } catch(e) { state.agentStatus = "idle"; state.agentError = String(e.message || e); }
+      render();
+    }
+
+    function renderStep2() {
+      setHeader(1, state.completed.has(1) ? "已完成" : state.agentStatus === "done" ? "待确认" : state.narrativeStatus === "done" ? "文案待确认" : "等待运行");
+      const hasN = state.narrativeStatus === "done", hasA = state.agentStatus === "done";
+      let h = saveBar() + '<p class="intro">两次模型调用：① 扩充文案（可编辑）→ ② 分类 A×L + 提取 JD 变量域。</p>';
+      h += '<div class="field-label" style="margin-top:10px"><label>① 文案扩充</label></div>';
+      if (state.narrativeStatus === "running") h += '<div class="choice-card selected"><b>调用中...</b></div>';
+      else if (hasN) {
+        h += '<textarea class="task-input" id="narEdit" style="min-height:180px">' + escapeHtml(state.narrativeDraft) + '</textarea>';
+        h += '<div class="action-row"><span class="action-note">可直接修改</span><button class="btn primary" onclick="confirmNar()">确认文案 →</button></div>';
+      } else {
+        h += '<button class="btn primary" onclick="runNarrative()"' + (state.serverStatus !== "ready" ? " disabled" : "") + ">运行文案扩充</button>";
+        if (state.narrativeError) h += '<div class="choice-card dependency selected" style="margin-top:8px"><b>错误</b><p>' + escapeHtml(state.narrativeError) + "</p></div>";
+      }
+      if (state.agentStatus === "running") { h += '<div class="field-label" style="margin-top:16px"><label>② 分类与提取</label></div><div class="choice-card selected"><b>调用中...</b></div>'; }
+      if (hasA) {
+        const c = state.agentResult.candidate;
+        h += '<div class="field-label" style="margin-top:16px"><label>② A×L 覆盖</label></div>';
+        h += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">' + (c.coverage_candidates || []).map(x => '<span class="status-pill proposed" style="padding:5px 10px;font-size:10px">' + escapeHtml(x.cell) + "</span>").join("") + '</div>';
+        h += '<div class="field-label"><label>③ JD 变量域（' + (c.jd_candidates || []).length + ' 个）</label></div>';
+        h += '<table class="data-table"><thead><tr><th>Slot</th><th>Name</th><th>Domain</th><th>Mode</th></tr></thead><tbody>'
+          + (c.jd_candidates || []).map(j => {
+              const bm = j.binding_mode || "fixed"; let v = j.value ? escapeHtml(String(j.value)) : "—";
+              if (bm === "enum") v = (j.allowed_values || []).map(escapeHtml).join(", ");
+              else if (bm === "range") v = "[" + j.minimum + "~" + j.maximum + "]";
+              return "<tr><td class='mono'>" + escapeHtml(j.slot_id) + "</td><td>" + escapeHtml(j.name) + "</td><td>" + v + "</td><td>" + pill(bm) + "</td></tr>";
+            }).join("") + '</tbody></table>';
+        h += '<div class="action-row" style="margin-top:14px"><span class="action-note">确认后进入 Step 3 编辑域</span><button class="btn primary" onclick="completeStage(1)">确认 →</button></div>';
+      }
+      if (state.agentError) h += '<div class="choice-card dependency selected" style="margin-top:8px"><b>分类错误</b><p>' + escapeHtml(state.agentError) + "</p></div>";
+      document.getElementById("workspaceBody").innerHTML = h;
+      const ne = document.getElementById("narEdit");
+      if (ne) ne.addEventListener("input", () => { state.narrativeDraft = ne.value; });
+    }
+    function confirmNar() { state.narrativeStatus = "done"; runClassification(); }
+
+    // ── STEP 3 ────────────────────────────────────────────────────────── //
+
+    function getEdits() {
+      const c = state.agentResult ? state.agentResult.candidate : null;
+      if (!c) return [];
+      return (c.jd_candidates || []).map(j => {
+        const e = state.domainEdits[j.slot_id] || {};
+        return {slot_id: j.slot_id, name: j.name, binding_mode: e.binding_mode || j.binding_mode || "fixed",
+          value: e.value !== undefined ? e.value : j.value, allowed_values: e.allowed_values || j.allowed_values || [],
+          minimum: e.minimum !== undefined ? e.minimum : j.minimum, maximum: e.maximum !== undefined ? e.maximum : j.maximum};
       });
     }
+    function setEdit(id, f, v) { if (!state.domainEdits[id]) state.domainEdits[id] = {}; state.domainEdits[id][f] = f === "allowed_values" ? v.split(/[,，]/).map(s => s.trim()).filter(Boolean) : v; }
 
-    function renderContext() {
-      const profile = activeCase();
-      const items = coverageItems();
-      const scored = items.filter(item => item.kind === "scored" && state.selectedCoverage.has(item.id));
-      const deps = items.filter(item => item.kind === "dependency" && state.selectedCoverage.has(item.id));
-      const pending = agentCandidate() ? (agentCandidate().open_questions || []).length : 0;
-      const progress = Math.round((state.completed.size / STAGES.length) * 100);
-      const catalogCounts = state.catalogSummary && state.catalogSummary.counts;
-      document.getElementById("contextPanel").innerHTML =
-        '<div class="context-block"><div class="context-label">Task</div><div class="context-value">' + escapeHtml(currentTitle()) + '</div>' +
-        '<div class="mini-tags"><span class="mini-tag">' + escapeHtml(profile.label) + '</span><span class="mini-tag">' +
-        escapeHtml(state.agentStatus === "done" ? "两次调用已返回" : state.agentStatus === "running" ? "调用 2 运行中" : state.narrativeStatus === "done" ? "文案待确认" : state.narrativeStatus === "running" ? "调用 1 运行中" : profile.status) + '</span></div></div>' +
-        (state.narrativeRunId ? '<div class="context-block"><div class="context-label">Narrative Run</div><div class="context-value mono">' + escapeHtml(state.narrativeRunId) + '</div></div>' : '') +
-        '<div class="context-block"><div class="context-label">Classification Run</div><div class="context-value mono">' + escapeHtml(state.runId.startsWith("agent-") ? state.runId : "尚未开始") + "</div></div>" +
-        '<div class="context-block"><div class="context-label">Model</div><div class="context-value mono">' +
-        escapeHtml(state.agentResult ? state.agentResult.model : state.modelTier === "pro" ? "DeepSeek Chat (Pro)" : state.modelTier === "lite" ? "DeepSeek Chat (Lite)" : "DeepSeek Chat") + '</div></div>' +
-        '<div class="context-block"><div class="context-label">Knowledge Catalog</div><div class="context-value mono">' +
-        (catalogCounts ? catalogCounts.abilities + ' A · ' + catalogCounts.gal_cells + ' A×L · ' + catalogCounts.jd_fields + ' JD' : '正在读取') +
-        '</div><div class="action-note">版本：' + escapeHtml(state.catalogSummary ? state.catalogSummary.catalog_version : "—") + '</div></div>' +
-        '<div class="context-block"><div class="context-label">Scored Coverage</div><div class="mini-tags">' +
-        (scored.length ? scored.map(item => '<span class="mini-tag scored">' + item.code + "</span>").join("") : '<span class="mini-tag">未确认</span>') +
-        '</div></div><div class="context-block"><div class="context-label">Runtime Dependencies</div><div class="mini-tags">' +
-        (deps.length ? deps.map(item => '<span class="mini-tag dep">' + item.code + " · external</span>").join("") : '<span class="mini-tag">未确认</span>') +
-        '</div></div><div class="context-block"><div class="context-label">Open Questions</div><div class="pending-count">' + pending +
-        '</div><div class="action-note">缺失信息保留 TBD，等待人工确认</div></div>' +
-        '<div class="context-block"><div class="context-label">Pipeline Progress</div><div class="context-value">' + progress +
-        '%</div><div class="progress-track"><div class="progress-fill" style="width:' + progress + '%"></div></div></div>';
+    function renderStep3() {
+      setHeader(2, state.completed.has(2) ? "已确认" : "编辑取值域");
+      const edits = getEdits();
+      let h = saveBar() + '<p class="intro">为每个 JD 变量定义取值域。fixed=固定；enum=离散选项；range=数值区间；TBD=未知。域越丰富，Step 4 生成的实例越多样。</p>';
+      const c = state.agentResult ? state.agentResult.candidate : null;
+      if (c && c.coverage_candidates) {
+        h += '<div class="field-label" style="margin-top:8px"><label>A×L（' + c.coverage_candidates.length + ' 个）</label></div>';
+        h += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">' + c.coverage_candidates.map(x => '<span class="status-pill proposed" style="padding:5px 10px">' + escapeHtml(x.cell) + '</span>').join("") + '</div>';
+      }
+      h += '<table class="data-table"><thead><tr><th>Slot</th><th>Name</th><th>Mode</th><th>Domain</th></tr></thead><tbody>';
+      for (const e of edits) {
+        const bm = e.binding_mode;
+        h += "<tr><td class='mono'>" + escapeHtml(e.slot_id) + "</td><td>" + escapeHtml(e.name) + "</td>"
+          + '<td><select onchange="setEdit(\'' + e.slot_id + "','binding_mode',this.value)\" style=\"padding:4px 8px;border:1px solid var(--line-strong);border-radius:6px;font-size:10px\">"
+          + ["fixed","enum","range","TBD"].map(m => "<option value='" + m + "'" + (m === bm ? " selected" : "") + ">" + m + "</option>").join("") + "</select></td>";
+        if (bm === "fixed") h += '<td><input type="text" value="' + escapeHtml(e.value || "") + '" onchange="setEdit(\'' + e.slot_id + "','value',this.value)\" style=\"width:100%;padding:4px 8px;border:1px solid var(--line-strong);border-radius:6px;font-size:10px\"></td>";
+        else if (bm === "enum") h += '<td><input type="text" value="' + escapeHtml((e.allowed_values || []).join(", ")) + '" placeholder="A, B, C" onchange="setEdit(\'' + e.slot_id + "','allowed_values',this.value)\" style=\"width:100%;padding:4px 8px;border:1px solid var(--line-strong);border-radius:6px;font-size:10px\"></td>';
+        else if (bm === "range") h += '<td><input type="number" value="' + (e.minimum || "") + '" onchange="setEdit(\'' + e.slot_id + "','minimum',parseFloat(this.value))\" style=\"width:55px;padding:4px;border:1px solid var(--line-strong);border-radius:6px;font-size:10px\"> ~ <input type="number" value="' + (e.maximum || "") + '" onchange="setEdit(\'' + e.slot_id + "','maximum',parseFloat(this.value))\" style=\"width:55px;padding:4px;border:1px solid var(--line-strong);border-radius:6px;font-size:10px\"></td>';
+        else h += "<td>—</td>";
+        h += "</tr>";
+      }
+      h += '</tbody></table>';
+      const variable = edits.filter(e => e.binding_mode === "enum" || e.binding_mode === "range").length;
+      h += '<div class="action-row" style="margin-top:14px"><span class="action-note">' + variable + ' 个可变域</span><button class="btn primary" onclick="completeStage(2)">确认 Domain Template →</button></div>';
+      document.getElementById("workspaceBody").innerHTML = h;
     }
 
-    function reviewItems(items) {
-      return '<div class="review-list">' + items.map(item =>
-        '<div class="review-item ' + item[0] + '"><div class="review-type">' + item[1] + '</div><b>' +
-        item[2] + "</b><p>" + item[3] + "</p>" + (item[4] ? '<span class="artifact-link">' + item[4] + "</span>" : "") + "</div>"
-      ).join("") + '</div><div class="disclaimer">Agent 输出是候选；能力等级需人工确认，未知业务阈值与 simulator 接口继续保持 TBD。</div>';
+    // ── STEP 4 ────────────────────────────────────────────────────────── //
+
+    function buildTemplate() {
+      const c = state.agentResult ? state.agentResult.candidate : null;
+      if (!c) return null;
+      return {template_id: (c.task_title || "tpl").replace(/\s+/g, "_").substring(0, 30), template_version: "0.1.0",
+        jd_slots: getEdits().map(e => {
+          const b = {mode: e.binding_mode, status: "verified"};
+          if (e.binding_mode === "fixed") b.value = e.value;
+          else if (e.binding_mode === "enum") { b.allowed_values = e.allowed_values; b.value = e.value; }
+          else if (e.binding_mode === "range") { b.minimum = e.minimum; b.maximum = e.maximum; }
+          return {slot_id: e.slot_id, description: e.name, visibility: "sut_visible", binding: b, provenance: []};
+        }), phases: [], disturbances: [], interfaces: {}, coverage: []};
+    }
+
+    async function genInstance() {
+      const tpl = buildTemplate(); if (!tpl) { state.instanceError = "无模板"; render(); return; }
+      state.instanceLoading = true; state.instanceError = null; state.instanceResult = null; state.instanceResults = null; render();
+      try {
+        const ep = state.instanceMode === "traverse" ? "/api/instance/traverse" : state.instanceMode === "batch" ? "/api/instance/batch" : "/api/instance/generate";
+        const body = state.instanceMode === "single" ? {template: tpl, seed: parseInt(state.instanceSeed) || 0}
+          : state.instanceMode === "batch" ? {template: tpl, seeds: state.instanceBatchSeeds} : {template: tpl, steps_per_range: 3};
+        const r = await fetch(ep, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)});
+        const d = await r.json(); if (!r.ok) throw new Error(d.message || d.error);
+        if (state.instanceMode === "single") state.instanceResult = d.instance; else state.instanceResults = d.instances || [];
+      } catch(e) { state.instanceError = String(e.message || e); }
+      state.instanceLoading = false; render();
+    }
+
+    function renderStep4() {
+      setHeader(3, state.instanceResult ? "已生成" : "等待 Seed");
+      const tpl = buildTemplate();
+      let h = saveBar() + '<p class="intro">Domain Template + Seed → Task Template（每个域取一个具体值）。同一 Seed 始终产生相同结果。</p>';
+      if (tpl) {
+        h += '<table class="data-table"><thead><tr><th>Slot</th><th>Mode</th><th>Domain</th></tr></thead><tbody>'
+          + tpl.jd_slots.map(s => { let v = "—"; if (s.binding.mode === "fixed") v = escapeHtml(String(s.binding.value)); else if (s.binding.mode === "enum") v = escapeHtml((s.binding.allowed_values || []).join(" | ")); else if (s.binding.mode === "range") v = "[" + s.binding.minimum + "~" + s.binding.maximum + "]"; return "<tr><td class='mono'>" + escapeHtml(s.slot_id) + "</td><td>" + pill(s.binding.mode) + "</td><td>" + v + "</td></tr>"; }).join("")
+          + '</tbody></table>';
+      }
+      h += '<div class="field-label" style="margin-top:16px"><label>模式</label></div><div class="control" style="margin-bottom:8px"><select id="im">'
+        + [["single","单个 Seed"],["batch","批量范围"],["traverse","全遍历"]].map(m => "<option value='" + m[0] + "'" + (m[0] === state.instanceMode ? " selected" : "") + ">" + m[1] + "</option>").join("") + "</select></div>";
+      if (state.instanceMode === "single") h += '<input type="number" min="0" value="' + state.instanceSeed + '" id="is" style="padding:4px 8px;width:100px;border:1px solid var(--line-strong);border-radius:6px">';
+      else if (state.instanceMode === "batch") h += '<input type="text" value="' + escapeHtml(state.instanceBatchSeeds) + '" id="ib" style="padding:4px 8px;width:200px;border:1px solid var(--line-strong);border-radius:6px">';
+      h += '<div class="action-row" style="margin-top:10px"><button class="btn primary" onclick="genInstance()"' + (state.instanceLoading ? " disabled" : "") + ">" + (state.instanceLoading ? "生成中..." : "生成") + "</button></div>";
+      if (state.instanceError) h += '<div class="choice-card dependency selected" style="margin-top:10px"><b>错误</b><p>' + escapeHtml(state.instanceError) + "</p></div>";
+      else if (state.instanceResult) h += '<div class="choice-card selected" style="margin-top:10px"><b>SEED ' + state.instanceResult.seed + '</b><p class="mono" style="font-size:11px">' + escapeHtml(state.instanceResult.instance_id) + '</p><table class="data-table"><thead><tr><th>Slot</th><th>Value</th><th>Status</th></tr></thead><tbody>' + (state.instanceResult.slot_bindings || []).map(s => "<tr><td class='mono'>" + escapeHtml(s.slot_id) + "</td><td>" + escapeHtml(JSON.stringify(s.value)) + "</td><td>" + pill(s.status) + "</td></tr>").join("") + '</tbody></table></div>';
+      else if (state.instanceResults) h += '<div class="choice-card selected" style="margin-top:10px"><b>' + state.instanceResults.length + ' 个实例</b><table class="data-table"><thead><tr><th>Instance</th><th>Seed</th><th>Resolved</th></tr></thead><tbody>' + state.instanceResults.map(i => "<tr><td class='mono'>" + escapeHtml(i.instance_id) + "</td><td>" + i.seed + "</td><td>" + (i.slot_bindings || []).filter(s => s.status !== "TBD").length + "/" + (i.slot_bindings || []).length + "</td></tr>").join("") + '</tbody></table></div>';
+      document.getElementById("workspaceBody").innerHTML = h;
+      const im = document.getElementById("im"); if (im) im.addEventListener("change", () => { state.instanceMode = im.value; render(); });
+      const is = document.getElementById("is"); if (is) is.addEventListener("change", () => { state.instanceSeed = parseInt(is.value) || 0; });
+      const ib = document.getElementById("ib"); if (ib) ib.addEventListener("change", () => { state.instanceBatchSeeds = ib.value; });
+    }
+
+    // ── Sidebars ──────────────────────────────────────────────────────── //
+
+    function renderContext() {
+      let h = '<div class="context-block"><div class="context-label">Status</div><div class="context-value">' + pill(state.serverStatus, state.serverStatus === "ready" ? "given" : "tbd") + '</div></div>';
+      if (state.catalogSummary) h += '<div class="context-block"><div class="context-label">Catalog</div><div class="context-value">' + state.catalogSummary.counts.abilities + "A · " + state.catalogSummary.counts.gal_cells + " A×L · " + state.catalogSummary.counts.jd_fields + " JD</div></div>";
+      if (state.fixedScenario) h += '<div class="context-block"><div class="context-label">Scenario</div><div class="context-value">' + escapeHtml(state.fixedScenario.title) + '</div></div>';
+      if (state.agentResult && state.agentResult.candidate) h += '<div class="context-block"><div class="context-label">Coverage</div><div class="mini-tags">' + (state.agentResult.candidate.coverage_candidates || []).map(c => '<span class="mini-tag scored">' + escapeHtml(c.cell) + '</span>').join("") + '</div></div>';
+      h += '<div class="context-block"><div class="context-label">Progress</div><div class="progress-track"><div class="progress-fill" style="width:' + (state.completed.size / STAGES.length * 100) + '%"></div></div><div class="action-note">' + state.completed.size + '/' + STAGES.length + '</div></div>';
+      document.getElementById("contextPanel").innerHTML = h;
     }
 
     function renderReview() {
-      let items;
-      const result = state.agentResult;
-      const toolNames = result ? (result.tool_trace || []).filter(item => item.status === "called").map(item => item.tool) : [];
-      const issueCount = result ? (result.validation_issues || []).length : 0;
-      switch (state.currentStage) {
-        case 0:
-          items = [
-            [state.fixedScenario ? "valid" : "pending", "SCENARIO SOURCE", state.fixedScenario ? "固定业务场景已加载" : "等待场景文件", state.fixedScenario ? "场景与业务变量在人工任务输入之前锁定。" : "请通过本地服务读取版本化场景。", "/api/scenario"],
-            ["info", "BOUNDARY", "Stage 0 不预设能力等级", "这里只固定环境、对象、观测、外部设施和允许变量域。", "fixed_scenario"]
-          ]; break;
-        case 1:
-          items = [
-            [state.serverStatus === "ready" ? "valid" : "pending", "LOCAL SERVICE", state.serverStatus === "ready" ? "Config Agent 已就绪" : "等待本地服务", state.serverStatus === "ready" ? "API Key 只保存在本地服务进程中。" : "请通过启动脚本打开页面，不要直接双击 HTML。", "/api/health"],
-            ["info", "HUMAN INPUT", "只描述本次任务责任", "不要求人工填写 A×L 或 JD 编号。", "human_task_description"]
-          ]; break;
-        case 2:
-          items = [
-            [state.narrativeStatus === "done" ? "valid" : "pending", "CALL 1 / 2", "完整任务文案已生成", "文案可以人工编辑；本阶段不进行 A×L 或 JD 分类。", "expanded_narrative"],
-            [state.narrativeEdited ? "info" : "valid", "HUMAN GATE", state.narrativeEdited ? "文案已人工修改" : "等待人工确认", "第二次调用只读取最终确认的文案，不会改写它。", "confirmed_task_narrative"]
-          ]; break;
-        case 3:
-          items = [
-            [toolNames.includes("lookup_gal_catalog") ? "valid" : "pending", "TOOL TRACE", "GAL 目录查询", toolNames.includes("lookup_gal_catalog") ? "Agent 已查询 17 个 A、68 个累计式 A×L 责任单元。" : "未观察到必需工具调用。", "lookup_gal_catalog"],
-            ["info", "HUMAN GATE", "L1–L4 可人工改选", "Agent 只提出候选；人工确认或修正后才形成正式边界。", "coverage_candidates"]
-          ]; break;
-        case 4:
-          items = [
-            [toolNames.includes("lookup_jd_catalog") ? "valid" : "pending", "TOOL TRACE", "JD 目录查询", toolNames.includes("lookup_jd_catalog") ? "Agent 已查询 10 个全局 JD 与 56 个局部 JD。" : "未观察到必需工具调用。", "lookup_jd_catalog"],
-            [issueCount ? "pending" : "valid", "VALIDATOR", issueCount ? issueCount + " 个问题待复核" : "确定性校验通过", issueCount ? "查看模板页中的校验问题；不可静默忽略。" : "字段 ID 与原文证据已通过本地规则检查。", "validation_issues"]
-          ]; break;
-        case 5:
-          items = [
-            ["valid", "PRIMARY ARTIFACT", "自然语言 Task Template", "正文只保留业务语言；A×L 与 JD 留在结构化审核结果中。", "natural_language_template"],
-            [issueCount ? "pending" : "valid", "NO INVENTION", issueCount ? "需要人工复核" : "本地规则未发现越界字段", "阈值、业务规则和 simulator 接口仍不能由 Agent 编造。", "validation_status"]
-          ]; break;
-      }
-      document.getElementById("reviewPanel").innerHTML = reviewItems(items);
+      const items = [];
+      if (state.narrativeError) items.push({t:"pending",l:"文案错误",d:state.narrativeError});
+      if (state.agentError) items.push({t:"pending",l:"分类错误",d:state.agentError});
+      if (state.agentResult && state.agentResult.validation_issues) state.agentResult.validation_issues.forEach(v => items.push({t:"pending",l:v.code,d:v.message}));
+      document.getElementById("reviewPanel").innerHTML = items.length ? '<div class="review-list">' + items.slice(0,10).map(i => '<div class="review-item ' + i.t + '"><div class="review-type ' + i.t + '">' + escapeHtml(i.l) + '</div><b>' + escapeHtml(i.l) + '</b><p>' + escapeHtml(i.d) + '</p></div>').join("") + '</div>' : '<div class="review-item info"><div class="review-type info">INFO</div><b>无待处理项</b></div>';
     }
 
-    function setWorkspaceHeader(index, stateText) {
-      document.getElementById("workspaceEyebrow").textContent = "STAGE " + String(index).padStart(2, "0") + " · " + STAGES[index][0];
-      document.getElementById("workspaceTitle").textContent = STAGES[index][1];
-      document.getElementById("workspaceState").textContent = stateText;
-    }
+    function render() { renderStageRail(); renderContext(); renderReview(); [renderStep1, renderStep2, renderStep3, renderStep4][state.currentStage](); persistState(); }
 
-    function renderScenarioStage() {
-      const scenario = state.fixedScenario;
-      const locked = state.completed.has(0);
-      setWorkspaceHeader(0, scenario ? (locked ? "固定场景已确认" : "等待人工确认") : "正在读取固定场景");
-      if (!scenario) {
-        document.getElementById("workspaceBody").innerHTML = '<div class="choice-card"><b>正在读取固定业务场景</b><p>请通过本地启动脚本打开页面；Stage 0 不调用 DeepSeek。</p></div>';
-        return;
-      }
-      const modeLabel = { fixed_value: "固定值", fixed_domain: "固定取值域", task_derived: "由任务提取" };
-      const modeStyle = { fixed_value: "given", fixed_domain: "proposed", task_derived: "tbd" };
-      const rows = (scenario.variable_bindings || []).map(item => '<tr><td class="mono">' + escapeHtml(item.slot_id) + '</td><td><b>' +
-        escapeHtml(item.name) + '</b></td><td>' + escapeHtml(item.value_or_domain) + '</td><td>' +
-        statusPill(modeLabel[item.binding_mode] || item.binding_mode, modeStyle[item.binding_mode] || "proposed") + '</td></tr>').join("");
-      const scenarioOptions = ((state.scenarioRegistry && state.scenarioRegistry.scenarios) || []).map(item =>
-        '<option value="' + escapeHtml(item.scenario_id) + '"' + (item.scenario_id === state.selectedScenarioId ? " selected" : "") + '>' + escapeHtml(item.title) + '</option>'
-      ).join("");
-      const modules = (scenario.available_task_modules || []).map(item => '<div class="choice-card"><div class="choice-code">' + escapeHtml(item.name) + '</div><p>' + escapeHtml(item.requirement) + '</p></div>').join("");
-      document.getElementById("workspaceBody").innerHTML =
-        '<p class="intro">先选择并锁定一个业务场景及其变量边界，再由人描述本次想让无人机完成的任务。这里选择的是场景配置，不是预制案例答案；本阶段不选择能力，也不调用 Agent。</p>' +
-        '<div class="field-label"><label for="businessScenarioSelect">业务场景</label><span>Stage 0 · 必选</span></div><div class="control" style="margin-bottom:14px"><select id="businessScenarioSelect"' + (locked ? " disabled" : "") + '>' + scenarioOptions + '</select></div>' +
-        '<div class="scenario-summary"><b>' + escapeHtml(scenario.title) + '</b><br>' + escapeHtml(scenario.summary) + '</div>' +
-        '<div class="group-label">固定场景边界</div><ul class="boundary-list">' + (scenario.fixed_boundary || []).map(item => '<li>✓ ' + escapeHtml(item) + '</li>').join("") + '</ul>' +
-        '<div class="group-label">可选任务模块 · 不自动计入本次能力</div><div class="choice-grid">' + modules + '</div>' +
-        '<div class="group-label">对应业务变量</div><table class="data-table"><thead><tr><th>JD</th><th>变量</th><th>固定值或允许域</th><th>绑定方式</th></tr></thead><tbody>' + rows + '</tbody></table>' +
-        '<div class="action-row"><span class="action-note">来源：' + escapeHtml(state.scenarioRegistry ? state.scenarioRegistry.source : "场景注册表") + ' · ' + escapeHtml(scenario.scenario_version) + '</span>' +
-        '<button class="btn primary" id="confirmScenario" type="button">' + (locked ? "查看任务输入 →" : "确认场景与变量 →") + '</button></div>';
-      const scenarioSelect = document.getElementById("businessScenarioSelect");
-      if (scenarioSelect) scenarioSelect.addEventListener("change", event => {
-        state.selectedScenarioId = event.target.value;
-        state.fixedScenario = state.scenarioRegistry.scenarios.find(item => item.scenario_id === state.selectedScenarioId);
-        state.prompt = "";
-        render();
-      });
-      document.getElementById("confirmScenario").addEventListener("click", () => locked ? goToStage(1) : completeStage(0));
-    }
+    document.getElementById("resetButton").addEventListener("click", () => { if (pollTimer) clearTimeout(pollTimer); state = initialState(); render(); init(); });
 
-    function renderInputStage() {
-      const locked = state.completed.has(1);
-      const busy = state.narrativeStatus === "running";
-      const serverReady = state.serverStatus === "ready";
-      const taskExample = SCENARIO_TASK_EXAMPLES[state.selectedScenarioId] || "例如：请用一到三句话说明希望无人机完成什么、遇到异常如何处理，以及最后需要什么结果。";
-      setWorkspaceHeader(1, busy ? "调用 1/2 · 正在扩充文案" : locked ? "简短任务已提交" : serverReady ? "文案 Agent 已就绪" : "等待本地服务");
-      document.getElementById("workspaceBody").innerHTML =
-        '<p class="intro">请像向同事交代工作一样，用 1–3 句话说明想让无人机做什么。第一次 DeepSeek 调用会把这段人话扩充成完整业务文案，但不会判断 A×L，也不会提取 JD。</p>' +
-        '<div class="field-label"><label for="taskPrompt">本次任务要求</label><span>简短自然语言 · 可编辑</span></div>' +
-        '<textarea class="task-input" id="taskPrompt" placeholder="' + escapeHtml(taskExample) + '"' + (locked || busy ? " disabled" : "") + '>' + escapeHtml(state.prompt) + "</textarea>" +
-        '<div class="instance-tools"><div class="control"><label for="modelTier">两次调用使用的模型</label><select id="modelTier"' + (locked || busy ? " disabled" : "") + '>' +
-        '<option value="flash"' + (state.modelTier === "flash" ? " selected" : "") + '>DeepSeek Chat · 推荐</option>' +
-        '<option value="lite"' + (state.modelTier === "lite" ? " selected" : "") + '>DeepSeek Chat · 备用</option>' +
-        '<option value="pro"' + (state.modelTier === "pro" ? " selected" : "") + '>DeepSeek Chat · 复核型</option></select></div></div>' +
-        (busy ? '<div class="choice-card selected"><div class="choice-code">CALL 1 / 2 · 可刷新恢复</div><b>' + escapeHtml(currentRunLabel("narrative")) + '</b><p>正在把简短人话扩充为七段式业务文案，不进行能力分级。</p></div>' : "") +
-        (state.narrativeError ? '<div class="choice-card dependency selected"><div class="choice-code">NARRATIVE AGENT ERROR</div><b>本次未生成文案</b><p>' + escapeHtml(state.narrativeError) + '</p></div>' : "") +
-        '<div class="action-row"><span class="action-note">' + (locked ? "简短输入已形成快照，下一步仍可修改扩充后的完整文案。" : serverReady ? "这一步消耗一次模型请求；Key 只由本机服务读取。" : "请先运行 scripts/start_agent_demo.sh，再从本地地址打开页面。") + '</span>' +
-        '<button class="btn primary" id="saveInput" type="button"' + (busy ? " disabled" : "") + '>' + (locked ? "查看扩充文案 →" : busy ? "正在扩充…" : "调用 1：生成任务文案 →") + '</button></div>';
-      const modelSelect = document.getElementById("modelTier");
-      if (modelSelect) modelSelect.addEventListener("change", event => { state.modelTier = event.target.value; persistState(); });
-      const promptInput = document.getElementById("taskPrompt");
-      if (promptInput) promptInput.addEventListener("input", event => { state.prompt = event.target.value; persistState(); });
-      document.getElementById("saveInput").addEventListener("click", async () => {
-        if (locked) { goToStage(2); return; }
-        const value = document.getElementById("taskPrompt").value.trim();
-        if (value.length < 10) {
-          state.narrativeError = "请至少用一句完整的话说明希望无人机做什么。";
-          render();
-          return;
-        }
-        state.prompt = value;
-        state.narrativeRunId = "agent-draft-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
-        state.narrativeStatus = "running";
-        state.narrativeEvent = "request_submitted";
-        state.narrativeEventDetails = null;
-        state.narrativeError = null;
-        render();
-        startRunPolling("narrative");
-        try {
-          const response = await fetch("/api/config-agent/expand", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ scenario_id: state.selectedScenarioId, task_description: value, model_tier: state.modelTier, run_id: state.narrativeRunId })
-          });
-          const payload = await response.json();
-          if (!response.ok) throw new Error(payload.message || "任务文案 Agent 调用失败（HTTP " + response.status + "）。");
-          applyNarrativeResult(payload.result);
-          completeStage(1);
-        } catch (error) {
-          if (state.narrativeStatus === "done") return;
-          state.narrativeStatus = "error";
-          state.narrativeError = error.message || String(error);
-          render();
-        }
-      });
-    }
-
-    function renderNarrativeStage() {
-      const locked = state.completed.has(2);
-      const busy = state.agentStatus === "running";
-      const issues = (state.narrativeResult && state.narrativeResult.validation_issues) || [];
-      const narrativeIssues = issues.length ? '<div class="group-label">第一次调用的本地检查 · ' + issues.length + ' 项待处理</div><div class="review-list">' + issues.map(item => {
-        const copy = issueCopy(item);
-        return '<div class="review-item pending"><div class="review-type">WARNING</div><b>' + escapeHtml(copy.title) + '</b><p>' + escapeHtml(copy.detail) + '</p><span class="artifact-link">' + escapeHtml(item.code) + '</span></div>';
-      }).join("") + '</div>' : '';
-      setWorkspaceHeader(2, busy ? "调用 2/2 · 正在分类与提取" : locked ? "任务文案已确认" : "等待人工修改与确认");
-      document.getElementById("workspaceBody").innerHTML =
-        '<p class="intro">下面是第一次 DeepSeek 调用扩充的完整任务文案。请直接修改不准确、过度推断或缺失的内容。确认后，第二次 DeepSeek 调用才会据此判断 A×L 等级并提取 JD；第二次调用不会改写这段文案。</p>' +
-        '<div class="choice-card"><div class="choice-code">原始人工输入</div><p>' + escapeHtml(state.prompt) + '</p></div>' +
-        '<div class="field-label"><label for="narrativeDraft">Agent 扩充文案</label><span>' + (state.narrativeEdited ? "已人工修改" : "Agent 原稿") + ' · 可编辑</span></div>' +
-        '<textarea class="task-input review-template-editor" id="narrativeDraft"' + (locked || busy ? " disabled" : "") + '>' + escapeHtml(state.narrativeDraft || "") + '</textarea>' +
-        narrativeIssues +
-        (busy ? '<div class="choice-card selected"><div class="choice-code">CALL 2 / 2 · 可刷新恢复</div><b>' + escapeHtml(currentRunLabel("classification")) + '</b><p>正在查询受审 A×L / JD 目录并形成结构化候选。</p></div>' : '') +
-        (state.agentError ? '<div class="choice-card dependency selected"><div class="choice-code">CLASSIFICATION AGENT ERROR</div><b>本次未生成分类候选</b><p>' + escapeHtml(state.agentError) + '</p></div>' : '') +
-        '<div class="action-row"><span class="action-note">第二次调用以当前编辑框内容为唯一任务依据。完成后仍可人工修改 L1–L4。</span>' +
-        '<button class="btn primary" id="classifyNarrative" type="button"' + (busy ? " disabled" : "") + '>' + (locked ? "查看能力等级 →" : busy ? "正在分类…" : "确认文案并调用 2：分类与提取 →") + '</button></div>';
-      const editor = document.getElementById("narrativeDraft");
-      if (editor) editor.addEventListener("input", event => {
-        state.narrativeDraft = event.target.value;
-        state.narrativeEdited = state.narrativeDraft !== state.narrativeOriginal;
-        persistState();
-      });
-      document.getElementById("classifyNarrative").addEventListener("click", async () => {
-        if (locked) { goToStage(3); return; }
-        const narrative = document.getElementById("narrativeDraft").value.trim();
-        if (narrative.length < 300) {
-          state.agentError = "完整任务文案至少需要 300 个字符；请补足任务行为、责任边界、异常和完成条件。";
-          render();
-          return;
-        }
-        state.narrativeDraft = narrative;
-        state.runId = "agent-classify-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
-        state.agentStatus = "running";
-        state.agentEvent = "request_submitted";
-        state.agentEventDetails = null;
-        state.agentError = null;
-        render();
-        startRunPolling("classification");
-        try {
-          const response = await fetch("/api/config-agent/analyze", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              scenario_id: state.selectedScenarioId,
-              task_description: narrative,
-              source_task_description: state.prompt,
-              narrative_parent_run_id: state.narrativeRunId,
-              model_tier: state.modelTier,
-              run_id: state.runId
-            })
-          });
-          const payload = await response.json();
-          if (!response.ok) throw new Error(payload.message || "分类 Agent 调用失败（HTTP " + response.status + "）。");
-          applyAgentResult(payload.result);
-          completeStage(2);
-        } catch (error) {
-          if (state.agentStatus === "done") return;
-          state.agentStatus = "error";
-          state.agentError = error.message || String(error);
-          render();
-        }
-      });
-    }
-
-    function renderCoverageStage() {
-      const locked = state.completed.has(3);
-      const busy = state.coverageSaving;
-      setWorkspaceHeader(3, locked ? "能力等级已确认" : busy ? "正在保存人工复核" : "需要人工复核");
-      const scored = coverageItems().filter(item => item.kind === "scored");
-      const deps = coverageItems().filter(item => item.kind === "dependency");
-      const levelOptions = item => ["L1", "L2", "L3", "L4"].map(level =>
-        '<option value="' + level + '"' + (item.level === level ? " selected" : "") + '>' + level + '</option>'
-      ).join("");
-      const scoredCards = scored.map(item =>
-        '<label class="choice-card scored' + (state.selectedCoverage.has(item.id) ? " selected" : "") + '">' +
-        '<input type="checkbox" data-coverage="' + item.id + '"' + (state.selectedCoverage.has(item.id) ? " checked" : "") + (locked || busy ? " disabled" : "") + '>' +
-        '<div class="choice-code">' + item.code + "</div><b>" + escapeHtml(item.name) + "</b><p>" + escapeHtml(item.detail) + "</p>" +
-        '<div class="level-review"><label>人工复核等级</label><select data-coverage-level="' + item.candidateIndex + '"' + (locked || busy ? " disabled" : "") + '>' + levelOptions(item) + '</select>' +
-        '<span class="agent-proposal">Agent 建议：' + escapeHtml(item.proposedCode) + '</span></div></label>'
-      ).join("");
-      const dependencyCards = deps.map(item =>
-        '<label class="choice-card ' + item.kind + (state.selectedCoverage.has(item.id) ? " selected" : "") + '">' +
-        '<input type="checkbox" data-coverage="' + item.id + '"' + (state.selectedCoverage.has(item.id) ? " checked" : "") + (locked || busy ? " disabled" : "") + '>' +
-        '<div class="choice-code">' + escapeHtml(item.code) + "</div><b>" + escapeHtml(item.name) + "</b><p>" + escapeHtml(item.detail) + "</p></label>"
-      ).join("");
-      document.getElementById("workspaceBody").innerHTML =
-        '<p class="intro">Agent 根据任务行为提出 A×L 候选。请逐项确认；如果等级不准确，可直接在 L1–L4 中修改。高等级会累计包含同一能力的低等级责任。</p>' +
-        '<div class="group-label">Scored Coverage · Agent 候选与人工等级复核</div><div class="choice-grid">' + scoredCards + "</div>" +
-        '<div class="group-label">Runtime Dependencies · 外部提供且不评分</div><div class="choice-grid">' + (deps.length ? dependencyCards : '<div class="choice-card"><b>未提取到外部依赖</b><p>请人工检查任务是否需要执行器或外部决定接口。</p></div>') + "</div>" +
-        '<div class="action-row"><span class="action-note">人工改级只改变本次任务候选，不会改写 GAL 权威目录。</span>' +
-        '<div><button class="btn" id="editDependencies" type="button"' + (busy ? " disabled" : "") + '>人工补充外部依赖</button> <button class="btn primary" id="confirmCoverage" type="button"' + (busy ? " disabled" : "") + '>' + (locked ? "查看变量提取 →" : busy ? "正在保存…" : "确认能力等级 →") + '</button></div></div>';
-      document.querySelectorAll("[data-coverage]").forEach(input => {
-        input.addEventListener("change", () => {
-          if (input.checked) state.selectedCoverage.add(input.dataset.coverage);
-          else state.selectedCoverage.delete(input.dataset.coverage);
-          render();
-        });
-      });
-      document.querySelectorAll("[data-coverage-level]").forEach(select => select.addEventListener("change", () => {
-        changeCoverageLevel(Number(select.dataset.coverageLevel), select.value);
-      }));
-      document.getElementById("confirmCoverage").addEventListener("click", () => locked ? goToStage(4) : confirmCoverageReview());
-      document.getElementById("editDependencies").addEventListener("click", () => openReviewWorkspace("dependencies"));
-    }
-
-    function changeCoverageLevel(candidateIndex, level) {
-      const item = agentCandidate().coverage_candidates[candidateIndex];
-      const aId = item.cell.split("×")[0];
-      const target = state.catalogSummary && state.catalogSummary.gal_cells.find(row => row.a_id === aId && row.level === level);
-      if (!target) return;
-      item.cell = target.cell;
-      item.responsibilities = target.cumulative_responsibilities.slice();
-      item.provenance = "human_edited";
-      item.source_note = "Stage 3 人工能力等级复核";
-      state.coverageEdited = true;
-      const existing = new Set((agentCandidate().jd_candidates || []).map(row => row.slot_id));
-      (target.required_jd_ids || []).forEach(slotId => {
-        if (existing.has(slotId)) return;
-        const definition = state.catalogSummary.jd_fields.find(row => row.id === slotId);
-        agentCandidate().jd_candidates.push({
-          slot_id: slotId,
-          name: definition ? definition.name : slotId,
-          value: null,
-          status: "TBD",
-          evidence_quote: "",
-          provenance: "auto_fixed",
-          source_note: "人工改级后由版本化目录补入的必需槽位"
-        });
-      });
-      render();
-    }
-
-    async function confirmCoverageReview() {
-      const items = coverageItems();
-      if (!items.some(item => item.kind === "scored" && state.selectedCoverage.has(item.id))) return;
-      const draft = cloneCandidate();
-      draft.coverage_candidates = draft.coverage_candidates.filter((_item, index) => state.selectedCoverage.has("scored_" + index));
-      draft.runtime_dependencies = draft.runtime_dependencies.filter((_item, index) => state.selectedCoverage.has("dependency_" + index));
-      state.coverageSaving = true;
-      render();
+    async function init() {
       try {
-        const response = await fetch("/api/config-agent/revise", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            parent_run_id: state.baseRunId || state.agentResult.run_id,
-            revision_number: state.revisionNumber + 1,
-            scenario_id: state.selectedScenarioId,
-            task_description: state.narrativeDraft,
-            candidate: draft,
-            change_summary: [state.coverageEdited ? "人工复核并调整 A×L 等级" : "人工确认 Agent 提出的 A×L 等级"]
-          })
-        });
-        const payload = await response.json();
-        if (!response.ok) throw new Error(payload.message || "能力等级复核保存失败。");
-        state.agentResult.candidate = payload.candidate;
-        state.agentResult.validation_status = payload.validation_status;
-        state.agentResult.validation_issues = payload.validation_issues;
-        state.revisionNumber += 1;
-        state.revisionId = payload.revision_id;
-        state.revisionHistory.push({ revision_id: payload.revision_id, note: "Stage 3 能力等级复核", status: payload.validation_status });
-        state.selectedCoverage = new Set(coverageItems().map(item => item.id));
-        state.coverageSaving = false;
-        completeStage(3);
-      } catch (error) {
-        state.coverageSaving = false;
-        state.agentError = error.message || String(error);
-        render();
-      }
-    }
-
-    function renderJdStage() {
-      const rowsData = jdRows();
-      const tbdCount = rowsData.filter(row => row[4] === "tbd").length;
-      setWorkspaceHeader(4, state.jdConfirmed ? "字段已确认 · " + tbdCount + " 项 TBD" : "字段提取完成 · 等待确认");
-      const label = { given: "原文给定", proposed: "候选", tbd: "TBD" };
-      const rows = rowsData.map(row => '<tr><td class="mono">' + escapeHtml(row[0]) + "</td><td><b>" + escapeHtml(row[1]) +
-        "</b></td><td>" + escapeHtml(row[2]) + "</td><td>" + escapeHtml(row[3]) + "</td><td>" +
-        statusPill(label[row[4]], row[4]) + "</td></tr>").join("");
-      document.getElementById("workspaceBody").innerHTML =
-        '<p class="intro">JD 字段按来源和确定性分层。缺失项保留 TBD，不静默补值。</p>' +
-        '<table class="data-table"><thead><tr><th>JD</th><th>字段</th><th>候选值</th><th>来源</th><th>状态</th></tr></thead><tbody>' +
-        rows + '</tbody></table><div class="action-row"><span class="action-note">TBD 将进入模板的开放问题，不会成为评分阈值。</span>' +
-        '<div><button class="btn" id="openTbdReview" type="button">统一补录 TBD / 缺失 JD</button> <button class="btn primary" id="confirmJd" type="button">确认 JD 与待办 →</button></div></div>';
-      document.getElementById("openTbdReview").addEventListener("click", () => openReviewWorkspace("tbd"));
-      document.getElementById("confirmJd").addEventListener("click", () => {
-        state.jdConfirmed = true;
-        completeStage(4);
-      });
-    }
-
-    function buildTemplate() {
-      const profile = activeCase();
-      return {
-        schema_version: "0.2.0",
-        artifact_type: "template_manifest_preview",
-        template_id: profile.templateId,
-        template_version: "0.1.0",
-        title: profile.title,
-        boundary_status: profile.key === "case1" ? "verified" : "proposed",
-        coverage: profile.coverage.filter(item => item.kind === "scored" && state.selectedCoverage.has(item.id)).map(item => ({
-          coverage_id: item.id, ability: item.code.split("×")[0], level: item.code.split("×")[1], scored: true
-        })),
-        runtime_dependencies: profile.coverage.filter(item => item.kind === "dependency" && state.selectedCoverage.has(item.id)).map(item => ({
-          dependency_id: item.id, ability: item.code, provider: item.id.includes("executor") || item.id === "a8_dep" ? "executor" : "external_system", scored: false
-        })),
-        attribution_rules: profile.attributionRules,
-        task_level_gates: profile.taskGates,
-        jd_slots: profile.jdRows.map(row => ({ slot_id: row[0], status: row[4] === "tbd" ? "TBD" : "proposed" })),
-        thresholds: null,
-        simulator_interface: null
-      };
-    }
-
-    function renderTemplateStage() {
-      const result = state.agentResult;
-      const issueCount = result ? (result.validation_issues || []).length : 0;
-      setWorkspaceHeader(5, state.templateValidated ? "自然语言模板已确认" : issueCount ? "候选模板 · 需要复核" : "候选模板 · 校验通过");
-      const naturalActive = state.templateView === "natural";
-      const preview = naturalActive ?
-        '<div class="natural-template">' + escapeHtml(agentCandidate().natural_language_template) + '</div>' :
-        '<pre class="code-preview">' + escapeHtml(JSON.stringify(agentCandidate(), null, 2)) + "</pre>";
-      const issues = issueCount ? '<div class="group-label">确定性校验 · ' + issueCount + ' 项待复核</div><div class="review-list">' +
-        result.validation_issues.map((item, index) => { const copy = issueCopy(item); return '<div class="review-item pending"><div class="review-type">需要处理</div><b>' + escapeHtml(copy.title) + '</b><p>' + escapeHtml(copy.detail) + '</p><div class="review-item-foot"><span class="artifact-link">' + escapeHtml(item.code) + '</span><button class="btn" data-fix-issue="' + index + '" type="button">去处理</button></div></div>'; }).join("") + '</div>' : "";
-      const revision = state.revisionId ? '<span class="revision-badge">Human Revision v' + (state.revisionNumber + 1) + '</span>' : "";
-      document.getElementById("workspaceBody").innerHTML =
-        '<div class="validation-grid"><div class="validation-card"><b>' + (issueCount ? "△" : "✓") + ' STRUCTURED MAPPING</b><span>JD 与 A×L 在结构化结果中可追踪</span></div>' +
-        '<div class="validation-card"><b>✓ BOUNDARY</b><span>Coverage 与依赖分离</span></div>' +
-        '<div class="validation-card"><b>' + (issueCount ? "△ REVIEW" : "✓ NO INVENTION") + '</b><span>未知 threshold / interface 必须保持 TBD</span></div></div>' +
-        '<div class="template-tabs"><button class="template-tab ' + (naturalActive ? "active" : "") +
-        '" type="button" data-template-view="natural">自然语言 Task Template</button><button class="template-tab ' +
-        (!naturalActive ? "active" : "") + '" type="button" data-template-view="manifest">机器 Manifest 摘要</button></div>' +
-        revision + preview + issues + '<div class="action-row"><span class="action-note">' + (issueCount ? "请先在人工审核工作台解决结构问题，再确认本轮。" : "正文不暴露内部编号；TBD 仍作为待业务确认项保留。") + '</span>' +
-        '<div><button class="btn" id="openHumanReview" type="button">打开人工审核工作台</button> <button class="btn primary" id="validateTemplate" type="button"' + (issueCount ? " disabled" : "") + '>确认并完成本轮</button></div></div>';
-      document.querySelectorAll("[data-template-view]").forEach(button => {
-        button.addEventListener("click", () => {
-          state.templateView = button.dataset.templateView;
-          render();
-        });
-      });
-      document.getElementById("validateTemplate").addEventListener("click", () => {
-        if (issueCount) return;
-        state.templateValidated = true;
-        completeStage(5);
-      });
-      document.querySelectorAll("[data-fix-issue]").forEach(button => button.addEventListener("click", () => {
-        openReviewWorkspace(issueReviewTab(result.validation_issues[Number(button.dataset.fixIssue)]));
-      }));
-      document.getElementById("openHumanReview").addEventListener("click", () => {
-        openReviewWorkspace(issueCount ? issueReviewTab(result.validation_issues[0]) : "tbd");
-      });
-    }
-
-    function seeded(seed) {
-      let value = Number(seed) || 0;
-      return () => {
-        value = (value * 1664525 + 1013904223) >>> 0;
-        return value / 4294967296;
-      };
-    }
-
-    function createInstances(seed, count) {
-      const random = seeded(seed);
-      const pools = activeCase().variables;
-      state.instances = Array.from({ length: count }, (_, index) => {
-        const bindings = {};
-        Object.keys(pools).forEach(key => {
-          const pool = pools[key];
-          bindings[key] = pool[Math.floor(random() * pool.length)];
-        });
-        return {
-          instance_id: activeCase().key + "-" + String(seed + index).padStart(3, "0"),
-          seed: seed + index,
-          bindings,
-          validation: "valid",
-          gt_visibility: "grader_only"
-        };
-      });
-      state.selectedInstance = state.instances[0].instance_id;
-    }
-
-    function renderInstancesStage() {
-      const locked = state.completed.has(4);
-      setWorkspaceHeader(4, state.instances.length ? state.instances.length + " 个实例已生成" : "等待生成");
-      const cards = state.instances.map(instance =>
-        '<button class="instance-card ' + (state.selectedInstance === instance.instance_id ? "selected" : "") +
-        '" type="button" data-instance="' + instance.instance_id + '"><span class="instance-id">' + instance.instance_id +
-        '</span><span class="binding-tags">' + Object.values(instance.bindings).map(value => "<span>" + value + "</span>").join("") +
-        '</span><span class="status-pill valid">VALID</span></button>'
-      ).join("");
-      document.getElementById("workspaceBody").innerHTML =
-        '<p class="intro">Deterministic Compiler 使用固定 seed 在允许变量域中生成可复现 episode 配置。</p>' +
-        '<div class="instance-tools"><div class="control"><label for="seedInput">Seed</label><input id="seedInput" type="number" value="17" min="0"></div>' +
-        '<div class="control"><label for="countInput">实例数量</label><select id="countInput"><option value="3">3 个</option><option value="5">5 个</option></select></div>' +
-        '<button class="btn primary" id="generateInstances" type="button"' + (locked ? " disabled" : "") + '>生成实例</button></div>' +
-        '<div class="instance-list">' + (cards || '<div class="choice-card"><b>尚未生成实例</b><p>设置 seed 和数量后开始。</p></div>') + "</div>" +
-        (state.instances.length ? '<div class="action-row"><span class="action-note">已选择 ' + state.selectedInstance +
-          '；Hidden GT 保持 grader_only。</span><button class="btn primary" id="confirmInstance" type="button">' + (locked ? "查看 Mock SUT →" : "使用选中实例 →") + '</button></div>' : "");
-      document.getElementById("generateInstances").addEventListener("click", () => {
-        createInstances(Number(document.getElementById("seedInput").value), Number(document.getElementById("countInput").value));
-        render();
-      });
-      document.querySelectorAll("[data-instance]").forEach(button => {
-        button.addEventListener("click", () => {
-          if (locked) return;
-          state.selectedInstance = button.dataset.instance;
-          render();
-        });
-      });
-      const confirm = document.getElementById("confirmInstance");
-      if (confirm) confirm.addEventListener("click", () => locked ? goToStage(5) : completeStage(4));
-    }
-
-    function renderSutStage() {
-      const locked = state.completed.has(5);
-      setWorkspaceHeader(5, state.selectedSut ? "Mock SUT 已绑定" : "选择一个可控行为");
-      document.getElementById("workspaceBody").innerHTML =
-        '<p class="intro">Mock SUT 用于证明 Harness 和 Grader 能区分正确链路与特定错误，不代表真实系统性能。</p>' +
-        '<div class="sut-grid">' + activeCase().suts.map(sut =>
-          '<button class="sut-card ' + (state.selectedSut === sut.id ? "selected" : "") + '" type="button" data-sut="' + sut.id +
-          '"><span class="sut-type">' + sut.label.toUpperCase() + "</span><b>" + sut.name + "</b><p>" + sut.description +
-          '</p><div class="expected">' + sut.expected + "</div></button>"
-        ).join("") + '</div><div class="action-row"><span class="action-note">' +
-        (state.selectedSut ? "Target：" + state.selectedInstance + " × " + state.selectedSut : "请选择 Mock SUT。") +
-        '</span><button class="btn primary" id="confirmSut" type="button"' + (state.selectedSut ? "" : " disabled") +
-        '>' + (locked ? "查看运行链路 →" : "绑定运行目标 →") + '</button></div>';
-      document.querySelectorAll("[data-sut]").forEach(button => {
-        button.addEventListener("click", () => {
-          if (locked) return;
-          state.selectedSut = button.dataset.sut;
-          render();
-        });
-      });
-      document.getElementById("confirmSut").addEventListener("click", () => locked ? goToStage(6) : completeStage(5));
-    }
-
-    function buildRunEvidence() {
-      const behavior = state.selectedSut;
-      if (activeCase().key === "case1") {
-        const identityBad = behavior === "identity_switch_sut";
-        const unsafe = behavior === "unsafe_continue_sut";
-        state.evidence = [
-          ["00:00.000", "trace", "Harness", "episode_started", "加载 " + state.selectedInstance],
-          ["00:05.200", "gt", "Fixture", "vehicle_entity_truth", "车辆实体与违停标签；grader_only"],
-          ["00:06.400", "trace", "SUT", "perception_update", identityBad ? "同一车辆产生新 ID" : "车辆身份连续维护"],
-          ["00:11.800", "trace", "SUT", "report_update", identityBad ? "同一车辆重复计入报告" : "报告去重并持续更新"],
-          ["00:18.000", "gt", "Fixture", "localization_fault_window", "定位退化真实起点；grader_only"],
-          ["00:18.300", "trace", "Fixture", "localization_observation", "可见定位源出现漂移与不一致"],
-          ["00:20.100", "trace", "SUT", "trust_state", "位姿标记为不可信"],
-          ["00:20.400", "trace", "SUT", "protection_request", unsafe ? "未发出保护请求" : "请求暂停或安全保持"],
-          ["00:20.600", "trace", "Executor", "protection_execution", unsafe ? "未收到请求，固定航段继续推进" : "执行暂停或等效安全保持"],
-          ["00:21.100", "trace", "SUT", "anomaly_report", unsafe ? "无异常上报" : "向外部接口上报定位退化"],
-          ["00:21.300", "trace", "SUT", "wait_state", unsafe ? "未进入等待" : "等待外部决定"],
-          ["00:21.800", "trace", "External", "external_decision", unsafe ? "无有效请求可处理" : "外部决定已记录"],
-          ["00:22.000", "gt", "Fixture", "external_decision_truth", "外部决定分支；grader_only"]
-        ];
-        return;
-      }
-      const decisionDetail = behavior === "good_resource_sut" ? "选择 shorten-return，目标可达" :
-        behavior === "always_return_sut" ? "资源仍充足时固定选择 return" : "超过安全窗口后才选择 return";
-      const terminalDetail = behavior === "late_decision_sut" ? "所选安全目标已不可达" : "到达固定返航点并停止";
-      state.evidence = [
-        ["00:00.000", "trace", "Harness", "episode_started", "加载 " + state.selectedInstance],
-        ["00:06.400", "trace", "SUT", "defect_observation", "输出缺陷类别、证据和管廊区段"],
-        ["00:12.100", "trace", "SUT", "relative_geometry", "连续距离、方位和观测质量"],
-        ["00:18.000", "gt", "Fixture", "resource_deviation_truth", "真实偏差窗口开始；grader_only"],
-        ["00:18.200", "trace", "Fixture", "telemetry_update", "可见功耗与剩余航时趋势变化"],
-        ["00:25.100", "trace", "SUT", "resource_decision", decisionDetail],
-        ["00:25.300", "trace", "SUT", "mode_switch", "A11 向 A7 输出路线模式和目标"],
-        ["00:26.500", "gt", "Fixture", "latest_safe_decision", "隐藏安全决策窗口边界；grader_only"],
-        ["00:34.800", "trace", "Executor", "route_complete", terminalDetail],
-        ["00:35.000", "gt", "Fixture", "terminal_safety_truth", behavior === "late_decision_sut" ? "unsafe" : "safe"],
-        ["00:35.100", "trace", "SUT", "terminal_verification", behavior === "late_decision_sut" ? "安全验证失败" : "声明进入安全终态"]
-      ];
-    }
-
-    function buildGrader() {
-      const oilfieldResults = {
-        good_resource_sut: [
-          ["A5×L1", "观察到缺陷证据链", "指标阈值未标定", "indeterminate"],
-          ["A6b×L2", "观察到连续相对几何", "指标阈值未标定", "indeterminate"],
-          ["A7×L2", "路线切换与完成事件齐全", "—", "observed"],
-          ["A11×L4", "资源决策与终态验证链完整", "—", "observed"]
-        ],
-        always_return_sut: [
-          ["A5×L1", "正常观察阶段过短", "EARLY_TERMINATION", "risk"],
-          ["A6b×L2", "连续维护片段不足", "EARLY_TERMINATION", "risk"],
-          ["A7×L2", "返航路线执行事件齐全", "—", "observed"],
-          ["A11×L4", "资源充足时无条件终止", "UNNECESSARY_ABORT", "risk"]
-        ],
-        late_decision_sut: [
-          ["A5×L1", "缺陷证据事件已记录", "指标阈值未标定", "indeterminate"],
-          ["A6b×L2", "相对几何事件已记录", "指标阈值未标定", "indeterminate"],
-          ["A7×L2", "路线切换发生过晚", "LATE_MODE_SWITCH", "risk"],
-          ["A11×L4", "超过安全窗口仍继续", "LATE_DECISION", "risk"]
-        ]
-      };
-      const cityResults = {
-        good_sut: [
-          ["A5×L2", "身份维护与报告更新链完整", "HOTA threshold 未标定", "indeterminate"],
-          ["A6a×L3", "退化识别、保护、上报、等待链完整", "时延 threshold 未标定", "indeterminate"],
-          ["A7×L1", "航路约束与风险提示已记录", "业务判据未标定", "indeterminate"],
-          ["A8×L1", "包络评估与调整建议已记录", "业务判据未标定", "indeterminate"]
-        ],
-        identity_switch_sut: [
-          ["A5×L2", "同一车辆发生身份切换与重复计数", "IDENTITY_SWITCH / DUPLICATE_COUNT", "risk"],
-          ["A6a×L3", "异常责任链完整", "时延 threshold 未标定", "indeterminate"],
-          ["A7×L1", "辅助建议事件已记录", "业务判据未标定", "indeterminate"],
-          ["A8×L1", "包络建议事件已记录", "业务判据未标定", "indeterminate"]
-        ],
-        unsafe_continue_sut: [
-          ["A5×L2", "车辆事件已记录", "HOTA threshold 未标定", "indeterminate"],
-          ["A6a×L3", "识别异常但未完成保护上报链", "UNSAFE_CONTINUATION", "risk"],
-          ["A7×L1", "辅助建议不能替代外部保护执行", "—", "observed"],
-          ["A8×L1", "包络建议不能替代闭环保持", "—", "observed"]
-        ]
-      };
-      if (activeCase().key === "case1") {
-        const failed = state.selectedSut === "unsafe_continue_sut";
-        state.grader = {
-          results: cityResults[state.selectedSut],
-          gate: failed ? "not_satisfied" : "satisfied",
-          gateLabel: "PROTECTION · REPORT · EXTERNAL DECISION",
-          gateDetail: failed ?
-            "保护请求、异常上报或等待外部决定链缺失。" :
-            "Synthetic episode 完成保护请求、Executor 执行、异常上报和等待链；共享链只统计一次。"
-        };
-        return;
-      }
-      state.grader = {
-        results: oilfieldResults[state.selectedSut],
-        gate: state.selectedSut === "late_decision_sut" ? "not_satisfied" : "satisfied",
-        gateLabel: "SAFE TERMINAL",
-        gateDetail: state.selectedSut === "late_decision_sut" ?
-          "未在隐藏安全窗口内进入可达安全终态。" :
-          "Synthetic episode 到达声明的安全终态；共享结果只统计一次。"
-      };
-    }
-
-    function advanceRun() {
-      state.runPhase += 1;
-      if (state.runPhase < activeCase().phases.length) {
-        const phase = activeCase().phases[state.runPhase];
-        state.runLog.push("[" + new Date().toLocaleTimeString("zh-CN", { hour12: false }) + "] " + phase[0] + " · " + phase[3] + " · " + phase[2]);
-        render();
-        return;
-      }
-      clearInterval(runTimer);
-      runTimer = null;
-      state.runStatus = "complete";
-      buildRunEvidence();
-      buildGrader();
-      state.completed.add(6);
-      state.maxUnlocked = Math.max(state.maxUnlocked, 7);
+        const h = await (await fetch("/api/health", {cache:"no-store"})).json(); state.serverStatus = h.agent_ready ? "ready" : "missing_api_key";
+        state.catalogSummary = await (await fetch("/api/catalog", {cache:"no-store"})).json();
+        const reg = await (await fetch("/api/scenarios", {cache:"no-store"})).json(); state.scenarioRegistry = reg;
+        state.fixedScenario = reg.scenarios.find(s => s.scenario_id === state.selectedScenarioId) || reg.scenarios[0]; state.selectedScenarioId = state.fixedScenario.scenario_id;
+        const sv = await fetch("/api/pipeline/load", {cache:"no-store"});
+        if (sv.ok) { const d = await sv.json(); if (d.agentResult && !state.agentResult) { if (d.taskPrompt) state.taskPrompt = d.taskPrompt; if (d.narrativeDraft) { state.narrativeDraft = d.narrativeDraft; state.narrativeStatus = "done"; } state.agentResult = d.agentResult; state.agentStatus = "done"; if (d.domainEdits) state.domainEdits = d.domainEdits; state.completed = new Set(d.completedSteps || [0,1]); state.maxUnlocked = Math.max(...(d.completedSteps||[0,1])); state.saveNotice = "已自动加载"; } }
+      } catch(e) { state.serverStatus = "offline"; }
       render();
     }
-
-    function startRun() {
-      if (runTimer) return;
-      state.runStatus = "running";
-      state.runPhase = -1;
-      state.runLog = [];
-      render();
-      advanceRun();
-      runTimer = setInterval(advanceRun, 650);
-    }
-
-    function renderRunStage() {
-      const running = state.runStatus === "running";
-      const complete = state.runStatus === "complete";
-      setWorkspaceHeader(6, complete ? "运行完成 · Trace 已生成" : running ? "Harness 正在推进" : "等待运行");
-      const phases = activeCase().phases.map((phase, index) => {
-        const cls = index < state.runPhase || complete ? "done" : index === state.runPhase ? "active" : "";
-        return '<div class="phase ' + cls + '"><div class="phase-index">' + String(index + 1).padStart(2, "0") +
-          " · " + phase[0] + "</div><b>" + phase[1] + "</b><p>" + phase[2] + '</p><span class="actor">' + phase[3] + "</span></div>";
-      }).join("");
-      const progress = complete ? 100 : Math.max(0, ((state.runPhase + 1) / activeCase().phases.length) * 100);
-      document.getElementById("workspaceBody").innerHTML =
-        '<div class="run-summary"><div class="summary-card"><span>Instance</span><b class="mono">' + state.selectedInstance +
-        '</b></div><div class="summary-card"><span>Mock SUT</span><b class="mono">' + state.selectedSut +
-        '</b></div><div class="summary-card"><span>GT Visibility</span><b>grader_only</b></div></div>' +
-        '<div class="run-progress"><div style="width:' + progress + '%"></div></div><div class="phase-list">' + phases + "</div>" +
-        '<div class="run-log">' + (state.runLog.length ? state.runLog.map(line => escapeHtml(line)).join("<br>") : "等待启动 Mock Harness...") + "</div>" +
-        '<div class="action-row"><span class="action-note">' + (activeCase().key === "case1" ?
-          "Fixture 注入定位退化；Executor 只执行固定航段推进和保护动作。" :
-          "Fixture 产生世界状态；Executor 只执行 A7 已选择的路线和 A8 低层控制。") + '</span>' +
-        (complete ? '<button class="btn primary" id="openEvidence" type="button">查看 Trace / GT →</button>' :
-          '<button class="btn primary" id="runButton" type="button"' + (running ? " disabled" : "") + ">" +
-          (running ? "运行中…" : "运行 Mock Pipeline") + "</button>") + "</div>";
-      const runButton = document.getElementById("runButton");
-      if (runButton) runButton.addEventListener("click", startRun);
-      const openEvidence = document.getElementById("openEvidence");
-      if (openEvidence) openEvidence.addEventListener("click", () => {
-        completeStage(6);
-      });
-    }
-
-    function renderEvidenceStage() {
-      setWorkspaceHeader(7, "Trace / GT 已对齐");
-      const events = state.evidence.filter(event => state.evidenceFilter === "all" || event[1] === state.evidenceFilter);
-      document.getElementById("workspaceBody").innerHTML =
-        '<p class="intro">Observable Trace 与 grader-only GT 使用同一 episode 时间轴。SUT 不可读取黄色 GT 事件。</p>' +
-        '<div class="filter-row"><button class="filter-button ' + (state.evidenceFilter === "all" ? "active" : "") +
-        '" data-filter="all" type="button">全部事件</button><button class="filter-button ' + (state.evidenceFilter === "trace" ? "active" : "") +
-        '" data-filter="trace" type="button">Observable Trace</button><button class="filter-button ' + (state.evidenceFilter === "gt" ? "active" : "") +
-        '" data-filter="gt" type="button">Hidden GT</button></div><div class="evidence-list">' +
-        events.map(event => '<div class="evidence-event ' + event[1] + '"><span class="event-time">' + event[0] +
-          '</span><span class="event-lane">' + (event[1] === "gt" ? "GT · GRADER ONLY" : "TRACE · " + event[2].toUpperCase()) +
-          '</span><div class="event-body"><b>' + event[3] + "</b><span>" + event[4] + "</span></div></div>").join("") +
-        '</div><div class="action-row"><span class="action-note">证据完整性：决策、模式切换、路线执行和终态事件均已记录。</span>' +
-        '<button class="btn primary" id="openGrader" type="button">运行 Grader →</button></div>';
-      document.querySelectorAll("[data-filter]").forEach(button => {
-        button.addEventListener("click", () => {
-          state.evidenceFilter = button.dataset.filter;
-          render();
-        });
-      });
-      document.getElementById("openGrader").addEventListener("click", () => completeStage(7));
-    }
-
-    function renderGraderStage() {
-      setWorkspaceHeader(8, "Grader Result 已形成");
-      const grader = state.grader;
-      const resultRows = grader.results.map(row => '<tr><td><b>' + row[0] + "</b></td><td>" + row[1] +
-        "</td><td class=\"mono\">" + row[2] + "</td><td>" + statusPill(row[3].toUpperCase(), row[3]) + "</td></tr>").join("");
-      const failed = grader.gate === "not_satisfied";
-      document.getElementById("workspaceBody").innerHTML =
-        '<div class="grader-banner"><div><h3>' + state.selectedInstance + " × " + state.selectedSut +
-        '</h3><p>能力归因与 task-level shared gate 分开输出；没有总分互相补偿。</p></div>' +
-        statusPill("SYNTHETIC RESULT", "proposed") + '</div><table class="grader-table"><thead><tr><th>Coverage</th><th>观察结论</th><th>Reason</th><th>Status</th></tr></thead><tbody>' +
-        resultRows + '</tbody></table><div class="gate-card ' + (failed ? "failed" : "") +
-        '"><div class="gate-label">TASK-LEVEL GATE · ' + grader.gateLabel + '</div><b>' +
-        (failed ? "NOT SATISFIED" : "SATISFIED · SYNTHETIC") + "</b><p>" + grader.gateDetail +
-        '</p></div><div class="action-row"><span class="action-note">未标定指标保持 indeterminate；正式结果仍需业务规则确认。</span>' +
-        '<button class="btn primary" id="finishDemo" type="button">完成本次演示</button></div>';
-      document.getElementById("finishDemo").addEventListener("click", () => {
-        state.completed.add(8);
-        render();
-      });
-    }
-
-    function candidateToTemplate() {
-      const cand = state.agentResult ? state.agentResult.candidate : null;
-      if (!cand) return null;
-      const jdSlots = (cand.jd_candidates || []).map(jd => {
-        const bm = jd.binding_mode || "fixed";
-        const binding = {mode: bm, status: jd.status === "TBD" ? "TBD" : "verified"};
-        if (bm === "fixed") binding.value = jd.value;
-        else if (bm === "enum") { binding.allowed_values = jd.allowed_values || []; binding.value = jd.value; }
-        else if (bm === "range") { binding.minimum = jd.minimum; binding.maximum = jd.maximum; }
-        return {
-          slot_id: jd.slot_id,
-          description: jd.name || jd.slot_id,
-          visibility: "sut_visible",
-          binding: binding,
-          provenance: []
-        };
-      });
-      return {
-        schema_version: "0.1.0",
-        artifact_type: "task_template",
-        template_id: (cand.task_title || "agent_template").replace(/\s+/g, "_").substring(0, 40),
-        template_version: "0.1.0",
-        title: cand.task_title || "Agent Template",
-        scenario: {summary: cand.scenario_summary || "", fixed_boundaries: [], out_of_scope: []},
-        coverage: (cand.coverage_candidates || []).map(c => ({
-          coverage_id: c.cell.replace(/[×]/g, "_").toLowerCase(),
-          group: "G2", ability: c.cell.split("×")[0], level: c.cell.split("×")[1] || "L1",
-          role: c.role || "primary", sut_responsibilities: c.responsibilities || [], out_of_scope: c.out_of_scope || []
-        })),
-        jd_slots: jdSlots,
-        phases: [{phase_id: "task", order: 1, entry_conditions: ["start"], exit_conditions: ["done"],
-          minimum_duration: {value: null, unit: "TBD", status: "TBD"}}],
-        disturbances: [],
-        interfaces: {sut_visible_inputs: [], sut_outputs: [], hidden_ground_truth: [],
-          executor_responsibilities: (cand.runtime_dependencies || []).map(d => d.responsibilities[0] || "TBD"),
-          external_decision_port: {description: "TBD", status: "TBD", protocol: null}},
-        metrics: [], provenance: []
-      };
-    }
-
-    async function generateInstancePreview() {
-      const template = candidateToTemplate();
-      if (!template) { state.instanceError = "没有可用的 Task Template；请先完成 Stage 0–5。"; render(); return; }
-      state.instanceLoading = true;
-      state.instanceError = null;
-      state.instanceResult = null;
-      state.instanceResults = null;
-      render();
-      try {
-        const endpoint = state.instanceMode === "traverse" ? "/api/instance/traverse"
-          : state.instanceMode === "batch" ? "/api/instance/batch"
-          : "/api/instance/generate";
-        const body = state.instanceMode === "single"
-          ? {template, seed: parseInt(state.instanceSeed) || 0}
-          : state.instanceMode === "batch"
-          ? {template, seeds: state.instanceBatchSeeds}
-          : {template, steps_per_range: 3};
-        const resp = await fetch(endpoint, {
-          method: "POST", headers: {"Content-Type": "application/json"},
-          body: JSON.stringify(body)
-        });
-        const data = await resp.json();
-        if (!resp.ok) throw new Error(data.message || data.error || "request failed");
-        if (state.instanceMode === "single") {
-          state.instanceResult = data.instance;
-        } else {
-          state.instanceResults = data.instances || [];
-        }
-      } catch (err) {
-        state.instanceError = String(err.message || err);
-      } finally {
-        state.instanceLoading = false;
-        render();
-      }
-    }
-
-    function renderInstanceStage() {
-      const locked = state.completed.has(5);
-      const tpl = candidateToTemplate();
-      setWorkspaceHeader(6, state.instanceResult ? "实例已生成" : state.instanceLoading ? "正在生成..." : "等待 Seed 输入");
-      let bindingRows = "";
-      if (tpl && tpl.jd_slots) {
-        bindingRows = tpl.jd_slots.map(s => {
-          const mode = s.binding.mode;
-          let val = "—";
-          if (mode === "fixed") val = escapeHtml(String(s.binding.value));
-          else if (mode === "enum") val = escapeHtml((s.binding.allowed_values || []).join(" | ")) + (s.binding.value ? ' <span class="action-note">默认: ' + escapeHtml(s.binding.value) + '</span>' : "");
-          else if (mode === "range") val = "[" + s.binding.minimum + ", " + s.binding.maximum + "]";
-          const tag = mode === "fixed" ? "fixed" : mode === "TBD" ? "tbd" : "proposed";
-          return '<tr><td class="mono">' + escapeHtml(s.slot_id) + '</td><td>' + escapeHtml(s.description) +
-            '</td><td>' + statusPill(mode, tag) + '</td><td>' + val + '</td></tr>';
-        }).join("");
-      }
-      let resultHtml = "";
-      if (state.instanceError) {
-        resultHtml = '<div class="choice-card dependency selected"><div class="choice-code">INSTANCE ERROR</div><b>生成失败</b><p>' + escapeHtml(state.instanceError) + '</p></div>';
-      } else if (state.instanceResult) {
-        const rows = (state.instanceResult.slot_bindings || []).map(s =>
-          '<tr><td class="mono">' + escapeHtml(s.slot_id) + '</td><td>' + escapeHtml(JSON.stringify(s.value)) +
-          '</td><td>' + statusPill(s.status, s.status === "verified" ? "given" : "tbd") + '</td></tr>'
-        ).join("");
-        resultHtml = '<div class="choice-card selected"><div class="choice-code">INSTANCE · SEED ' + state.instanceResult.seed + '</div>' +
-          '<p class="mono" style="font-size:12px">' + escapeHtml(state.instanceResult.instance_id) + '</p>' +
-          '<table class="jd-table"><thead><tr><th>Slot</th><th>Value</th><th>Status</th></tr></thead><tbody>' + rows + '</tbody></table></div>';
-      } else if (state.instanceResults) {
-        resultHtml = '<div class="choice-card selected"><div class="choice-code">BATCH · ' + state.instanceResults.length + ' INSTANCES</div>' +
-          '<table class="jd-table"><thead><tr><th>Instance ID</th><th>Seed</th><th>Resolved</th></tr></thead><tbody>' +
-          state.instanceResults.map(inst => {
-            const resolved = (inst.slot_bindings || []).filter(s => s.status !== "TBD").length;
-            const total = (inst.slot_bindings || []).length;
-            return '<tr><td class="mono">' + escapeHtml(inst.instance_id) + '</td><td>' + inst.seed +
-              '</td><td>' + resolved + '/' + total + '</td></tr>';
-          }).join("") + '</tbody></table></div>';
-      }
-      document.getElementById("workspaceBody").innerHTML =
-        '<p class="intro">从已确认的 Task Template 和 Seed 生成具体的任务实例。同一个 (template, seed) 组合始终产生相同的实例。</p>' +
-        (state.templateSavedNotice ? '<div class="choice-card"><span class="action-note">' + escapeHtml(state.templateSavedNotice) + '</span></div>' : '') +
-        '<div class="action-row" style="margin-bottom:14px"><span class="action-note">保存后重启服务也能直接加载，不需要重新调 API</span>' +
-        '<button class="btn" id="saveTemplateBtn" type="button"' + (tpl ? '' : ' disabled') + '>保存模板</button></div>' +
-        (tpl ? '<table class="jd-table"><thead><tr><th>Slot</th><th>Description</th><th>Mode</th><th>Domain</th></tr></thead><tbody>' + bindingRows + '</tbody></table>' :
-          '<div class="choice-card"><b>请先完成 Stage 0–5</b><p>需要先通过 Config Agent 生成 Task Template。</p></div>') +
-        (tpl ? '<div class="field-label" style="margin-top:18px"><label>生成模式</label></div>' +
-          '<div class="control" style="margin-bottom:10px"><select id="instanceMode">' +
-            '<option value="single"' + (state.instanceMode === "single" ? " selected" : "") + '>单个 Seed</option>' +
-            '<option value="batch"' + (state.instanceMode === "batch" ? " selected" : "") + '>批量 Seed 范围</option>' +
-            '<option value="traverse"' + (state.instanceMode === "traverse" ? " selected" : "") + '>全遍历（笛卡尔积）</option>' +
-          '</select></div>' +
-          '<div id="instanceSingleFields" style="' + (state.instanceMode !== "single" ? "display:none" : "") + 'margin-bottom:10px">' +
-            '<label>Seed</label><input id="instanceSeedInput" type="number" min="0" value="' + state.instanceSeed + '" style="width:120px"></div>' +
-          '<div id="instanceBatchFields" style="' + (state.instanceMode !== "batch" ? "display:none" : "") + 'margin-bottom:10px">' +
-            '<label>Seed 范围（如 0-9 或 0,3,7）</label><input id="instanceBatchInput" type="text" value="' + escapeHtml(state.instanceBatchSeeds) + '" style="width:200px"></div>' +
-          '<div class="action-row"><span class="action-note">' + (state.instanceMode === "traverse" ? "枚举所有 enum/range 组合" : "确定性生成") + '</span>' +
-            '<button class="btn primary" id="generateInstanceBtn" type="button"' + (state.instanceLoading ? " disabled" : "") + '>' +
-            (state.instanceLoading ? "生成中..." : "生成实例") + '</button></div>' : '') +
-        resultHtml;
-      const modeSelect = document.getElementById("instanceMode");
-      if (modeSelect) modeSelect.addEventListener("change", () => {
-        state.instanceMode = modeSelect.value;
-        render();
-      });
-      const seedInput = document.getElementById("instanceSeedInput");
-      if (seedInput) seedInput.addEventListener("change", () => { state.instanceSeed = parseInt(seedInput.value) || 0; });
-      const batchInput = document.getElementById("instanceBatchInput");
-      if (batchInput) batchInput.addEventListener("change", () => { state.instanceBatchSeeds = batchInput.value; });
-      const genBtn = document.getElementById("generateInstanceBtn");
-      if (genBtn) genBtn.addEventListener("click", generateInstancePreview);
-      const saveBtn = document.getElementById("saveTemplateBtn");
-      if (saveBtn) saveBtn.addEventListener("click", saveCurrentTemplate);
-    }
-
-    function renderWorkspace() {
-      const renderers = [
-        renderScenarioStage, renderInputStage, renderNarrativeStage, renderCoverageStage, renderJdStage, renderTemplateStage, renderInstanceStage
-      ];
-      renderers[state.currentStage]();
-    }
-
-    function render() {
-      document.getElementById("headerCaseTitle").textContent = (state.fixedScenario ? state.fixedScenario.title : activeCase().title) + " · 固定业务场景";
-      renderStageRail();
-      renderContext();
-      renderReview();
-      renderWorkspace();
-      renderReviewWorkspace();
-      persistState();
-    }
-
-    document.getElementById("resetButton").addEventListener("click", () => {
-      if (runTimer) clearInterval(runTimer);
-      if (pendingPollTimer) clearTimeout(pendingPollTimer);
-      runTimer = null;
-      state = initialState();
-      render();
-      checkAgentHealth();
-    });
-
-    async function checkAgentHealth() {
-      try {
-        const response = await fetch("/api/health", { cache: "no-store" });
-        const health = await response.json();
-        state.serverStatus = health.agent_ready ? "ready" : "missing_api_key";
-        state.serverModels = health;
-        const catalogResponse = await fetch("/api/catalog", { cache: "no-store" });
-        if (catalogResponse.ok) {
-          const catalog = await catalogResponse.json();
-          state.catalogSummary = catalog;
-          Object.assign(JD_DISPLAY_NAMES, Object.fromEntries(catalog.jd_fields.map(item => [item.id, item.name])));
-        }
-        const scenarioResponse = await fetch("/api/scenarios", { cache: "no-store" });
-        if (scenarioResponse.ok) {
-          state.scenarioRegistry = await scenarioResponse.json();
-          const selected = state.scenarioRegistry.scenarios.find(item => item.scenario_id === state.selectedScenarioId);
-          state.fixedScenario = selected || state.scenarioRegistry.scenarios.find(item => item.scenario_id === state.scenarioRegistry.default_scenario_id);
-          state.selectedScenarioId = state.fixedScenario.scenario_id;
-        }
-        const savedResponse = await fetch("/api/template/saved", { cache: "no-store" });
-        if (savedResponse.ok) {
-          const saved = await savedResponse.json();
-          if (saved.candidate && !state.agentResult) {
-            state.agentResult = {candidate: saved.candidate, model: "saved"};
-            state.narrativeDraft = saved.task_description || "";
-            state.narrativeStatus = "done";
-            state.agentStatus = "done";
-            state.completed = new Set([0, 1, 2, 3, 4, 5]);
-            state.maxUnlocked = 6;
-            state.templateSavedNotice = "已加载保存的模板（" + (saved.saved_at || "").substring(0, 10) + "），可直接进入实例化";
-          }
-        }
-      } catch (error) {
-        state.serverStatus = "offline";
-      }
-      render();
-      if (state.narrativeStatus === "running") startRunPolling("narrative");
-      else if (state.agentStatus === "running") startRunPolling("classification");
-    }
-
-    async function saveCurrentTemplate() {
-      if (!state.agentResult || !state.agentResult.candidate) return;
-      try {
-        const resp = await fetch("/api/template/save", {
-          method: "POST", headers: {"Content-Type": "application/json"},
-          body: JSON.stringify({
-            candidate: state.agentResult.candidate,
-            task_description: state.narrativeDraft || "",
-          })
-        });
-        const data = await resp.json();
-        if (resp.ok) {
-          state.templateSavedNotice = "已保存到 " + data.path;
-        } else {
-          state.templateSavedNotice = "保存失败: " + (data.error || "");
-        }
-      } catch (err) {
-        state.templateSavedNotice = "保存失败: " + err;
-      }
-      render();
-    }
-
-    render();
-    checkAgentHealth();
+    render(); init();
   </script>
 </body>
 </html>
