@@ -146,7 +146,8 @@ PYTHONPATH=src python3 -m uav_benchmark.compiler \
 ## 项目结构
 
 ```text
-pipeline.html                 浏览器演示与人工复核界面
+pipeline.html                 浏览器演示入口（薄壳）
+pipeline/                     UI 模块：css/app.css + js/*.js（见 pipeline/README.md）
 scripts/start_agent_demo.sh   本地服务启动入口
 src/uav_benchmark/agent/      Config Agent、校验器与 HTTP 服务
 src/uav_benchmark/compiler/   YAML Intake Compiler
