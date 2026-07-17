@@ -1040,6 +1040,13 @@ class ConfigAgent:
             {"cell": c.cell, "required_jd_ids": _lookup_required_jds(c.cell, gal_catalog)}
             for c in coverage_cells
         ]
+        # The template must only carry JD slots the selected coverage actually
+        # requires. The model is shown the full JD catalog per chunk and tends to
+        # emit domains for unrelated slots; keep the required set so those extras
+        # (and the spurious TBDs they create) never leak into the template.
+        required_slots: set[str] = set(base_slots)
+        for entry in coverage_summary:
+            required_slots.update(entry.get("required_jd_ids") or [])
         chunks = _chunk_coverage_for_extraction(coverage_summary, base_slots)
         total_chunks = len(chunks)
 
@@ -1093,6 +1100,9 @@ class ConfigAgent:
                 emit=emit,
             )
             for jd in part.jd_candidates:
+                # Drop slots the confirmed coverage does not require.
+                if jd.slot_id not in required_slots:
+                    continue
                 merged_jd.setdefault(jd.slot_id, jd)
             for dep in part.runtime_dependencies:
                 merged_deps.setdefault(dep.dependency_id, dep)
