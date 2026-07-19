@@ -103,7 +103,7 @@ http://127.0.0.1:8765
 4. **STEP 4**：编辑取值域；TBD 可智能填写 → 确认；
 5. **STEP 5**：选 Seed 生成特定任务模版；重点看每个实例的具体 JD 值。
 
-每步可「保存/加载」。操作细节见 [Config Agent 演示说明](docs/config_agent_quickstart.md)。
+每步可「保存/加载」。操作细节见 [Config Agent 演示说明](docs/config_agent_quickstart.md)；带截图走读见 [Pipeline UI 图解](docs/pipeline_ui_walkthrough.md)。
 
 ## 离线任务配置
 

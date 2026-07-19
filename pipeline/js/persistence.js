@@ -51,6 +51,8 @@ async function loadPipeline() {
     if (d.agentResult) {
       state.agentRunId = d.agentRunId || null;
       state.agentResult = d.agentResult; state.agentStatus = "done"; state.agentPhase = "done";
+      const jd = (d.agentResult.candidate && d.agentResult.candidate.jd_candidates) || [];
+      if (jd.length) state.extractionStatus = "done";
     }
     if (d.domainEdits) state.domainEdits = d.domainEdits;
     if (d.instanceMode) state.instanceMode = d.instanceMode;

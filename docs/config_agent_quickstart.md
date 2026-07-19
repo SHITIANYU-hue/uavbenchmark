@@ -1,5 +1,7 @@
 # Config Agent Pipeline 操作说明
 
+带截图的界面走读见 [Pipeline UI 图解](pipeline_ui_walkthrough.md)。
+
 当前页面入口：`pipeline.html`（样式/脚本在 `pipeline/`）。五步流程：
 
 ```text
