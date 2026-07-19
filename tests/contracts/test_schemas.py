@@ -117,7 +117,7 @@ def test_runtime_dependencies_are_explicitly_out_of_score() -> None:
         {
             "dependency_id": "external_localization",
             "group": "G2",
-            "ability": "A6a",
+            "ability": "A7a",
             "provider": "external_system",
             "responsibilities": ["provide base pose"],
             "scored": False,
@@ -128,7 +128,7 @@ def test_runtime_dependencies_are_explicitly_out_of_score() -> None:
         {
             "rule_id": "decision_execution_split",
             "description": "Decision and execution are scored independently.",
-            "applies_to": ["a6a_l3", "a7_l1"],
+            "applies_to": ["a7a_l3", "a9_l1"],
             "shared_outcome_handling": "no_double_count",
             "status": "proposed",
         }
@@ -150,7 +150,7 @@ def test_runtime_dependency_cannot_be_marked_scored() -> None:
         {
             "dependency_id": "external_flight_control",
             "group": "G3",
-            "ability": "A8",
+            "ability": "A10",
             "provider": "executor",
             "responsibilities": ["provide low-level flight control"],
             "scored": True,

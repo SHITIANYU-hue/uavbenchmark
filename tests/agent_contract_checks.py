@@ -51,7 +51,7 @@ def candidate(evidence: str) -> AgentCandidate:
         "task_title": "城市道路车辆巡检",
         "scenario_summary": "连续车辆巡检与定位退化处置",
         "coverage_candidates": [{
-            "cell": "A5×L2",
+            "cell": "A6×L2",
             "role": "primary",
             "responsibilities": ["输出当前车辆识别结果", "持续识别车辆并维护跨帧身份"],
             "out_of_scope": [],
@@ -69,9 +69,9 @@ def candidate(evidence: str) -> AgentCandidate:
         "jd_candidates": [
             {"slot_id": "jd-0.2", "name": "工作空间结构", "value": "高速公路、沿线路段和超长道路走廊；具体路段结构待确认", "status": "given", "evidence_quote": "高速公路、沿线路段和超长道路走廊；具体路段结构待确认", "provenance": "scenario_fixed"},
             {"slot_id": "jd-0.7", "name": "任务完成判据", "value": None, "status": "TBD", "evidence_quote": ""},
-            {"slot_id": "jd-5.1", "name": "业务对象类目", "value": "车辆", "status": "given", "evidence_quote": "车辆"},
-            {"slot_id": "jd-5.2", "name": "典型场景特征", "value": None, "status": "TBD", "evidence_quote": ""},
-            {"slot_id": "jd-5.3", "name": "感知模态集", "value": None, "status": "TBD", "evidence_quote": ""},
+            {"slot_id": "jd-6.1", "name": "业务对象类目", "value": "车辆", "status": "given", "evidence_quote": "车辆"},
+            {"slot_id": "jd-6.2", "name": "典型场景特征", "value": None, "status": "TBD", "evidence_quote": ""},
+            {"slot_id": "jd-6.3", "name": "感知模态集", "value": None, "status": "TBD", "evidence_quote": ""},
         ],
         "responsibility_boundaries": [{
             "actor": "SUT",
@@ -107,7 +107,7 @@ class AgentContractChecks(unittest.TestCase):
         prose = candidate("持续识别车辆并维护跨帧身份").natural_language_template
         draft = NarrativeDraft(
             task_title="高速公路车辆巡检",
-            expanded_narrative=prose + "\n\n内部建议采用 A5×L2。",
+            expanded_narrative=prose + "\n\n内部建议采用 A6×L2。",
         )
         issues = validate_narrative_draft(draft)
         self.assertIn("INTERNAL_LABEL_IN_NARRATIVE", {item.code for item in issues})
@@ -132,6 +132,18 @@ class AgentContractChecks(unittest.TestCase):
     def test_reviewed_catalog_is_full_and_contains_no_case_templates(self) -> None:
         catalog = load_reference_catalog()
         self.assertEqual(catalog["scope"], "full_17A_L1_L4_66JD_catalog")
+        self.assertEqual(catalog["ability_id_scheme"], "ability-id-v2-2026-07-19")
+        self.assertEqual(
+            [item["a_id"] for item in catalog["abilities"]],
+            [
+                "A1", "A2", "A3", "A4", "A5",
+                "A6", "A7a", "A7b", "A8",
+                "A9", "A10",
+                "A11a", "A11b",
+                "A12", "A13",
+                "A14", "A15",
+            ],
+        )
         self.assertEqual(catalog["counts"]["gal_cells"], 68)
         self.assertEqual(catalog["counts"]["jd_fields"], 66)
         self.assertEqual(len({item["cell"] for item in catalog["gal_cells"]}), 68)
@@ -142,43 +154,43 @@ class AgentContractChecks(unittest.TestCase):
 
     def test_a_by_l_responsibility_is_cumulative(self) -> None:
         catalog = load_reference_catalog()
-        cell = next(item for item in catalog["gal_cells"] if item["cell"] == "A5×L4")
+        cell = next(item for item in catalog["gal_cells"] if item["cell"] == "A6×L4")
         self.assertEqual(cell["cumulative_levels"], ["L1", "L2", "L3", "L4"])
         self.assertEqual(len(cell["cumulative_responsibilities"]), 4)
-        self.assertTrue({"jd-5.1", "jd-5.2", "jd-5.3", "jd-5.4"}.issubset(cell["required_jd_ids"]))
+        self.assertTrue({"jd-6.1", "jd-6.2", "jd-6.3", "jd-6.4"}.issubset(cell["required_jd_ids"]))
 
-    def test_same_city_case_can_switch_a5_level_without_changing_ability(self) -> None:
+    def test_same_city_case_can_switch_a6_level_without_changing_ability(self) -> None:
         """Level selection expands one A's duties instead of swapping case templates."""
         catalog = load_reference_catalog()
-        a5_cells = {
+        a6_cells = {
             item["level"]: item
             for item in catalog["gal_cells"]
-            if item["a_id"] == "A5"
+            if item["a_id"] == "A6"
         }
-        self.assertEqual(set(a5_cells), {"L1", "L2", "L3", "L4"})
+        self.assertEqual(set(a6_cells), {"L1", "L2", "L3", "L4"})
 
         expected_new_jd = {
-            "L1": {"jd-5.1", "jd-5.3"},
-            "L2": {"jd-5.2"},
+            "L1": {"jd-6.1", "jd-6.3"},
+            "L2": {"jd-6.2"},
             "L3": {"jd-0.2", "jd-0.3", "jd-0.5"},
-            "L4": {"jd-5.4"},
+            "L4": {"jd-6.4"},
         }
         previous_jd: set[str] = set()
         for index, level in enumerate(("L1", "L2", "L3", "L4"), start=1):
-            cell = a5_cells[level]
+            cell = a6_cells[level]
             current_jd = set(cell["required_jd_ids"])
-            self.assertEqual(cell["cell"], f"A5×{level}")
+            self.assertEqual(cell["cell"], f"A6×{level}")
             self.assertEqual(len(cell["cumulative_responsibilities"]), index)
             self.assertTrue(previous_jd.issubset(current_jd))
             self.assertTrue(expected_new_jd[level].issubset(current_jd))
             previous_jd = current_jd
 
-    def test_current_jd_8_semantics_are_versioned(self) -> None:
+    def test_legacy_jd_8_control_semantics_migrate_to_jd_10(self) -> None:
         catalog = load_reference_catalog()
         names = {item["id"]: item["name"] for item in catalog["jd_fields"]}
-        self.assertEqual(names["jd-8.1"], "控制质量先验")
-        self.assertEqual(names["jd-8.2"], "控制工作机制")
-        self.assertEqual(names["jd-8.3"], "控制处置策略适用集")
+        self.assertEqual(names["jd-10.1"], "控制质量先验")
+        self.assertEqual(names["jd-10.2"], "控制工作机制")
+        self.assertEqual(names["jd-10.3"], "控制处置策略适用集")
 
     def test_fixed_scenario_precedes_human_task_and_has_no_level(self) -> None:
         registry = load_scenario_registry()
@@ -211,20 +223,20 @@ class AgentContractChecks(unittest.TestCase):
 
     def test_internal_axl_label_is_rejected_from_business_narrative(self) -> None:
         value = candidate("持续识别车辆并维护跨帧身份")
-        value.natural_language_template += "\n\n内部候选为 A5×L2。"
+        value.natural_language_template += "\n\n内部候选为 A6×L2。"
         issues = validate_candidate(value, TASK)
         self.assertIn("INTERNAL_LABEL_IN_NARRATIVE", {issue.code for issue in issues})
 
     def test_human_level_edit_requires_source_note(self) -> None:
         value = candidate("持续识别车辆并维护跨帧身份")
-        value.coverage_candidates[0].cell = "A5×L3"
+        value.coverage_candidates[0].cell = "A6×L3"
         value.coverage_candidates[0].provenance = "human_edited"
         issues = validate_candidate(value, TASK)
         self.assertIn("HUMAN_VALUE_MISSING_SOURCE", {issue.code for issue in issues})
 
     def test_missing_backbone_slot_is_rejected(self) -> None:
         value = candidate("持续识别车辆并维护跨帧身份")
-        value.jd_candidates = [item for item in value.jd_candidates if item.slot_id != "jd-5.3"]
+        value.jd_candidates = [item for item in value.jd_candidates if item.slot_id != "jd-6.3"]
         issues = validate_candidate(value, TASK)
         self.assertIn("MISSING_REQUIRED_JD_SLOT", {issue.code for issue in issues})
 
@@ -242,7 +254,7 @@ class AgentContractChecks(unittest.TestCase):
 
     def test_human_jd_value_requires_source_note(self) -> None:
         value = candidate("持续识别车辆并维护跨帧身份")
-        row = next(item for item in value.jd_candidates if item.slot_id == "jd-5.2")
+        row = next(item for item in value.jd_candidates if item.slot_id == "jd-6.2")
         row.value = "高密度动态目标"
         row.status = "proposed"
         row.provenance = "human_edited"
@@ -251,7 +263,7 @@ class AgentContractChecks(unittest.TestCase):
 
     def test_human_jd_value_with_source_note_is_accepted(self) -> None:
         value = candidate("持续识别车辆并维护跨帧身份")
-        row = next(item for item in value.jd_candidates if item.slot_id == "jd-5.2")
+        row = next(item for item in value.jd_candidates if item.slot_id == "jd-6.2")
         row.value = "高密度动态目标"
         row.status = "proposed"
         row.provenance = "human_edited"
@@ -383,23 +395,26 @@ class AgentContractChecks(unittest.TestCase):
 
     def test_chunking_splits_large_coverage_but_keeps_single_cell_whole(self) -> None:
         summary = [
-            {"cell": "A1×L2", "required_jd_ids": ["jd-1.1", "jd-1.2", "jd-1.3", "jd-1.4", "jd-1.5", "jd-1.6"]},
-            {"cell": "A2×L2", "required_jd_ids": ["jd-2.1", "jd-2.2", "jd-2.3", "jd-2.4", "jd-2.5", "jd-2.6"]},
-            {"cell": "A3×L2", "required_jd_ids": ["jd-3.1", "jd-3.2", "jd-3.3", "jd-3.4", "jd-3.5", "jd-3.6"]},
+            {"cell": "A4×L2", "required_jd_ids": ["jd-4.1", "jd-4.2", "jd-4.3", "jd-4.4", "jd-4.5"]},
+            {"cell": "A6×L2", "required_jd_ids": ["jd-6.1", "jd-6.2", "jd-6.3", "jd-6.4"]},
+            {"cell": "A13×L2", "required_jd_ids": ["jd-13.1", "jd-13.2", "jd-13.3", "jd-13.4", "jd-13.5"]},
         ]
         chunks = _chunk_coverage_for_extraction(summary, ["jd-0.2", "jd-0.7"], max_slots_per_chunk=10)
         self.assertGreater(len(chunks), 1)
         # every cell appears exactly once across all chunks
         flat = [entry["cell"] for chunk in chunks for entry in chunk]
-        self.assertEqual(sorted(flat), ["A1×L2", "A2×L2", "A3×L2"])
+        self.assertEqual(sorted(flat), ["A13×L2", "A4×L2", "A6×L2"])
 
     def test_chunking_single_cell_is_one_chunk(self) -> None:
-        summary = [{"cell": "A5×L2", "required_jd_ids": ["jd-5.1", "jd-5.2"]}]
+        summary = [{"cell": "A6×L2", "required_jd_ids": ["jd-6.1", "jd-6.2"]}]
         chunks = _chunk_coverage_for_extraction(summary, ["jd-0.2", "jd-0.7"])
         self.assertEqual(len(chunks), 1)
 
     def test_preferred_coverage_chunking_splits_and_preserves(self) -> None:
-        pref = [{"cell": f"A{i}×L2"} for i in range(1, 9)]
+        pref = [
+            {"cell": f"{ability}×L2"}
+            for ability in ("A1", "A2", "A3", "A4", "A5", "A6", "A7a", "A7b")
+        ]
         chunks = _chunk_preferred_coverage(pref, max_cells_per_chunk=6)
         self.assertEqual(len(chunks), 2)
         flat = [entry["cell"] for chunk in chunks for entry in chunk]
@@ -436,8 +451,8 @@ class AgentContractChecks(unittest.TestCase):
 
     def test_classify_coverage_batches_large_selection(self) -> None:
         calls: list[str] = []
-        cells1 = ["A1×L2", "A2×L2", "A3×L2", "A4×L2", "A5×L2", "A6a×L2"]
-        cells2 = ["A7×L2", "A9a×L2"]
+        cells1 = ["A1×L2", "A2×L2", "A3×L2", "A4×L2", "A6×L2", "A7a×L2"]
+        cells2 = ["A9×L2", "A11a×L2"]
 
         def make(cells: list[str]) -> CoverageResult:
             return CoverageResult(

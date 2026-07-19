@@ -23,7 +23,7 @@ def case2_intake():
 def test_case2_intake_builds_valid_task_template() -> None:
     template = build_task_template(case2_intake())
     validate_task_template(template, SCHEMA)
-    assert [item["ability"] for item in template["coverage"]] == ["A5", "A6b", "A7", "A11"]
+    assert [item["ability"] for item in template["coverage"]] == ["A6", "A7b", "A9", "A8"]
     assert all(item["scored"] is False for item in template["runtime_dependencies"])
 
 

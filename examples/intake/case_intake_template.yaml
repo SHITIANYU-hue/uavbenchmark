@@ -18,7 +18,7 @@ out_of_scope:
   - <明确不评价的能力或行为>
 
 coverage:
-  - ability: A5
+  - ability: A6
     level: L1
     role: primary             # primary / anomaly / auxiliary / non_scored
     responsibilities:
@@ -29,7 +29,7 @@ coverage:
 # 外部定位、飞控、执行器等写这里，不要写成 L0 coverage。
 runtime_dependencies:
   - dependency_id: <dependency_id>
-    ability: A8               # 可省略
+    ability: A10               # 可省略
     provider: executor        # fixture / harness / executor / external_system
     responsibilities:
       - <外部系统承担的责任>
@@ -80,7 +80,7 @@ interfaces:
 
 metrics:
   - metric_id: <metric_id>
-    coverage_id: a5_l1
+    coverage_id: a6_l1
     name: <指标名称>
     parameters: {}
     direction: TBD

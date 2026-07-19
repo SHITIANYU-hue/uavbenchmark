@@ -1,9 +1,11 @@
-# UAV Benchmark Factory：五步 Pipeline 图解
+# UAV Benchmark Factory：五步 Pipeline 操作流程
 
 入口：`http://127.0.0.1:8765`（`pipeline.html`）。  
 启动：`./scripts/start_agent_demo.sh`，并在 `.env` 配置 API Key。
 
 本页不跑真实 SUT / 仿真 / GT / Grader，只把**任务描述**收成可复现的 **特定任务模版**（具体 JD 取值）。
+
+当前代码采用 `ability-id-v2-2026-07-19`。
 
 ## 整体在干什么
 
@@ -30,13 +32,9 @@ JD 变量域（按 A 分组）
 
 侧栏「本次运行」可看 Provider、进度、Coverage（按 G 分组）等；阶段轨可在已解锁步骤间跳转。
 
-![侧栏与 STEP 5 总览](assets/pipeline-walkthrough/overview-sidebar.png)
-
 ## STEP 1 · 任务域选择
 
 写清任务即可。需要示例时，从下拉选场景（高速 / 油气 / 桥梁 / 园区等），内容会直接填进文本框，可再改。确认后进入 STEP 2。
-
-![STEP 1 任务描述](assets/pipeline-walkthrough/step1-task.png)
 
 ## STEP 2 · 文案与 A×L
 
@@ -54,19 +52,13 @@ JD 域提取不在这一步，放到 STEP 3。
 - 「不覆盖」= **L0**（本次不计分，不是“考到 L0”）
 - 不同 L 用颜色区分，方便扫一眼
 
-![STEP 2：L 含义与目标 Coverage](assets/pipeline-walkthrough/step2-coverage.png)
-
 分类完成后可看到结果 chips，确认 A×L 再进 STEP 3。
-
-![STEP 2：文案与 A×L 结果](assets/pipeline-walkthrough/step2-axl-result.png)
 
 ## STEP 3 · JD 域提取
 
 根据 STEP 2 已确认的 A×L，单独跑 JD 变量域提取（分批，避免一次返回过长被截断；失败可重试，不必重跑 STEP 2）。
 
 结果按 **A** 分组展示；琥珀色 TBD 会在 STEP 4 补全。
-
-![STEP 3：JD 域按 A 分组](assets/pipeline-walkthrough/step3-jd.png)
 
 ## STEP 4 · 任务域模版
 
@@ -81,8 +73,6 @@ JD 域提取不在这一步，放到 STEP 3。
 
 这里定的是**取值范围**，还不是某一趟任务的具体采样值。
 
-![STEP 4：域编辑与智能填写 TBD](assets/pipeline-walkthrough/step4-domain.png)
-
 ## STEP 5 · 特定任务模版
 
 重点是每个 Seed 下 JD 取到的**具体值**。
@@ -91,8 +81,6 @@ JD 域提取不在这一步，放到 STEP 3。
 - 同 Seed 结果可复现；可「换一批」再生成
 - 卡片可收起；内含文字说明（任务叙述 + 关键 JD）
 - STEP 4 域模版折叠在底部作参考（Domain → Value）
-
-![STEP 5：Seed → 具体 JD](assets/pipeline-walkthrough/step5-specific.png)
 
 ## 保存 / 加载 / 重新开始
 

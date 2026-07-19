@@ -192,7 +192,7 @@ For EACH required JD slot, choose a binding_mode and define its domain:
 2. binding_mode="enum"    — there is a closed set of meaningful options.
    Set allowed_values to the full list. Set value to the recommended default.
    Example:
-   jd-5.1: binding_mode="enum", allowed_values=["车辆","行人","非机动车","道路设施"],
+   jd-6.1: binding_mode="enum", allowed_values=["车辆","行人","非机动车","道路设施"],
            value="车辆"
 
 3. binding_mode="range"   — the variable is numeric and varies continuously.
@@ -507,6 +507,7 @@ def _condensed_gal_catalog() -> dict[str, Any]:
     catalog = lookup_gal_catalog()
     return {
         "catalog_version": catalog["catalog_version"],
+        "ability_id_scheme": catalog["ability_id_scheme"],
         "abilities": catalog["abilities"],
         "cells": [
             {

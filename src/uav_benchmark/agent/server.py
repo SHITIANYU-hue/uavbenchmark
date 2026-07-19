@@ -146,6 +146,7 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                 "lite_model": providers[default_provider]["models"]["lite"],
                 "pro_model": providers[default_provider]["models"]["pro"],
                 "catalog_version": catalog["catalog_version"],
+                "ability_id_scheme": catalog["ability_id_scheme"],
                 "catalog_scope": catalog["scope"],
                 "catalog_counts": catalog["counts"],
                 "catalog_source_versions": catalog["source_versions"],
@@ -155,6 +156,7 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
             catalog = load_reference_catalog()
             self._json(HTTPStatus.OK, {
                 "catalog_version": catalog["catalog_version"],
+                "ability_id_scheme": catalog["ability_id_scheme"],
                 "scope": catalog["scope"],
                 "source_versions": catalog["source_versions"],
                 "counts": catalog["counts"],

@@ -10,21 +10,21 @@
       "油田地面管廊或油气集输管线走廊",
       "指定固定巡检、返航和安全备降路线",
       "资源偏差发生前必须存在正常巡检阶段",
-      "A11 负责资源决策，A7 负责路线执行，A8 低层控制由外部飞控提供"
+      "A8 负责资源决策，A9 负责路线执行，A10 低层控制由外部飞控提供"
     ],
     "out_of_scope": [
-      "A6a 定位异常识别与恢复",
-      "A8 低层飞行控制评分",
-      "A9 载荷动作评分",
+      "A7a 定位异常识别与恢复",
+      "A10 低层飞行控制评分",
+      "A11a/A11b 载荷动作与成果评分",
       "自然语言交互、人工批准和人工接管评分",
       "动态障碍自主重规划"
     ]
   },
   "coverage": [
     {
-      "coverage_id": "a5_l1",
+      "coverage_id": "a6_l1",
       "group": "G2",
-      "ability": "A5",
+      "ability": "A6",
       "level": "L1",
       "role": "auxiliary",
       "sut_responsibilities": [
@@ -43,9 +43,9 @@
       ]
     },
     {
-      "coverage_id": "a6b_l2",
+      "coverage_id": "a7b_l2",
       "group": "G2",
-      "ability": "A6b",
+      "ability": "A7b",
       "level": "L2",
       "role": "auxiliary",
       "sut_responsibilities": [
@@ -64,14 +64,14 @@
       ]
     },
     {
-      "coverage_id": "a7_l2",
+      "coverage_id": "a9_l2",
       "group": "G3",
-      "ability": "A7",
+      "ability": "A9",
       "level": "L2",
       "role": "auxiliary",
       "sut_responsibilities": [
         "持续执行固定巡检路线",
-        "根据 A11 的模式和目标切换并执行返航或备降路线"
+        "根据 A8 的模式和目标切换并执行返航或备降路线"
       ],
       "out_of_scope": [
         "低层速度、姿态和着陆控制",
@@ -87,9 +87,9 @@
       ]
     },
     {
-      "coverage_id": "a11_l4",
+      "coverage_id": "a8_l4",
       "group": "G2",
-      "ability": "A11",
+      "ability": "A8",
       "level": "L4",
       "role": "primary",
       "sut_responsibilities": [
@@ -127,7 +127,7 @@
           "notes": "正式 A×L、业务规则和 threshold 尚待项目组确认。"
         }
       ],
-      "ability": "A6a",
+      "ability": "A7a",
       "group": "G2"
     },
     {
@@ -146,7 +146,7 @@
           "notes": "正式 A×L、业务规则和 threshold 尚待项目组确认。"
         }
       ],
-      "ability": "A8",
+      "ability": "A10",
       "group": "G3"
     },
     {
@@ -169,11 +169,11 @@
   ],
   "attribution_rules": [
     {
-      "rule_id": "a11_decision_a7_execution_split",
-      "description": "A11 评价资源决策和终态验证，A7 评价已选路线的切换与执行；双方结果不得互相补偿。",
+      "rule_id": "a8_decision_a9_execution_split",
+      "description": "A8 评价资源决策和终态验证，A9 评价已选路线的切换与执行；双方结果不得互相补偿。",
       "applies_to": [
-        "a11_l4",
-        "a7_l2"
+        "a8_l4",
+        "a9_l2"
       ],
       "shared_outcome_handling": "no_double_count",
       "status": "proposed"
@@ -182,8 +182,8 @@
       "rule_id": "safe_terminal_single_gate",
       "description": "安全返航、备降或安全完成是任务级共享终态，只统计一次。",
       "applies_to": [
-        "a11_l4",
-        "a7_l2"
+        "a8_l4",
+        "a9_l2"
       ],
       "shared_outcome_handling": "single_task_gate",
       "status": "proposed"
@@ -451,7 +451,7 @@
     "sut_outputs": [
       {
         "name": "observable_event",
-        "description": "A5/A6b/A7/A11 的结构化可观察事件。",
+        "description": "A6/A7b/A9/A8 的结构化可观察事件。",
         "schema_ref": "../../schemas/sut_trace.schema.json"
       }
     ],
@@ -463,7 +463,7 @@
       }
     ],
     "executor_responsibilities": [
-      "执行 A7 输出的导航目标",
+      "执行 A9 输出的导航目标",
       "提供低层速度、姿态、位置和着陆控制",
       "记录 executor 状态和终端执行结果"
     ],
@@ -476,7 +476,7 @@
   "metrics": [
     {
       "metric_id": "defect_detection_metrics",
-      "coverage_id": "a5_l1",
+      "coverage_id": "a6_l1",
       "name": "缺陷识别与证据指标组",
       "parameters": {},
       "direction": "TBD",
@@ -496,7 +496,7 @@
     },
     {
       "metric_id": "relative_geometry_metrics",
-      "coverage_id": "a6b_l2",
+      "coverage_id": "a7b_l2",
       "name": "相对几何误差与连续可用性指标组",
       "parameters": {},
       "direction": "TBD",
@@ -516,7 +516,7 @@
     },
     {
       "metric_id": "route_execution_metrics",
-      "coverage_id": "a7_l2",
+      "coverage_id": "a9_l2",
       "name": "路线完成、走廊合规与切换指标组",
       "parameters": {},
       "direction": "TBD",
@@ -536,7 +536,7 @@
     },
     {
       "metric_id": "resource_fallback_gates",
-      "coverage_id": "a11_l4",
+      "coverage_id": "a8_l4",
       "name": "资源估计、风险、策略和终态验证 gate",
       "parameters": {},
       "direction": "TBD",

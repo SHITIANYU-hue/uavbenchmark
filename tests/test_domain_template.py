@@ -27,7 +27,7 @@ class DomainTemplateTests(unittest.TestCase):
         domain = build_domain_template(
             task_title="油田管廊缺陷巡检",
             scenario_summary="油气巡检",
-            coverage=[{"cell": "A5xL2", "role": "primary", "responsibilities": ["检测"]}],
+            coverage=[{"cell": "A6xL2", "role": "primary", "responsibilities": ["检测"]}],
             runtime_dependencies=[{
                 "dependency_id": "external_executor",
                 "provider": "executor",

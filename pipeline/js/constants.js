@@ -15,13 +15,17 @@ const SCENARIO_TASK_EXAMPLES = {
   other_inspection: "例如：让无人机沿指定河段持续查找异常漂浮物，发现后记录位置和图片并发出告警。",
 };
 
-const STORAGE_KEY = "uav_pipeline_v7";
+// ability-id-v2 changes every renamed A/JD identifier; do not silently restore
+// browser drafts produced under the legacy numbering scheme.
+const STORAGE_KEY = "uav_pipeline_v8";
+const ABILITY_ID_SCHEME = "ability-id-v2-2026-07-19";
 const SCENARIO_NONE = "";
 const SCENARIO_FALLBACK_ID = "other_inspection";
 // 巡检常用默认：L2 受令自主；进入 Step 2 后可改等级或改成「不覆盖」
 const DEFAULT_TARGET_LEVELS = {
   A1: "L2", A2: "L2", A3: "L2", A4: "L2", A5: "L2",
-  A6a: "L2", A7: "L2", A9a: "L2", A9b: "L2", A12: "L2", A14: "L2", A15: "L2",
+  A6: "L2", A7a: "L2", A9: "L2",
+  A11a: "L2", A11b: "L2", A14: "L2", A15: "L2",
 };
 
 function defaultTargetLevels() { return Object.assign({}, DEFAULT_TARGET_LEVELS); }
@@ -47,10 +51,10 @@ const ISSUE_ZH = {
 const WORLD_SIDE_JD = new Set([
   "jd-0.2", "jd-0.3", "jd-0.4", "jd-0.8", "jd-0.9",
   "jd-2.2",
-  "jd-5.1", "jd-5.2", "jd-5.3",
-  "jd-6a.1", "jd-6a.2", "jd-6b.1", "jd-6b.2",
-  "jd-7.2", "jd-8.1", "jd-8.2",
-  "jd-10.1", "jd-10.2", "jd-11.1",
+  "jd-6.1", "jd-6.2", "jd-6.3",
+  "jd-7a.1", "jd-7a.2", "jd-7b.1", "jd-7b.2",
+  "jd-9.2", "jd-10.1", "jd-10.2",
+  "jd-12.1", "jd-12.2", "jd-8.1",
   "jd-13.1", "jd-13.2", "jd-13.3",
   "jd-15.1",
 ]);

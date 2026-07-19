@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="data:,">
+  <title>JD 业务变量树｜version1</title>
+  <link rel="stylesheet" href="jd-variable-tree/css/app.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <span class="brand-kicker">UAV BENCHMARK</span>
+      <strong>JD 业务变量树</strong>
+      <span>A1 · A2 · A3 · A4 · A5 · A6 · A7a · A7b · A8 · A9 · A10</span>
+    </div>
+    <div class="header-actions">
+      <button class="review-action" id="importCommentsButton" type="button">导入建议</button>
+      <button class="review-action" id="exportCommentsButton" type="button">
+        导出建议 <span id="totalCommentCount">0</span>
+      </button>
+      <input id="commentImportInput" type="file" accept="application/json,.json" hidden>
+      <a
+        class="download-link"
+        data-standalone-download
+        href="JD业务变量树_version1.html"
+        download
+      >下载可分享版</a>
+    </div>
+  </header>
+
+  <main>
+    <nav class="ability-tabs" id="abilityTabs" aria-label="能力树切换"></nav>
+
+    <section class="map-panel">
+      <header class="map-head">
+        <div>
+          <span class="eyebrow">MIND MAP</span>
+          <h1 id="mapTitle">加载中</h1>
+        </div>
+        <span class="map-count" id="mapCount"></span>
+      </header>
+      <div class="map-viewport" id="mapViewport">
+        <div class="mindmap" id="mindmap" aria-label="JD 思维导图"></div>
+      </div>
+    </section>
+  </main>
+
+  <dialog class="detail-dialog" id="detailDialog" aria-labelledby="detailTitle">
+    <div class="dialog-head">
+      <div>
+        <span class="detail-id" id="detailId"></span>
+        <h2 id="detailTitle"></h2>
+      </div>
+      <button class="close-button" id="closeDialogButton" type="button" aria-label="关闭详情">×</button>
+    </div>
+    <div class="dialog-body" id="dialogBody"></div>
+  </dialog>
+
+  <script src="jd-variable-tree/js/app.js"></script>
+</body>
+</html>

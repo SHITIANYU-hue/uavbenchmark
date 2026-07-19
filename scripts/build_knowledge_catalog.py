@@ -21,6 +21,23 @@ AXL_SOURCE = ROOT / "AxL责任定义字典_17A_68单元_机读版.md"
 JD_SOURCE = ROOT / "JD业务变量字典_66槽位_机读版.md"
 KNOWLEDGE_DIR = ROOT / "knowledge"
 LEVELS = ("L1", "L2", "L3", "L4")
+ABILITY_ID_SCHEME = "ability-id-v2-2026-07-19"
+EXPECTED_ABILITY_IDS = (
+    "A1", "A2", "A3", "A4", "A5",
+    "A6", "A7a", "A7b", "A8",
+    "A9", "A10",
+    "A11a", "A11b",
+    "A12", "A13",
+    "A14", "A15",
+)
+EXPECTED_ABILITY_GROUPS = {
+    "A1": "G1", "A2": "G1", "A3": "G1", "A4": "G1", "A5": "G1",
+    "A6": "G2", "A7a": "G2", "A7b": "G2", "A8": "G2",
+    "A9": "G3", "A10": "G3",
+    "A11a": "G4", "A11b": "G4",
+    "A12": "G5", "A13": "G5",
+    "A14": "G6", "A15": "G6",
+}
 
 
 def _sha256(path: Path) -> str:
@@ -83,6 +100,32 @@ def build_catalog() -> dict[str, Any]:
     ability_by_id = {item["a_id"]: item for item in abilities}
     if len(abilities) != 17 or len(ability_by_id) != 17:
         raise ValueError("A×L dictionary must contain 17 unique abilities")
+    if tuple(item["a_id"] for item in abilities) != EXPECTED_ABILITY_IDS:
+        raise ValueError(
+            "A×L dictionary must use ability-id-v2 order: "
+            + ", ".join(EXPECTED_ABILITY_IDS)
+        )
+    actual_groups = {item["a_id"]: item["g_group"] for item in abilities}
+    if actual_groups != EXPECTED_ABILITY_GROUPS:
+        raise ValueError("A×L dictionary ability-to-group mapping does not match ability-id-v2")
+    if axl.get("ability_id_scheme") != ABILITY_ID_SCHEME:
+        raise ValueError(f"A×L dictionary must use {ABILITY_ID_SCHEME}")
+    if jd.get("ability_id_scheme") != ABILITY_ID_SCHEME:
+        raise ValueError(f"JD dictionary must use {ABILITY_ID_SCHEME}")
+    if axl.get("ability_id_migration") != jd.get("ability_id_migration"):
+        raise ValueError("A×L and JD dictionaries must declare the same ability ID migration")
+
+    for item in variables:
+        if item["scope"] != "local":
+            continue
+        owner = item.get("owner_a")
+        if owner not in ability_by_id:
+            raise ValueError(f"{item['id']}: unknown local owner {owner!r}")
+        expected_prefix = f"jd-{owner[1:].lower()}."
+        if not item["id"].startswith(expected_prefix):
+            raise ValueError(
+                f"{item['id']}: local ID must follow owner {owner} prefix {expected_prefix}"
+            )
 
     flat_cells = axl.get("flat_a_by_l_index") or []
     if len(flat_cells) != 68 or len({item["cell"] for item in flat_cells}) != 68:
@@ -156,8 +199,11 @@ def build_catalog() -> dict[str, Any]:
         JD_SOURCE.name: _sha256(JD_SOURCE),
     }
     catalog = {
-        "catalog_version": "full-17A-68AxL-66JD-2026-07-14",
+        "catalog_version": "full-17A-68AxL-66JD-ability-id-v2-2026-07-19",
         "scope": "full_17A_L1_L4_66JD_catalog",
+        "ability_id_scheme": ABILITY_ID_SCHEME,
+        "ability_id_migration": axl["ability_id_migration"],
+        "jd_local_prefix_migration": jd["jd_local_prefix_migration"],
         "source_versions": source_versions,
         "source_sha256": source_sha256,
         "warning": (
@@ -198,6 +244,9 @@ def build_catalog() -> dict[str, Any]:
     report = {
         "status": "pass",
         "catalog_version": catalog["catalog_version"],
+        "ability_id_scheme": ABILITY_ID_SCHEME,
+        "ability_id_migration": catalog["ability_id_migration"],
+        "jd_local_prefix_migration": catalog["jd_local_prefix_migration"],
         "source_versions": source_versions,
         "source_sha256": source_sha256,
         "validated_counts": catalog["counts"],
@@ -205,19 +254,22 @@ def build_catalog() -> dict[str, Any]:
         "unreferenced_jd_ids": sorted(set(jd_by_id) - referenced_jd),
         "legacy_semantic_conflicts": [
             {
-                "slot_id": "jd-8.1",
+                "legacy_slot_id": "jd-8.1",
+                "slot_id": "jd-10.1",
                 "legacy_name": "控制接口",
-                "current_name": jd_by_id["jd-8.1"]["name"],
+                "current_name": jd_by_id["jd-10.1"]["name"],
             },
             {
-                "slot_id": "jd-8.2",
+                "legacy_slot_id": "jd-8.2",
+                "slot_id": "jd-10.2",
                 "legacy_name": "控制约束",
-                "current_name": jd_by_id["jd-8.2"]["name"],
+                "current_name": jd_by_id["jd-10.2"]["name"],
             },
             {
-                "slot_id": "jd-8.3",
+                "legacy_slot_id": "jd-8.3",
+                "slot_id": "jd-10.3",
                 "legacy_name": "平台与执行包络",
-                "current_name": jd_by_id["jd-8.3"]["name"],
+                "current_name": jd_by_id["jd-10.3"]["name"],
             },
         ],
     }

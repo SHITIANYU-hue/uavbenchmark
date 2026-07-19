@@ -104,7 +104,7 @@ class DeterminismTests(unittest.TestCase):
         s1 = _slot_seed(99, "jd-0.2")
         s2 = _slot_seed(99, "jd-0.2")
         self.assertEqual(s1, s2)
-        s3 = _slot_seed(99, "jd-5.1")
+        s3 = _slot_seed(99, "jd-6.1")
         self.assertNotEqual(s1, s3)
 
 

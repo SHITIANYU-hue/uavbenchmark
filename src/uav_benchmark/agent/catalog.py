@@ -49,6 +49,7 @@ def lookup_gal_catalog() -> dict[str, Any]:
     catalog = load_reference_catalog()
     return {
         "catalog_version": catalog["catalog_version"],
+        "ability_id_scheme": catalog["ability_id_scheme"],
         "scope": catalog["scope"],
         "source_versions": catalog["source_versions"],
         "counts": catalog["counts"],
@@ -67,6 +68,7 @@ def lookup_jd_catalog() -> dict[str, Any]:
     catalog = load_reference_catalog()
     return {
         "catalog_version": catalog["catalog_version"],
+        "ability_id_scheme": catalog["ability_id_scheme"],
         "scope": catalog["scope"],
         "source_versions": catalog["source_versions"],
         "counts": catalog["counts"],

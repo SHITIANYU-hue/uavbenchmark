@@ -103,7 +103,7 @@ http://127.0.0.1:8765
 4. **STEP 4**：编辑取值域；TBD 可智能填写 → 确认；
 5. **STEP 5**：选 Seed 生成特定任务模版；重点看每个实例的具体 JD 值。
 
-每步可「保存/加载」。操作细节见 [Config Agent 演示说明](docs/config_agent_quickstart.md)；带截图走读见 [Pipeline UI 图解](docs/pipeline_ui_walkthrough.md)。
+每步可「保存/加载」。操作细节见 [Config Agent 演示说明](docs/config_agent_quickstart.md)；完整流程见 [Pipeline UI 操作流程](docs/pipeline_ui_walkthrough.md)。
 
 ## 离线任务配置
 
@@ -146,6 +146,8 @@ PYTHONPATH=src python3 -m uav_benchmark.compiler \
 ```text
 pipeline.html                 浏览器演示入口（薄壳）
 pipeline/                     UI 模块：css/app.css + js/*.js（见 pipeline/README.md）
+jd-variable-tree.html         JD 变量树本地审阅入口
+jd-variable-tree/             JD 变量树页面逻辑与样式
 scripts/start_agent_demo.sh   本地服务启动入口
 src/uav_benchmark/agent/      Config Agent、校验器与 HTTP 服务
 src/uav_benchmark/compiler/   YAML Intake Compiler
@@ -154,10 +156,10 @@ schemas/                      五类 benchmark artifact schema
 examples/                     合同样例、案例 intake 与编译结果
 templates/                    自然语言任务模板
 tests/                        schema、compiler 与 Agent 合同检查
-docs/                         使用说明与代码文档
+docs/                         使用说明、G1 设计与 JD 变量树文档
 ```
 
-代码模块说明见 [代码梳理](docs/codebase_guide.md)，演示操作见 [Config Agent 演示说明](docs/config_agent_quickstart.md)。
+完整入口见 [文档索引](docs/README.md)，代码模块说明见 [代码梳理](docs/codebase_guide.md)。
 
 ## 验证与复现
 
@@ -179,7 +181,7 @@ PYTHONPATH=src .venv/bin/python tests/agent_contract_checks.py
 - artifact schema 与模板版本；
 - Config Agent 模型标识和 Run ID；
 - 人工修订版本与确认依据；
-- 特定任务模版（Step 4）的 seed 和 JD 变量绑定；
+- 特定任务模版（STEP 5）的 seed 和 JD 变量绑定；
 - Fixture、SUT、GT、Trace 与 Grader 版本。
 
 本地 Agent 运行记录保存在 `.agent_runs/`，默认不纳入 Git。
@@ -196,8 +198,8 @@ PYTHONPATH=src .venv/bin/python tests/agent_contract_checks.py
 
 - 当前网页只执行到特定任务模版阶段，尚未运行真实 SUT 或 simulator；
 - 五类场景目前来自需求级 Summary 和变量域，还需要业务负责人逐项确认对象 taxonomy、接口、阈值和完成规则；
-- 当前目录完整覆盖本版 PNG 定义的 17 个 A×L1–L4 和 66 个 JD，但不包含 L5/L6 的逐 A 责任定义；
-- 新字典与早期示例中的 `jd-8.1/8.2/8.3` 含义存在版本迁移，构建报告会显式列出冲突；
+- 当前受审字典覆盖 17 个 A、68 个 A×L1–L4 单元和 66 个 JD，但不包含 L5/L6 的逐 A 责任定义；
+- 早期白墙草案中的 `jd-8.1/8.2/8.3` 与当前 `jd-10.1/10.2/10.3` 语义不同，现作为 `PROPOSED` 非 canonical 候选保留，构建报告显式记录冲突；
 - Agent 输出仍需确定性校验和人工确认，不能作为自动批准的业务规则；
 - threshold、metric 参数、业务完成判据和 simulator 接口尚未统一标定；
 - 当前示例不能替代真实平台、传感器和场景数据上的有效性验证。

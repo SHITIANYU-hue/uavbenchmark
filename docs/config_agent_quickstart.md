@@ -1,8 +1,10 @@
 # Config Agent Pipeline 操作说明
 
-带截图的界面走读见 [Pipeline UI 图解](pipeline_ui_walkthrough.md)。
+完整的五步说明见 [Pipeline UI 操作流程](pipeline_ui_walkthrough.md)。
 
 当前页面入口：`pipeline.html`（样式/脚本在 `pipeline/`）。五步流程：
+
+当前目录采用 `ability-id-v2-2026-07-19`。旧编号检查点不会自动迁移，以免同一 A/JD ID 被解释成新能力；需要在新版本中重新运行任务。
 
 ```text
 STEP 1  任务域选择      任务描述 + 可选场景示例

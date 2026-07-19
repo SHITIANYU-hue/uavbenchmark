@@ -12,19 +12,5 @@ saved_pipeline.json
 saved_template.json
 *.egg-info/
 
-# Local research/source materials; not part of the public runnable repository.
-/01c_dashboard_总表.xlsx
-/*.docx
-/LGA_含业务变量.png
-/AI_Pilot_Benchmark_GAL_Project_Brief_v0.1.md
-/AI飞手Project交接文档.md
-/UAV-benchmark_Codex_交接与启动提示.md
-/benchmark_design_draft_v0.html
-/deep-research-report-*.md
-/【案例一】*.md
-/【案例二】*.md
-/docs/case2_pipeline_review.md
-/docs/implementation_plan.md
-/docs/open_questions.md
-/docs/pipeline_ui_redesign_plan.md
-/docs/source_inventory.md
+# Local-only source material and internal working notes.
+/local/

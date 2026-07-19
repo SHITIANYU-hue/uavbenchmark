@@ -85,7 +85,7 @@
     "id": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]*$"},
     "evidence_status": {"enum": ["verified", "proposed", "TBD"]},
     "ability": {
-      "enum": ["A1", "A2", "A3", "A4", "A5", "A6a", "A6b", "A7", "A8", "A9a", "A9b", "A10", "A11", "A12", "A13", "A14", "A15"]
+      "enum": ["A1", "A2", "A3", "A4", "A5", "A6", "A7a", "A7b", "A8", "A9", "A10", "A11a", "A11b", "A12", "A13", "A14", "A15"]
     },
     "provenance": {
       "type": "object",

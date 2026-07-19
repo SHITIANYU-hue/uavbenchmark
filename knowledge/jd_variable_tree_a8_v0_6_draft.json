@@ -1,0 +1,2237 @@
+{
+  "catalog_id": "jd-variable-tree-a8-v0-6-draft",
+  "schema": "uav-benchmark-jd-variable-tree",
+  "schema_version": "0.2.1",
+  "catalog_version": "a8-demand-draft-v0.6-preserved-2026-07-19",
+  "generated_at": "2026-07-19",
+  "generated_by": "scripts/generate_jd_variable_tree_a8_v0_6_draft.mjs",
+  "scenario_scope": [
+    "white_wall_narrow_gap"
+  ],
+  "preservation_rule": "A8 节点结构、名称与候选取值按《需求草案-v0.6.md》展示，不在此目录中解决正式编号冲突。",
+  "sources": [
+    {
+      "source_id": "L-A8-V06",
+      "title": "需求草案-v0.6.md",
+      "issuer": "UAV Benchmark team",
+      "source_type": "team_draft",
+      "locator": "§2.0、§2.1、§2.2、§2.5",
+      "url": null,
+      "evidence_grade": "team_material_only"
+    }
+  ],
+  "source_count": 1,
+  "node_count": 33,
+  "leaf_count": 26,
+  "nodes": [
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "PROPOSED-jd-tree-A8",
+      "parent_id": null,
+      "canonical_slot": null,
+      "owner_a": "A8",
+      "name": "飞行控制 / 避障（窄缝穿梭）",
+      "definition": "需求草案 v0.6 中的 A8 白墙避障（窄缝穿梭）变量树；本页仅按草案结构与取值原样展示。",
+      "node_kind": "capability_root",
+      "value_type": "none",
+      "value_domain": null,
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "TBD",
+      "configuration_side": "shared",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [
+        "jd-0.2",
+        "jd-0.3"
+      ],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": "未在此处处理需求草案 v0.6 与现有 66 槽位字典中 jd-8.1/8.2/8.3 的含义冲突；A8 分支不代表完成正式编号迁移。"
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.1",
+      "parent_id": "PROPOSED-jd-tree-A8",
+      "canonical_slot": "jd-8.1",
+      "owner_a": "A8",
+      "name": "控制接口/指令类型",
+      "definition": "需求草案 v0.6 §2.5 的平台基准：控制接口/指令类型。",
+      "node_kind": "variable",
+      "value_type": "multi_enum",
+      "value_domain": [
+        {
+          "value": "velocity-cmd",
+          "label_zh": "velocity-cmd",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "waypoint-tracking",
+          "label_zh": "waypoint-tracking",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "neutral",
+      "configuration_side": "shared",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": "平台基准固定；按需求草案 v0.6 原样展示。"
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.2",
+      "parent_id": "PROPOSED-jd-tree-A8",
+      "canonical_slot": "jd-8.2",
+      "owner_a": "A8",
+      "name": "控制约束（v_max / 姿态角 / Δt / f_c）",
+      "definition": "需求草案 v0.6 §2.5 的平台基准：控制约束。",
+      "node_kind": "variable",
+      "value_type": "multi_value",
+      "value_domain": [
+        {
+          "value": "v_max ~3 m/s",
+          "label_zh": "v_max ~3 m/s",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "f_c≥10Hz",
+          "label_zh": "f_c≥10Hz",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "neutral",
+      "configuration_side": "shared",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": "草案只给出 v_max 与 f_c 的占位基准；姿态角、Δt 及最终可行值待仿真团队校准。"
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.3",
+      "parent_id": "PROPOSED-jd-tree-A8",
+      "canonical_slot": "jd-8.3",
+      "owner_a": "A8",
+      "name": "执行包络（多旋翼 / 高度带 / 物理执行）",
+      "definition": "需求草案 v0.6 §2.5 的平台基准：执行包络。",
+      "node_kind": "variable",
+      "value_type": "multi_value",
+      "value_domain": [
+        {
+          "value": "多旋翼",
+          "label_zh": "多旋翼",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "机身等效直径 ~0.3 m（缝宽标尺）",
+          "label_zh": "机身等效直径 ~0.3 m（缝宽标尺）",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "neutral",
+      "configuration_side": "shared",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": "草案将平台基准整体固定；高度带与其他物理执行值待仿真团队校准。"
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5",
+      "parent_id": "PROPOSED-jd-tree-A8",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "避障树",
+      "definition": "需求草案 v0.6 的白墙避障树，包括障碍物与障碍物布局。",
+      "node_kind": "group",
+      "value_type": "none",
+      "value_domain": null,
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "TBD",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": "jd-8.5 为需求草案 v0.6 新增分支；是否进入正式 66 槽位编号体系仍待团队确认。"
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.1",
+      "parent_id": "jd-8.5",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "障碍物",
+      "definition": "单面白墙自身的几何、外观与缝属性。",
+      "node_kind": "group",
+      "value_type": "none",
+      "value_domain": null,
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "TBD",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.1.1",
+      "parent_id": "jd-8.5.1",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "几何",
+      "definition": "白墙本体的几何属性。",
+      "node_kind": "group",
+      "value_type": "none",
+      "value_domain": null,
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "TBD",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.1.1.1",
+      "parent_id": "jd-8.5.1.1",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "墙高",
+      "definition": "白墙高度档位。",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "低",
+          "label_zh": "低",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "中",
+          "label_zh": "中",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "高",
+          "label_zh": "高",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "increasing",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.1.1.2",
+      "parent_id": "jd-8.5.1.1",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "墙厚",
+      "definition": "白墙厚度档位；缝道长等于墙厚。",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "薄",
+          "label_zh": "薄",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "中",
+          "label_zh": "中",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "厚",
+          "label_zh": "厚",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "increasing",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.1.1.3",
+      "parent_id": "jd-8.5.1.1",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "墙宽",
+      "definition": "白墙宽度档位；宽墙用于强制穿缝。",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "窄",
+          "label_zh": "窄",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "中",
+          "label_zh": "中",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "宽（强制穿缝）",
+          "label_zh": "宽（强制穿缝）",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.1.1.4",
+      "parent_id": "jd-8.5.1.1",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "墙外形",
+      "definition": "白墙外形类别。",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "矩形板",
+          "label_zh": "矩形板",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "弧形",
+          "label_zh": "弧形",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "不规则",
+          "label_zh": "不规则",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "increasing",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.1.2",
+      "parent_id": "jd-8.5.1",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "外观（墙纹理 / 缝墙对比度）",
+      "definition": "白墙纹理和缝/墙对比度。",
+      "node_kind": "group",
+      "value_type": "none",
+      "value_domain": null,
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "TBD",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.1.2.1",
+      "parent_id": "jd-8.5.1.2",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "纹理复杂度",
+      "definition": "墙面纹理复杂度。",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "无",
+          "label_zh": "无",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "轻纹理",
+          "label_zh": "轻纹理",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "复杂纹理",
+          "label_zh": "复杂纹理",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "increasing",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.1.2.2",
+      "parent_id": "jd-8.5.1.2",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "缝/墙对比度",
+      "definition": "缝与墙面的视觉对比度。",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "高",
+          "label_zh": "高",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "中",
+          "label_zh": "中",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "低",
+          "label_zh": "低",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "decreasing",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.1.3",
+      "parent_id": "jd-8.5.1",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "缝（单缝 schema；多缝时列表值）",
+      "definition": "单缝 schema；一墙多缝时各叶子取列表值。",
+      "node_kind": "group",
+      "value_type": "none",
+      "value_domain": null,
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "TBD",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.1.3.1",
+      "parent_id": "jd-8.5.1.3",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "缝宽（比值）",
+      "definition": "目标缝宽相对机身等效直径的比值；连续值域，同档内可连续变化。",
+      "node_kind": "variable",
+      "value_type": "array_enum",
+      "value_domain": [
+        {
+          "value": "3.0×",
+          "label_zh": "3.0×",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "2.0×",
+          "label_zh": "2.0×",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "1.5×",
+          "label_zh": "1.5×",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "1.2×",
+          "label_zh": "1.2×",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one_or_more",
+      "difficulty_direction": "decreasing",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.1.3.2",
+      "parent_id": "jd-8.5.1.3",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "缝纵向位置",
+      "definition": "缝在白墙纵向上的位置。",
+      "node_kind": "variable",
+      "value_type": "array_enum",
+      "value_domain": [
+        {
+          "value": "居中",
+          "label_zh": "居中",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "偏上",
+          "label_zh": "偏上",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "偏下",
+          "label_zh": "偏下",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one_or_more",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.1.3.3",
+      "parent_id": "jd-8.5.1.3",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "缝横向位置",
+      "definition": "缝在白墙横向上的位置。",
+      "node_kind": "variable",
+      "value_type": "array_enum",
+      "value_domain": [
+        {
+          "value": "居中",
+          "label_zh": "居中",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "偏左",
+          "label_zh": "偏左",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "偏右",
+          "label_zh": "偏右",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one_or_more",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.1.3.4",
+      "parent_id": "jd-8.5.1.3",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "缝形状",
+      "definition": "缝的形状类别。",
+      "node_kind": "variable",
+      "value_type": "array_enum",
+      "value_domain": [
+        {
+          "value": "矩形",
+          "label_zh": "矩形",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "圆孔",
+          "label_zh": "圆孔",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "拱形",
+          "label_zh": "拱形",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one_or_more",
+      "difficulty_direction": "increasing",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.1.4",
+      "parent_id": "jd-8.5.1",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "缝数",
+      "definition": "单面墙上的缝数量；约束缝列表长度。",
+      "node_kind": "variable",
+      "value_type": "integer_enum",
+      "value_domain": [
+        {
+          "value": "1",
+          "label_zh": "1",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "2",
+          "label_zh": "2",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "3",
+          "label_zh": "3",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "increasing",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [
+        "len(jd-8.5.1.3.1..jd-8.5.1.3.4) == jd-8.5.1.4"
+      ],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.1.5",
+      "parent_id": "jd-8.5.1",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "缝间排列",
+      "definition": "同一面墙上多缝之间的排列方式。",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "并排（横向）",
+          "label_zh": "并排（横向）",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "上下（纵向）",
+          "label_zh": "上下（纵向）",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "混合",
+          "label_zh": "混合",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": {
+        "node": "jd-8.5.1.4",
+        "operator": ">=",
+        "value": 2
+      },
+      "multiplicity": "one",
+      "difficulty_direction": "increasing",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.1.6",
+      "parent_id": "jd-8.5.1",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "缝间距",
+      "definition": "同一面墙上多缝之间的距离档位。",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "大",
+          "label_zh": "大",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "中",
+          "label_zh": "中",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "近",
+          "label_zh": "近",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": {
+        "node": "jd-8.5.1.4",
+        "operator": ">=",
+        "value": 2
+      },
+      "multiplicity": "one",
+      "difficulty_direction": "decreasing",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.1.7",
+      "parent_id": "jd-8.5.1",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "目标缝",
+      "definition": "需要穿越的目标缝编号；作为评分锚点和缝宽难度取值对象。",
+      "node_kind": "variable",
+      "value_type": "integer_enum",
+      "value_domain": [
+        {
+          "value": "1",
+          "label_zh": "1",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "2",
+          "label_zh": "2",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "3",
+          "label_zh": "3",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "neutral",
+      "configuration_side": "world",
+      "visibility": [
+        "hidden_gt"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [
+        "jd-8.5.1.7 <= jd-8.5.1.4"
+      ],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.2",
+      "parent_id": "jd-8.5",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "障碍物布局",
+      "definition": "多面白墙的数量、间距、角度、缝对齐、排列拓扑和运动。",
+      "node_kind": "group",
+      "value_type": "none",
+      "value_domain": null,
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "TBD",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.2.1",
+      "parent_id": "jd-8.5.2",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "墙数",
+      "definition": "场景中的白墙数量。",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "1",
+          "label_zh": "1",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "2",
+          "label_zh": "2",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "3",
+          "label_zh": "3",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "4+",
+          "label_zh": "4+",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "increasing",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.2.2",
+      "parent_id": "jd-8.5.2",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "墙间距",
+      "definition": "多面墙之间的距离档位。",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "大",
+          "label_zh": "大",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "中",
+          "label_zh": "中",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "近",
+          "label_zh": "近",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "decreasing",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.2.3",
+      "parent_id": "jd-8.5.2",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "摆放角度 θ",
+      "definition": "白墙相对飞行方向的摆放角度；草案给出有效缝宽 = 缝宽·cosθ。",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "0°",
+          "label_zh": "0°",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "15°",
+          "label_zh": "15°",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "30°",
+          "label_zh": "30°",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "45°",
+          "label_zh": "45°",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": "degree",
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "increasing",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.2.4",
+      "parent_id": "jd-8.5.2",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "缝对齐性",
+      "definition": "多面墙之间缝的对齐关系。",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "对齐（廊道）",
+          "label_zh": "对齐（廊道）",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "部分错开",
+          "label_zh": "部分错开",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "错开（迷宫）",
+          "label_zh": "错开（迷宫）",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "increasing",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.2.5",
+      "parent_id": "jd-8.5.2",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "排列拓扑",
+      "definition": "多面墙的排列拓扑。",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "直线",
+          "label_zh": "直线",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "扇形",
+          "label_zh": "扇形",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "错位",
+          "label_zh": "错位",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "网格",
+          "label_zh": "网格",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "increasing",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.2.6",
+      "parent_id": "jd-8.5.2",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "墙运动",
+      "definition": "白墙是静止还是运动；运动仅在 D3–D4 启用。",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "静止",
+          "label_zh": "静止",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "运动",
+          "label_zh": "运动",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "increasing",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.2.6.1",
+      "parent_id": "jd-8.5.2.6",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "速度",
+      "definition": "运动墙的速度档位。",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "慢",
+          "label_zh": "慢",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "中",
+          "label_zh": "中",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "快",
+          "label_zh": "快",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": {
+        "node": "jd-8.5.2.6",
+        "operator": "equals",
+        "value": "运动"
+      },
+      "multiplicity": "one",
+      "difficulty_direction": "TBD",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.2.6.2",
+      "parent_id": "jd-8.5.2.6",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "方向",
+      "definition": "运动墙的运动方向。",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "X+",
+          "label_zh": "X+",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "X-",
+          "label_zh": "X-",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "Y+",
+          "label_zh": "Y+",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "Y-",
+          "label_zh": "Y-",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": {
+        "node": "jd-8.5.2.6",
+        "operator": "equals",
+        "value": "运动"
+      },
+      "multiplicity": "one",
+      "difficulty_direction": "TBD",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.2.1",
+      "node_id": "jd-8.5.2.6.3",
+      "parent_id": "jd-8.5.2.6",
+      "canonical_slot": "jd-8.5",
+      "owner_a": "A8",
+      "name": "运动模式",
+      "definition": "运动墙的运动模式。",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "匀速",
+          "label_zh": "匀速",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "往复",
+          "label_zh": "往复",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "随机",
+          "label_zh": "随机",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": {
+        "node": "jd-8.5.2.6",
+        "operator": "equals",
+        "value": "运动"
+      },
+      "multiplicity": "one",
+      "difficulty_direction": "TBD",
+      "configuration_side": "world",
+      "visibility": [
+        "sut_visible"
+      ],
+      "applicable_scenarios": [
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [],
+      "related_jd": [],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "team_material_only",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    }
+  ]
+}

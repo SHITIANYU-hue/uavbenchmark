@@ -19,7 +19,8 @@ async function savePipeline() {
         instanceRandomCount: state.instanceRandomCount, instanceRandomSeeds: state.instanceRandomSeeds,
         instanceResult: state.instanceResult, instanceResults: state.instanceResults,
         currentStage: state.currentStage, maxUnlocked: state.maxUnlocked,
-        completedSteps: Array.from(state.completed), stageSchema: 5, savedAt: new Date().toISOString(),
+        completedSteps: Array.from(state.completed), stageSchema: 5,
+        abilityIdScheme: ABILITY_ID_SCHEME, savedAt: new Date().toISOString(),
       })});
     state.saveNotice = r.ok ? "已保存检查点 ✓" : "保存失败";
   } catch(e) { state.saveNotice = "保存失败: " + e; }
@@ -31,6 +32,11 @@ async function loadPipeline() {
     const r = await fetch("/api/pipeline/load", {cache: "no-store"});
     if (!r.ok) { state.saveNotice = "没有已保存的进度"; render(); return; }
     const d = await r.json();
+    if (d.abilityIdScheme !== ABILITY_ID_SCHEME) {
+      state.saveNotice = "该检查点使用旧能力编号，请重新运行本轮任务";
+      render();
+      return;
+    }
     const runtime = runtimeSnapshot();
     state = Object.assign(initialState(), runtime);
     state.selectedScenarioId = d.selectedScenarioId || SCENARIO_NONE;
