@@ -30,8 +30,8 @@ src/uav_benchmark/instance/   域模版 → Seed 具体化
 src/uav_benchmark/compiler/   离线 YAML intake
 knowledge/                    A×L / JD 机读目录
 schemas/                      artifact JSON Schema
-jd-variable-tree.html         JD 变量树审阅入口
-jd-variable-tree/             JD 变量树页面逻辑与样式
+JD业务变量树_version1.html    JD 变量树可分享单文件
+jd-variable-tree/             变量树构建所需的页面逻辑与样式
 templates/                    自然语言任务模板
 docs/                         使用、设计与工程文档
 ```

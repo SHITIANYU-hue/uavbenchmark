@@ -146,8 +146,8 @@ PYTHONPATH=src python3 -m uav_benchmark.compiler \
 ```text
 pipeline.html                 浏览器演示入口（薄壳）
 pipeline/                     UI 模块：css/app.css + js/*.js（见 pipeline/README.md）
-jd-variable-tree.html         JD 变量树本地审阅入口
-jd-variable-tree/             JD 变量树页面逻辑与样式
+JD业务变量树_version1.html    JD 变量树可分享单文件
+jd-variable-tree/             变量树构建所需的页面逻辑与样式
 scripts/start_agent_demo.sh   本地服务启动入口
 src/uav_benchmark/agent/      Config Agent、校验器与 HTTP 服务
 src/uav_benchmark/compiler/   YAML Intake Compiler

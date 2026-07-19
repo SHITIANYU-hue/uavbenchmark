@@ -487,7 +487,7 @@ source:
 
 ### 5.1 实现边界
 
-- 独立页面：`jd-variable-tree.html`。
+- 独立页面：`JD业务变量树_version1.html`。
 - 不覆盖、不导入、不修改 `pipeline.html` 的正式数据。
 - 第一版只读，不写回 JD Catalog。
 - 使用独立服务 `http://127.0.0.1:8766`。
@@ -498,7 +498,7 @@ source:
 ### 5.2 建议文件结构
 
 ```text
-jd-variable-tree.html
+JD业务变量树_version1.html
 jd-variable-tree/
 ├── css/
 │   └── app.css

@@ -4,7 +4,6 @@
 
 | 文件 | 作用 |
 |---|---|
-| `../../jd-variable-tree.html` | 本地开发页面入口 |
 | `../../jd-variable-tree/js/app.js` | 页面数据加载、能力切换、搜索与审阅交互 |
 | `../../jd-variable-tree/css/app.css` | 页面样式 |
 | `../../knowledge/jd_variable_tree_version1.json` | 页面读取的完整机读数据 |
@@ -30,7 +29,7 @@ node scripts/build_jd_variable_tree_standalone.mjs
 ./scripts/serve_jd_variable_tree.sh
 ```
 
-然后访问 `http://127.0.0.1:8766/jd-variable-tree.html`。
+然后访问 `http://127.0.0.1:8766/JD业务变量树_version1.html`。
 
 ## 发布范围
 

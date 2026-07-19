@@ -227,7 +227,7 @@
 
 - `knowledge/jd_variable_tree_version1.json`
 - `JD业务变量树_version1.html`
-- `jd-variable-tree.html` 及其页面资源
+- `jd-variable-tree/` 下的构建源码
 
 同时新增三个可追溯的中间数据文件：
 
