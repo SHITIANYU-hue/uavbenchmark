@@ -23,7 +23,7 @@ const currentJdById = new Map(
   currentJdDictionary.variables.map((variable) => [variable.id, variable]),
 );
 
-const generatedAt = "2026-07-20";
+const generatedAt = "2026-07-21";
 const schemaVersion = "0.3.0";
 const nodeSchemaVersion = "jd-tree/0.3.0";
 const catalogRootId = "PROPOSED-jd-tree-version1";
@@ -302,6 +302,64 @@ const a11Sources = [
       "ability-id-v3-2026-07-20：A11×L1–L4 的控制质量、执行、异常确认、处置与验证责任",
     url: null,
     evidence_grade: "authoritative_local",
+  },
+  {
+    source_id: "W-MAVLINK-OFFBOARD",
+    title: "MAVLink Offboard Control Interface",
+    issuer: "MAVLink",
+    source_type: "official_protocol_documentation",
+    locator:
+      "SET_POSITION_TARGET_LOCAL_NED、SET_POSITION_TARGET_GLOBAL_INT、SET_ATTITUDE_TARGET 与能力声明",
+    url: "https://mavlink.io/en/services/offboard_control.html",
+    evidence_grade: "source_supported",
+  },
+  {
+    source_id: "W-MAVLINK-COMMON",
+    title: "MAVLink Common Message Set",
+    issuer: "MAVLink",
+    source_type: "official_protocol_documentation",
+    locator:
+      "位置、速度、加速度、姿态、角速度、航向、推力目标及其参考系和单位",
+    url: "https://mavlink.io/en/messages/common.html",
+    evidence_grade: "source_supported",
+  },
+  {
+    source_id: "W-PX4-CONTROL-ARCH",
+    title: "PX4 Controller Diagrams and Controller Modules",
+    issuer: "PX4",
+    source_type: "official_platform_documentation",
+    locator:
+      "多旋翼位置、速度、姿态、角速度级联控制，外环旁路、设定值跟踪与限幅",
+    url: "https://docs.px4.io/v1.16/en/modules/modules_controller",
+    evidence_grade: "source_supported",
+  },
+  {
+    source_id: "W-PX4-CONTROL-ALLOCATOR",
+    title: "PX4 ControlAllocatorStatus",
+    issuer: "PX4",
+    source_type: "official_platform_documentation",
+    locator: "执行机构饱和、控制分配状态与已处理电机故障",
+    url: "https://docs.px4.io/v1.14/en/msg_docs/ControlAllocatorStatus",
+    evidence_grade: "source_supported",
+  },
+  {
+    source_id: "W-PX4-CONTROL-TUNING",
+    title: "PX4 Multicopter PID Tuning Guide",
+    issuer: "PX4",
+    source_type: "official_platform_documentation",
+    locator: "设定值跟踪、超调、振荡、响应与稳定性观察",
+    url: "https://docs.px4.io/v1.12/en/config_mc/pid_tuning_guide_multicopter_basic",
+    evidence_grade: "source_supported",
+  },
+  {
+    source_id: "W-MOT-UAV-BRIDGE",
+    title: "低空无人机应用公路桥梁巡检技术指南（试行）",
+    issuer: "交通运输部",
+    source_type: "official_guideline",
+    locator:
+      "交办公路〔2026〕8号；巡检飞行方式、抵近检查、定点定视角、飞行状态与影像质量要求",
+    url: "https://xxgk.mot.gov.cn/jigou/glj/202602/P020260228435553861410.pdf",
+    evidence_grade: "authoritative_external_scoped",
   },
 ];
 
@@ -1429,135 +1487,1950 @@ const levelsUsingSlot = (ability, slotId) =>
     .filter(([, level]) => level.jd_refs.includes(slotId))
     .map(([level]) => `${ability.a_id}×${level}`);
 
-function demoteLegacyA11Draft(nodes) {
-  const legacyPlatformIds = new Map([
-    ["jd-11.1", "PROPOSED-jd-11.platform-interface-v0.6"],
-    ["jd-11.2", "PROPOSED-jd-11.platform-constraints-v0.6"],
-    ["jd-11.3", "PROPOSED-jd-11.execution-envelope-v0.6"],
-  ]);
-  const idMap = new Map(legacyPlatformIds);
-  for (const node of nodes) {
-    if (node.node_id.startsWith("jd-11.5")) {
-      idMap.set(node.node_id, `PROPOSED-${node.node_id}`);
-    }
-  }
-
-  const rewriteReferences = (value) => {
-    if (typeof value === "string") return idMap.get(value) || value;
-    if (Array.isArray(value)) return value.map(rewriteReferences);
-    if (value && typeof value === "object") {
-      return Object.fromEntries(
-        Object.entries(value).map(([key, item]) => [
-          key,
-          rewriteReferences(item),
-        ]),
-      );
-    }
-    return value;
-  };
-
-  return nodes.map((inputNode) => {
-    const node = rewriteReferences(inputNode);
-    const originalMigratedId = inputNode.node_id;
-    if (originalMigratedId === "PROPOSED-jd-tree-A11") {
-      node.name = authoritativeA11Ability.ability;
-      node.definition =
-        "描述飞行控制、控制质量、控制工作机制与控制处置策略相关的 JD 业务变量；白墙窄缝内容保留为场景化候选分支。";
-      node.related_global_jd = authoritativeA11Ability.global_jd;
-      node.source = [
-        ...new Set([
-          ...(node.source || []),
-          "L-A11-JD66-V3",
-          "L-A11-AXL68-V3",
-        ]),
-      ];
-      node.evidence_status = "authoritative_existing";
-      node.derivation_status = "given";
-      node.review_status = "reviewed";
-      node.notes = [
-        node.notes,
-        "A11 能力根与 canonical 槽位以 ability-id-v3 权威字典为准；v0.6 平台基准和避障树仅作为非 canonical 候选保留。",
-      ]
-        .filter(Boolean)
-        .join("\n");
-      return node;
-    }
-    if (!idMap.has(originalMigratedId)) return node;
-
-    node.canonical_slot = null;
-    node.legacy_aliases = [
-      ...new Set([...(node.legacy_aliases || []), originalMigratedId]),
-    ];
-    node.review_status = "proposed";
-    if (legacyPlatformIds.has(originalMigratedId)) {
-      node.name = `v0.6 候选：${inputNode.name}`;
-      node.notes = [
-        node.notes,
-        "该节点来自旧 A8 白墙 v0.6 平台基准，与新 A11 canonical 槽位语义冲突；当前保留为非 canonical 候选，不覆盖 jd-11.1/jd-11.2/jd-11.3。",
-      ]
-        .filter(Boolean)
-        .join("\n");
-    } else if (originalMigratedId === "jd-11.5") {
-      node.name = "候选避障变量树（旧 jd-8.5 草案）";
-      node.notes = [
-        node.notes,
-        "jd-11.5 尚未进入 66 槽位权威字典；本分支及其子节点均为非 canonical 候选。",
-      ]
-        .filter(Boolean)
-        .join("\n");
-    }
-    return node;
-  });
-}
-
 const migratedInspectionNodes = oldInspection.nodes
   .map(migrateExistingNode)
   .filter(Boolean)
   .map(normalizeCanonicalNode);
-const migratedA11DraftNodes = demoteLegacyA11Draft(
-  oldA8.nodes.map(migrateExistingNode).filter(Boolean),
+
+const a11Scenarios = [
+  "cross_scenario",
+  "highway_inspection",
+  "campus_inspection",
+];
+const a11CanonicalSources = ["L-A11-JD66-V3", "L-A11-AXL68-V3"];
+
+const a11DomainItem = (
+  value,
+  label,
+  sourceRefs,
+  status = "source_supported",
+  scenarios = a11Scenarios,
+) => ({
+  value,
+  label_zh: label,
+  source_refs: sourceRefs,
+  status,
+  applicable_scenarios: scenarios,
+});
+
+const a11Tbd = (label) =>
+  a11DomainItem("TBD", label, [], "TBD", a11Scenarios);
+
+const a11Nodes = [
+  baseNode({
+    node_id: "PROPOSED-jd-tree-A11",
+    parent_id: catalogRootId,
+    owner_a: "A11",
+    name: authoritativeA11Ability.ability,
+    definition:
+      "描述飞行控制、执行机构、控制质量、控制工作机制与局部控制恢复相关的 JD 业务变量；近障与受限空间条件通过非 canonical 场景 Profile 绑定到正式槽位。",
+    node_kind: "capability_root",
+    related_global_jd: authoritativeA11Ability.global_jd,
+    source: a11CanonicalSources,
+    evidence_status: "authoritative_existing",
+    derivation_status: "given",
+    review_status: "reviewed",
+    applicable_scenarios: a11Scenarios,
+    configuration_side: "shared",
+    projection_targets: [
+      "world_config",
+      "user_config",
+      "sut_input",
+      "harness",
+    ],
+    legacy_aliases: ["PROPOSED-jd-tree-A8"],
+    notes:
+      "A11 能力根及 jd-11.1、jd-11.2、jd-11.3 以 ability-id-v3 权威字典为准；PROPOSED-jd-11.4 与 PROPOSED-jd-11.5 均不计入当前 66 个 canonical 槽位。",
+  }),
+];
+
+const a11SlotById = new Map(
+  authoritativeA11Slots.map((slot) => [slot.id, slot]),
 );
-const migratedA11Root = migratedA11DraftNodes.find(
-  (node) => node.node_id === "PROPOSED-jd-tree-A11",
-);
-if (!migratedA11Root) {
-  throw new Error("A11 草案迁移后缺少能力根节点。");
+for (const slot of authoritativeA11Slots) {
+  a11Nodes.push(
+    normalizeCanonicalNode(
+      baseNode({
+        node_id: slot.id,
+        parent_id: "PROPOSED-jd-tree-A11",
+        canonical_slot: slot.id,
+        owner_a: "A11",
+        name: slot.name,
+        definition: slot.description,
+        node_kind: "group",
+        related_global_jd: authoritativeA11Ability.global_jd,
+        used_by_axl: levelsUsingSlot(authoritativeA11Ability, slot.id),
+        source: a11CanonicalSources,
+        evidence_status: "authoritative_existing",
+        derivation_status: "given",
+        review_status: "reviewed",
+        applicable_scenarios: a11Scenarios,
+        configuration_side: "shared",
+        projection_targets: [
+          "user_config",
+          "sut_input",
+          "harness",
+        ],
+        notes:
+          "canonical 名称与定义取自 ability-id-v3 权威机读源；下级 PROPOSED 节点为巡检类保守归纳。",
+      }),
+    ),
+  );
 }
-const authoritativeA11Nodes = authoritativeA11Slots.map((slot) =>
-  normalizeCanonicalNode(
+
+function addA11Group({
+  id,
+  parent,
+  canonical = null,
+  name,
+  definition,
+  relatedJd = [],
+  source = a11CanonicalSources,
+  configurationSide = "shared",
+  projectionTargets = ["user_config", "sut_input", "harness"],
+  scenarios = a11Scenarios,
+  evidenceStatus = "source_supported",
+  derivationStatus = "derived",
+  notes = null,
+}) {
+  const slot = canonical ? a11SlotById.get(canonical) : null;
+  a11Nodes.push(
     baseNode({
-      node_id: slot.id,
-      parent_id: migratedA11Root.node_id,
-      canonical_slot: slot.id,
+      node_id: id,
+      parent_id: parent,
+      canonical_slot: canonical,
       owner_a: "A11",
-      name: slot.name,
-      definition: slot.description,
+      name,
+      definition,
       node_kind: "group",
       related_global_jd: authoritativeA11Ability.global_jd,
-      used_by_axl: levelsUsingSlot(authoritativeA11Ability, slot.id),
-      source: ["L-A11-JD66-V3", "L-A11-AXL68-V3"],
-      evidence_status: "authoritative_existing",
-      derivation_status: "given",
-      review_status: "reviewed",
-      applicable_scenarios: ["cross_scenario"],
-      configuration_side: "shared",
-      projection_targets: [
-        "world_config",
-        "user_config",
-        "sut_input",
-        "harness",
-      ],
-      notes:
-        "canonical 名称与定义取自 ability-id-v3 权威机读源；具体子维度尚待建设。",
+      related_jd: relatedJd,
+      used_by_axl: slot
+        ? levelsUsingSlot(authoritativeA11Ability, slot.id)
+        : [],
+      source,
+      evidence_status: evidenceStatus,
+      derivation_status: derivationStatus,
+      review_status: "proposed",
+      applicable_scenarios: scenarios,
+      configuration_side: configurationSide,
+      projection_targets: projectionTargets,
+      visibility: ["sut_visible", "grader_visible"],
+      observation_channel: ["sut_input", "sut_trace", "grader"],
+      notes,
     }),
-  ),
-);
-const migratedA11Nodes = [
-  migratedA11Root,
-  ...authoritativeA11Nodes,
-  ...migratedA11DraftNodes.filter((node) => node !== migratedA11Root),
+  );
+}
+
+function addA11Leaf({
+  id,
+  parent,
+  canonical = null,
+  name,
+  definition,
+  valueType,
+  domain,
+  unit = null,
+  difficulty = "context_dependent",
+  activationCondition = null,
+  relatedJd = [],
+  dependsOn = [],
+  constraints = [],
+  source = null,
+  configurationSide = "shared",
+  projectionTargets = ["user_config", "sut_input", "harness"],
+  visibility = ["sut_visible", "grader_visible"],
+  observationChannel = ["sut_input", "sut_trace", "grader"],
+  scenarios = a11Scenarios,
+  evidenceStatus = null,
+  derivationStatus = null,
+  notes = null,
+}) {
+  const slot = canonical ? a11SlotById.get(canonical) : null;
+  const statuses = (domain || [])
+    .filter((item) => item && typeof item === "object")
+    .map((item) => item.status);
+  const allTbd =
+    statuses.length > 0 && statuses.every((status) => status === "TBD");
+  const domainSources = (domain || [])
+    .filter((item) => item && typeof item === "object")
+    .flatMap((item) => item.source_refs || []);
+  const resolvedEvidence =
+    evidenceStatus || (allTbd ? "TBD" : "source_supported");
+  const resolvedDerivation =
+    derivationStatus ||
+    (resolvedEvidence === "TBD"
+      ? "TBD"
+      : resolvedEvidence === "team_material_only"
+        ? "given"
+        : resolvedEvidence === "inferred_candidate"
+          ? "proposed"
+          : "derived");
+  const resolvedSources = [
+    ...new Set([
+      ...(source || a11CanonicalSources),
+      ...domainSources,
+    ]),
+  ];
+
+  a11Nodes.push(
+    baseNode({
+      node_id: id,
+      parent_id: parent,
+      canonical_slot: canonical,
+      owner_a: "A11",
+      name,
+      definition,
+      node_kind: "variable",
+      value_type: valueType,
+      value_domain: domain,
+      unit,
+      activation_condition: activationCondition,
+      difficulty_direction: difficulty,
+      related_global_jd: authoritativeA11Ability.global_jd,
+      related_jd: relatedJd,
+      used_by_axl: slot
+        ? levelsUsingSlot(authoritativeA11Ability, slot.id)
+        : [],
+      depends_on: dependsOn,
+      constraints,
+      source: resolvedSources,
+      evidence_status: resolvedEvidence,
+      derivation_status: resolvedDerivation,
+      review_status: "proposed",
+      applicable_scenarios: scenarios,
+      configuration_side: configurationSide,
+      projection_targets: projectionTargets,
+      visibility,
+      observation_channel: observationChannel,
+      notes,
+    }),
+  );
+}
+
+addA11Group({
+  id: "PROPOSED-jd-11.1.1",
+  parent: "jd-11.1",
+  canonical: "jd-11.1",
+  name: "跟踪误差要求",
+  definition:
+    "任务允许的期望控制状态与实际控制状态之间的误差要求；具体数值须由场景、平台和评测方案共同确认。",
+  source: [
+    ...a11CanonicalSources,
+    "W-MAVLINK-COMMON",
+    "W-PX4-CONTROL-ARCH",
+  ],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.1.1.1",
+  parent: "PROPOSED-jd-11.1.1",
+  canonical: "jd-11.1",
+  name: "位置误差容忍范围",
+  definition:
+    "水平与垂向位置设定值相对实际位置的允许误差向量；阈值按巡检阶段分别配置。",
+  valueType: "object",
+  domain: [a11Tbd("水平 / 垂向位置误差范围 TBD")],
+  unit: "m",
+  difficulty: "decreasing",
+  source: [...a11CanonicalSources, "W-MAVLINK-COMMON"],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.1.1.2",
+  parent: "PROPOSED-jd-11.1.1",
+  canonical: "jd-11.1",
+  name: "速度误差容忍范围",
+  definition:
+    "水平与垂向速度设定值相对实际速度的允许误差向量；阈值保持 TBD。",
+  valueType: "object",
+  domain: [a11Tbd("水平 / 垂向速度误差范围 TBD")],
+  unit: "m/s",
+  difficulty: "decreasing",
+  source: [...a11CanonicalSources, "W-MAVLINK-COMMON"],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.1.1.3",
+  parent: "PROPOSED-jd-11.1.1",
+  canonical: "jd-11.1",
+  name: "姿态误差容忍范围",
+  definition:
+    "横滚与俯仰姿态设定值相对实际姿态的允许误差向量；阈值保持 TBD。",
+  valueType: "object",
+  domain: [a11Tbd("横滚 / 俯仰误差范围 TBD")],
+  unit: "degree_or_rad",
+  difficulty: "decreasing",
+  source: [...a11CanonicalSources, "W-MAVLINK-COMMON"],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.1.1.4",
+  parent: "PROPOSED-jd-11.1.1",
+  canonical: "jd-11.1",
+  name: "航向误差容忍范围",
+  definition:
+    "航向或偏航设定值相对实际航向的允许误差；角度表示和阈值保持 TBD。",
+  valueType: "number_or_range",
+  domain: [a11Tbd("航向 / 偏航误差范围 TBD")],
+  unit: "degree_or_rad",
+  difficulty: "decreasing",
+  source: [...a11CanonicalSources, "W-MAVLINK-COMMON"],
+});
+
+addA11Group({
+  id: "PROPOSED-jd-11.1.2",
+  parent: "jd-11.1",
+  canonical: "jd-11.1",
+  name: "瞬态与稳定性质量",
+  definition:
+    "描述控制响应、超调、调节过程、振荡与抖动等质量要求，不预设具体阈值。",
+  source: [
+    ...a11CanonicalSources,
+    "W-PX4-CONTROL-TUNING",
+    "W-PX4-CONTROL-ARCH",
+  ],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.1.2.1",
+  parent: "PROPOSED-jd-11.1.2",
+  canonical: "jd-11.1",
+  name: "误差评价方式",
+  definition:
+    "用于汇总控制误差的评价方式；正式评测窗口、统计量和组合规则待确认。",
+  valueType: "enum",
+  domain: [
+    a11DomainItem("instantaneous_error", "瞬时误差", [
+      "W-PX4-CONTROL-TUNING",
+    ]),
+    a11DomainItem("maximum_absolute_error", "最大绝对误差", [
+      "W-PX4-CONTROL-TUNING",
+    ]),
+    a11DomainItem("rms_error", "均方根误差", [], "inferred_candidate"),
+    a11DomainItem("steady_state_error", "稳态误差", [
+      "W-PX4-CONTROL-TUNING",
+    ]),
+    a11Tbd("评价窗口与组合规则 TBD"),
+  ],
+  source: [...a11CanonicalSources, "W-PX4-CONTROL-TUNING"],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.1.2.2",
+  parent: "PROPOSED-jd-11.1.2",
+  canonical: "jd-11.1",
+  name: "超调容忍范围",
+  definition: "设定值变化后的超调允许范围；数值和计算窗口保持 TBD。",
+  valueType: "number_or_range",
+  domain: [a11Tbd("超调范围与计算窗口 TBD")],
+  difficulty: "decreasing",
+  source: [...a11CanonicalSources, "W-PX4-CONTROL-TUNING"],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.1.2.3",
+  parent: "PROPOSED-jd-11.1.2",
+  canonical: "jd-11.1",
+  name: "稳定 / 调节时间要求",
+  definition:
+    "控制状态进入并持续保持在允许范围内所需的时间要求；具体窗口保持 TBD。",
+  valueType: "duration_or_range",
+  domain: [a11Tbd("稳定判定带、调节时间与持续窗口 TBD")],
+  unit: "s",
+  difficulty: "decreasing",
+  source: [...a11CanonicalSources, "W-PX4-CONTROL-TUNING"],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.1.2.4",
+  parent: "PROPOSED-jd-11.1.2",
+  canonical: "jd-11.1",
+  name: "振荡与抖动容忍范围",
+  definition:
+    "控制状态振荡、姿态抖动或高频变化的允许程度；频段、幅值和持续时间保持 TBD。",
+  valueType: "object",
+  domain: [a11Tbd("振荡频段、幅值与持续时间 TBD")],
+  difficulty: "decreasing",
+  source: [...a11CanonicalSources, "W-PX4-CONTROL-TUNING"],
+});
+
+addA11Group({
+  id: "PROPOSED-jd-11.1.3",
+  parent: "jd-11.1",
+  canonical: "jd-11.1",
+  name: "控制与执行余量",
+  definition:
+    "描述执行机构饱和及剩余控制权威，作为控制异常识别和局部恢复的输入。",
+  source: [
+    ...a11CanonicalSources,
+    "W-PX4-CONTROL-ALLOCATOR",
+  ],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.1.3.1",
+  parent: "PROPOSED-jd-11.1.3",
+  canonical: "jd-11.1",
+  name: "执行机构饱和状态",
+  definition:
+    "执行机构或控制分配是否发生上限、下限或动态速率饱和；正式状态映射待确认。",
+  valueType: "enum",
+  domain: [
+    a11DomainItem("not_saturated", "未饱和", [
+      "W-PX4-CONTROL-ALLOCATOR",
+    ]),
+    a11DomainItem("upper_saturation", "上限饱和", [
+      "W-PX4-CONTROL-ALLOCATOR",
+    ]),
+    a11DomainItem("lower_saturation", "下限饱和", [
+      "W-PX4-CONTROL-ALLOCATOR",
+    ]),
+    a11DomainItem("dynamic_rate_saturation", "动态速率饱和", [
+      "W-PX4-CONTROL-ALLOCATOR",
+    ]),
+    a11DomainItem("unknown", "未知", ["W-PX4-CONTROL-ALLOCATOR"]),
+  ],
+  difficulty: "context_dependent",
+  source: [...a11CanonicalSources, "W-PX4-CONTROL-ALLOCATOR"],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.1.3.2",
+  parent: "PROPOSED-jd-11.1.3",
+  canonical: "jd-11.1",
+  name: "剩余控制权威",
+  definition:
+    "当前状态下用于继续跟踪或恢复稳定的剩余控制能力；表示方式和阈值保持 TBD。",
+  valueType: "object",
+  domain: [a11Tbd("控制权威表示、单位和阈值 TBD")],
+  difficulty: "decreasing",
+  source: [...a11CanonicalSources, "W-PX4-CONTROL-ALLOCATOR"],
+});
+
+addA11Group({
+  id: "PROPOSED-jd-11.1.4",
+  parent: "jd-11.1",
+  canonical: "jd-11.1",
+  name: "巡检阶段质量 Profile",
+  definition:
+    "按巡检阶段激活不同控制质量要求；具体阈值由对应场景 Profile 绑定。",
+  source: [...a11CanonicalSources, "W-MOT-UAV-BRIDGE"],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.1.4.1",
+  parent: "PROPOSED-jd-11.1.4",
+  canonical: "jd-11.1",
+  name: "控制质量激活阶段",
+  definition:
+    "选择当前控制质量要求适用的巡检作业阶段；阶段名称为跨场景候选。",
+  valueType: "multi_enum",
+  domain: [
+    a11DomainItem("takeoff_or_landing", "起飞 / 降落", [
+      "W-MOT-UAV-BRIDGE",
+    ]),
+    a11DomainItem("route_transit", "航线飞行 / 转场", [
+      "W-MOT-UAV-BRIDGE",
+    ]),
+    a11DomainItem("continuous_scan", "连续扫描", [
+      "W-MOT-UAV-BRIDGE",
+    ]),
+    a11DomainItem("point_fixed_view", "定点定视角", [
+      "W-MOT-UAV-BRIDGE",
+    ]),
+    a11DomainItem("close_range_inspection", "抵近检查", [
+      "W-MOT-UAV-BRIDGE",
+    ]),
+  ],
+  difficulty: "non_monotonic",
+  source: [...a11CanonicalSources, "W-MOT-UAV-BRIDGE"],
+});
+
+addA11Group({
+  id: "PROPOSED-jd-11.2.1",
+  parent: "jd-11.2",
+  canonical: "jd-11.2",
+  name: "控制目标与指令层级",
+  definition:
+    "描述 A11 接收和跟踪的飞控级目标类型、参考系与指令连续性要求。",
+  source: [
+    ...a11CanonicalSources,
+    "W-MAVLINK-OFFBOARD",
+    "W-MAVLINK-COMMON",
+    "W-PX4-CONTROL-ARCH",
+  ],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.2.1.1",
+  parent: "PROPOSED-jd-11.2.1",
+  canonical: "jd-11.2",
+  name: "控制目标类型",
+  definition:
+    "控制器接收的设定值层级；组合支持情况由具体平台能力声明决定。",
+  valueType: "multi_enum",
+  domain: [
+    a11DomainItem("position", "位置", [
+      "W-MAVLINK-OFFBOARD",
+      "W-MAVLINK-COMMON",
+    ]),
+    a11DomainItem("velocity", "速度", [
+      "W-MAVLINK-OFFBOARD",
+      "W-MAVLINK-COMMON",
+    ]),
+    a11DomainItem("acceleration_or_force", "加速度 / 力", [
+      "W-MAVLINK-COMMON",
+    ]),
+    a11DomainItem("attitude", "姿态", [
+      "W-MAVLINK-OFFBOARD",
+      "W-MAVLINK-COMMON",
+    ]),
+    a11DomainItem("body_rate", "机体系角速度", [
+      "W-MAVLINK-OFFBOARD",
+      "W-MAVLINK-COMMON",
+    ]),
+    a11DomainItem("thrust", "推力", [
+      "W-MAVLINK-OFFBOARD",
+      "W-MAVLINK-COMMON",
+    ]),
+  ],
+  difficulty: "non_monotonic",
+  source: [
+    ...a11CanonicalSources,
+    "W-MAVLINK-OFFBOARD",
+    "W-MAVLINK-COMMON",
+  ],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.2.1.2",
+  parent: "PROPOSED-jd-11.2.1",
+  canonical: "jd-11.2",
+  name: "指令参考系",
+  definition:
+    "控制目标所采用的坐标或机体参考系；需与 A7/A8 的状态估计和相对几何保持一致。",
+  valueType: "enum",
+  domain: [
+    a11DomainItem("local_ned", "局部 NED", ["W-MAVLINK-COMMON"]),
+    a11DomainItem("body_frd", "机体系 FRD", ["W-MAVLINK-COMMON"]),
+    a11DomainItem("global", "全局坐标参考", ["W-MAVLINK-COMMON"]),
+    a11Tbd("其他参考系与转换规则 TBD"),
+  ],
+  difficulty: "non_monotonic",
+  relatedJd: ["jd-7.1", "jd-8.1"],
+  source: [...a11CanonicalSources, "W-MAVLINK-COMMON"],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.2.1.3",
+  parent: "PROPOSED-jd-11.2.1",
+  canonical: "jd-11.2",
+  name: "指令更新与连续性要求",
+  definition:
+    "指令更新频率、延迟、丢帧容忍和设定值连续性要求；v0.6 数值不推广，正式范围保持 TBD。",
+  valueType: "object",
+  domain: [a11Tbd("更新频率、延迟、丢帧和连续性规则 TBD")],
+  source: [
+    ...a11CanonicalSources,
+    "W-MAVLINK-OFFBOARD",
+    "L-A8-V06",
+  ],
+});
+
+addA11Group({
+  id: "PROPOSED-jd-11.2.2",
+  parent: "jd-11.2",
+  canonical: "jd-11.2",
+  name: "保持与跟踪模式",
+  definition:
+    "A11 在当前执行片段内采用的飞控级保持或跟踪模式；任务路径仍由 A10 决定。",
+  source: [
+    ...a11CanonicalSources,
+    "W-PX4-CONTROL-ARCH",
+    "W-MAVLINK-OFFBOARD",
+  ],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.2.2.1",
+  parent: "PROPOSED-jd-11.2.2",
+  canonical: "jd-11.2",
+  name: "控制保持 / 跟踪模式",
+  definition:
+    "当前片段采用的姿态、高度、位置、速度或轨迹片段保持与跟踪模式。",
+  valueType: "multi_enum",
+  domain: [
+    a11DomainItem("attitude_hold", "姿态保持", [
+      "L-A11-AXL68-V3",
+      "W-PX4-CONTROL-ARCH",
+    ]),
+    a11DomainItem("altitude_hold", "高度保持", ["L-A11-AXL68-V3"]),
+    a11DomainItem("position_or_hover_hold", "位置 / 悬停保持", [
+      "L-A11-AXL68-V3",
+      "W-PX4-CONTROL-ARCH",
+    ]),
+    a11DomainItem("velocity_tracking", "速度跟踪", [
+      "L-A11-AXL68-V3",
+      "W-PX4-CONTROL-ARCH",
+    ]),
+    a11DomainItem("trajectory_segment_tracking", "轨迹片段跟踪", [
+      "W-PX4-CONTROL-ARCH",
+    ]),
+    a11DomainItem("offboard_external", "外部 / Offboard 控制", [
+      "W-MAVLINK-OFFBOARD",
+    ]),
+  ],
+  difficulty: "non_monotonic",
+  relatedJd: ["jd-10.2"],
+  source: [
+    ...a11CanonicalSources,
+    "W-PX4-CONTROL-ARCH",
+    "W-MAVLINK-OFFBOARD",
+  ],
+});
+
+addA11Group({
+  id: "PROPOSED-jd-11.2.3",
+  parent: "jd-11.2",
+  canonical: "jd-11.2",
+  name: "控制回路与执行分配",
+  definition:
+    "控制回路层级、外环旁路和控制分配机制；用于描述可配置或可声明的工作范式。",
+  source: [
+    ...a11CanonicalSources,
+    "W-PX4-CONTROL-ARCH",
+    "W-PX4-CONTROL-ALLOCATOR",
+  ],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.2.3.1",
+  parent: "PROPOSED-jd-11.2.3",
+  canonical: "jd-11.2",
+  name: "控制回路结构",
+  definition:
+    "控制器使用的外环与内环组合；具体实现可以按控制目标旁路部分外环。",
+  valueType: "enum",
+  domain: [
+    a11DomainItem(
+      "cascaded_position_velocity_attitude_rate",
+      "位置—速度—姿态—角速度级联",
+      ["W-PX4-CONTROL-ARCH"],
+    ),
+    a11DomainItem("outer_loop_bypassed", "部分外环旁路", [
+      "W-PX4-CONTROL-ARCH",
+    ]),
+    a11Tbd("其他回路结构 TBD"),
+  ],
+  difficulty: "non_monotonic",
+  source: [...a11CanonicalSources, "W-PX4-CONTROL-ARCH"],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.2.3.2",
+  parent: "PROPOSED-jd-11.2.3",
+  canonical: "jd-11.2",
+  name: "控制分配机制",
+  definition:
+    "期望力与力矩到执行机构输出的分配方式；平台支持和参数范围必须由平台资料声明。",
+  valueType: "enum",
+  domain: [
+    a11DomainItem("static_mixer", "静态 Mixer", [
+      "W-PX4-CONTROL-ALLOCATOR",
+    ]),
+    a11DomainItem(
+      "effectiveness_matrix_control_allocation",
+      "基于效能矩阵的控制分配",
+      ["W-PX4-CONTROL-ALLOCATOR"],
+    ),
+    a11Tbd("其他控制分配机制 TBD"),
+  ],
+  difficulty: "non_monotonic",
+  relatedJd: ["jd-2.2", "jd-9.1"],
+  source: [...a11CanonicalSources, "W-PX4-CONTROL-ALLOCATOR"],
+});
+
+addA11Group({
+  id: "PROPOSED-jd-11.2.4",
+  parent: "jd-11.2",
+  canonical: "jd-11.2",
+  name: "控制器类型声明",
+  definition:
+    "保留受审 JD 中的控制器家族示例，用作 SUT 声明或 Trace，不默认作为场景难度变量。",
+  source: [...a11CanonicalSources, "W-PX4-CONTROL-ARCH"],
+  notes:
+    "PX4 文档中的 MPC 常指 Multicopter Position Controller；机读枚举使用完整名称 model_predictive_control 避免缩写混淆。",
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.2.4.1",
+  parent: "PROPOSED-jd-11.2.4",
+  canonical: "jd-11.2",
+  name: "控制器家族",
+  definition:
+    "SUT 声明的控制器家族；taxonomy 完整性和是否进入 benchmark 分层仍待确认。",
+  valueType: "enum",
+  domain: [
+    a11DomainItem("pid", "PID", [
+      "L-A11-JD66-V3",
+      "W-PX4-CONTROL-ARCH",
+    ]),
+    a11DomainItem("model_predictive_control", "Model Predictive Control", [
+      "L-A11-JD66-V3",
+    ]),
+    a11DomainItem("adaptive_control", "自适应控制", [
+      "L-A11-JD66-V3",
+    ]),
+    a11DomainItem("gain_scheduled_control", "增益调度", [
+      "L-A11-JD66-V3",
+    ]),
+    a11DomainItem(
+      "reinforcement_learning_controller",
+      "RL controller",
+      ["L-A11-JD66-V3"],
+    ),
+    a11DomainItem("other", "其他", [], "inferred_candidate"),
+    a11Tbd("正式分类与披露要求 TBD"),
+  ],
+  difficulty: "neutral",
+  source: [...a11CanonicalSources, "W-PX4-CONTROL-ARCH"],
+  configurationSide: "TBD",
+  projectionTargets: ["sut_input", "harness"],
+  visibility: ["sut_visible", "grader_visible"],
+  observationChannel: ["sut_trace", "grader"],
+  notes:
+    "该节点描述 SUT 实现声明，不应默认投影为 world_config 或由 Seed 随机采样。",
+});
+
+addA11Group({
+  id: "PROPOSED-jd-11.2.5",
+  parent: "jd-11.2",
+  canonical: "jd-11.2",
+  name: "控制输入前提",
+  definition:
+    "控制模式启用所需的状态估计和执行机构可用性；只保存引用，不复制 A7/A8/A9 的变量。",
+  relatedJd: ["jd-7.2", "jd-8.2", "jd-9.1"],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.2.5.1",
+  parent: "PROPOSED-jd-11.2.5",
+  canonical: "jd-11.2",
+  name: "所需状态估计引用",
+  definition:
+    "当前控制目标需要的位置、速度、姿态、航向或相对几何状态引用。",
+  valueType: "multi_reference",
+  domain: [
+    a11DomainItem("absolute_position_state", "绝对位置 / 速度状态", [
+      "L-A11-AXL68-V3",
+    ]),
+    a11DomainItem("attitude_and_heading_state", "姿态 / 航向状态", [
+      "L-A11-AXL68-V3",
+    ]),
+    a11DomainItem("relative_geometry_state", "相对几何状态", [
+      "L-A11-AXL68-V3",
+    ]),
+    a11Tbd("状态质量前提与失效规则 TBD"),
+  ],
+  relatedJd: ["jd-7.2", "jd-8.2"],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.2.5.2",
+  parent: "PROPOSED-jd-11.2.5",
+  canonical: "jd-11.2",
+  name: "执行机构可用状态",
+  definition:
+    "执行机构及控制分配对当前控制模式的可用程度；故障分类引用平台与 A9 资源健康状态。",
+  valueType: "enum",
+  domain: [
+    a11DomainItem("available", "可用", ["W-PX4-CONTROL-ALLOCATOR"]),
+    a11DomainItem("degraded", "降级可用", [
+      "W-PX4-CONTROL-ALLOCATOR",
+    ]),
+    a11DomainItem("unavailable", "不可用", [
+      "W-PX4-CONTROL-ALLOCATOR",
+    ]),
+    a11DomainItem("unknown", "未知", ["W-PX4-CONTROL-ALLOCATOR"]),
+  ],
+  difficulty: "decreasing",
+  relatedJd: ["jd-2.2", "jd-9.1"],
+  source: [...a11CanonicalSources, "W-PX4-CONTROL-ALLOCATOR"],
+});
+
+addA11Group({
+  id: "PROPOSED-jd-11.3.1",
+  parent: "jd-11.3",
+  canonical: "jd-11.3",
+  name: "控制异常触发",
+  definition:
+    "按 A11×L3 责任识别需要局部控制处置的异常类别；具体判据引用 jd-11.1。",
+  relatedJd: ["jd-11.1", "jd-0.3"],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.3.1.1",
+  parent: "PROPOSED-jd-11.3.1",
+  canonical: "jd-11.3",
+  name: "控制异常类别",
+  definition:
+    "触发局部控制恢复的偏差、饱和、振荡、姿态异常、风扰退化或执行余量下降。",
+  valueType: "multi_enum",
+  domain: [
+    a11DomainItem("sustained_tracking_error", "持续控制误差", [
+      "L-A11-AXL68-V3",
+    ]),
+    a11DomainItem("actuator_saturation", "执行机构饱和", [
+      "L-A11-AXL68-V3",
+    ]),
+    a11DomainItem("oscillation", "振荡", ["L-A11-AXL68-V3"]),
+    a11DomainItem("attitude_anomaly", "姿态异常", [
+      "L-A11-AXL68-V3",
+    ]),
+    a11DomainItem("wind_disturbance_degradation", "风扰导致的控制退化", [
+      "L-A11-AXL68-V3",
+    ]),
+    a11DomainItem("control_authority_degradation", "执行余量下降", [
+      "L-A11-AXL68-V3",
+    ]),
+  ],
+  relatedJd: ["jd-11.1", "jd-0.3"],
+});
+
+addA11Group({
+  id: "PROPOSED-jd-11.3.2",
+  parent: "jd-11.3",
+  canonical: "jd-11.3",
+  name: "可用局部处置动作",
+  definition:
+    "当前 JD 下允许由 A11 选择、且不直接改变任务级航路或进入安全态的局部控制动作。",
+  relatedJd: ["jd-10.4", "jd-16.2"],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.3.2.1",
+  parent: "PROPOSED-jd-11.3.2",
+  canonical: "jd-11.3",
+  name: "局部控制处置动作集",
+  definition:
+    "处置动作直接继承受审 JD 与 A11×L4；动作参数、组合与优先级仍待确认。",
+  valueType: "multi_enum",
+  domain: [
+    a11DomainItem("reduce_control_aggressiveness", "局部降速 / 降低控制激进度", [
+      "L-A11-JD66-V3",
+      "L-A11-AXL68-V3",
+    ]),
+    a11DomainItem("increase_control_margin", "增大控制余量", [
+      "L-A11-JD66-V3",
+      "L-A11-AXL68-V3",
+    ]),
+    a11DomainItem("switch_control_mode", "切换控制模式", [
+      "L-A11-JD66-V3",
+      "L-A11-AXL68-V3",
+    ]),
+    a11DomainItem("wait_for_stability", "等待稳定", [
+      "L-A11-JD66-V3",
+      "L-A11-AXL68-V3",
+    ]),
+    a11DomainItem("request_inspection", "请求检查", [
+      "L-A11-JD66-V3",
+      "L-A11-AXL68-V3",
+    ]),
+  ],
+  difficulty: "non_monotonic",
+  relatedJd: ["jd-10.4", "jd-16.2"],
+  notes:
+    "改变任务速度 Profile、航路或高度属于 A10；返航、迫降或进入 safe state 属于 A16。",
+});
+
+addA11Group({
+  id: "PROPOSED-jd-11.3.3",
+  parent: "jd-11.3",
+  canonical: "jd-11.3",
+  name: "策略适用条件",
+  definition:
+    "控制处置动作在任务阶段、当前模式、异常类型和剩余控制权威上的适用范围。",
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.3.3.1",
+  parent: "PROPOSED-jd-11.3.3",
+  canonical: "jd-11.3",
+  name: "适用任务阶段",
+  definition: "策略允许启用的巡检阶段集合。",
+  valueType: "multi_reference",
+  domain: [
+    a11DomainItem("inspection_phase_profile", "引用 jd-11.1.4 巡检阶段", [
+      "W-MOT-UAV-BRIDGE",
+    ]),
+  ],
+  dependsOn: ["PROPOSED-jd-11.1.4.1"],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.3.3.2",
+  parent: "PROPOSED-jd-11.3.3",
+  canonical: "jd-11.3",
+  name: "适用控制模式",
+  definition: "策略允许作用的当前保持或跟踪模式集合。",
+  valueType: "multi_reference",
+  domain: [
+    a11DomainItem("control_mode_profile", "引用 jd-11.2.2 控制模式", [
+      "L-A11-AXL68-V3",
+    ]),
+  ],
+  dependsOn: ["PROPOSED-jd-11.2.2.1"],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.3.3.3",
+  parent: "PROPOSED-jd-11.3.3",
+  canonical: "jd-11.3",
+  name: "所需剩余控制权威",
+  definition:
+    "执行策略前必须具备的最低剩余控制权威；表示方式和阈值保持 TBD。",
+  valueType: "object",
+  domain: [a11Tbd("最低控制权威要求 TBD")],
+  dependsOn: ["PROPOSED-jd-11.1.3.2"],
+  difficulty: "decreasing",
+});
+
+addA11Group({
+  id: "PROPOSED-jd-11.3.4",
+  parent: "jd-11.3",
+  canonical: "jd-11.3",
+  name: "模式切换保护",
+  definition:
+    "控制模式切换的入口、设定值连续性、回退与超时条件；正式状态机保持 TBD。",
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.3.4.1",
+  parent: "PROPOSED-jd-11.3.4",
+  canonical: "jd-11.3",
+  name: "模式切换保护规则",
+  definition:
+    "描述切换入口、状态交接、设定值连续性、回退和超时；不得推断具体时限。",
+  valueType: "object",
+  domain: [a11Tbd("切换入口、连续性、回退与超时规则 TBD")],
+});
+
+addA11Group({
+  id: "PROPOSED-jd-11.3.5",
+  parent: "jd-11.3",
+  canonical: "jd-11.3",
+  name: "处置后验证与升级",
+  definition:
+    "验证控制状态是否恢复可信，并在无法局部恢复时升级给其他能力或人工。",
+  relatedJd: ["jd-7.2", "jd-9.3", "jd-10.4", "jd-16.2", "jd-0.5"],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.3.5.1",
+  parent: "PROPOSED-jd-11.3.5",
+  canonical: "jd-11.3",
+  name: "处置后控制状态",
+  definition:
+    "处置动作后控制质量、振荡、饱和和控制权威的综合恢复状态；通过标准保持 TBD。",
+  valueType: "enum",
+  domain: [
+    a11DomainItem("recovered", "已恢复", ["L-A11-AXL68-V3"]),
+    a11DomainItem("partially_recovered", "部分恢复", [
+      "L-A11-AXL68-V3",
+    ]),
+    a11DomainItem("not_recovered", "未恢复", ["L-A11-AXL68-V3"]),
+    a11DomainItem("unknown", "无法验证", ["L-A11-AXL68-V3"]),
+    a11Tbd("恢复可信判据 TBD"),
+  ],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.3.5.2",
+  parent: "PROPOSED-jd-11.3.5",
+  canonical: "jd-11.3",
+  name: "跨能力升级目标",
+  definition:
+    "A11 无法在当前执行片段内恢复控制质量时，将问题升级到定位、资源、航迹、安全或人工确认。",
+  valueType: "multi_reference",
+  domain: [
+    a11DomainItem("A7", "A7 自定位", ["L-A11-AXL68-V3"]),
+    a11DomainItem("A9", "A9 健康 / 能源 / 资源管理", [
+      "L-A11-AXL68-V3",
+    ]),
+    a11DomainItem("A10", "A10 导航 / 航迹 / 轨迹管理", [
+      "L-A11-AXL68-V3",
+    ]),
+    a11DomainItem("A16", "A16 安全包络 / 运行保证", [
+      "L-A11-AXL68-V3",
+    ]),
+    a11DomainItem("jd-0.5", "人机确认协议", ["L-A11-AXL68-V3"]),
+  ],
+  difficulty: "non_monotonic",
+  relatedJd: ["jd-7.2", "jd-9.3", "jd-10.4", "jd-16.2", "jd-0.5"],
+});
+
+addA11Group({
+  id: "PROPOSED-jd-11.4",
+  parent: "PROPOSED-jd-tree-A11",
+  name: "控制执行条件与动态包络",
+  definition:
+    "描述某个平台、载荷、控制接口和运行状态下可实际执行的控制边界；用于连接 jd-11.1 控制质量、jd-11.2 控制机制、jd-11.3 处置策略与具体场景 Profile。",
+  relatedJd: [
+    "jd-2.2",
+    "jd-0.3",
+    "jd-0.9",
+    "jd-11.1",
+    "jd-11.2",
+    "jd-11.3",
+    "jd-16.1",
+  ],
+  source: [
+    "L-A8-V06",
+    "W-MAVLINK-OFFBOARD",
+    "W-MAVLINK-COMMON",
+    "W-PX4-CONTROL-ARCH",
+    "W-PX4-CONTROL-ALLOCATOR",
+  ],
+  configurationSide: "shared",
+  projectionTargets: [
+    "world_config",
+    "user_config",
+    "sut_input",
+    "harness",
+  ],
+  evidenceStatus: "inferred_candidate",
+  derivationStatus: "proposed",
+  notes:
+    "该节点用于补齐 A11 的结构空档，但不是当前 66 槽位中的 canonical JD。具体范围、阈值和正式编号均待确认。",
+});
+
+addA11Group({
+  id: "PROPOSED-jd-11.4.1",
+  parent: "PROPOSED-jd-11.4",
+  name: "平台与载荷执行基准",
+  definition:
+    "引用决定控制执行边界的平台静态档案、机体占用空间和当前任务载荷配置，不在 A11 重复保存平台静态参数。",
+  relatedJd: ["jd-2.2", "jd-0.9"],
+  source: ["L-A8-V06", "W-MOT-UAV-BRIDGE"],
+  configurationSide: "shared",
+  projectionTargets: ["world_config", "user_config", "harness"],
+  evidenceStatus: "inferred_candidate",
+  derivationStatus: "proposed",
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.4.1.1",
+  parent: "PROPOSED-jd-11.4.1",
+  name: "平台档案引用",
+  definition:
+    "引用 jd-2.2 中的平台类型、尺寸、质量、运动学能力和设计运行域；A11 只读取其对控制执行的约束。",
+  valueType: "reference",
+  domain: [
+    a11DomainItem(
+      "jd-2.2",
+      "引用平台参数表",
+      ["L-A11-JD66-V3"],
+      "authoritative_existing",
+    ),
+  ],
+  relatedJd: ["jd-2.2"],
+  source: ["L-A11-JD66-V3", "L-A8-V06"],
+  configurationSide: "shared",
+  projectionTargets: ["world_config", "user_config", "harness"],
+  evidenceStatus: "inferred_candidate",
+  derivationStatus: "proposed",
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.4.1.2",
+  parent: "PROPOSED-jd-11.4.1",
+  name: "机体占用空间引用",
+  definition:
+    "引用机体、旋翼、起落架和外伸部件共同形成的有效占用空间；正式几何表示和来源待确认。",
+  valueType: "reference_or_geometry_profile",
+  domain: [a11Tbd("机体有效占用空间的引用方式与几何表示 TBD")],
+  unit: "m",
+  relatedJd: ["jd-2.2", "jd-16.1"],
+  source: ["L-A8-V06", "W-MOT-UAV-BRIDGE"],
+  configurationSide: "world",
+  projectionTargets: ["world_config", "harness"],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.4.1.3",
+  parent: "PROPOSED-jd-11.4.1",
+  name: "载荷配置引用",
+  definition:
+    "引用当前任务载荷及其质量、重心、外形和工作状态对控制执行包络的影响。",
+  valueType: "reference",
+  domain: [
+    a11DomainItem(
+      "jd-0.9",
+      "引用载荷集与当前载荷配置",
+      ["L-A11-JD66-V3"],
+      "authoritative_existing",
+    ),
+    a11Tbd("载荷影响字段及其组合规则 TBD"),
+  ],
+  relatedJd: ["jd-0.9", "jd-2.2"],
+  source: ["L-A11-JD66-V3", "W-MOT-UAV-BRIDGE"],
+  configurationSide: "shared",
+  projectionTargets: ["world_config", "user_config", "harness"],
+  difficulty: "context_dependent",
+});
+
+addA11Group({
+  id: "PROPOSED-jd-11.4.2",
+  parent: "PROPOSED-jd-11.4",
+  name: "指令接口执行约束",
+  definition:
+    "描述已选控制目标在接口层的更新、时序、连续性和失效边界；不重复定义 jd-11.2 的控制目标 taxonomy。",
+  relatedJd: ["jd-11.2"],
+  source: ["L-A8-V06", "W-MAVLINK-OFFBOARD", "W-MAVLINK-COMMON"],
+  configurationSide: "shared",
+  projectionTargets: ["user_config", "sut_input", "harness"],
+  evidenceStatus: "source_supported",
+  derivationStatus: "derived",
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.4.2.1",
+  parent: "PROPOSED-jd-11.4.2",
+  name: "控制目标引用",
+  definition:
+    "引用 jd-11.2 下当前启用的位置、速度、加速度 / 力、姿态、角速度或推力控制目标。",
+  valueType: "reference",
+  domain: [
+    a11DomainItem(
+      "PROPOSED-jd-11.2.1.1",
+      "引用控制目标类型",
+      ["W-MAVLINK-OFFBOARD", "W-MAVLINK-COMMON"],
+    ),
+  ],
+  relatedJd: ["jd-11.2"],
+  source: ["W-MAVLINK-OFFBOARD", "W-MAVLINK-COMMON"],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.4.2.2",
+  parent: "PROPOSED-jd-11.4.2",
+  name: "指令更新频率范围",
+  definition:
+    "控制指令或设定值被接受并持续有效所需的更新频率范围；不得套用白墙示例的固定值。",
+  valueType: "number_or_range",
+  domain: [a11Tbd("最小、目标与最大更新频率范围 TBD")],
+  unit: "Hz",
+  difficulty: "context_dependent",
+  source: ["L-A8-V06", "W-MAVLINK-OFFBOARD"],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.4.2.3",
+  parent: "PROPOSED-jd-11.4.2",
+  name: "指令时延与超时边界",
+  definition:
+    "指令从生成到生效的允许时延、丢更容忍和超时失效边界；具体时限保持 TBD。",
+  valueType: "object",
+  domain: [a11Tbd("时延、丢更容忍和超时边界 TBD")],
+  unit: "ms_or_s",
+  difficulty: "decreasing",
+  source: ["W-MAVLINK-OFFBOARD"],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.4.2.4",
+  parent: "PROPOSED-jd-11.4.2",
+  name: "指令连续性要求",
+  definition:
+    "模式切换或设定值更新过程中，对位置、速度、姿态、推力等指令连续性的要求。",
+  valueType: "object",
+  domain: [a11Tbd("连续性维度、允许跃变和切换规则 TBD")],
+  difficulty: "context_dependent",
+  relatedJd: ["jd-11.2", "jd-11.3"],
+  source: ["W-MAVLINK-OFFBOARD", "W-MAVLINK-COMMON"],
+});
+
+addA11Group({
+  id: "PROPOSED-jd-11.4.3",
+  parent: "PROPOSED-jd-11.4",
+  name: "运动与姿态动态包络",
+  definition:
+    "描述在当前平台、载荷、模式和环境下允许执行的速度、加速度、姿态与角速度范围。",
+  relatedJd: ["jd-2.2", "jd-0.3", "jd-0.9", "jd-11.2", "jd-16.1"],
+  source: ["L-A8-V06", "W-MAVLINK-COMMON", "W-PX4-CONTROL-ARCH"],
+  configurationSide: "shared",
+  projectionTargets: [
+    "world_config",
+    "user_config",
+    "sut_input",
+    "harness",
+  ],
+  evidenceStatus: "inferred_candidate",
+  derivationStatus: "proposed",
+});
+for (const envelopeLeaf of [
+  [
+    "PROPOSED-jd-11.4.3.1",
+    "水平速度包络",
+    "当前条件下可指令和可稳定跟踪的水平速度范围。",
+    "m/s",
+  ],
+  [
+    "PROPOSED-jd-11.4.3.2",
+    "垂向速度包络",
+    "当前条件下可指令和可稳定跟踪的爬升、下降速度范围。",
+    "m/s",
+  ],
+  [
+    "PROPOSED-jd-11.4.3.3",
+    "加速度 / 减速度包络",
+    "当前条件下可指令和可稳定实现的平动加速度与减速度范围。",
+    "m/s^2",
+  ],
+  [
+    "PROPOSED-jd-11.4.3.4",
+    "姿态角包络",
+    "当前条件下可指令和可保持的滚转、俯仰与航向角范围。",
+    "degree_or_rad",
+  ],
+  [
+    "PROPOSED-jd-11.4.3.5",
+    "角速度包络",
+    "当前条件下可指令和可稳定实现的机体系角速度范围。",
+    "degree/s_or_rad/s",
+  ],
+]) {
+  addA11Leaf({
+    id: envelopeLeaf[0],
+    parent: "PROPOSED-jd-11.4.3",
+    name: envelopeLeaf[1],
+    definition: envelopeLeaf[2],
+    valueType: "number_or_range_or_axis_object",
+    domain: [a11Tbd(`${envelopeLeaf[1]}的单位、范围和适用条件 TBD`)],
+    unit: envelopeLeaf[3],
+    difficulty: "context_dependent",
+    relatedJd: ["jd-2.2", "jd-11.1", "jd-11.2", "jd-16.1"],
+    source: ["L-A8-V06", "W-MAVLINK-COMMON", "W-PX4-CONTROL-ARCH"],
+    configurationSide: "shared",
+    projectionTargets: [
+      "world_config",
+      "user_config",
+      "sut_input",
+      "harness",
+    ],
+  });
+}
+
+addA11Group({
+  id: "PROPOSED-jd-11.4.4",
+  parent: "PROPOSED-jd-11.4",
+  name: "执行机构约束",
+  definition:
+    "描述执行机构与控制分配在各控制轴上的可用性、限幅、速率和剩余执行能力。",
+  relatedJd: ["jd-9.1", "jd-11.1", "jd-11.2"],
+  source: ["W-PX4-CONTROL-ALLOCATOR", "W-PX4-CONTROL-ARCH"],
+  configurationSide: "world",
+  projectionTargets: ["world_config", "sut_input", "harness"],
+  evidenceStatus: "source_supported",
+  derivationStatus: "derived",
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.4.4.1",
+  parent: "PROPOSED-jd-11.4.4",
+  name: "控制轴可用性",
+  definition:
+    "滚转、俯仰、偏航、升力及平动控制轴当前是否具备有效控制分配能力。",
+  valueType: "axis_status_object",
+  domain: [
+    a11DomainItem("available", "可用", ["W-PX4-CONTROL-ALLOCATOR"]),
+    a11DomainItem(
+      "partially_available",
+      "部分可用",
+      ["W-PX4-CONTROL-ALLOCATOR"],
+    ),
+    a11DomainItem("unavailable", "不可用", ["W-PX4-CONTROL-ALLOCATOR"]),
+    a11DomainItem("unknown", "未知", ["W-PX4-CONTROL-ALLOCATOR"]),
+  ],
+  difficulty: "decreasing",
+  relatedJd: ["jd-9.1", "jd-11.1"],
+  source: ["W-PX4-CONTROL-ALLOCATOR"],
+  configurationSide: "world",
+  projectionTargets: ["world_config", "sut_input", "harness"],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.4.4.2",
+  parent: "PROPOSED-jd-11.4.4",
+  name: "执行机构输出与速率限制",
+  definition:
+    "各执行机构或控制轴的输出上下限、变化速率和可能的死区；具体参数必须由平台资料给出。",
+  valueType: "actuator_limit_object",
+  domain: [a11Tbd("输出上下限、变化速率和死区参数 TBD")],
+  difficulty: "context_dependent",
+  relatedJd: ["jd-2.2", "jd-9.1", "jd-11.1"],
+  source: ["W-PX4-CONTROL-ALLOCATOR"],
+  configurationSide: "world",
+  projectionTargets: ["world_config", "sut_input", "harness"],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.4.4.3",
+  parent: "PROPOSED-jd-11.4.4",
+  name: "执行余量下限",
+  definition:
+    "允许继续执行当前控制片段所需的最低剩余执行能力；阈值及其安全含义必须与 A16 联合确认。",
+  valueType: "number_range_or_axis_object",
+  domain: [a11Tbd("剩余执行能力的表示、下限与判定规则 TBD")],
+  difficulty: "decreasing",
+  relatedJd: ["jd-11.1", "jd-11.3", "jd-16.1"],
+  source: ["W-PX4-CONTROL-ALLOCATOR", "L-A11-AXL68-V3"],
+  configurationSide: "shared",
+  projectionTargets: [
+    "world_config",
+    "user_config",
+    "sut_input",
+    "harness",
+  ],
+});
+
+addA11Group({
+  id: "PROPOSED-jd-11.4.5",
+  parent: "PROPOSED-jd-11.4",
+  name: "包络修正与适用条件",
+  definition:
+    "描述环境、载荷、控制模式和任务阶段对基础执行包络的降额、收缩或失效条件。",
+  relatedJd: ["jd-0.3", "jd-0.9", "jd-11.2", "jd-11.3", "jd-16.1"],
+  source: ["W-PX4-CONTROL-TUNING", "W-MOT-UAV-BRIDGE"],
+  configurationSide: "shared",
+  projectionTargets: [
+    "world_config",
+    "user_config",
+    "sut_input",
+    "harness",
+  ],
+  evidenceStatus: "inferred_candidate",
+  derivationStatus: "proposed",
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.4.5.1",
+  parent: "PROPOSED-jd-11.4.5",
+  name: "环境扰动修正",
+  definition:
+    "风、气流和其他扰动对基础速度、姿态、控制余量及跟踪质量包络的修正关系。",
+  valueType: "reference_or_rule_object",
+  domain: [
+    a11DomainItem(
+      "jd-0.3",
+      "引用扰动谱",
+      ["L-A11-JD66-V3"],
+      "authoritative_existing",
+    ),
+    a11Tbd("扰动到包络修正的规则与阈值 TBD"),
+  ],
+  difficulty: "context_dependent",
+  relatedJd: ["jd-0.3", "jd-11.1", "jd-16.1"],
+  source: ["L-A11-JD66-V3", "W-PX4-CONTROL-TUNING"],
+  configurationSide: "shared",
+  projectionTargets: [
+    "world_config",
+    "user_config",
+    "sut_input",
+    "harness",
+  ],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.4.5.2",
+  parent: "PROPOSED-jd-11.4.5",
+  name: "载荷配置修正",
+  definition:
+    "载荷质量、重心、外形或工作状态对基础执行包络的修正关系。",
+  valueType: "reference_or_rule_object",
+  domain: [
+    a11DomainItem(
+      "jd-0.9",
+      "引用当前载荷配置",
+      ["L-A11-JD66-V3"],
+      "authoritative_existing",
+    ),
+    a11Tbd("载荷到包络修正的规则与阈值 TBD"),
+  ],
+  difficulty: "context_dependent",
+  relatedJd: ["jd-0.9", "jd-11.1"],
+  source: ["L-A11-JD66-V3", "W-MOT-UAV-BRIDGE"],
+  configurationSide: "shared",
+  projectionTargets: [
+    "world_config",
+    "user_config",
+    "sut_input",
+    "harness",
+  ],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.4.5.3",
+  parent: "PROPOSED-jd-11.4.5",
+  name: "控制模式修正",
+  definition:
+    "不同保持、跟踪或降级模式对可用控制目标、动态包络和执行余量的修正关系。",
+  valueType: "reference_or_rule_object",
+  domain: [
+    a11DomainItem(
+      "PROPOSED-jd-11.2.2.1",
+      "引用控制保持 / 跟踪模式",
+      ["W-PX4-CONTROL-ARCH"],
+    ),
+    a11Tbd("模式到包络修正的规则 TBD"),
+  ],
+  difficulty: "context_dependent",
+  relatedJd: ["jd-11.2", "jd-11.3"],
+  source: ["W-PX4-CONTROL-ARCH"],
+});
+addA11Leaf({
+  id: "PROPOSED-jd-11.4.5.4",
+  parent: "PROPOSED-jd-11.4.5",
+  name: "任务阶段适用性",
+  definition:
+    "执行包络在起降、航路转场、连续扫描、定点观测和抵近检查阶段的适用范围。",
+  valueType: "reference_or_multi_enum",
+  domain: [
+    a11DomainItem(
+      "PROPOSED-jd-11.1.4.1",
+      "引用控制质量激活阶段",
+      ["W-MOT-UAV-BRIDGE"],
+    ),
+    a11Tbd("阶段专用包络与切换条件 TBD"),
+  ],
+  difficulty: "non_monotonic",
+  relatedJd: ["jd-10.1", "jd-11.1", "jd-11.3"],
+  source: ["W-MOT-UAV-BRIDGE"],
+});
+
+addA11Group({
+  id: "PROPOSED-jd-11.5",
+  parent: "PROPOSED-jd-tree-A11",
+  name: "近障 / 受限空间控制场景 Profile",
+  definition:
+    "将障碍物、通行空间、布局、动态性和遭遇关系抽象为跨巡检场景可复用的控制压力 Profile；该分支不是当前 66 槽位中的 canonical JD。",
+  relatedJd: [
+    "jd-8.1",
+    "jd-10.1",
+    "jd-11.1",
+    "jd-11.2",
+    "jd-11.3",
+    "PROPOSED-jd-11.4",
+    "jd-16.1",
+  ],
+  source: ["L-A8-V06", "W-MOT-UAV-BRIDGE"],
+  configurationSide: "world",
+  projectionTargets: ["world_config", "harness"],
+  evidenceStatus: "inferred_candidate",
+  derivationStatus: "proposed",
+  notes:
+    "白墙窄缝 v0.6 已降为本 Profile 的示例；是否将 jd-11.5 正式纳入 JD 字典仍待确认。",
+});
+
+const profileGroups = [
+  [
+    "PROPOSED-jd-11.5.1",
+    "障碍物几何",
+    "障碍物本体的形态、尺寸与边缘规则性。",
+  ],
+  [
+    "PROPOSED-jd-11.5.2",
+    "通行空间几何",
+    "障碍物之间或内部可供通过、抵近或观察的净空间。",
+  ],
+  [
+    "PROPOSED-jd-11.5.3",
+    "障碍物布局",
+    "多个障碍物之间的数量、间距、角度、对齐和拓扑关系。",
+  ],
+  [
+    "PROPOSED-jd-11.5.4",
+    "障碍物动态性",
+    "障碍物的运动状态、速度、方向、模式与可预测性。",
+  ],
+  [
+    "PROPOSED-jd-11.5.5",
+    "遭遇与通过关系",
+    "巡检任务相对障碍物的绕行、穿越、沿面、抵近或定点观察关系。",
+  ],
+  [
+    "PROPOSED-jd-11.5.6",
+    "控制压力派生量",
+    "由世界几何、平台包络和任务关系推导的通行余量与响应窗口。",
+  ],
+  [
+    "PROPOSED-jd-11.5.7",
+    "A11 控制要求绑定",
+    "将场景 Profile 投影到 jd-11.1、jd-11.2、jd-11.3、PROPOSED-jd-11.4，并引用 A16 安全边界。",
+  ],
 ];
-const migratedNodes = [...migratedInspectionNodes, ...migratedA11Nodes];
+for (const [id, name, definition] of profileGroups) {
+  addA11Group({
+    id,
+    parent: "PROPOSED-jd-11.5",
+    name,
+    definition,
+    relatedJd:
+      id === "PROPOSED-jd-11.5.7"
+        ? [
+            "jd-11.1",
+            "jd-11.2",
+            "jd-11.3",
+            "PROPOSED-jd-11.4",
+            "jd-16.1",
+          ]
+        : [],
+    source: ["L-A8-V06", "W-MOT-UAV-BRIDGE"],
+    configurationSide: "world",
+    projectionTargets: ["world_config", "harness"],
+    evidenceStatus: "inferred_candidate",
+    derivationStatus: "proposed",
+  });
+}
+
+const profileLeaf = (spec) =>
+  addA11Leaf({
+    ...spec,
+    configurationSide: spec.configurationSide ?? "world",
+    projectionTargets: spec.projectionTargets ?? [
+      "world_config",
+      "harness",
+    ],
+    visibility: spec.visibility ?? ["sut_visible", "grader_visible"],
+    observationChannel: spec.observationChannel ?? [
+      "sut_input",
+      "grader",
+      "hidden_gt",
+    ],
+    evidenceStatus: spec.evidenceStatus || "inferred_candidate",
+    derivationStatus: spec.derivationStatus || "proposed",
+    source: spec.source || ["L-A8-V06", "W-MOT-UAV-BRIDGE"],
+  });
+
+profileLeaf({
+  id: "PROPOSED-jd-11.5.1.1",
+  parent: "PROPOSED-jd-11.5.1",
+  name: "障碍物形态",
+  definition: "障碍物本体的几何形态类别；正式 taxonomy 待巡检场景研究确认。",
+  valueType: "enum",
+  domain: [
+    a11DomainItem("planar_surface", "面状结构", ["L-A8-V06"]),
+    a11DomainItem("linear_structure", "线状结构", [], "inferred_candidate"),
+    a11DomainItem("volumetric_object", "体状物体", [], "inferred_candidate"),
+    a11DomainItem("irregular_object", "不规则物体", [], "inferred_candidate"),
+    a11Tbd("其他形态 TBD"),
+  ],
+});
+profileLeaf({
+  id: "PROPOSED-jd-11.5.1.2",
+  parent: "PROPOSED-jd-11.5.1",
+  name: "障碍物尺寸向量",
+  definition: "障碍物的高度、宽度与纵深；单位和数值必须来自世界配置。",
+  valueType: "vector3_or_object",
+  domain: [a11Tbd("高度、宽度与纵深范围 TBD")],
+  unit: "m",
+  difficulty: "context_dependent",
+});
+profileLeaf({
+  id: "PROPOSED-jd-11.5.1.3",
+  parent: "PROPOSED-jd-11.5.1",
+  name: "边缘规则性",
+  definition: "障碍物边缘和轮廓是否规则、混合或不规则。",
+  valueType: "enum",
+  domain: [
+    a11DomainItem("regular", "规则", ["L-A8-V06"]),
+    a11DomainItem("mixed", "混合", [], "inferred_candidate"),
+    a11DomainItem("irregular", "不规则", [], "inferred_candidate"),
+    a11Tbd("正式档位 TBD"),
+  ],
+});
+
+profileLeaf({
+  id: "PROPOSED-jd-11.5.2.1",
+  parent: "PROPOSED-jd-11.5.2",
+  name: "通行空间类型",
+  definition: "任务需要穿越、沿行或抵近的可用空间类型。",
+  valueType: "enum",
+  domain: [
+    a11DomainItem("open_gap", "开放间隙", ["L-A8-V06"]),
+    a11DomainItem("aperture", "孔洞 / 开口", ["L-A8-V06"]),
+    a11DomainItem("narrow_corridor", "狭窄通道", [], "inferred_candidate"),
+    a11DomainItem("structural_clearance", "结构间隙", [
+      "W-MOT-UAV-BRIDGE",
+    ]),
+    a11DomainItem("above_or_below_clearance", "上方 / 下方净空", [
+      "W-MOT-UAV-BRIDGE",
+    ]),
+    a11Tbd("其他空间类型 TBD"),
+  ],
+  difficulty: "non_monotonic",
+});
+profileLeaf({
+  id: "PROPOSED-jd-11.5.2.2",
+  parent: "PROPOSED-jd-11.5.2",
+  name: "通行空间尺寸向量",
+  definition: "可用通行空间的净宽、净高与纵深。",
+  valueType: "vector3_or_object",
+  domain: [a11Tbd("净宽、净高与纵深范围 TBD")],
+  unit: "m",
+  difficulty: "decreasing",
+});
+profileLeaf({
+  id: "PROPOSED-jd-11.5.2.3",
+  parent: "PROPOSED-jd-11.5.2",
+  name: "通行空间偏移",
+  definition: "开口或通道相对障碍物、任务目标或参考中心的横向与垂向偏移。",
+  valueType: "vector2_or_object",
+  domain: [a11Tbd("横向 / 垂向偏移范围 TBD")],
+  unit: "m",
+  difficulty: "context_dependent",
+  relatedJd: ["jd-8.1"],
+});
+profileLeaf({
+  id: "PROPOSED-jd-11.5.2.4",
+  parent: "PROPOSED-jd-11.5.2",
+  name: "通行截面形状",
+  definition: "通行空间截面的几何形状。",
+  valueType: "enum",
+  domain: [
+    a11DomainItem("rectangular", "矩形", ["L-A8-V06"]),
+    a11DomainItem("circular", "圆形", [], "inferred_candidate"),
+    a11DomainItem("irregular", "不规则", [], "inferred_candidate"),
+    a11Tbd("其他截面形状 TBD"),
+  ],
+});
+
+profileLeaf({
+  id: "PROPOSED-jd-11.5.3.1",
+  parent: "PROPOSED-jd-11.5.3",
+  name: "障碍物数量",
+  definition: "当前控制压力 Profile 涉及的障碍物实例数量。",
+  valueType: "integer_or_range",
+  domain: [a11Tbd("数量范围与上限 TBD")],
+  difficulty: "increasing",
+});
+profileLeaf({
+  id: "PROPOSED-jd-11.5.3.2",
+  parent: "PROPOSED-jd-11.5.3",
+  name: "障碍物间距",
+  definition: "连续障碍物之间的空间距离。",
+  valueType: "number_or_range",
+  domain: [a11Tbd("障碍物间距范围 TBD")],
+  unit: "m",
+  difficulty: "decreasing",
+});
+profileLeaf({
+  id: "PROPOSED-jd-11.5.3.3",
+  parent: "PROPOSED-jd-11.5.3",
+  name: "相对摆放角度",
+  definition: "障碍物相对任务运动方向或前一障碍物的摆放角度。",
+  valueType: "number_or_range",
+  domain: [a11Tbd("角度范围与参考方向 TBD")],
+  unit: "degree_or_rad",
+  difficulty: "context_dependent",
+});
+profileLeaf({
+  id: "PROPOSED-jd-11.5.3.4",
+  parent: "PROPOSED-jd-11.5.3",
+  name: "通行空间对齐关系",
+  definition: "多个通行空间之间的对齐或错位关系。",
+  valueType: "enum",
+  domain: [
+    a11DomainItem("aligned", "对齐", ["L-A8-V06"]),
+    a11DomainItem("partially_staggered", "部分错开", ["L-A8-V06"]),
+    a11DomainItem("staggered", "错开", ["L-A8-V06"]),
+    a11Tbd("正式对齐 taxonomy TBD"),
+  ],
+  difficulty: "increasing",
+});
+profileLeaf({
+  id: "PROPOSED-jd-11.5.3.5",
+  parent: "PROPOSED-jd-11.5.3",
+  name: "排列拓扑",
+  definition: "多个障碍物构成的空间排列拓扑。",
+  valueType: "enum",
+  domain: [
+    a11DomainItem("linear", "直线", ["L-A8-V06"]),
+    a11DomainItem("fan", "扇形", ["L-A8-V06"]),
+    a11DomainItem("staggered", "错位", ["L-A8-V06"]),
+    a11DomainItem("grid", "网格", ["L-A8-V06"]),
+    a11Tbd("其他拓扑 TBD"),
+  ],
+  difficulty: "non_monotonic",
+});
+
+profileLeaf({
+  id: "PROPOSED-jd-11.5.4.1",
+  parent: "PROPOSED-jd-11.5.4",
+  name: "障碍物运动状态",
+  definition: "障碍物是静止、运动还是当前状态未知。",
+  valueType: "enum",
+  domain: [
+    a11DomainItem("static", "静止", ["L-A8-V06"]),
+    a11DomainItem("moving", "运动", ["L-A8-V06"]),
+    a11DomainItem("unknown", "未知", [], "inferred_candidate"),
+  ],
+  difficulty: "increasing",
+});
+profileLeaf({
+  id: "PROPOSED-jd-11.5.4.2",
+  parent: "PROPOSED-jd-11.5.4",
+  name: "障碍物速度向量",
+  definition: "运动障碍物的速度大小和方向；仅在运动状态启用。",
+  valueType: "vector3_or_object",
+  domain: [a11Tbd("速度向量范围与参考系 TBD")],
+  unit: "m/s",
+  activationCondition: {
+    node: "PROPOSED-jd-11.5.4.1",
+    operator: "equals",
+    value: "moving",
+  },
+  difficulty: "context_dependent",
+  relatedJd: ["jd-8.1"],
+});
+profileLeaf({
+  id: "PROPOSED-jd-11.5.4.3",
+  parent: "PROPOSED-jd-11.5.4",
+  name: "运动模式",
+  definition: "运动障碍物的时间变化模式；白墙草案只提供部分实例。",
+  valueType: "enum",
+  domain: [
+    a11DomainItem("constant_velocity", "匀速", ["L-A8-V06"]),
+    a11DomainItem("reciprocating", "往复", ["L-A8-V06"]),
+    a11DomainItem("stochastic", "随机", ["L-A8-V06"]),
+    a11Tbd("其他运动模式 TBD"),
+  ],
+  activationCondition: {
+    node: "PROPOSED-jd-11.5.4.1",
+    operator: "equals",
+    value: "moving",
+  },
+  difficulty: "non_monotonic",
+});
+profileLeaf({
+  id: "PROPOSED-jd-11.5.4.4",
+  parent: "PROPOSED-jd-11.5.4",
+  name: "运动可预测性",
+  definition: "障碍物未来运动对 SUT 是否可预测及预测依据的可用程度。",
+  valueType: "enum",
+  domain: [
+    a11DomainItem("predictable", "可预测", [], "inferred_candidate"),
+    a11DomainItem(
+      "partially_predictable",
+      "部分可预测",
+      [],
+      "inferred_candidate",
+    ),
+    a11DomainItem("unpredictable", "不可预测", [], "inferred_candidate"),
+    a11Tbd("正式预测性定义 TBD"),
+  ],
+  difficulty: "decreasing",
+});
+
+profileLeaf({
+  id: "PROPOSED-jd-11.5.5.1",
+  parent: "PROPOSED-jd-11.5.5",
+  name: "任务—障碍物关系",
+  definition: "任务要求相对障碍物采取的空间关系。",
+  valueType: "enum",
+  domain: [
+    a11DomainItem("bypass", "绕行", [], "inferred_candidate"),
+    a11DomainItem("traverse", "穿越", ["L-A8-V06"]),
+    a11DomainItem("along_surface", "沿面飞行", [
+      "W-MOT-UAV-BRIDGE",
+    ]),
+    a11DomainItem("close_approach", "抵近观察", [
+      "W-MOT-UAV-BRIDGE",
+    ]),
+    a11DomainItem("fixed_hover", "定点悬停 / 定视角", [
+      "W-MOT-UAV-BRIDGE",
+    ]),
+  ],
+  difficulty: "non_monotonic",
+  relatedJd: ["jd-10.1", "jd-10.2"],
+});
+profileLeaf({
+  id: "PROPOSED-jd-11.5.5.2",
+  parent: "PROPOSED-jd-11.5.5",
+  name: "接近关系",
+  definition: "无人机相对目标障碍物或通行空间的接近方向、相对速度与相对航向。",
+  valueType: "object",
+  domain: [a11Tbd("接近方向、相对速度与相对航向范围 TBD")],
+  relatedJd: ["jd-8.1"],
+  difficulty: "context_dependent",
+});
+profileLeaf({
+  id: "PROPOSED-jd-11.5.5.3",
+  parent: "PROPOSED-jd-11.5.5",
+  name: "目标通行空间",
+  definition: "任务指定需要通过、沿行或抵近的通行空间实例引用。",
+  valueType: "reference",
+  domain: [a11Tbd("目标实例 ID 与选择规则 TBD")],
+  relatedJd: ["jd-10.1", "jd-10.2"],
+});
+profileLeaf({
+  id: "PROPOSED-jd-11.5.5.4",
+  parent: "PROPOSED-jd-11.5.5",
+  name: "载荷朝向保持要求",
+  definition: "近障控制过程中需要保持的相机或任务载荷朝向关系。",
+  valueType: "object",
+  domain: [a11Tbd("载荷朝向、容差与启用阶段 TBD")],
+  relatedJd: ["jd-8.1"],
+  source: ["W-MOT-UAV-BRIDGE"],
+  configurationSide: "shared",
+  projectionTargets: ["user_config", "world_config", "harness"],
+});
+
+profileLeaf({
+  id: "PROPOSED-jd-11.5.6.1",
+  parent: "PROPOSED-jd-11.5.6",
+  name: "有效通行空间",
+  definition:
+    "根据通行空间尺寸、障碍物角度和布局推导的有效净宽与净高；公式与阈值保持 TBD。",
+  valueType: "derived_object",
+  domain: [a11Tbd("有效净宽 / 净高公式与范围 TBD")],
+  unit: "m",
+  difficulty: "decreasing",
+  dependsOn: [
+    "PROPOSED-jd-11.5.2.2",
+    "PROPOSED-jd-11.5.3.3",
+    "PROPOSED-jd-11.5.3.4",
+  ],
+});
+profileLeaf({
+  id: "PROPOSED-jd-11.5.6.2",
+  parent: "PROPOSED-jd-11.5.6",
+  name: "剩余几何余量",
+  definition:
+    "有效通行空间扣除平台执行包络和附加安全裕度后的剩余几何余量。",
+  valueType: "derived_object",
+  domain: [a11Tbd("平台包络、安全裕度、公式和阈值 TBD")],
+  unit: "m",
+  difficulty: "decreasing",
+  relatedJd: [
+    "jd-2.2",
+    "jd-0.9",
+    "PROPOSED-jd-11.4",
+    "jd-16.1",
+  ],
+  dependsOn: ["PROPOSED-jd-11.5.6.1"],
+});
+profileLeaf({
+  id: "PROPOSED-jd-11.5.6.3",
+  parent: "PROPOSED-jd-11.5.6",
+  name: "控制响应窗口",
+  definition:
+    "由相对运动、剩余距离和任务关系推导的局部控制响应时间窗口；公式保持 TBD。",
+  valueType: "derived_object",
+  domain: [a11Tbd("响应窗口公式、单位和阈值 TBD")],
+  unit: "s",
+  difficulty: "decreasing",
+  relatedJd: ["jd-8.1", "jd-11.1"],
+  dependsOn: [
+    "PROPOSED-jd-11.5.4.2",
+    "PROPOSED-jd-11.5.5.2",
+  ],
+});
+
+for (const binding of [
+  [
+    "PROPOSED-jd-11.5.7.1",
+    "控制质量 Profile 引用",
+    "jd-11.1",
+    "选择本场景启用的误差、稳定性、振荡和控制余量要求。",
+  ],
+  [
+    "PROPOSED-jd-11.5.7.2",
+    "控制机制 Profile 引用",
+    "jd-11.2",
+    "选择本场景允许或要求的控制目标、模式和输入前提。",
+  ],
+  [
+    "PROPOSED-jd-11.5.7.3",
+    "控制策略 Profile 引用",
+    "jd-11.3",
+    "选择本场景允许的局部控制异常处置和恢复验证规则。",
+  ],
+  [
+    "PROPOSED-jd-11.5.7.4",
+    "安全包络引用",
+    "jd-16.1",
+    "引用 A16 分相位安全阈值；A11 不在本分支重复定义安全态。",
+  ],
+  [
+    "PROPOSED-jd-11.5.7.5",
+    "控制执行包络 Profile 引用",
+    "PROPOSED-jd-11.4",
+    "选择本场景适用的平台、指令接口、动态包络、执行机构约束和包络修正规则。",
+  ],
+]) {
+  profileLeaf({
+    id: binding[0],
+    parent: "PROPOSED-jd-11.5.7",
+    name: binding[1],
+    definition: binding[3],
+    valueType: "reference",
+    domain: [
+      a11DomainItem(
+        binding[2],
+        `引用 ${binding[2]}`,
+        binding[2].startsWith("jd-11")
+          ? a11CanonicalSources
+          : [],
+        binding[2].startsWith("jd-11")
+          ? "authoritative_existing"
+          : "inferred_candidate",
+      ),
+    ],
+    relatedJd: [binding[2]],
+    configurationSide: "shared",
+    projectionTargets: [
+      "world_config",
+      "user_config",
+      "sut_input",
+      "harness",
+    ],
+  });
+}
+
+const oldA8NodeById = new Map(
+  oldA8.nodes.map((node) => [node.node_id, node]),
+);
+function oldA8NodePath(node) {
+  const names = [];
+  let current = node;
+  while (current && current.node_id !== "PROPOSED-jd-tree-A8") {
+    names.unshift(current.name);
+    current = oldA8NodeById.get(current.parent_id);
+  }
+  return names.join(" / ");
+}
+
+const whiteWallExampleBindings = oldA8.nodes
+  .filter((node) => node.node_kind === "variable")
+  .map((node) => ({
+    source_node_id: node.node_id,
+    path: oldA8NodePath(node),
+    value_type: node.value_type,
+    value_domain: node.value_domain,
+    unit: node.unit,
+    activation_condition: node.activation_condition,
+  }));
+
+a11Nodes.push(
+  baseNode({
+    node_id: "EXAMPLE-jd-11.5-white-wall-v0.6",
+    parent_id: "PROPOSED-jd-11.5",
+    canonical_slot: null,
+    owner_a: "A11",
+    name: "白墙窄缝草案 v0.6 示例",
+    definition:
+      "需求草案 v0.6 的白墙、缝、布局、运动和平台基准原始内容；作为 PROPOSED-jd-11.5 的具体实例保留，不代表跨巡检场景的通用取值。",
+    node_kind: "example_profile",
+    value_type: "example_profile",
+    value_domain: [
+      a11DomainItem(
+        "white_wall_narrow_gap_v0_6",
+        "白墙窄缝穿越 v0.6",
+        ["L-A8-V06"],
+        "team_material_only",
+        ["white_wall_narrow_gap"],
+      ),
+    ],
+    configuration_side: "world",
+    projection_targets: ["world_config", "harness"],
+    visibility: ["sut_visible", "grader_visible"],
+    observation_channel: ["sut_input", "grader", "hidden_gt"],
+    applicable_scenarios: ["white_wall_narrow_gap"],
+    related_global_jd: [],
+    related_jd: [
+      "PROPOSED-jd-11.4",
+      "PROPOSED-jd-11.5.1",
+      "PROPOSED-jd-11.5.2",
+      "PROPOSED-jd-11.5.3",
+      "PROPOSED-jd-11.5.4",
+      "PROPOSED-jd-11.5.5",
+      "PROPOSED-jd-11.5.6",
+      "PROPOSED-jd-11.5.7",
+    ],
+    used_by_axl: ["A11×L3", "A11×L4"],
+    source: ["L-A8-V06"],
+    evidence_status: "team_material_only",
+    derivation_status: "given",
+    review_status: "proposed",
+    legacy_aliases: ["jd-8.5", "PROPOSED-jd-11.5-white-wall-v0.6"],
+    notes:
+      "所有原始数值和枚举来自需求草案 v0.6；原控制接口、控制约束和执行包络现作为 PROPOSED-jd-11.4 的示例输入保留，未将其提升为正式阈值、通用 taxonomy 或 simulator 接口。",
+    example_bindings: whiteWallExampleBindings,
+  }),
+);
+
+const migratedNodes = [...migratedInspectionNodes];
 
 const migrateSource = (source) => ({
   ...source,
@@ -1708,18 +3581,11 @@ const g1Catalog = {
 const migratedCatalog = {
   ...commonMetadata,
   catalog_id: "jd-variable-tree-g2-g3-renumbered-version1-draft",
-  catalog_version: "version1-a6-a7-a8-a10-a11-2026-07-20",
-  scope: ["A6", "A7", "A8", "A10", "A11"],
-  scenario_scope: [
-    ...new Set([
-      ...(oldInspection.scenario_scope || []),
-      ...(oldA8.scenario_scope || []),
-    ]),
-  ],
+  catalog_version: "version1-a6-a7-a8-a10-2026-07-21",
+  scope: ["A6", "A7", "A8", "A10"],
+  scenario_scope: [...new Set(oldInspection.scenario_scope || [])],
   sources: uniqueSources([
     ...oldInspection.sources.map(migrateSource),
-    ...oldA8.sources.map(migrateSource),
-    ...a11Sources,
     g1Sources.find((source) => source.source_id === "L-RENUMBER-20260719"),
     g1Sources.find((source) => source.source_id === "L-RENUMBER-20260720"),
   ]),
@@ -1736,17 +3602,37 @@ const a9Catalog = {
   nodes: a9Nodes,
 };
 
+const a11Catalog = {
+  ...commonMetadata,
+  catalog_id: "jd-variable-tree-a11-control-version1-draft",
+  catalog_version: "version1-a11-control-2026-07-21",
+  scope: ["A11"],
+  scenario_scope: [
+    "cross_scenario",
+    "highway_inspection",
+    "campus_inspection",
+    "white_wall_narrow_gap",
+  ],
+  sources: uniqueSources([
+    ...oldA8.sources.map(migrateSource),
+    ...a11Sources,
+    g1Sources.find((source) => source.source_id === "L-RENUMBER-20260719"),
+    g1Sources.find((source) => source.source_id === "L-RENUMBER-20260720"),
+  ]),
+  nodes: a11Nodes,
+};
+
 const allNodes = [
   ...g1Nodes,
   ...migratedInspectionNodes,
   ...a9Nodes,
-  ...migratedA11Nodes,
+  ...a11Nodes,
 ];
 const allSources = uniqueSources([
   ...g1Catalog.sources,
   ...migratedCatalog.sources,
   ...a9Catalog.sources,
-  ...a11Sources,
+  ...a11Catalog.sources,
 ]);
 const countBy = (key) =>
   allNodes.reduce((counts, node) => {
@@ -1758,11 +3644,12 @@ const countBy = (key) =>
 const combinedCatalog = {
   ...commonMetadata,
   catalog_id: "jd-variable-tree-review-version1",
-  catalog_version: "review-version1-ability-id-v3-a1-a11-2026-07-20",
+  catalog_version: "review-version1-ability-id-v3-a1-a11-2026-07-21",
   included_catalogs: [
     g1Catalog.catalog_id,
     migratedCatalog.catalog_id,
     a9Catalog.catalog_id,
+    a11Catalog.catalog_id,
   ],
   scope: [
     "A1",
@@ -1797,6 +3684,7 @@ const combinedCatalog = {
 writeJson("jd_variable_tree_g1_a1_a5_draft.json", g1Catalog);
 writeJson("jd_variable_tree_g2_g3_renumbered_draft.json", migratedCatalog);
 writeJson("jd_variable_tree_a9_resource_management_draft.json", a9Catalog);
+writeJson("jd_variable_tree_a11_control_draft.json", a11Catalog);
 writeJson("jd_variable_tree_version1.json", combinedCatalog);
 
 console.log(
@@ -1804,6 +3692,7 @@ console.log(
     "knowledge/jd_variable_tree_g1_a1_a5_draft.json",
     "knowledge/jd_variable_tree_g2_g3_renumbered_draft.json",
     "knowledge/jd_variable_tree_a9_resource_management_draft.json",
+    "knowledge/jd_variable_tree_a11_control_draft.json",
     "knowledge/jd_variable_tree_version1.json",
     `${allNodes.length} nodes`,
   ].join("\n"),

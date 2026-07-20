@@ -1,7 +1,7 @@
 {
   "schema": "uav-benchmark-jd-variable-tree",
   "schema_version": "0.3.0",
-  "generated_at": "2026-07-20",
+  "generated_at": "2026-07-21",
   "generated_by": "scripts/generate_jd_variable_tree_version1.mjs",
   "ability_id_scheme": "ability-id-v3-2026-07-20",
   "numbering_scheme": "ability-id-v3-2026-07-20",

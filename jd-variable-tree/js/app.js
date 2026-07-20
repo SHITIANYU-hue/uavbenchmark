@@ -252,7 +252,14 @@
 
   function nodeClass(node) {
     if (node.node_kind === "capability_root") return "root";
+    if (
+      node.node_id === "PROPOSED-jd-11.4" ||
+      node.node_id === "PROPOSED-jd-11.5"
+    ) {
+      return "canonical";
+    }
     if (node.review_status === "reviewed") return "canonical";
+    if (node.node_kind === "example_profile") return "example";
     if (node.node_kind === "group") return "group";
     return "variable";
   }
@@ -434,6 +441,43 @@
       .join("")}</div>`;
   }
 
+  function renderExampleBindings(node) {
+    if (!Array.isArray(node.example_bindings) || !node.example_bindings.length) {
+      return "";
+    }
+    const bindingItems = node.example_bindings
+      .map((binding) => {
+        const values = Array.isArray(binding.value_domain)
+          ? binding.value_domain
+              .map((item) =>
+                item && typeof item === "object"
+                  ? item.label_zh || item.value
+                  : item,
+              )
+              .filter((item) => item !== null && item !== undefined)
+          : [];
+        return `<article class="example-binding-item">
+          <strong>${escapeHtml(binding.path || binding.source_node_id)}</strong>
+          <code>${escapeHtml(binding.source_node_id)}</code>
+          <small>${escapeHtml(
+            [binding.value_type, binding.unit].filter(Boolean).join(" · "),
+          )}</small>
+          ${
+            values.length
+              ? `<div class="tag-list">${values
+                  .map((value) => `<span class="tag">${escapeHtml(value)}</span>`)
+                  .join("")}</div>`
+              : '<span class="tag">无固定候选值</span>'
+          }
+        </article>`;
+      })
+      .join("");
+    return `<section class="detail-section">
+      <h3>白墙窄缝 v0.6 示例赋值</h3>
+      <div class="example-binding-list">${bindingItems}</div>
+    </section>`;
+  }
+
   function renderConditions(node) {
     const conditions = {
       activation_condition: node.activation_condition,
@@ -582,6 +626,8 @@
         <h3>候选取值 / 取值范围</h3>
         ${renderDomain(node)}
       </section>
+
+      ${renderExampleBindings(node)}
 
       ${renderConditions(node)}
 

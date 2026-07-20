@@ -126,6 +126,24 @@ for (const node of nodes) {
       }
     }
   }
+  for (const binding of Array.isArray(node.example_bindings)
+    ? node.example_bindings
+    : []) {
+    if (!binding.source_node_id || !binding.path) {
+      errors.push(`${node.node_id} 的示例赋值缺少 source_node_id 或 path。`);
+    }
+    for (const item of Array.isArray(binding.value_domain)
+      ? binding.value_domain
+      : []) {
+      for (const sourceId of item?.source_refs || []) {
+        if (!sourceIds.has(sourceId)) {
+          errors.push(
+            `${node.node_id} 的示例赋值引用了不存在的来源：${sourceId}`,
+          );
+        }
+      }
+    }
+  }
   for (const cell of node.used_by_axl || []) {
     if (!axlIds.has(cell)) {
       errors.push(`${node.node_id} 引用了不存在的 A×L：${cell}`);
@@ -187,6 +205,73 @@ for (const node of nodes) {
     !expectedCanonicalSet.has(node.node_id)
   ) {
     errors.push(`${node.node_id} 被标成 canonical，但不在当前 66 槽位字典。`);
+  }
+}
+
+for (const canonicalId of ["jd-11.1", "jd-11.2", "jd-11.3"]) {
+  const childCount = nodes.filter(
+    (node) => node.parent_id === canonicalId,
+  ).length;
+  if (childCount === 0) {
+    errors.push(`${canonicalId} 尚未展开任何子维度。`);
+  }
+}
+
+const a11Envelope = nodeById.get("PROPOSED-jd-11.4");
+if (
+  !a11Envelope ||
+  a11Envelope.canonical_slot !== null ||
+  !nodes.some((node) => node.parent_id === "PROPOSED-jd-11.4")
+) {
+  errors.push(
+    "PROPOSED-jd-11.4 必须作为非 canonical 的控制执行条件与动态包络存在，并包含子维度。",
+  );
+}
+
+const a11Profile = nodeById.get("PROPOSED-jd-11.5");
+if (!a11Profile || a11Profile.canonical_slot !== null) {
+  errors.push("PROPOSED-jd-11.5 必须存在，且不得标为 canonical 槽位。");
+}
+if (
+  !nodes.some(
+    (node) =>
+      node.parent_id === "PROPOSED-jd-11.5.7" &&
+      (node.related_jd || []).includes("PROPOSED-jd-11.4"),
+  )
+) {
+  errors.push(
+    "PROPOSED-jd-11.5 必须通过控制要求绑定引用 PROPOSED-jd-11.4。",
+  );
+}
+
+const whiteWallExamples = nodes.filter(
+  (node) => node.node_id === "EXAMPLE-jd-11.5-white-wall-v0.6",
+);
+if (whiteWallExamples.length !== 1) {
+  errors.push(
+    `白墙窄缝 v0.6 示例应恰好出现一次，实际为 ${whiteWallExamples.length}。`,
+  );
+} else {
+  const example = whiteWallExamples[0];
+  if (
+    example.parent_id !== "PROPOSED-jd-11.5" ||
+    example.node_kind !== "example_profile" ||
+    !Array.isArray(example.example_bindings) ||
+    example.example_bindings.length === 0
+  ) {
+    errors.push(
+      "白墙窄缝 v0.6 必须作为 PROPOSED-jd-11.5 下的非 canonical 示例，并保留原始赋值。",
+    );
+  }
+}
+
+for (const obsoletePrefix of [
+  "PROPOSED-jd-11.platform-",
+  "PROPOSED-jd-11.control-interface",
+  "PROPOSED-jd-11.control-constraint",
+]) {
+  if (nodes.some((node) => node.node_id.startsWith(obsoletePrefix))) {
+    errors.push(`A11 主树仍含旧草案同级节点：${obsoletePrefix}`);
   }
 }
 
