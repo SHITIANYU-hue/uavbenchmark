@@ -1,12 +1,28 @@
 {
   "schema": "uav-benchmark-jd-variable-tree",
   "schema_version": "0.3.0",
-  "generated_at": "2026-07-19",
+  "generated_at": "2026-07-20",
   "generated_by": "scripts/generate_jd_variable_tree_version1.mjs",
-  "ability_id_scheme": "ability-id-v2-2026-07-19",
-  "numbering_scheme": "ability-id-v2-2026-07-19",
+  "ability_id_scheme": "ability-id-v3-2026-07-20",
+  "numbering_scheme": "ability-id-v3-2026-07-20",
   "numbering_authority_status": "current_authoritative_machine_baseline",
   "ability_renumbering": [
+    {
+      "from": "A1",
+      "to": "A1"
+    },
+    {
+      "from": "A2",
+      "to": "A2"
+    },
+    {
+      "from": "A3",
+      "to": "A3"
+    },
+    {
+      "from": "A4",
+      "to": "A4"
+    },
     {
       "from": "A14",
       "to": "A5"
@@ -17,47 +33,47 @@
     },
     {
       "from": "A6a",
-      "to": "A7a"
+      "to": "A7"
     },
     {
       "from": "A6b",
-      "to": "A7b"
-    },
-    {
-      "from": "A11",
       "to": "A8"
     },
     {
-      "from": "A7",
+      "from": "A11",
       "to": "A9"
     },
     {
-      "from": "A8",
+      "from": "A7",
       "to": "A10"
     },
     {
+      "from": "A8",
+      "to": "A11"
+    },
+    {
       "from": "A9a",
-      "to": "A11a"
-    },
-    {
-      "from": "A9b",
-      "to": "A11b"
-    },
-    {
-      "from": "A10",
       "to": "A12"
     },
     {
-      "from": "A13",
+      "from": "A9b",
       "to": "A13"
     },
     {
-      "from": "A12",
+      "from": "A10",
       "to": "A14"
     },
     {
-      "from": "A15",
+      "from": "A13",
       "to": "A15"
+    },
+    {
+      "from": "A12",
+      "to": "A16"
+    },
+    {
+      "from": "A15",
+      "to": "A17"
     }
   ],
   "l0_policy": {
@@ -159,7 +175,7 @@
     "notes"
   ],
   "authority_rules": [
-    "本 version1 使用 ability-id-v2-2026-07-19 权威机读编号；旧树仅作为迁移输入和审计证据。",
+    "本 version1 使用 ability-id-v3-2026-07-20 权威机读编号；旧树仅作为迁移输入和审计证据。",
     "canonical 语义继承旧受审资料；迁移后的 ID 通过 legacy_aliases 可追溯。",
     "A×L 仅作责任引用，L1–L4 不进入 JD 取值域；L0 是 episode 覆盖哨兵。",
     "缺少依据的阈值、时限、业务判据、安全规则和 simulator 接口保持 TBD。",
@@ -169,7 +185,7 @@
   "decision_log": [
     {
       "decision_id": "ability-renumbering-20260719",
-      "status": "authoritative_machine_baseline",
+      "status": "historical_superseded",
       "decision": [
         {
           "from": "A14",
@@ -212,7 +228,41 @@
           "to": "A12"
         },
         {
-          "from": "A13",
+          "from": "A12",
+          "to": "A14"
+        }
+      ]
+    },
+    {
+      "decision_id": "ability-renumbering-20260720",
+      "status": "current_authoritative_machine_baseline",
+      "decision": [
+        {
+          "from": "A7a",
+          "to": "A7"
+        },
+        {
+          "from": "A7b",
+          "to": "A8"
+        },
+        {
+          "from": "A8",
+          "to": "A9"
+        },
+        {
+          "from": "A9",
+          "to": "A10"
+        },
+        {
+          "from": "A10",
+          "to": "A11"
+        },
+        {
+          "from": "A11a",
+          "to": "A12"
+        },
+        {
+          "from": "A11b",
           "to": "A13"
         },
         {
@@ -220,8 +270,16 @@
           "to": "A14"
         },
         {
-          "from": "A15",
+          "from": "A13",
           "to": "A15"
+        },
+        {
+          "from": "A14",
+          "to": "A16"
+        },
+        {
+          "from": "A15",
+          "to": "A17"
         }
       ]
     },
@@ -242,7 +300,7 @@
     }
   ],
   "catalog_id": "jd-variable-tree-g1-a1-a5-version1-draft",
-  "catalog_version": "version1-g1-a1-a5-2026-07-19",
+  "catalog_version": "version1-g1-a1-a5-2026-07-20",
   "scope": [
     "A1",
     "A2",
@@ -334,6 +392,15 @@
       "locator": "A14→A5 及后续 A 域顺延映射",
       "url": null,
       "evidence_grade": "confirmed_by_user_for_version1_draft"
+    },
+    {
+      "source_id": "L-RENUMBER-20260720",
+      "title": "A 域连续编号确认（2026-07-20）",
+      "issuer": "UAV Benchmark team",
+      "source_type": "team_decision",
+      "locator": "ability-id-v2 的 A7a/A7b/A11a/A11b 连续化，并将后续能力顺延为 A1–A17",
+      "url": null,
+      "evidence_grade": "confirmed_by_user"
     }
   ],
   "nodes": [
@@ -344,7 +411,7 @@
       "canonical_slot": null,
       "owner_a": "MULTI",
       "name": "JD 业务变量树 version1",
-      "definition": "按 ability-id-v2-2026-07-19 汇总 A1–A10 当前已建设分支，包含新 A8 健康 / 能源 / 资源管理；页面按单项能力切换，不显示组别标题。",
+      "definition": "按 ability-id-v3-2026-07-20 汇总 A1–A11 当前已建设分支，包含 A9 健康 / 能源 / 资源管理；页面按单项能力切换，不显示组别标题。",
       "node_kind": "catalog_root",
       "value_type": "none",
       "value_domain": null,
@@ -376,7 +443,7 @@
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
-        "L-RENUMBER-20260719"
+        "L-RENUMBER-20260720"
       ],
       "evidence_status": "team_material_only",
       "derivation_status": "given",
@@ -2929,7 +2996,7 @@
       "canonical_slot": "jd-2.2",
       "owner_a": "A2",
       "name": "运行时状态边界",
-      "definition": "仅声明静态平台档案；电量、健康和实时资源状态归新 A8，不在本槽位复制。",
+      "definition": "仅声明静态平台档案；电量、健康和实时资源状态归 A9，不在本槽位复制。",
       "node_kind": "variable",
       "value_type": "reference",
       "value_domain": [
@@ -2945,8 +3012,8 @@
           ]
         },
         {
-          "value": "runtime_state_reference_A8",
-          "label_zh": "运行时状态引用新 A8",
+          "value": "runtime_state_reference_A9",
+          "label_zh": "运行时状态引用 A9",
           "source_refs": [],
           "status": "inferred_candidate",
           "applicable_scenarios": [
@@ -5319,7 +5386,7 @@
       "canonical_slot": "jd-4.3",
       "owner_a": "A4",
       "name": "重编排触发",
-      "definition": "JD 特定的任务级重规划触发条件，区别于 A9 的轨迹级重规划判据。",
+      "definition": "JD 特定的任务级重规划触发条件，区别于 A10 的轨迹级重规划判据。",
       "node_kind": "group",
       "value_type": "none",
       "value_domain": null,
@@ -5819,7 +5886,7 @@
       "canonical_slot": "jd-4.4",
       "owner_a": "A4",
       "name": "任务级重规划策略",
-      "definition": "JD 典型的多步重规划与恢复模式，区别于 A14 的反射级兜底动作。",
+      "definition": "JD 典型的多步重规划与恢复模式，区别于 A16 的反射级兜底动作。",
       "node_kind": "group",
       "value_type": "none",
       "value_domain": null,

@@ -132,20 +132,52 @@ class AgentContractChecks(unittest.TestCase):
     def test_reviewed_catalog_is_full_and_contains_no_case_templates(self) -> None:
         catalog = load_reference_catalog()
         self.assertEqual(catalog["scope"], "full_17A_L1_L4_66JD_catalog")
-        self.assertEqual(catalog["ability_id_scheme"], "ability-id-v2-2026-07-19")
+        self.assertEqual(catalog["ability_id_scheme"], "ability-id-v3-2026-07-20")
         self.assertEqual(
             [item["a_id"] for item in catalog["abilities"]],
             [
                 "A1", "A2", "A3", "A4", "A5",
-                "A6", "A7a", "A7b", "A8",
-                "A9", "A10",
-                "A11a", "A11b",
+                "A6", "A7", "A8", "A9",
+                "A10", "A11",
                 "A12", "A13",
                 "A14", "A15",
+                "A16", "A17",
             ],
         )
         self.assertEqual(catalog["counts"]["gal_cells"], 68)
         self.assertEqual(catalog["counts"]["jd_fields"], 66)
+        self.assertEqual(
+            catalog["ability_id_migration_v2_to_v3"],
+            {
+                "A7a": "A7",
+                "A7b": "A8",
+                "A8": "A9",
+                "A9": "A10",
+                "A10": "A11",
+                "A11a": "A12",
+                "A11b": "A13",
+                "A12": "A14",
+                "A13": "A15",
+                "A14": "A16",
+                "A15": "A17",
+            },
+        )
+        self.assertEqual(
+            catalog["jd_local_prefix_migration_v2_to_v3"],
+            {
+                "jd-7a": "jd-7",
+                "jd-7b": "jd-8",
+                "jd-8": "jd-9",
+                "jd-9": "jd-10",
+                "jd-10": "jd-11",
+                "jd-11a": "jd-12",
+                "jd-11b": "jd-13",
+                "jd-12": "jd-14",
+                "jd-13": "jd-15",
+                "jd-14": "jd-16",
+                "jd-15": "jd-17",
+            },
+        )
         self.assertEqual(len({item["cell"] for item in catalog["gal_cells"]}), 68)
         self.assertEqual(len({item["id"] for item in catalog["jd_fields"]}), 66)
         serialized = str(catalog)
@@ -185,12 +217,12 @@ class AgentContractChecks(unittest.TestCase):
             self.assertTrue(expected_new_jd[level].issubset(current_jd))
             previous_jd = current_jd
 
-    def test_legacy_jd_8_control_semantics_migrate_to_jd_10(self) -> None:
+    def test_legacy_jd_8_control_semantics_migrate_to_jd_11(self) -> None:
         catalog = load_reference_catalog()
         names = {item["id"]: item["name"] for item in catalog["jd_fields"]}
-        self.assertEqual(names["jd-10.1"], "控制质量先验")
-        self.assertEqual(names["jd-10.2"], "控制工作机制")
-        self.assertEqual(names["jd-10.3"], "控制处置策略适用集")
+        self.assertEqual(names["jd-11.1"], "控制质量先验")
+        self.assertEqual(names["jd-11.2"], "控制工作机制")
+        self.assertEqual(names["jd-11.3"], "控制处置策略适用集")
 
     def test_fixed_scenario_precedes_human_task_and_has_no_level(self) -> None:
         registry = load_scenario_registry()
@@ -397,13 +429,13 @@ class AgentContractChecks(unittest.TestCase):
         summary = [
             {"cell": "A4×L2", "required_jd_ids": ["jd-4.1", "jd-4.2", "jd-4.3", "jd-4.4", "jd-4.5"]},
             {"cell": "A6×L2", "required_jd_ids": ["jd-6.1", "jd-6.2", "jd-6.3", "jd-6.4"]},
-            {"cell": "A13×L2", "required_jd_ids": ["jd-13.1", "jd-13.2", "jd-13.3", "jd-13.4", "jd-13.5"]},
+            {"cell": "A15×L2", "required_jd_ids": ["jd-15.1", "jd-15.2", "jd-15.3", "jd-15.4", "jd-15.5"]},
         ]
         chunks = _chunk_coverage_for_extraction(summary, ["jd-0.2", "jd-0.7"], max_slots_per_chunk=10)
         self.assertGreater(len(chunks), 1)
         # every cell appears exactly once across all chunks
         flat = [entry["cell"] for chunk in chunks for entry in chunk]
-        self.assertEqual(sorted(flat), ["A13×L2", "A4×L2", "A6×L2"])
+        self.assertEqual(sorted(flat), ["A15×L2", "A4×L2", "A6×L2"])
 
     def test_chunking_single_cell_is_one_chunk(self) -> None:
         summary = [{"cell": "A6×L2", "required_jd_ids": ["jd-6.1", "jd-6.2"]}]
@@ -413,7 +445,7 @@ class AgentContractChecks(unittest.TestCase):
     def test_preferred_coverage_chunking_splits_and_preserves(self) -> None:
         pref = [
             {"cell": f"{ability}×L2"}
-            for ability in ("A1", "A2", "A3", "A4", "A5", "A6", "A7a", "A7b")
+            for ability in ("A1", "A2", "A3", "A4", "A5", "A6", "A7", "A8")
         ]
         chunks = _chunk_preferred_coverage(pref, max_cells_per_chunk=6)
         self.assertEqual(len(chunks), 2)
@@ -451,8 +483,8 @@ class AgentContractChecks(unittest.TestCase):
 
     def test_classify_coverage_batches_large_selection(self) -> None:
         calls: list[str] = []
-        cells1 = ["A1×L2", "A2×L2", "A3×L2", "A4×L2", "A6×L2", "A7a×L2"]
-        cells2 = ["A9×L2", "A11a×L2"]
+        cells1 = ["A1×L2", "A2×L2", "A3×L2", "A4×L2", "A6×L2", "A7×L2"]
+        cells2 = ["A10×L2", "A12×L2"]
 
         def make(cells: list[str]) -> CoverageResult:
             return CoverageResult(

@@ -9,7 +9,7 @@ const rootDir = path.resolve(scriptDir, "..");
 const outputPath = path.join(
   rootDir,
   "knowledge",
-  "jd_variable_tree_a8_v0_6_draft.json",
+  "jd_variable_tree_legacy_white_wall_v0_6.json",
 );
 
 const SCENE = ["white_wall_narrow_gap"];
@@ -137,7 +137,7 @@ addNode({
   configuration_side: "shared",
   related_global_jd: ["jd-0.2", "jd-0.3"],
   notes:
-    "未在此处处理需求草案 v0.6 与现有 66 槽位字典中 jd-8.1/8.2/8.3 的含义冲突；A8 分支不代表完成正式编号迁移。",
+    "未在此处处理需求草案 v0.6 与现有 66 槽位字典中 jd-8.1/jd-8.2/jd-8.3 的含义冲突；A8 分支不代表完成正式编号迁移。",
 });
 
 variable(
@@ -523,15 +523,15 @@ for (const node of nodes) {
 }
 
 const catalog = {
-  catalog_id: "jd-variable-tree-a8-v0-6-draft",
+  catalog_id: "jd-variable-tree-legacy-white-wall-v0-6",
   schema: "uav-benchmark-jd-variable-tree",
   schema_version: "0.2.1",
   catalog_version: "a8-demand-draft-v0.6-preserved-2026-07-19",
   generated_at: "2026-07-19",
-  generated_by: "scripts/generate_jd_variable_tree_a8_v0_6_draft.mjs",
+  generated_by: "scripts/generate_jd_variable_tree_legacy_white_wall_v0_6.mjs",
   scenario_scope: SCENE,
   preservation_rule:
-    "A8 节点结构、名称与候选取值按《需求草案-v0.6.md》展示，不在此目录中解决正式编号冲突。",
+    "A8 是《需求草案-v0.6.md》的旧编号；本文件仅作为迁移源保留，不代表当前 canonical 能力编号。",
   sources: [
     {
       source_id: SOURCE_ID,

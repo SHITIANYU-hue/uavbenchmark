@@ -78,7 +78,7 @@ VALID: case2_oilfield_corridor_template (4 coverage cells)
 
 ```yaml
 coverage:
-  - ability: A8
+  - ability: A9
     level: L4
     role: primary
     responsibilities:
@@ -90,7 +90,7 @@ coverage:
 
 runtime_dependencies:
   - dependency_id: external_low_level_flight_control
-    ability: A10
+    ability: A11
     provider: executor
     responsibilities:
       - 提供低层速度、姿态和着陆控制
@@ -106,7 +106,7 @@ variables:
       status: proposed
 ```
 
-这段表达的是：A8×L4 正式评分，A10 只是外部运行依赖；Config Agent 可以在三个候选资源分支中遍历或采样。
+这段表达的是：A9×L4 正式评分，A11 只是外部运行依赖；Config Agent 可以在三个候选资源分支中遍历或采样。
 
 ## 4. 从 Markdown 到 YAML
 

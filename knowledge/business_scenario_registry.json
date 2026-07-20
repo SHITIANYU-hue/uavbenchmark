@@ -1,7 +1,7 @@
 {
   "schema": "uav-benchmark-business-scenario-registry",
   "schema_version": "0.1.0",
-  "registry_version": "inspection-scenarios-2026-07-15",
+  "registry_version": "inspection-scenarios-ability-id-v3-2026-07-20",
   "source": "用户于 2026-07-15 提供的巡检作业类需求清单",
   "default_scenario_id": "highway_inspection",
   "scenarios": [
@@ -40,10 +40,10 @@
         {"slot_id": "jd-4.4", "name": "任务级重规划策略", "binding_mode": "fixed_domain", "value_or_domain": "应急航线和多架次调度策略域；具体规则 TBD"},
         {"slot_id": "jd-6.1", "name": "业务对象类目", "binding_mode": "fixed_domain", "value_or_domain": "道路事件、病害、车辆和取证对象；正式类目表 TBD"},
         {"slot_id": "jd-6.3", "name": "感知模态集", "binding_mode": "fixed_domain", "value_or_domain": "可见光、车牌识别、热成像或其他已确认检测模态"},
-        {"slot_id": "jd-9.1", "name": "航路拓扑", "binding_mode": "task_derived", "value_or_domain": "高速路段、起终点、巡检航段和应急航线；具体拓扑 TBD"},
-        {"slot_id": "jd-11a.1", "name": "载荷动作目录", "binding_mode": "fixed_domain", "value_or_domain": "拍照、喊话、灯光警示及其他已授权载荷动作"},
-        {"slot_id": "jd-11b.1", "name": "成果格式", "binding_mode": "fixed_domain", "value_or_domain": "按路段/时间归档、巡查报告和统计报表；具体格式 TBD"},
-        {"slot_id": "jd-15.2", "name": "证据格式规格", "binding_mode": "fixed_domain", "value_or_domain": "检测告警、图像或热成像证据和处置记录；字段 TBD"}
+        {"slot_id": "jd-10.1", "name": "航路拓扑", "binding_mode": "task_derived", "value_or_domain": "高速路段、起终点、巡检航段和应急航线；具体拓扑 TBD"},
+        {"slot_id": "jd-12.1", "name": "载荷动作目录", "binding_mode": "fixed_domain", "value_or_domain": "拍照、喊话、灯光警示及其他已授权载荷动作"},
+        {"slot_id": "jd-13.1", "name": "成果格式", "binding_mode": "fixed_domain", "value_or_domain": "按路段/时间归档、巡查报告和统计报表；具体格式 TBD"},
+        {"slot_id": "jd-17.2", "name": "证据格式规格", "binding_mode": "fixed_domain", "value_or_domain": "检测告警、图像或热成像证据和处置记录；字段 TBD"}
       ],
       "runtime_dependencies": [
         {"dependency_id": "route_and_dispatch_service", "provider": "external_system", "responsibility": "提供受审路网、计划和多架次调度执行能力；接口 TBD"},
@@ -84,11 +84,11 @@
         {"slot_id": "jd-4.3", "name": "重编排触发", "binding_mode": "fixed_domain", "value_or_domain": "突发事件或工作流事件；正式枚举 TBD"},
         {"slot_id": "jd-6.1", "name": "业务对象类目", "binding_mode": "fixed_domain", "value_or_domain": "管道、设备、病害、缺陷和处置对象；正式类目表 TBD"},
         {"slot_id": "jd-6.3", "name": "感知模态集", "binding_mode": "fixed_domain", "value_or_domain": "可见光、热成像或其他已确认检测模态"},
-        {"slot_id": "jd-9.1", "name": "航路拓扑", "binding_mode": "task_derived", "value_or_domain": "管道/设备巡检航段、起终点和应急航线；具体拓扑 TBD"},
-        {"slot_id": "jd-11a.1", "name": "载荷动作目录", "binding_mode": "fixed_domain", "value_or_domain": "拍照、喊话、灯光警示及其他已授权动作"},
-        {"slot_id": "jd-11b.1", "name": "成果格式", "binding_mode": "fixed_domain", "value_or_domain": "按路段/时间归档、巡查报告和统计报表；具体格式 TBD"},
-        {"slot_id": "jd-8.1", "name": "资源消耗包络", "binding_mode": "task_derived", "value_or_domain": "超长管道和设备巡检的续航、载荷与资源预算；具体数值 TBD"},
-        {"slot_id": "jd-15.2", "name": "证据格式规格", "binding_mode": "fixed_domain", "value_or_domain": "检测告警、图像/热成像证据和处置记录；字段 TBD"}
+        {"slot_id": "jd-10.1", "name": "航路拓扑", "binding_mode": "task_derived", "value_or_domain": "管道/设备巡检航段、起终点和应急航线；具体拓扑 TBD"},
+        {"slot_id": "jd-12.1", "name": "载荷动作目录", "binding_mode": "fixed_domain", "value_or_domain": "拍照、喊话、灯光警示及其他已授权动作"},
+        {"slot_id": "jd-13.1", "name": "成果格式", "binding_mode": "fixed_domain", "value_or_domain": "按路段/时间归档、巡查报告和统计报表；具体格式 TBD"},
+        {"slot_id": "jd-9.1", "name": "资源消耗包络", "binding_mode": "task_derived", "value_or_domain": "超长管道和设备巡检的续航、载荷与资源预算；具体数值 TBD"},
+        {"slot_id": "jd-17.2", "name": "证据格式规格", "binding_mode": "fixed_domain", "value_or_domain": "检测告警、图像/热成像证据和处置记录；字段 TBD"}
       ],
       "runtime_dependencies": [
         {"dependency_id": "route_and_dispatch_service", "provider": "external_system", "responsibility": "提供管道/设备路线、计划和多架次调度执行能力；接口 TBD"},
@@ -129,12 +129,12 @@
         {"slot_id": "jd-4.1", "name": "任务结构", "binding_mode": "task_derived", "value_or_domain": "由人工选择的建模、巡检和分析模块组合形成"},
         {"slot_id": "jd-6.1", "name": "业务对象类目", "binding_mode": "fixed_domain", "value_or_domain": "桥梁结构件、病害、缺陷和干扰对象；正式目录 TBD"},
         {"slot_id": "jd-6.2", "name": "典型场景特征", "binding_mode": "fixed_domain", "value_or_domain": "桥面、桥底和结构件层级，遮挡与近距离观察条件；具体特征 TBD"},
-        {"slot_id": "jd-7b.1", "name": "相对几何先验", "binding_mode": "fixed_domain", "value_or_domain": "桥梁三维模型、结构件几何或检查面先验；模型精度 TBD"},
-        {"slot_id": "jd-7b.2", "name": "相对几何感知机制", "binding_mode": "task_derived", "value_or_domain": "三维重建与结构件巡检所需机制和模态 TBD"},
-        {"slot_id": "jd-9.1", "name": "航路拓扑", "binding_mode": "fixed_domain", "value_or_domain": "桥面、桥底和结构件层级航路；具体起终点和航点 TBD"},
-        {"slot_id": "jd-11b.1", "name": "成果格式", "binding_mode": "fixed_domain", "value_or_domain": "巡检数据、报告、统计报表、三维模型和数字孪生标记；具体格式 TBD"},
-        {"slot_id": "jd-11b.2", "name": "覆盖完整度判据", "binding_mode": "task_derived", "value_or_domain": "桥面、桥底、结构件或模型覆盖要求；具体判据 TBD"},
-        {"slot_id": "jd-15.2", "name": "证据格式规格", "binding_mode": "fixed_domain", "value_or_domain": "检测告警、病害证据、模型位置和人工标记记录；字段 TBD"}
+        {"slot_id": "jd-8.1", "name": "相对几何先验", "binding_mode": "fixed_domain", "value_or_domain": "桥梁三维模型、结构件几何或检查面先验；模型精度 TBD"},
+        {"slot_id": "jd-8.2", "name": "相对几何感知机制", "binding_mode": "task_derived", "value_or_domain": "三维重建与结构件巡检所需机制和模态 TBD"},
+        {"slot_id": "jd-10.1", "name": "航路拓扑", "binding_mode": "fixed_domain", "value_or_domain": "桥面、桥底和结构件层级航路；具体起终点和航点 TBD"},
+        {"slot_id": "jd-13.1", "name": "成果格式", "binding_mode": "fixed_domain", "value_or_domain": "巡检数据、报告、统计报表、三维模型和数字孪生标记；具体格式 TBD"},
+        {"slot_id": "jd-13.2", "name": "覆盖完整度判据", "binding_mode": "task_derived", "value_or_domain": "桥面、桥底、结构件或模型覆盖要求；具体判据 TBD"},
+        {"slot_id": "jd-17.2", "name": "证据格式规格", "binding_mode": "fixed_domain", "value_or_domain": "检测告警、病害证据、模型位置和人工标记记录；字段 TBD"}
       ],
       "runtime_dependencies": [
         {"dependency_id": "bridge_model_and_twin_service", "provider": "external_system", "responsibility": "存储桥梁模型、数字孪生结果和人工标记；接口 TBD"},
@@ -175,11 +175,11 @@
         {"slot_id": "jd-4.1", "name": "任务结构", "binding_mode": "task_derived", "value_or_domain": "由人工选择的空中巡检、地面巡检和协同阶段形成"},
         {"slot_id": "jd-4.2", "name": "人机交接点", "binding_mode": "task_derived", "value_or_domain": "远程处置、人工确认或协同任务交接点；具体规则 TBD"},
         {"slot_id": "jd-6.1", "name": "业务对象类目", "binding_mode": "task_derived", "value_or_domain": "园区事件、车辆、人员、设施或其他巡检对象；正式目录 TBD"},
-        {"slot_id": "jd-7b.1", "name": "相对几何先验", "binding_mode": "fixed_domain", "value_or_domain": "园区三维模型、建筑与设施几何；模型精度 TBD"},
-        {"slot_id": "jd-9.1", "name": "航路拓扑", "binding_mode": "task_derived", "value_or_domain": "园区巡检航路、起终点和允许区域；具体拓扑 TBD"},
-        {"slot_id": "jd-11a.1", "name": "载荷动作目录", "binding_mode": "fixed_domain", "value_or_domain": "拍照、喊话驱离、车牌识别及其他已授权动作"},
-        {"slot_id": "jd-11b.1", "name": "成果格式", "binding_mode": "fixed_domain", "value_or_domain": "巡检数据、报告、统计报表和三维可视化结果；具体格式 TBD"},
-        {"slot_id": "jd-15.2", "name": "证据格式规格", "binding_mode": "fixed_domain", "value_or_domain": "检测告警、图像证据、处置和协同记录；字段 TBD"}
+        {"slot_id": "jd-8.1", "name": "相对几何先验", "binding_mode": "fixed_domain", "value_or_domain": "园区三维模型、建筑与设施几何；模型精度 TBD"},
+        {"slot_id": "jd-10.1", "name": "航路拓扑", "binding_mode": "task_derived", "value_or_domain": "园区巡检航路、起终点和允许区域；具体拓扑 TBD"},
+        {"slot_id": "jd-12.1", "name": "载荷动作目录", "binding_mode": "fixed_domain", "value_or_domain": "拍照、喊话驱离、车牌识别及其他已授权动作"},
+        {"slot_id": "jd-13.1", "name": "成果格式", "binding_mode": "fixed_domain", "value_or_domain": "巡检数据、报告、统计报表和三维可视化结果；具体格式 TBD"},
+        {"slot_id": "jd-17.2", "name": "证据格式规格", "binding_mode": "fixed_domain", "value_or_domain": "检测告警、图像证据、处置和协同记录；字段 TBD"}
       ],
       "runtime_dependencies": [
         {"dependency_id": "campus_model_service", "provider": "external_system", "responsibility": "提供园区三维模型和可视化存储；接口 TBD"},
@@ -218,8 +218,8 @@
         {"slot_id": "jd-4.3", "name": "重编排触发", "binding_mode": "fixed_domain", "value_or_domain": "突发事件可触发应急调度；具体事件枚举 TBD"},
         {"slot_id": "jd-6.1", "name": "业务对象类目", "binding_mode": "task_derived", "value_or_domain": "随河道、矿山、海事或其他子场景确定；当前为 TBD"},
         {"slot_id": "jd-6.3", "name": "感知模态集", "binding_mode": "task_derived", "value_or_domain": "随具体检测任务确定；当前为 TBD"},
-        {"slot_id": "jd-9.1", "name": "航路拓扑", "binding_mode": "task_derived", "value_or_domain": "随具体子场景确定；当前为 TBD"},
-        {"slot_id": "jd-15.2", "name": "证据格式规格", "binding_mode": "task_derived", "value_or_domain": "随检测对象和告警要求确定；当前为 TBD"}
+        {"slot_id": "jd-10.1", "name": "航路拓扑", "binding_mode": "task_derived", "value_or_domain": "随具体子场景确定；当前为 TBD"},
+        {"slot_id": "jd-17.2", "name": "证据格式规格", "binding_mode": "task_derived", "value_or_domain": "随检测对象和告警要求确定；当前为 TBD"}
       ],
       "runtime_dependencies": [
         {"dependency_id": "route_and_dispatch_service", "provider": "external_system", "responsibility": "提供具体子场景的路线、计划和多架次调度执行能力；接口 TBD"},

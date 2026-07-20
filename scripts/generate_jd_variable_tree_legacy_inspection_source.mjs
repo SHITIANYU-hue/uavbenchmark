@@ -9,18 +9,18 @@ const rootDir = path.resolve(scriptDir, "..");
 const outputJson = path.join(
   rootDir,
   "knowledge",
-  "jd_variable_tree_a5_a6a_a6b_a7.json",
+  "jd_variable_tree_legacy_inspection_source.json",
 );
 const outputYaml = path.join(
   rootDir,
   "knowledge",
-  "jd_variable_tree_a5_a6a_a6b_a7.yaml",
+  "jd_variable_tree_legacy_inspection_source.yaml",
 );
 const outputMarkdown = path.join(
   rootDir,
   "docs",
   "jd-variable-tree",
-  "JD业务变量树_A5_A6a_A6b_A7_高速与园区巡检_机读版.md",
+  "JD业务变量树_legacy_inspection_source_机读版.md",
 );
 
 const BOTH = ["highway_inspection", "campus_inspection"];
@@ -32,19 +32,19 @@ const sources = [
     source_id: "L-JD66",
     title: "JD业务变量字典_66槽位_机读版.md",
     issuer: "UAV Benchmark team",
-    source_type: "reviewed_team_dictionary",
-    locator: "A5, A6a, A6b, A7 canonical slots",
+    source_type: "legacy_team_dictionary_projection",
+    locator: "旧 v1 编号 A5、A6a、A6b、A7 的 canonical slots",
     url: null,
-    evidence_grade: "authoritative_local",
+    evidence_grade: "historical_local",
   },
   {
     source_id: "L-AXL68",
     title: "AxL责任定义字典_17A_68单元_机读版.md",
     issuer: "UAV Benchmark team",
-    source_type: "reviewed_team_dictionary",
-    locator: "A5, A6a, A6b, A7 L1-L4",
+    source_type: "legacy_team_dictionary_projection",
+    locator: "旧 v1 编号 A5、A6a、A6b、A7 的 L1–L4",
     url: null,
-    evidence_grade: "authoritative_local",
+    evidence_grade: "historical_local",
   },
   {
     source_id: "L-SCENARIO",
@@ -3123,7 +3123,7 @@ function buildMarkdown(catalog) {
 
   return `# JD 业务变量树：A5 / A6a / A6b / A7
 
-## 高速巡检与园区巡检机读版
+## 高速巡检与园区巡检旧编号迁移源
 
 | 元数据 | 值 |
 |---|---|
@@ -3131,13 +3131,13 @@ function buildMarkdown(catalog) {
 | schema_version | \`${catalog.schema_version}\` |
 | catalog_version | \`${catalog.catalog_version}\` |
 | 生成日期 | \`${catalog.generated_at}\` |
-| 替代范围 | 原 66 槽位机读版中 A5、A6a、A6b、A7 的扁平展示层 |
+| 数据身份 | 旧 v1 编号 A5、A6a、A6b、A7 的迁移输入，不是当前 canonical 目录 |
 | 保留基线 | 14 个现有 canonical slots 不重编号 |
 | 新节点状态 | 全部以 \`PROPOSED\` 编号，等待人工评审 |
 | 场景 | \`highway_inspection\`、\`campus_inspection\` |
 | 主要业务主线 | 车辆停止/停放事件；道路病害为高速可选扩展 |
 
-> 本文件与 \`knowledge/jd_variable_tree_a5_a6a_a6b_a7.json\` 由同一生成脚本产生。旧 \`knowledge/jd_dictionary.json\` 继续保存 66 个 canonical slots；新的树状 Catalog 是其 A5/A6a/A6b/A7 细化层，不破坏其他 A。
+> 本文件与 \`knowledge/jd_variable_tree_legacy_inspection_source.json\` 由同一生成脚本产生。这里保留旧编号只为迁移和审计；当前能力编号由 \`knowledge/jd_dictionary.json\` 与完整 version1 树决定。
 
 ## 一、关键边界
 
@@ -3180,9 +3180,9 @@ ${nodeRows}
 
 ## 六、机器文件
 
-- \`knowledge/jd_variable_tree_a5_a6a_a6b_a7.json\`
-- \`knowledge/jd_variable_tree_a5_a6a_a6b_a7.yaml\`
-- 生成器：\`scripts/generate_jd_variable_tree_a5_a6a_a6b_a7.mjs\`
+- \`knowledge/jd_variable_tree_legacy_inspection_source.json\`
+- \`knowledge/jd_variable_tree_legacy_inspection_source.yaml\`
+- 生成器：\`scripts/generate_jd_variable_tree_legacy_inspection_source.mjs\`
 
 ## 七、当前待团队确认
 
@@ -3200,13 +3200,13 @@ ${nodeRows}
 assertCatalog();
 
 const catalog = {
-  catalog_id: "jd-variable-tree-a5-a6a-a6b-a7-inspection",
+  catalog_id: "jd-variable-tree-legacy-inspection-source",
   schema: "uav-benchmark-jd-variable-tree",
   schema_version: "0.2.1",
-  catalog_version: "a5-a6a-a6b-a7-highway-campus-2026-07-19-r2",
+  catalog_version: "legacy-v1-inspection-source-2026-07-19-r2",
   generated_at: "2026-07-19",
-  generated_by: "scripts/generate_jd_variable_tree_a5_a6a_a6b_a7.mjs",
-  supersedes_for_scope: {
+  generated_by: "scripts/generate_jd_variable_tree_legacy_inspection_source.mjs",
+  migration_input_for_scope: {
     source: "knowledge/jd_dictionary.json",
     scope: ["A5", "A6a", "A6b", "A7"],
     mode: "hierarchical_extension",

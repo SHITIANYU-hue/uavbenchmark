@@ -29,7 +29,7 @@ coverage:
 # 外部定位、飞控、执行器等写这里，不要写成 L0 coverage。
 runtime_dependencies:
   - dependency_id: <dependency_id>
-    ability: A10               # 可省略
+    ability: A11               # 可省略
     provider: executor        # fixture / harness / executor / external_system
     responsibilities:
       - <外部系统承担的责任>

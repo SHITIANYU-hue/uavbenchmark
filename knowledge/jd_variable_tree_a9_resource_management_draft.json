@@ -1,12 +1,28 @@
 {
   "schema": "uav-benchmark-jd-variable-tree",
   "schema_version": "0.3.0",
-  "generated_at": "2026-07-19",
+  "generated_at": "2026-07-20",
   "generated_by": "scripts/generate_jd_variable_tree_version1.mjs",
-  "ability_id_scheme": "ability-id-v2-2026-07-19",
-  "numbering_scheme": "ability-id-v2-2026-07-19",
+  "ability_id_scheme": "ability-id-v3-2026-07-20",
+  "numbering_scheme": "ability-id-v3-2026-07-20",
   "numbering_authority_status": "current_authoritative_machine_baseline",
   "ability_renumbering": [
+    {
+      "from": "A1",
+      "to": "A1"
+    },
+    {
+      "from": "A2",
+      "to": "A2"
+    },
+    {
+      "from": "A3",
+      "to": "A3"
+    },
+    {
+      "from": "A4",
+      "to": "A4"
+    },
     {
       "from": "A14",
       "to": "A5"
@@ -17,47 +33,47 @@
     },
     {
       "from": "A6a",
-      "to": "A7a"
+      "to": "A7"
     },
     {
       "from": "A6b",
-      "to": "A7b"
-    },
-    {
-      "from": "A11",
       "to": "A8"
     },
     {
-      "from": "A7",
+      "from": "A11",
       "to": "A9"
     },
     {
-      "from": "A8",
+      "from": "A7",
       "to": "A10"
     },
     {
+      "from": "A8",
+      "to": "A11"
+    },
+    {
       "from": "A9a",
-      "to": "A11a"
-    },
-    {
-      "from": "A9b",
-      "to": "A11b"
-    },
-    {
-      "from": "A10",
       "to": "A12"
     },
     {
-      "from": "A13",
+      "from": "A9b",
       "to": "A13"
     },
     {
-      "from": "A12",
+      "from": "A10",
       "to": "A14"
     },
     {
-      "from": "A15",
+      "from": "A13",
       "to": "A15"
+    },
+    {
+      "from": "A12",
+      "to": "A16"
+    },
+    {
+      "from": "A15",
+      "to": "A17"
     }
   ],
   "l0_policy": {
@@ -159,7 +175,7 @@
     "notes"
   ],
   "authority_rules": [
-    "本 version1 使用 ability-id-v2-2026-07-19 权威机读编号；旧树仅作为迁移输入和审计证据。",
+    "本 version1 使用 ability-id-v3-2026-07-20 权威机读编号；旧树仅作为迁移输入和审计证据。",
     "canonical 语义继承旧受审资料；迁移后的 ID 通过 legacy_aliases 可追溯。",
     "A×L 仅作责任引用，L1–L4 不进入 JD 取值域；L0 是 episode 覆盖哨兵。",
     "缺少依据的阈值、时限、业务判据、安全规则和 simulator 接口保持 TBD。",
@@ -169,7 +185,7 @@
   "decision_log": [
     {
       "decision_id": "ability-renumbering-20260719",
-      "status": "authoritative_machine_baseline",
+      "status": "historical_superseded",
       "decision": [
         {
           "from": "A14",
@@ -212,7 +228,41 @@
           "to": "A12"
         },
         {
-          "from": "A13",
+          "from": "A12",
+          "to": "A14"
+        }
+      ]
+    },
+    {
+      "decision_id": "ability-renumbering-20260720",
+      "status": "current_authoritative_machine_baseline",
+      "decision": [
+        {
+          "from": "A7a",
+          "to": "A7"
+        },
+        {
+          "from": "A7b",
+          "to": "A8"
+        },
+        {
+          "from": "A8",
+          "to": "A9"
+        },
+        {
+          "from": "A9",
+          "to": "A10"
+        },
+        {
+          "from": "A10",
+          "to": "A11"
+        },
+        {
+          "from": "A11a",
+          "to": "A12"
+        },
+        {
+          "from": "A11b",
           "to": "A13"
         },
         {
@@ -220,8 +270,16 @@
           "to": "A14"
         },
         {
-          "from": "A15",
+          "from": "A13",
           "to": "A15"
+        },
+        {
+          "from": "A14",
+          "to": "A16"
+        },
+        {
+          "from": "A15",
+          "to": "A17"
         }
       ]
     },
@@ -241,30 +299,30 @@
       "decision": "derivation_status 与 evidence_status 分列。"
     }
   ],
-  "catalog_id": "jd-variable-tree-a8-resource-management-version1-draft",
-  "catalog_version": "version1-a8-resource-management-2026-07-19",
+  "catalog_id": "jd-variable-tree-a9-resource-management-version1-draft",
+  "catalog_version": "version1-a9-resource-management-2026-07-20",
   "scope": [
-    "A8"
+    "A9"
   ],
   "scenario_scope": [
     "cross_scenario"
   ],
   "sources": [
     {
-      "source_id": "L-A8-JD66-V2",
+      "source_id": "L-A9-JD66-V3",
       "title": "JD业务变量字典_66槽位_机读版.md",
       "issuer": "UAV Benchmark team",
       "source_type": "reviewed_team_dictionary",
-      "locator": "ability-id-v2-2026-07-19：A8 与 jd-8.1、jd-8.2、jd-8.3 的 canonical 定义",
+      "locator": "ability-id-v3-2026-07-20：A9 与 jd-9.1、jd-9.2、jd-9.3 的 canonical 定义",
       "url": null,
       "evidence_grade": "authoritative_local"
     },
     {
-      "source_id": "L-A8-AXL68-V2",
+      "source_id": "L-A9-AXL68-V3",
       "title": "AxL责任定义字典_17A_68单元_机读版.md",
       "issuer": "UAV Benchmark team",
       "source_type": "reviewed_team_dictionary",
-      "locator": "ability-id-v2-2026-07-19：A8×L1–L4 的资源监测、预测、确认、处置与验证责任",
+      "locator": "ability-id-v3-2026-07-20：A9×L1–L4 的资源监测、预测、确认、处置与验证责任",
       "url": null,
       "evidence_grade": "authoritative_local"
     }
@@ -272,10 +330,10 @@
   "nodes": [
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-tree-A8",
+      "node_id": "PROPOSED-jd-tree-A9",
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
-      "owner_a": "A8",
+      "owner_a": "A9",
       "name": "健康 / 能源 / 资源管理",
       "definition": "描述健康、能源与资源管理相关的 JD 业务变量；A×L 仅作为责任引用，不作为变量取值。",
       "node_kind": "capability_root",
@@ -315,8 +373,8 @@
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
-        "L-A8-JD66-V2",
-        "L-A8-AXL68-V2"
+        "L-A9-JD66-V3",
+        "L-A9-AXL68-V3"
       ],
       "evidence_status": "authoritative_existing",
       "derivation_status": "given",
@@ -326,10 +384,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "jd-8.1",
-      "parent_id": "PROPOSED-jd-tree-A8",
-      "canonical_slot": "jd-8.1",
-      "owner_a": "A8",
+      "node_id": "jd-9.1",
+      "parent_id": "PROPOSED-jd-tree-A9",
+      "canonical_slot": "jd-9.1",
+      "owner_a": "A9",
       "name": "资源消耗包络",
       "definition": "JD 中电量、算力、带宽、载重等资源的典型消耗曲线。",
       "node_kind": "group",
@@ -364,30 +422,30 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A8×L1",
-        "A8×L2"
+        "A9×L1",
+        "A9×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
-        "L-A8-JD66-V2",
-        "L-A8-AXL68-V2"
+        "L-A9-JD66-V3",
+        "L-A9-AXL68-V3"
       ],
       "evidence_status": "authoritative_existing",
       "derivation_status": "given",
       "review_status": "reviewed",
       "legacy_aliases": [],
-      "notes": "canonical 名称与定义取自 ability-id-v2 权威机读源；下级子维度为保守归纳，尚待审阅。"
+      "notes": "canonical 名称与定义取自 ability-id-v3 权威机读源；下级子维度为保守归纳，尚待审阅。"
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-8.1.1",
-      "parent_id": "jd-8.1",
-      "canonical_slot": "jd-8.1",
-      "owner_a": "A8",
+      "node_id": "PROPOSED-jd-9.1.1",
+      "parent_id": "jd-9.1",
+      "canonical_slot": "jd-9.1",
+      "owner_a": "A9",
       "name": "资源对象类型",
-      "definition": "资源消耗包络所覆盖的资源对象；类别来自受审 JD 与 A8×L1–L3 责任原文。",
+      "definition": "资源消耗包络所覆盖的资源对象；类别来自受审 JD 与 A9×L1–L3 责任原文。",
       "node_kind": "variable",
       "value_type": "multi_enum",
       "value_domain": [
@@ -395,7 +453,7 @@
           "value": "battery_energy",
           "label_zh": "电量 / 能源",
           "source_refs": [
-            "L-A8-JD66-V2"
+            "L-A9-JD66-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -406,7 +464,7 @@
           "value": "compute",
           "label_zh": "算力",
           "source_refs": [
-            "L-A8-JD66-V2"
+            "L-A9-JD66-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -417,8 +475,8 @@
           "value": "communication_link_or_bandwidth",
           "label_zh": "链路 / 带宽",
           "source_refs": [
-            "L-A8-JD66-V2",
-            "L-A8-AXL68-V2"
+            "L-A9-JD66-V3",
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -429,8 +487,8 @@
           "value": "payload_capacity",
           "label_zh": "载重 / 载荷资源",
           "source_refs": [
-            "L-A8-JD66-V2",
-            "L-A8-AXL68-V2"
+            "L-A9-JD66-V3",
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -441,7 +499,7 @@
           "value": "sensor_state",
           "label_zh": "传感器资源状态",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -452,7 +510,7 @@
           "value": "actuator_state",
           "label_zh": "执行器资源状态",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -463,7 +521,7 @@
           "value": "thermal_headroom",
           "label_zh": "热余量 / 热风险",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -500,15 +558,15 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A8×L1",
-        "A8×L2"
+        "A9×L1",
+        "A9×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
-        "L-A8-JD66-V2",
-        "L-A8-AXL68-V2"
+        "L-A9-JD66-V3",
+        "L-A9-AXL68-V3"
       ],
       "evidence_status": "source_supported",
       "derivation_status": "derived",
@@ -518,10 +576,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-8.1.2",
-      "parent_id": "jd-8.1",
-      "canonical_slot": "jd-8.1",
-      "owner_a": "A8",
+      "node_id": "PROPOSED-jd-9.1.2",
+      "parent_id": "jd-9.1",
+      "canonical_slot": "jd-9.1",
+      "owner_a": "A9",
       "name": "消耗包络表示",
       "definition": "资源典型消耗曲线及其当前、趋势和预测表达；具体采样频率、窗口与模型保持 TBD。",
       "node_kind": "variable",
@@ -531,7 +589,7 @@
           "value": "current_state",
           "label_zh": "当前资源状态",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -542,7 +600,7 @@
           "value": "consumption_curve",
           "label_zh": "典型消耗曲线",
           "source_refs": [
-            "L-A8-JD66-V2"
+            "L-A9-JD66-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -553,7 +611,7 @@
           "value": "consumption_trend",
           "label_zh": "消耗趋势",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -564,7 +622,7 @@
           "value": "projected_remaining_resource",
           "label_zh": "预测资源余量",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -610,15 +668,15 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A8×L1",
-        "A8×L2"
+        "A9×L1",
+        "A9×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
-        "L-A8-AXL68-V2",
-        "L-A8-JD66-V2"
+        "L-A9-AXL68-V3",
+        "L-A9-JD66-V3"
       ],
       "evidence_status": "source_supported",
       "derivation_status": "derived",
@@ -628,12 +686,12 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-8.1.3",
-      "parent_id": "jd-8.1",
-      "canonical_slot": "jd-8.1",
-      "owner_a": "A8",
+      "node_id": "PROPOSED-jd-9.1.3",
+      "parent_id": "jd-9.1",
+      "canonical_slot": "jd-9.1",
+      "owner_a": "A9",
       "name": "任务阶段与时间参照",
-      "definition": "资源包络对应的任务阶段、当前执行片段或任务时长参照；复用 jd-0.1，不在 A8 内重复定义任务时长。",
+      "definition": "资源包络对应的任务阶段、当前执行片段或任务时长参照；复用 jd-0.1，不在 A9 内重复定义任务时长。",
       "node_kind": "variable",
       "value_type": "reference",
       "value_domain": [
@@ -641,7 +699,7 @@
           "value": "current_execution_segment",
           "label_zh": "当前执行片段",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -652,7 +710,7 @@
           "value": "mission_duration_reference",
           "label_zh": "引用 jd-0.1 任务时长",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -689,15 +747,15 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A8×L1",
-        "A8×L2"
+        "A9×L1",
+        "A9×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
-        "L-A8-AXL68-V2",
-        "L-A8-JD66-V2"
+        "L-A9-AXL68-V3",
+        "L-A9-JD66-V3"
       ],
       "evidence_status": "source_supported",
       "derivation_status": "derived",
@@ -707,10 +765,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-8.1.4",
-      "parent_id": "jd-8.1",
-      "canonical_slot": "jd-8.1",
-      "owner_a": "A8",
+      "node_id": "PROPOSED-jd-9.1.4",
+      "parent_id": "jd-9.1",
+      "canonical_slot": "jd-9.1",
+      "owner_a": "A9",
       "name": "资源状态质量",
       "definition": "资源状态或预测值的可用性、来源和可信状态；正式质量码与阈值尚无依据。",
       "node_kind": "variable",
@@ -720,7 +778,7 @@
           "value": "observed",
           "label_zh": "直接观测",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -731,7 +789,7 @@
           "value": "estimated",
           "label_zh": "估计 / 预测",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -742,7 +800,7 @@
           "value": "unavailable",
           "label_zh": "不可用",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -788,15 +846,15 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A8×L1",
-        "A8×L2"
+        "A9×L1",
+        "A9×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
-        "L-A8-AXL68-V2",
-        "L-A8-JD66-V2"
+        "L-A9-AXL68-V3",
+        "L-A9-JD66-V3"
       ],
       "evidence_status": "source_supported",
       "derivation_status": "derived",
@@ -806,10 +864,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-8.1.5",
-      "parent_id": "jd-8.1",
-      "canonical_slot": "jd-8.1",
-      "owner_a": "A8",
+      "node_id": "PROPOSED-jd-9.1.5",
+      "parent_id": "jd-9.1",
+      "canonical_slot": "jd-9.1",
+      "owner_a": "A9",
       "name": "执行片段资源充足性",
       "definition": "按资源消耗包络判断资源是否足以完成当前执行片段；判定阈值不得从常识推断。",
       "node_kind": "variable",
@@ -819,7 +877,7 @@
           "value": "sufficient",
           "label_zh": "足以完成当前执行片段",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -830,7 +888,7 @@
           "value": "insufficient",
           "label_zh": "不足以完成当前执行片段",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -841,7 +899,7 @@
           "value": "unknown",
           "label_zh": "无法判定",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -887,15 +945,15 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A8×L1",
-        "A8×L2"
+        "A9×L1",
+        "A9×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
-        "L-A8-AXL68-V2",
-        "L-A8-JD66-V2"
+        "L-A9-AXL68-V3",
+        "L-A9-JD66-V3"
       ],
       "evidence_status": "source_supported",
       "derivation_status": "derived",
@@ -905,10 +963,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "jd-8.2",
-      "parent_id": "PROPOSED-jd-tree-A8",
-      "canonical_slot": "jd-8.2",
-      "owner_a": "A8",
+      "node_id": "jd-9.2",
+      "parent_id": "PROPOSED-jd-tree-A9",
+      "canonical_slot": "jd-9.2",
+      "owner_a": "A9",
       "name": "资源预警 / 预留策略",
       "definition": "JD 的“何时预警+必保返航余量”组合，包括健康预警阈值与返航预留比。",
       "node_kind": "group",
@@ -943,30 +1001,30 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A8×L2",
-        "A8×L3"
+        "A9×L2",
+        "A9×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
-        "L-A8-JD66-V2",
-        "L-A8-AXL68-V2"
+        "L-A9-JD66-V3",
+        "L-A9-AXL68-V3"
       ],
       "evidence_status": "authoritative_existing",
       "derivation_status": "given",
       "review_status": "reviewed",
       "legacy_aliases": [],
-      "notes": "canonical 名称与定义取自 ability-id-v2 权威机读源；下级子维度为保守归纳，尚待审阅。"
+      "notes": "canonical 名称与定义取自 ability-id-v3 权威机读源；下级子维度为保守归纳，尚待审阅。"
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-8.2.1",
-      "parent_id": "jd-8.2",
-      "canonical_slot": "jd-8.2",
-      "owner_a": "A8",
+      "node_id": "PROPOSED-jd-9.2.1",
+      "parent_id": "jd-9.2",
+      "canonical_slot": "jd-9.2",
+      "owner_a": "A9",
       "name": "预警风险类别",
-      "definition": "需要由资源预警策略识别的风险类别；类别直接来自 A8×L3 责任原文。",
+      "definition": "需要由资源预警策略识别的风险类别；类别直接来自 A9×L3 责任原文。",
       "node_kind": "variable",
       "value_type": "multi_enum",
       "value_domain": [
@@ -974,7 +1032,7 @@
           "value": "low_energy_trend",
           "label_zh": "低电趋势",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -985,7 +1043,7 @@
           "value": "link_degradation",
           "label_zh": "链路退化",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -996,7 +1054,7 @@
           "value": "payload_anomaly",
           "label_zh": "载荷异常",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -1007,7 +1065,7 @@
           "value": "compute_congestion",
           "label_zh": "算力拥塞",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -1018,7 +1076,7 @@
           "value": "thermal_risk",
           "label_zh": "热风险",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -1055,15 +1113,15 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A8×L2",
-        "A8×L3"
+        "A9×L2",
+        "A9×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
-        "L-A8-AXL68-V2",
-        "L-A8-JD66-V2"
+        "L-A9-AXL68-V3",
+        "L-A9-JD66-V3"
       ],
       "evidence_status": "source_supported",
       "derivation_status": "derived",
@@ -1073,10 +1131,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-8.2.2",
-      "parent_id": "jd-8.2",
-      "canonical_slot": "jd-8.2",
-      "owner_a": "A8",
+      "node_id": "PROPOSED-jd-9.2.2",
+      "parent_id": "jd-9.2",
+      "canonical_slot": "jd-9.2",
+      "owner_a": "A9",
       "name": "预警触发表达",
       "definition": "描述何时预警的条件、趋势窗口和持续性；具体阈值、窗口与业务判据保持 TBD。",
       "node_kind": "variable",
@@ -1121,15 +1179,15 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A8×L2",
-        "A8×L3"
+        "A9×L2",
+        "A9×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
-        "L-A8-JD66-V2",
-        "L-A8-AXL68-V2"
+        "L-A9-JD66-V3",
+        "L-A9-AXL68-V3"
       ],
       "evidence_status": "TBD",
       "derivation_status": "TBD",
@@ -1139,10 +1197,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-8.2.3",
-      "parent_id": "jd-8.2",
-      "canonical_slot": "jd-8.2",
-      "owner_a": "A8",
+      "node_id": "PROPOSED-jd-9.2.3",
+      "parent_id": "jd-9.2",
+      "canonical_slot": "jd-9.2",
+      "owner_a": "A9",
       "name": "返航预留对象",
       "definition": "预留策略必须保护的返航资源或返航窗口；具体资源分解仍待确认。",
       "node_kind": "variable",
@@ -1152,7 +1210,7 @@
           "value": "return_reserve",
           "label_zh": "返航资源余量",
           "source_refs": [
-            "L-A8-JD66-V2"
+            "L-A9-JD66-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -1163,8 +1221,8 @@
           "value": "return_window",
           "label_zh": "返航窗口",
           "source_refs": [
-            "L-A8-JD66-V2",
-            "L-A8-AXL68-V2"
+            "L-A9-JD66-V3",
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -1210,15 +1268,15 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A8×L2",
-        "A8×L3"
+        "A9×L2",
+        "A9×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
-        "L-A8-JD66-V2",
-        "L-A8-AXL68-V2"
+        "L-A9-JD66-V3",
+        "L-A9-AXL68-V3"
       ],
       "evidence_status": "source_supported",
       "derivation_status": "derived",
@@ -1228,10 +1286,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-8.2.4",
-      "parent_id": "jd-8.2",
-      "canonical_slot": "jd-8.2",
-      "owner_a": "A8",
+      "node_id": "PROPOSED-jd-9.2.4",
+      "parent_id": "jd-9.2",
+      "canonical_slot": "jd-9.2",
+      "owner_a": "A9",
       "name": "预留量表示",
       "definition": "返航预留比、预留量及其单位和参照；资料未给出的数值范围全部保持 TBD。",
       "node_kind": "variable",
@@ -1241,7 +1299,7 @@
           "value": "return_reserve_ratio",
           "label_zh": "返航预留比",
           "source_refs": [
-            "L-A8-JD66-V2"
+            "L-A9-JD66-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -1287,15 +1345,15 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A8×L2",
-        "A8×L3"
+        "A9×L2",
+        "A9×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
-        "L-A8-JD66-V2",
-        "L-A8-AXL68-V2"
+        "L-A9-JD66-V3",
+        "L-A9-AXL68-V3"
       ],
       "evidence_status": "source_supported",
       "derivation_status": "derived",
@@ -1305,10 +1363,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-8.2.5",
-      "parent_id": "jd-8.2",
-      "canonical_slot": "jd-8.2",
-      "owner_a": "A8",
+      "node_id": "PROPOSED-jd-9.2.5",
+      "parent_id": "jd-9.2",
+      "canonical_slot": "jd-9.2",
+      "owner_a": "A9",
       "name": "人工确认与升级",
       "definition": "资源或健康风险何时按 jd-0.5 请求人工确认，以及无响应时如何升级；时限与规则保持 TBD。",
       "node_kind": "variable",
@@ -1318,7 +1376,7 @@
           "value": "request_human_confirmation",
           "label_zh": "请求人工确认",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -1364,15 +1422,15 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A8×L2",
-        "A8×L3"
+        "A9×L2",
+        "A9×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
-        "L-A8-AXL68-V2",
-        "L-A8-JD66-V2"
+        "L-A9-AXL68-V3",
+        "L-A9-JD66-V3"
       ],
       "evidence_status": "source_supported",
       "derivation_status": "derived",
@@ -1382,10 +1440,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "jd-8.3",
-      "parent_id": "PROPOSED-jd-tree-A8",
-      "canonical_slot": "jd-8.3",
-      "owner_a": "A8",
+      "node_id": "jd-9.3",
+      "parent_id": "PROPOSED-jd-tree-A9",
+      "canonical_slot": "jd-9.3",
+      "owner_a": "A9",
       "name": "资源处置策略适用集",
       "definition": "该 JD 下 L4 可用且有效的资源处置策略子集，例如降载、切链路、关闭非关键载荷、降采样率、保留返航窗口、等待冷却或请求支援。",
       "node_kind": "group",
@@ -1420,29 +1478,29 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A8×L4"
+        "A9×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
-        "L-A8-JD66-V2",
-        "L-A8-AXL68-V2"
+        "L-A9-JD66-V3",
+        "L-A9-AXL68-V3"
       ],
       "evidence_status": "authoritative_existing",
       "derivation_status": "given",
       "review_status": "reviewed",
       "legacy_aliases": [],
-      "notes": "canonical 名称与定义取自 ability-id-v2 权威机读源；下级子维度为保守归纳，尚待审阅。"
+      "notes": "canonical 名称与定义取自 ability-id-v3 权威机读源；下级子维度为保守归纳，尚待审阅。"
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-8.3.1",
-      "parent_id": "jd-8.3",
-      "canonical_slot": "jd-8.3",
-      "owner_a": "A8",
+      "node_id": "PROPOSED-jd-9.3.1",
+      "parent_id": "jd-9.3",
+      "canonical_slot": "jd-9.3",
+      "owner_a": "A9",
       "name": "处置启用条件",
-      "definition": "允许从资源处置策略集中选择动作的资源或健康异常类型；阈值引用 jd-8.2，不在本槽位重复。",
+      "definition": "允许从资源处置策略集中选择动作的资源或健康异常类型；阈值引用 jd-9.2，不在本槽位重复。",
       "node_kind": "variable",
       "value_type": "multi_enum",
       "value_domain": [
@@ -1450,7 +1508,7 @@
           "value": "resource_anomaly",
           "label_zh": "资源异常",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -1461,7 +1519,7 @@
           "value": "health_anomaly",
           "label_zh": "健康异常",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -1507,14 +1565,14 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A8×L4"
+        "A9×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
-        "L-A8-AXL68-V2",
-        "L-A8-JD66-V2"
+        "L-A9-AXL68-V3",
+        "L-A9-JD66-V3"
       ],
       "evidence_status": "source_supported",
       "derivation_status": "derived",
@@ -1524,12 +1582,12 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-8.3.2",
-      "parent_id": "jd-8.3",
-      "canonical_slot": "jd-8.3",
-      "owner_a": "A8",
+      "node_id": "PROPOSED-jd-9.3.2",
+      "parent_id": "jd-9.3",
+      "canonical_slot": "jd-9.3",
+      "owner_a": "A9",
       "name": "可用处置动作",
-      "definition": "当前 JD 下 L4 可用且有效的资源处置策略子集；动作来自受审 JD 与 A8×L4 原文。",
+      "definition": "当前 JD 下 L4 可用且有效的资源处置策略子集；动作来自受审 JD 与 A9×L4 原文。",
       "node_kind": "variable",
       "value_type": "multi_enum",
       "value_domain": [
@@ -1537,8 +1595,8 @@
           "value": "shed_load",
           "label_zh": "降载",
           "source_refs": [
-            "L-A8-JD66-V2",
-            "L-A8-AXL68-V2"
+            "L-A9-JD66-V3",
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -1549,8 +1607,8 @@
           "value": "switch_link",
           "label_zh": "切链路",
           "source_refs": [
-            "L-A8-JD66-V2",
-            "L-A8-AXL68-V2"
+            "L-A9-JD66-V3",
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -1561,8 +1619,8 @@
           "value": "disable_noncritical_payload",
           "label_zh": "关闭非关键载荷",
           "source_refs": [
-            "L-A8-JD66-V2",
-            "L-A8-AXL68-V2"
+            "L-A9-JD66-V3",
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -1573,8 +1631,8 @@
           "value": "reduce_sampling_rate",
           "label_zh": "降采样率",
           "source_refs": [
-            "L-A8-JD66-V2",
-            "L-A8-AXL68-V2"
+            "L-A9-JD66-V3",
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -1585,8 +1643,8 @@
           "value": "preserve_return_window",
           "label_zh": "保留返航窗口",
           "source_refs": [
-            "L-A8-JD66-V2",
-            "L-A8-AXL68-V2"
+            "L-A9-JD66-V3",
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -1597,8 +1655,8 @@
           "value": "wait_for_cooling",
           "label_zh": "等待冷却",
           "source_refs": [
-            "L-A8-JD66-V2",
-            "L-A8-AXL68-V2"
+            "L-A9-JD66-V3",
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -1609,8 +1667,8 @@
           "value": "request_support_or_maintenance",
           "label_zh": "请求支援 / 维护",
           "source_refs": [
-            "L-A8-JD66-V2",
-            "L-A8-AXL68-V2"
+            "L-A9-JD66-V3",
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -1647,14 +1705,14 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A8×L4"
+        "A9×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
-        "L-A8-JD66-V2",
-        "L-A8-AXL68-V2"
+        "L-A9-JD66-V3",
+        "L-A9-AXL68-V3"
       ],
       "evidence_status": "source_supported",
       "derivation_status": "derived",
@@ -1664,10 +1722,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-8.3.3",
-      "parent_id": "jd-8.3",
-      "canonical_slot": "jd-8.3",
-      "owner_a": "A8",
+      "node_id": "PROPOSED-jd-9.3.3",
+      "parent_id": "jd-9.3",
+      "canonical_slot": "jd-9.3",
+      "owner_a": "A9",
       "name": "动作参数与执行约束",
       "definition": "处置动作所需的参数、允许范围、执行条件和约束；资料未提供具体数值或接口。",
       "node_kind": "variable",
@@ -1712,14 +1770,14 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A8×L4"
+        "A9×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
-        "L-A8-JD66-V2",
-        "L-A8-AXL68-V2"
+        "L-A9-JD66-V3",
+        "L-A9-AXL68-V3"
       ],
       "evidence_status": "TBD",
       "derivation_status": "TBD",
@@ -1729,10 +1787,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-8.3.4",
-      "parent_id": "jd-8.3",
-      "canonical_slot": "jd-8.3",
-      "owner_a": "A8",
+      "node_id": "PROPOSED-jd-9.3.4",
+      "parent_id": "jd-9.3",
+      "canonical_slot": "jd-9.3",
+      "owner_a": "A9",
       "name": "策略选择与冲突",
       "definition": "多个可用处置动作之间的适用性、优先级、组合与互斥关系；正式规则保持 TBD。",
       "node_kind": "variable",
@@ -1777,14 +1835,14 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A8×L4"
+        "A9×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
-        "L-A8-JD66-V2",
-        "L-A8-AXL68-V2"
+        "L-A9-JD66-V3",
+        "L-A9-AXL68-V3"
       ],
       "evidence_status": "TBD",
       "derivation_status": "TBD",
@@ -1794,10 +1852,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-8.3.5",
-      "parent_id": "jd-8.3",
-      "canonical_slot": "jd-8.3",
-      "owner_a": "A8",
+      "node_id": "PROPOSED-jd-9.3.5",
+      "parent_id": "jd-9.3",
+      "canonical_slot": "jd-9.3",
+      "owner_a": "A9",
       "name": "处置后状态验证",
       "definition": "执行资源处置后对新资源与健康状态进行验证；通过标准和升级规则保持 TBD。",
       "node_kind": "variable",
@@ -1807,7 +1865,7 @@
           "value": "recovered",
           "label_zh": "已恢复",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -1818,7 +1876,7 @@
           "value": "partially_recovered",
           "label_zh": "部分恢复",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -1829,7 +1887,7 @@
           "value": "not_recovered",
           "label_zh": "未恢复",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -1840,7 +1898,7 @@
           "value": "unknown",
           "label_zh": "无法验证",
           "source_refs": [
-            "L-A8-AXL68-V2"
+            "L-A9-AXL68-V3"
           ],
           "status": "source_supported",
           "applicable_scenarios": [
@@ -1886,14 +1944,14 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A8×L4"
+        "A9×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
-        "L-A8-AXL68-V2",
-        "L-A8-JD66-V2"
+        "L-A9-AXL68-V3",
+        "L-A9-JD66-V3"
       ],
       "evidence_status": "source_supported",
       "derivation_status": "derived",

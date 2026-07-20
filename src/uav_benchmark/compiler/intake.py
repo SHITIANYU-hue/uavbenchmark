@@ -13,11 +13,11 @@ from jsonschema import Draft202012Validator
 
 ABILITY_TO_GROUP = {
     "A1": "G1", "A2": "G1", "A3": "G1", "A4": "G1", "A5": "G1",
-    "A6": "G2", "A7a": "G2", "A7b": "G2", "A8": "G2",
-    "A9": "G3", "A10": "G3",
-    "A11a": "G4", "A11b": "G4",
-    "A12": "G5", "A13": "G5",
-    "A14": "G6", "A15": "G6",
+    "A6": "G2", "A7": "G2", "A8": "G2", "A9": "G2",
+    "A10": "G3", "A11": "G3",
+    "A12": "G4", "A13": "G4",
+    "A14": "G5", "A15": "G5",
+    "A16": "G6", "A17": "G6",
 }
 
 EVIDENCE_STATUSES = {"verified", "proposed", "TBD"}

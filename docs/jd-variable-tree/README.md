@@ -7,7 +7,9 @@
 | `../../jd-variable-tree/js/app.js` | 页面数据加载、能力切换、搜索与审阅交互 |
 | `../../jd-variable-tree/css/app.css` | 页面样式 |
 | `../../knowledge/jd_variable_tree_version1.json` | 页面读取的完整机读数据 |
-| `../../knowledge/jd_variable_tree_a8_resource_management_draft.json` | 新 A8 健康、能源与资源管理分支草案 |
+| `../../knowledge/jd_variable_tree_a9_resource_management_draft.json` | A9 健康、能源与资源管理分支草案 |
+| `../../knowledge/jd_variable_tree_legacy_inspection_source.json` | 旧巡检树迁移源；仅用于生成与审计 |
+| `../../knowledge/jd_variable_tree_legacy_white_wall_v0_6.json` | 旧白墙 v0.6 迁移源；仅用于生成与审计 |
 | `../../scripts/generate_jd_variable_tree_version1.mjs` | 汇总和迁移变量树数据 |
 | `../../scripts/validate_jd_variable_tree_version1.mjs` | 结构、编号与引用校验 |
 | `../../scripts/build_jd_variable_tree_standalone.mjs` | 生成可独立打开的单文件 HTML |

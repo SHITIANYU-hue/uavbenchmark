@@ -15,48 +15,58 @@ const writeJson = (name, value) =>
     "utf8",
   );
 
-const oldInspection = readJson("jd_variable_tree_a5_a6a_a6b_a7.json");
-const oldA8 = readJson("jd_variable_tree_a8_v0_6_draft.json");
+const oldInspection = readJson("jd_variable_tree_legacy_inspection_source.json");
+const oldA8 = readJson("jd_variable_tree_legacy_white_wall_v0_6.json");
 const currentJdDictionary = readJson("jd_dictionary.json");
 const currentAxlCatalog = readJson("axl_responsibility_catalog.json");
 const currentJdById = new Map(
   currentJdDictionary.variables.map((variable) => [variable.id, variable]),
 );
 
-const generatedAt = "2026-07-19";
+const generatedAt = "2026-07-20";
 const schemaVersion = "0.3.0";
 const nodeSchemaVersion = "jd-tree/0.3.0";
 const catalogRootId = "PROPOSED-jd-tree-version1";
 
+const renumberingV1ToV2 = Object.entries(
+  currentAxlCatalog.ability_id_migration,
+).map(([from, to]) => ({ from, to }));
+const renumberingV2ToV3 = Object.entries(
+  currentAxlCatalog.ability_id_migration_v2_to_v3,
+).map(([from, to]) => ({ from, to }));
 const renumbering = [
+  ["A1", "A1"],
+  ["A2", "A2"],
+  ["A3", "A3"],
+  ["A4", "A4"],
   ["A14", "A5"],
   ["A5", "A6"],
-  ["A6a", "A7a"],
-  ["A6b", "A7b"],
-  ["A11", "A8"],
-  ["A7", "A9"],
-  ["A8", "A10"],
-  ["A9a", "A11a"],
-  ["A9b", "A11b"],
-  ["A10", "A12"],
-  ["A13", "A13"],
-  ["A12", "A14"],
-  ["A15", "A15"],
+  ["A6a", "A7"],
+  ["A6b", "A8"],
+  ["A11", "A9"],
+  ["A7", "A10"],
+  ["A8", "A11"],
+  ["A9a", "A12"],
+  ["A9b", "A13"],
+  ["A10", "A14"],
+  ["A13", "A15"],
+  ["A12", "A16"],
+  ["A15", "A17"],
 ].map(([from, to]) => ({ from, to }));
 
 const jdPrefixMap = {
   "5": "6",
-  "6a": "7a",
-  "6b": "7b",
-  "7": "9",
-  "8": "10",
+  "6a": "7",
+  "6b": "8",
+  "7": "10",
+  "8": "11",
 };
 const abilityMap = {
   A5: "A6",
-  A6a: "A7a",
-  A6b: "A7b",
-  A7: "A9",
-  A8: "A10",
+  A6a: "A7",
+  A6b: "A8",
+  A7: "A10",
+  A8: "A11",
 };
 
 function migrateString(value) {
@@ -148,7 +158,7 @@ function migrateExistingNode(oldNode) {
   ];
   migrated.notes = [
     migrated.notes,
-    `2026-07-19 会议草案重编号：${oldNode.owner_a} → ${migrated.owner_a}；语义与取值保持原来源口径。`,
+    `2026-07-20 连续编号迁移：${oldNode.owner_a} → ${migrated.owner_a}；语义与取值保持原来源口径。`,
   ]
     .filter(Boolean)
     .join("\n");
@@ -238,49 +248,58 @@ const g1Sources = [
     url: null,
     evidence_grade: "confirmed_by_user_for_version1_draft",
   },
+  {
+    source_id: "L-RENUMBER-20260720",
+    title: "A 域连续编号确认（2026-07-20）",
+    issuer: "UAV Benchmark team",
+    source_type: "team_decision",
+    locator: "ability-id-v2 的 A7a/A7b/A11a/A11b 连续化，并将后续能力顺延为 A1–A17",
+    url: null,
+    evidence_grade: "confirmed_by_user",
+  },
 ];
 
-const a8Sources = [
+const a9Sources = [
   {
-    source_id: "L-A8-JD66-V2",
+    source_id: "L-A9-JD66-V3",
     title: "JD业务变量字典_66槽位_机读版.md",
     issuer: "UAV Benchmark team",
     source_type: "reviewed_team_dictionary",
     locator:
-      "ability-id-v2-2026-07-19：A8 与 jd-8.1、jd-8.2、jd-8.3 的 canonical 定义",
+      "ability-id-v3-2026-07-20：A9 与 jd-9.1、jd-9.2、jd-9.3 的 canonical 定义",
     url: null,
     evidence_grade: "authoritative_local",
   },
   {
-    source_id: "L-A8-AXL68-V2",
+    source_id: "L-A9-AXL68-V3",
     title: "AxL责任定义字典_17A_68单元_机读版.md",
     issuer: "UAV Benchmark team",
     source_type: "reviewed_team_dictionary",
     locator:
-      "ability-id-v2-2026-07-19：A8×L1–L4 的资源监测、预测、确认、处置与验证责任",
+      "ability-id-v3-2026-07-20：A9×L1–L4 的资源监测、预测、确认、处置与验证责任",
     url: null,
     evidence_grade: "authoritative_local",
   },
 ];
 
-const a10Sources = [
+const a11Sources = [
   {
-    source_id: "L-A10-JD66-V2",
+    source_id: "L-A11-JD66-V3",
     title: "JD业务变量字典_66槽位_机读版.md",
     issuer: "UAV Benchmark team",
     source_type: "reviewed_team_dictionary",
     locator:
-      "ability-id-v2-2026-07-19：A10 与 jd-10.1、jd-10.2、jd-10.3 的 canonical 定义",
+      "ability-id-v3-2026-07-20：A11 与 jd-11.1、jd-11.2、jd-11.3 的 canonical 定义",
     url: null,
     evidence_grade: "authoritative_local",
   },
   {
-    source_id: "L-A10-AXL68-V2",
+    source_id: "L-A11-AXL68-V3",
     title: "AxL责任定义字典_17A_68单元_机读版.md",
     issuer: "UAV Benchmark team",
     source_type: "reviewed_team_dictionary",
     locator:
-      "ability-id-v2-2026-07-19：A10×L1–L4 的控制质量、执行、异常确认、处置与验证责任",
+      "ability-id-v3-2026-07-20：A11×L1–L4 的控制质量、执行、异常确认、处置与验证责任",
     url: null,
     evidence_grade: "authoritative_local",
   },
@@ -469,9 +488,9 @@ const slotSpecs = [
         E.tbd("ODD 与耐受阈值 TBD"),
       ]],
       ["任务兼容性", "平台档案与任务类型、载荷组合及场景要求的兼容关系。", "object", []],
-      ["运行时状态边界", "仅声明静态平台档案；电量、健康和实时资源状态归新 A8，不在本槽位复制。", "reference", [
+      ["运行时状态边界", "仅声明静态平台档案；电量、健康和实时资源状态归 A9，不在本槽位复制。", "reference", [
         E.derived("static_profile_only", "仅静态平台档案", ["L-G1-JD66"]),
-        E.proposed("runtime_state_reference_A8", "运行时状态引用新 A8"),
+        E.proposed("runtime_state_reference_A9", "运行时状态引用 A9"),
       ]],
     ],
   },
@@ -616,7 +635,7 @@ const slotSpecs = [
     owner: "A4",
     name: "重编排触发",
     definition:
-      "JD 特定的任务级重规划触发条件，区别于新 A9 的轨迹级重规划判据。",
+      "JD 特定的任务级重规划触发条件，区别于 A10 的轨迹级重规划判据。",
     global: ["jd-0.1", "jd-0.7"],
     used: ["A4×L4"],
     dimensions: [
@@ -843,8 +862,8 @@ function canonicalSourceForOwner(owner) {
   if (["A1", "A2", "A3", "A4", "A5"].includes(owner)) {
     return "L-G1-JD66";
   }
-  if (owner === "A8") return "L-A8-JD66-V2";
-  if (owner === "A10") return "L-A10-JD66-V2";
+  if (owner === "A9") return "L-A9-JD66-V3";
+  if (owner === "A11") return "L-A11-JD66-V3";
   return "L-JD66";
 }
 
@@ -876,13 +895,13 @@ const g1Nodes = [
     owner_a: "MULTI",
     name: "JD 业务变量树 version1",
     definition:
-      "按 ability-id-v2-2026-07-19 汇总 A1–A10 当前已建设分支，包含新 A8 健康 / 能源 / 资源管理；页面按单项能力切换，不显示组别标题。",
+      "按 ability-id-v3-2026-07-20 汇总 A1–A11 当前已建设分支，包含 A9 健康 / 能源 / 资源管理；页面按单项能力切换，不显示组别标题。",
     node_kind: "catalog_root",
     value_type: "none",
     value_domain: null,
     related_global_jd: [],
     used_by_axl: [],
-    source: ["L-RENUMBER-20260719"],
+    source: ["L-RENUMBER-20260720"],
     evidence_status: "team_material_only",
     derivation_status: "given",
     legacy_aliases: ["PROPOSED-jd-tree-inspection"],
@@ -1011,20 +1030,20 @@ for (const node of g1Nodes) {
   normalizeCanonicalNode(node);
 }
 
-const authoritativeA8Ability = currentAxlCatalog.abilities.find(
-  (ability) => ability.a_id === "A8",
+const authoritativeA9Ability = currentAxlCatalog.abilities.find(
+  (ability) => ability.a_id === "A9",
 );
-const authoritativeA8Slots = currentJdDictionary.variables.filter(
-  (variable) => variable.owner_a === "A8" && variable.scope === "local",
+const authoritativeA9Slots = currentJdDictionary.variables.filter(
+  (variable) => variable.owner_a === "A9" && variable.scope === "local",
 );
-const authoritativeA10Ability = currentAxlCatalog.abilities.find(
-  (ability) => ability.a_id === "A10",
+const authoritativeA11Ability = currentAxlCatalog.abilities.find(
+  (ability) => ability.a_id === "A11",
 );
-const authoritativeA10Slots = currentJdDictionary.variables.filter(
-  (variable) => variable.owner_a === "A10" && variable.scope === "local",
+const authoritativeA11Slots = currentJdDictionary.variables.filter(
+  (variable) => variable.owner_a === "A11" && variable.scope === "local",
 );
 
-const a8DomainItem = (
+const a9DomainItem = (
   value,
   label,
   sourceRefs,
@@ -1037,36 +1056,36 @@ const a8DomainItem = (
   applicable_scenarios: ["cross_scenario"],
 });
 
-const a8Specs = {
-  "jd-8.1": {
+const a9Specs = {
+  "jd-9.1": {
     relatedGlobal: ["jd-0.9", "jd-0.1"],
-    usedByAxl: ["A8×L1", "A8×L2"],
+    usedByAxl: ["A9×L1", "A9×L2"],
     dimensions: [
       {
         name: "资源对象类型",
         definition:
-          "资源消耗包络所覆盖的资源对象；类别来自受审 JD 与 A8×L1–L3 责任原文。",
+          "资源消耗包络所覆盖的资源对象；类别来自受审 JD 与 A9×L1–L3 责任原文。",
         valueType: "multi_enum",
         domain: [
-          a8DomainItem("battery_energy", "电量 / 能源", ["L-A8-JD66-V2"]),
-          a8DomainItem("compute", "算力", ["L-A8-JD66-V2"]),
-          a8DomainItem(
+          a9DomainItem("battery_energy", "电量 / 能源", ["L-A9-JD66-V3"]),
+          a9DomainItem("compute", "算力", ["L-A9-JD66-V3"]),
+          a9DomainItem(
             "communication_link_or_bandwidth",
             "链路 / 带宽",
-            ["L-A8-JD66-V2", "L-A8-AXL68-V2"],
+            ["L-A9-JD66-V3", "L-A9-AXL68-V3"],
           ),
-          a8DomainItem("payload_capacity", "载重 / 载荷资源", [
-            "L-A8-JD66-V2",
-            "L-A8-AXL68-V2",
+          a9DomainItem("payload_capacity", "载重 / 载荷资源", [
+            "L-A9-JD66-V3",
+            "L-A9-AXL68-V3",
           ]),
-          a8DomainItem("sensor_state", "传感器资源状态", [
-            "L-A8-AXL68-V2",
+          a9DomainItem("sensor_state", "传感器资源状态", [
+            "L-A9-AXL68-V3",
           ]),
-          a8DomainItem("actuator_state", "执行器资源状态", [
-            "L-A8-AXL68-V2",
+          a9DomainItem("actuator_state", "执行器资源状态", [
+            "L-A9-AXL68-V3",
           ]),
-          a8DomainItem("thermal_headroom", "热余量 / 热风险", [
-            "L-A8-AXL68-V2",
+          a9DomainItem("thermal_headroom", "热余量 / 热风险", [
+            "L-A9-AXL68-V3",
           ]),
         ],
         difficulty: "context_dependent",
@@ -1077,31 +1096,31 @@ const a8Specs = {
           "资源典型消耗曲线及其当前、趋势和预测表达；具体采样频率、窗口与模型保持 TBD。",
         valueType: "multi_enum",
         domain: [
-          a8DomainItem("current_state", "当前资源状态", ["L-A8-AXL68-V2"]),
-          a8DomainItem("consumption_curve", "典型消耗曲线", [
-            "L-A8-JD66-V2",
+          a9DomainItem("current_state", "当前资源状态", ["L-A9-AXL68-V3"]),
+          a9DomainItem("consumption_curve", "典型消耗曲线", [
+            "L-A9-JD66-V3",
           ]),
-          a8DomainItem("consumption_trend", "消耗趋势", [
-            "L-A8-AXL68-V2",
+          a9DomainItem("consumption_trend", "消耗趋势", [
+            "L-A9-AXL68-V3",
           ]),
-          a8DomainItem("projected_remaining_resource", "预测资源余量", [
-            "L-A8-AXL68-V2",
+          a9DomainItem("projected_remaining_resource", "预测资源余量", [
+            "L-A9-AXL68-V3",
           ]),
-          a8DomainItem("TBD", "采样窗口与预测模型 TBD", [], "TBD"),
+          a9DomainItem("TBD", "采样窗口与预测模型 TBD", [], "TBD"),
         ],
         difficulty: "context_dependent",
       },
       {
         name: "任务阶段与时间参照",
         definition:
-          "资源包络对应的任务阶段、当前执行片段或任务时长参照；复用 jd-0.1，不在 A8 内重复定义任务时长。",
+          "资源包络对应的任务阶段、当前执行片段或任务时长参照；复用 jd-0.1，不在 A9 内重复定义任务时长。",
         valueType: "reference",
         domain: [
-          a8DomainItem("current_execution_segment", "当前执行片段", [
-            "L-A8-AXL68-V2",
+          a9DomainItem("current_execution_segment", "当前执行片段", [
+            "L-A9-AXL68-V3",
           ]),
-          a8DomainItem("mission_duration_reference", "引用 jd-0.1 任务时长", [
-            "L-A8-AXL68-V2",
+          a9DomainItem("mission_duration_reference", "引用 jd-0.1 任务时长", [
+            "L-A9-AXL68-V3",
           ]),
         ],
         difficulty: "context_dependent",
@@ -1112,10 +1131,10 @@ const a8Specs = {
           "资源状态或预测值的可用性、来源和可信状态；正式质量码与阈值尚无依据。",
         valueType: "enum",
         domain: [
-          a8DomainItem("observed", "直接观测", ["L-A8-AXL68-V2"]),
-          a8DomainItem("estimated", "估计 / 预测", ["L-A8-AXL68-V2"]),
-          a8DomainItem("unavailable", "不可用", ["L-A8-AXL68-V2"]),
-          a8DomainItem("TBD", "质量码与不确定度表达 TBD", [], "TBD"),
+          a9DomainItem("observed", "直接观测", ["L-A9-AXL68-V3"]),
+          a9DomainItem("estimated", "估计 / 预测", ["L-A9-AXL68-V3"]),
+          a9DomainItem("unavailable", "不可用", ["L-A9-AXL68-V3"]),
+          a9DomainItem("TBD", "质量码与不确定度表达 TBD", [], "TBD"),
         ],
         difficulty: "context_dependent",
       },
@@ -1125,36 +1144,36 @@ const a8Specs = {
           "按资源消耗包络判断资源是否足以完成当前执行片段；判定阈值不得从常识推断。",
         valueType: "enum",
         domain: [
-          a8DomainItem("sufficient", "足以完成当前执行片段", [
-            "L-A8-AXL68-V2",
+          a9DomainItem("sufficient", "足以完成当前执行片段", [
+            "L-A9-AXL68-V3",
           ]),
-          a8DomainItem("insufficient", "不足以完成当前执行片段", [
-            "L-A8-AXL68-V2",
+          a9DomainItem("insufficient", "不足以完成当前执行片段", [
+            "L-A9-AXL68-V3",
           ]),
-          a8DomainItem("unknown", "无法判定", ["L-A8-AXL68-V2"]),
-          a8DomainItem("TBD", "充足性判定阈值 TBD", [], "TBD"),
+          a9DomainItem("unknown", "无法判定", ["L-A9-AXL68-V3"]),
+          a9DomainItem("TBD", "充足性判定阈值 TBD", [], "TBD"),
         ],
         difficulty: "decreasing",
       },
     ],
   },
-  "jd-8.2": {
+  "jd-9.2": {
     relatedGlobal: ["jd-0.1", "jd-0.5"],
-    usedByAxl: ["A8×L2", "A8×L3"],
+    usedByAxl: ["A9×L2", "A9×L3"],
     dimensions: [
       {
         name: "预警风险类别",
         definition:
-          "需要由资源预警策略识别的风险类别；类别直接来自 A8×L3 责任原文。",
+          "需要由资源预警策略识别的风险类别；类别直接来自 A9×L3 责任原文。",
         valueType: "multi_enum",
         domain: [
-          a8DomainItem("low_energy_trend", "低电趋势", ["L-A8-AXL68-V2"]),
-          a8DomainItem("link_degradation", "链路退化", ["L-A8-AXL68-V2"]),
-          a8DomainItem("payload_anomaly", "载荷异常", ["L-A8-AXL68-V2"]),
-          a8DomainItem("compute_congestion", "算力拥塞", [
-            "L-A8-AXL68-V2",
+          a9DomainItem("low_energy_trend", "低电趋势", ["L-A9-AXL68-V3"]),
+          a9DomainItem("link_degradation", "链路退化", ["L-A9-AXL68-V3"]),
+          a9DomainItem("payload_anomaly", "载荷异常", ["L-A9-AXL68-V3"]),
+          a9DomainItem("compute_congestion", "算力拥塞", [
+            "L-A9-AXL68-V3",
           ]),
-          a8DomainItem("thermal_risk", "热风险", ["L-A8-AXL68-V2"]),
+          a9DomainItem("thermal_risk", "热风险", ["L-A9-AXL68-V3"]),
         ],
         difficulty: "context_dependent",
       },
@@ -1164,7 +1183,7 @@ const a8Specs = {
           "描述何时预警的条件、趋势窗口和持续性；具体阈值、窗口与业务判据保持 TBD。",
         valueType: "object",
         domain: [
-          a8DomainItem("TBD", "预警阈值、趋势窗口与持续性 TBD", [], "TBD"),
+          a9DomainItem("TBD", "预警阈值、趋势窗口与持续性 TBD", [], "TBD"),
         ],
         difficulty: "context_dependent",
       },
@@ -1174,14 +1193,14 @@ const a8Specs = {
           "预留策略必须保护的返航资源或返航窗口；具体资源分解仍待确认。",
         valueType: "multi_enum",
         domain: [
-          a8DomainItem("return_reserve", "返航资源余量", [
-            "L-A8-JD66-V2",
+          a9DomainItem("return_reserve", "返航资源余量", [
+            "L-A9-JD66-V3",
           ]),
-          a8DomainItem("return_window", "返航窗口", [
-            "L-A8-JD66-V2",
-            "L-A8-AXL68-V2",
+          a9DomainItem("return_window", "返航窗口", [
+            "L-A9-JD66-V3",
+            "L-A9-AXL68-V3",
           ]),
-          a8DomainItem("TBD", "其他必保资源对象 TBD", [], "TBD"),
+          a9DomainItem("TBD", "其他必保资源对象 TBD", [], "TBD"),
         ],
         difficulty: "context_dependent",
       },
@@ -1191,10 +1210,10 @@ const a8Specs = {
           "返航预留比、预留量及其单位和参照；资料未给出的数值范围全部保持 TBD。",
         valueType: "object",
         domain: [
-          a8DomainItem("return_reserve_ratio", "返航预留比", [
-            "L-A8-JD66-V2",
+          a9DomainItem("return_reserve_ratio", "返航预留比", [
+            "L-A9-JD66-V3",
           ]),
-          a8DomainItem("TBD", "预留比数值、单位与计算规则 TBD", [], "TBD"),
+          a9DomainItem("TBD", "预留比数值、单位与计算规则 TBD", [], "TBD"),
         ],
         difficulty: "context_dependent",
       },
@@ -1204,64 +1223,64 @@ const a8Specs = {
           "资源或健康风险何时按 jd-0.5 请求人工确认，以及无响应时如何升级；时限与规则保持 TBD。",
         valueType: "object",
         domain: [
-          a8DomainItem("request_human_confirmation", "请求人工确认", [
-            "L-A8-AXL68-V2",
+          a9DomainItem("request_human_confirmation", "请求人工确认", [
+            "L-A9-AXL68-V3",
           ]),
-          a8DomainItem("TBD", "确认时限、升级条件与无响应处置 TBD", [], "TBD"),
+          a9DomainItem("TBD", "确认时限、升级条件与无响应处置 TBD", [], "TBD"),
         ],
         difficulty: "context_dependent",
       },
     ],
   },
-  "jd-8.3": {
+  "jd-9.3": {
     relatedGlobal: ["jd-0.5", "jd-0.9"],
-    usedByAxl: ["A8×L4"],
+    usedByAxl: ["A9×L4"],
     dimensions: [
       {
         name: "处置启用条件",
         definition:
-          "允许从资源处置策略集中选择动作的资源或健康异常类型；阈值引用 jd-8.2，不在本槽位重复。",
+          "允许从资源处置策略集中选择动作的资源或健康异常类型；阈值引用 jd-9.2，不在本槽位重复。",
         valueType: "multi_enum",
         domain: [
-          a8DomainItem("resource_anomaly", "资源异常", ["L-A8-AXL68-V2"]),
-          a8DomainItem("health_anomaly", "健康异常", ["L-A8-AXL68-V2"]),
-          a8DomainItem("TBD", "异常判定与启用阈值 TBD", [], "TBD"),
+          a9DomainItem("resource_anomaly", "资源异常", ["L-A9-AXL68-V3"]),
+          a9DomainItem("health_anomaly", "健康异常", ["L-A9-AXL68-V3"]),
+          a9DomainItem("TBD", "异常判定与启用阈值 TBD", [], "TBD"),
         ],
         difficulty: "context_dependent",
       },
       {
         name: "可用处置动作",
         definition:
-          "当前 JD 下 L4 可用且有效的资源处置策略子集；动作来自受审 JD 与 A8×L4 原文。",
+          "当前 JD 下 L4 可用且有效的资源处置策略子集；动作来自受审 JD 与 A9×L4 原文。",
         valueType: "multi_enum",
         domain: [
-          a8DomainItem("shed_load", "降载", [
-            "L-A8-JD66-V2",
-            "L-A8-AXL68-V2",
+          a9DomainItem("shed_load", "降载", [
+            "L-A9-JD66-V3",
+            "L-A9-AXL68-V3",
           ]),
-          a8DomainItem("switch_link", "切链路", [
-            "L-A8-JD66-V2",
-            "L-A8-AXL68-V2",
+          a9DomainItem("switch_link", "切链路", [
+            "L-A9-JD66-V3",
+            "L-A9-AXL68-V3",
           ]),
-          a8DomainItem("disable_noncritical_payload", "关闭非关键载荷", [
-            "L-A8-JD66-V2",
-            "L-A8-AXL68-V2",
+          a9DomainItem("disable_noncritical_payload", "关闭非关键载荷", [
+            "L-A9-JD66-V3",
+            "L-A9-AXL68-V3",
           ]),
-          a8DomainItem("reduce_sampling_rate", "降采样率", [
-            "L-A8-JD66-V2",
-            "L-A8-AXL68-V2",
+          a9DomainItem("reduce_sampling_rate", "降采样率", [
+            "L-A9-JD66-V3",
+            "L-A9-AXL68-V3",
           ]),
-          a8DomainItem("preserve_return_window", "保留返航窗口", [
-            "L-A8-JD66-V2",
-            "L-A8-AXL68-V2",
+          a9DomainItem("preserve_return_window", "保留返航窗口", [
+            "L-A9-JD66-V3",
+            "L-A9-AXL68-V3",
           ]),
-          a8DomainItem("wait_for_cooling", "等待冷却", [
-            "L-A8-JD66-V2",
-            "L-A8-AXL68-V2",
+          a9DomainItem("wait_for_cooling", "等待冷却", [
+            "L-A9-JD66-V3",
+            "L-A9-AXL68-V3",
           ]),
-          a8DomainItem("request_support_or_maintenance", "请求支援 / 维护", [
-            "L-A8-JD66-V2",
-            "L-A8-AXL68-V2",
+          a9DomainItem("request_support_or_maintenance", "请求支援 / 维护", [
+            "L-A9-JD66-V3",
+            "L-A9-AXL68-V3",
           ]),
         ],
         difficulty: "non_monotonic",
@@ -1272,7 +1291,7 @@ const a8Specs = {
           "处置动作所需的参数、允许范围、执行条件和约束；资料未提供具体数值或接口。",
         valueType: "object",
         domain: [
-          a8DomainItem("TBD", "动作参数、范围与执行接口 TBD", [], "TBD"),
+          a9DomainItem("TBD", "动作参数、范围与执行接口 TBD", [], "TBD"),
         ],
         difficulty: "context_dependent",
       },
@@ -1282,7 +1301,7 @@ const a8Specs = {
           "多个可用处置动作之间的适用性、优先级、组合与互斥关系；正式规则保持 TBD。",
         valueType: "object",
         domain: [
-          a8DomainItem("TBD", "优先级、组合与互斥规则 TBD", [], "TBD"),
+          a9DomainItem("TBD", "优先级、组合与互斥规则 TBD", [], "TBD"),
         ],
         difficulty: "non_monotonic",
       },
@@ -1292,13 +1311,13 @@ const a8Specs = {
           "执行资源处置后对新资源与健康状态进行验证；通过标准和升级规则保持 TBD。",
         valueType: "enum",
         domain: [
-          a8DomainItem("recovered", "已恢复", ["L-A8-AXL68-V2"]),
-          a8DomainItem("partially_recovered", "部分恢复", [
-            "L-A8-AXL68-V2",
+          a9DomainItem("recovered", "已恢复", ["L-A9-AXL68-V3"]),
+          a9DomainItem("partially_recovered", "部分恢复", [
+            "L-A9-AXL68-V3",
           ]),
-          a8DomainItem("not_recovered", "未恢复", ["L-A8-AXL68-V2"]),
-          a8DomainItem("unknown", "无法验证", ["L-A8-AXL68-V2"]),
-          a8DomainItem("TBD", "验证标准与升级规则 TBD", [], "TBD"),
+          a9DomainItem("not_recovered", "未恢复", ["L-A9-AXL68-V3"]),
+          a9DomainItem("unknown", "无法验证", ["L-A9-AXL68-V3"]),
+          a9DomainItem("TBD", "验证标准与升级规则 TBD", [], "TBD"),
         ],
         difficulty: "context_dependent",
       },
@@ -1306,16 +1325,16 @@ const a8Specs = {
   },
 };
 
-const a8Root = baseNode({
-  node_id: "PROPOSED-jd-tree-A8",
+const a9Root = baseNode({
+  node_id: "PROPOSED-jd-tree-A9",
   parent_id: catalogRootId,
-  owner_a: "A8",
-  name: authoritativeA8Ability.ability,
+  owner_a: "A9",
+  name: authoritativeA9Ability.ability,
   definition:
     "描述健康、能源与资源管理相关的 JD 业务变量；A×L 仅作为责任引用，不作为变量取值。",
   node_kind: "capability_root",
-  related_global_jd: authoritativeA8Ability.global_jd,
-  source: ["L-A8-JD66-V2", "L-A8-AXL68-V2"],
+  related_global_jd: authoritativeA9Ability.global_jd,
+  source: ["L-A9-JD66-V3", "L-A9-AXL68-V3"],
   evidence_status: "authoritative_existing",
   derivation_status: "given",
   review_status: "reviewed",
@@ -1329,24 +1348,24 @@ const a8Root = baseNode({
   ],
 });
 
-const a8Nodes = [a8Root];
-for (const slot of authoritativeA8Slots) {
-  const spec = a8Specs[slot.id];
+const a9Nodes = [a9Root];
+for (const slot of authoritativeA9Slots) {
+  const spec = a9Specs[slot.id];
   if (!spec) {
-    throw new Error(`A8 canonical 槽位缺少细分规格：${slot.id}`);
+    throw new Error(`A9 canonical 槽位缺少细分规格：${slot.id}`);
   }
-  a8Nodes.push(
+  a9Nodes.push(
     baseNode({
       node_id: slot.id,
-      parent_id: a8Root.node_id,
+      parent_id: a9Root.node_id,
       canonical_slot: slot.id,
-      owner_a: "A8",
+      owner_a: "A9",
       name: slot.name,
       definition: slot.description,
       node_kind: "group",
       related_global_jd: spec.relatedGlobal,
       used_by_axl: spec.usedByAxl,
-      source: ["L-A8-JD66-V2", "L-A8-AXL68-V2"],
+      source: ["L-A9-JD66-V3", "L-A9-AXL68-V3"],
       evidence_status: "authoritative_existing",
       derivation_status: "given",
       review_status: "reviewed",
@@ -1359,7 +1378,7 @@ for (const slot of authoritativeA8Slots) {
         "harness",
       ],
       notes:
-        "canonical 名称与定义取自 ability-id-v2 权威机读源；下级子维度为保守归纳，尚待审阅。",
+        "canonical 名称与定义取自 ability-id-v3 权威机读源；下级子维度为保守归纳，尚待审阅。",
     }),
   );
   spec.dimensions.forEach((dimension, index) => {
@@ -1369,15 +1388,15 @@ for (const slot of authoritativeA8Slots) {
       ...new Set(
         dimension.domain
           .flatMap((item) => item.source_refs || [])
-          .concat(["L-A8-JD66-V2", "L-A8-AXL68-V2"]),
+          .concat(["L-A9-JD66-V3", "L-A9-AXL68-V3"]),
       ),
     ];
-    a8Nodes.push(
+    a9Nodes.push(
       baseNode({
         node_id: `PROPOSED-${slot.id}.${index + 1}`,
         parent_id: slot.id,
         canonical_slot: slot.id,
-        owner_a: "A8",
+        owner_a: "A9",
         name: dimension.name,
         definition: dimension.definition,
         node_kind: "variable",
@@ -1410,15 +1429,15 @@ const levelsUsingSlot = (ability, slotId) =>
     .filter(([, level]) => level.jd_refs.includes(slotId))
     .map(([level]) => `${ability.a_id}×${level}`);
 
-function demoteLegacyA10Draft(nodes) {
+function demoteLegacyA11Draft(nodes) {
   const legacyPlatformIds = new Map([
-    ["jd-10.1", "PROPOSED-jd-10.platform-interface-v0.6"],
-    ["jd-10.2", "PROPOSED-jd-10.platform-constraints-v0.6"],
-    ["jd-10.3", "PROPOSED-jd-10.execution-envelope-v0.6"],
+    ["jd-11.1", "PROPOSED-jd-11.platform-interface-v0.6"],
+    ["jd-11.2", "PROPOSED-jd-11.platform-constraints-v0.6"],
+    ["jd-11.3", "PROPOSED-jd-11.execution-envelope-v0.6"],
   ]);
   const idMap = new Map(legacyPlatformIds);
   for (const node of nodes) {
-    if (node.node_id.startsWith("jd-10.5")) {
+    if (node.node_id.startsWith("jd-11.5")) {
       idMap.set(node.node_id, `PROPOSED-${node.node_id}`);
     }
   }
@@ -1440,16 +1459,16 @@ function demoteLegacyA10Draft(nodes) {
   return nodes.map((inputNode) => {
     const node = rewriteReferences(inputNode);
     const originalMigratedId = inputNode.node_id;
-    if (originalMigratedId === "PROPOSED-jd-tree-A10") {
-      node.name = authoritativeA10Ability.ability;
+    if (originalMigratedId === "PROPOSED-jd-tree-A11") {
+      node.name = authoritativeA11Ability.ability;
       node.definition =
         "描述飞行控制、控制质量、控制工作机制与控制处置策略相关的 JD 业务变量；白墙窄缝内容保留为场景化候选分支。";
-      node.related_global_jd = authoritativeA10Ability.global_jd;
+      node.related_global_jd = authoritativeA11Ability.global_jd;
       node.source = [
         ...new Set([
           ...(node.source || []),
-          "L-A10-JD66-V2",
-          "L-A10-AXL68-V2",
+          "L-A11-JD66-V3",
+          "L-A11-AXL68-V3",
         ]),
       ];
       node.evidence_status = "authoritative_existing";
@@ -1457,7 +1476,7 @@ function demoteLegacyA10Draft(nodes) {
       node.review_status = "reviewed";
       node.notes = [
         node.notes,
-        "A10 能力根与 canonical 槽位以 ability-id-v2 权威字典为准；v0.6 平台基准和避障树仅作为非 canonical 候选保留。",
+        "A11 能力根与 canonical 槽位以 ability-id-v3 权威字典为准；v0.6 平台基准和避障树仅作为非 canonical 候选保留。",
       ]
         .filter(Boolean)
         .join("\n");
@@ -1474,15 +1493,15 @@ function demoteLegacyA10Draft(nodes) {
       node.name = `v0.6 候选：${inputNode.name}`;
       node.notes = [
         node.notes,
-        "该节点来自旧 A8 白墙 v0.6 平台基准，与新 A10 canonical 槽位语义冲突；当前保留为非 canonical 候选，不覆盖 jd-10.1/10.2/10.3。",
+        "该节点来自旧 A8 白墙 v0.6 平台基准，与新 A11 canonical 槽位语义冲突；当前保留为非 canonical 候选，不覆盖 jd-11.1/jd-11.2/jd-11.3。",
       ]
         .filter(Boolean)
         .join("\n");
-    } else if (originalMigratedId === "jd-10.5") {
+    } else if (originalMigratedId === "jd-11.5") {
       node.name = "候选避障变量树（旧 jd-8.5 草案）";
       node.notes = [
         node.notes,
-        "jd-10.5 尚未进入 66 槽位权威字典；本分支及其子节点均为非 canonical 候选。",
+        "jd-11.5 尚未进入 66 槽位权威字典；本分支及其子节点均为非 canonical 候选。",
       ]
         .filter(Boolean)
         .join("\n");
@@ -1495,28 +1514,28 @@ const migratedInspectionNodes = oldInspection.nodes
   .map(migrateExistingNode)
   .filter(Boolean)
   .map(normalizeCanonicalNode);
-const migratedA10DraftNodes = demoteLegacyA10Draft(
+const migratedA11DraftNodes = demoteLegacyA11Draft(
   oldA8.nodes.map(migrateExistingNode).filter(Boolean),
 );
-const migratedA10Root = migratedA10DraftNodes.find(
-  (node) => node.node_id === "PROPOSED-jd-tree-A10",
+const migratedA11Root = migratedA11DraftNodes.find(
+  (node) => node.node_id === "PROPOSED-jd-tree-A11",
 );
-if (!migratedA10Root) {
-  throw new Error("A10 草案迁移后缺少能力根节点。");
+if (!migratedA11Root) {
+  throw new Error("A11 草案迁移后缺少能力根节点。");
 }
-const authoritativeA10Nodes = authoritativeA10Slots.map((slot) =>
+const authoritativeA11Nodes = authoritativeA11Slots.map((slot) =>
   normalizeCanonicalNode(
     baseNode({
       node_id: slot.id,
-      parent_id: migratedA10Root.node_id,
+      parent_id: migratedA11Root.node_id,
       canonical_slot: slot.id,
-      owner_a: "A10",
+      owner_a: "A11",
       name: slot.name,
       definition: slot.description,
       node_kind: "group",
-      related_global_jd: authoritativeA10Ability.global_jd,
-      used_by_axl: levelsUsingSlot(authoritativeA10Ability, slot.id),
-      source: ["L-A10-JD66-V2", "L-A10-AXL68-V2"],
+      related_global_jd: authoritativeA11Ability.global_jd,
+      used_by_axl: levelsUsingSlot(authoritativeA11Ability, slot.id),
+      source: ["L-A11-JD66-V3", "L-A11-AXL68-V3"],
       evidence_status: "authoritative_existing",
       derivation_status: "given",
       review_status: "reviewed",
@@ -1529,16 +1548,16 @@ const authoritativeA10Nodes = authoritativeA10Slots.map((slot) =>
         "harness",
       ],
       notes:
-        "canonical 名称与定义取自 ability-id-v2 权威机读源；具体子维度尚待建设。",
+        "canonical 名称与定义取自 ability-id-v3 权威机读源；具体子维度尚待建设。",
     }),
   ),
 );
-const migratedA10Nodes = [
-  migratedA10Root,
-  ...authoritativeA10Nodes,
-  ...migratedA10DraftNodes.filter((node) => node !== migratedA10Root),
+const migratedA11Nodes = [
+  migratedA11Root,
+  ...authoritativeA11Nodes,
+  ...migratedA11DraftNodes.filter((node) => node !== migratedA11Root),
 ];
-const migratedNodes = [...migratedInspectionNodes, ...migratedA10Nodes];
+const migratedNodes = [...migratedInspectionNodes, ...migratedA11Nodes];
 
 const migrateSource = (source) => ({
   ...source,
@@ -1625,8 +1644,8 @@ const commonMetadata = {
   schema_version: schemaVersion,
   generated_at: generatedAt,
   generated_by: "scripts/generate_jd_variable_tree_version1.mjs",
-  ability_id_scheme: "ability-id-v2-2026-07-19",
-  numbering_scheme: "ability-id-v2-2026-07-19",
+  ability_id_scheme: "ability-id-v3-2026-07-20",
+  numbering_scheme: "ability-id-v3-2026-07-20",
   numbering_authority_status: "current_authoritative_machine_baseline",
   ability_renumbering: renumbering,
   l0_policy: {
@@ -1639,7 +1658,7 @@ const commonMetadata = {
   controlled_vocabularies: controlledVocabularies,
   schema_fields: schemaFields,
   authority_rules: [
-    "本 version1 使用 ability-id-v2-2026-07-19 权威机读编号；旧树仅作为迁移输入和审计证据。",
+    "本 version1 使用 ability-id-v3-2026-07-20 权威机读编号；旧树仅作为迁移输入和审计证据。",
     "canonical 语义继承旧受审资料；迁移后的 ID 通过 legacy_aliases 可追溯。",
     "A×L 仅作责任引用，L1–L4 不进入 JD 取值域；L0 是 episode 覆盖哨兵。",
     "缺少依据的阈值、时限、业务判据、安全规则和 simulator 接口保持 TBD。",
@@ -1649,8 +1668,13 @@ const commonMetadata = {
   decision_log: [
     {
       decision_id: "ability-renumbering-20260719",
-      status: "authoritative_machine_baseline",
-      decision: renumbering,
+      status: "historical_superseded",
+      decision: renumberingV1ToV2,
+    },
+    {
+      decision_id: "ability-renumbering-20260720",
+      status: "current_authoritative_machine_baseline",
+      decision: renumberingV2ToV3,
     },
     {
       decision_id: "l0-project-sentinel",
@@ -1674,7 +1698,7 @@ const commonMetadata = {
 const g1Catalog = {
   ...commonMetadata,
   catalog_id: "jd-variable-tree-g1-a1-a5-version1-draft",
-  catalog_version: "version1-g1-a1-a5-2026-07-19",
+  catalog_version: "version1-g1-a1-a5-2026-07-20",
   scope: ["A1", "A2", "A3", "A4", "A5"],
   scenario_scope: g1Scenario,
   sources: g1Sources,
@@ -1684,8 +1708,8 @@ const g1Catalog = {
 const migratedCatalog = {
   ...commonMetadata,
   catalog_id: "jd-variable-tree-g2-g3-renumbered-version1-draft",
-  catalog_version: "version1-a6-a7a-a7b-a9-a10-2026-07-19",
-  scope: ["A6", "A7a", "A7b", "A9", "A10"],
+  catalog_version: "version1-a6-a7-a8-a10-a11-2026-07-20",
+  scope: ["A6", "A7", "A8", "A10", "A11"],
   scenario_scope: [
     ...new Set([
       ...(oldInspection.scenario_scope || []),
@@ -1695,33 +1719,34 @@ const migratedCatalog = {
   sources: uniqueSources([
     ...oldInspection.sources.map(migrateSource),
     ...oldA8.sources.map(migrateSource),
-    ...a10Sources,
+    ...a11Sources,
     g1Sources.find((source) => source.source_id === "L-RENUMBER-20260719"),
+    g1Sources.find((source) => source.source_id === "L-RENUMBER-20260720"),
   ]),
   nodes: migratedNodes,
 };
 
-const a8Catalog = {
+const a9Catalog = {
   ...commonMetadata,
-  catalog_id: "jd-variable-tree-a8-resource-management-version1-draft",
-  catalog_version: "version1-a8-resource-management-2026-07-19",
-  scope: ["A8"],
+  catalog_id: "jd-variable-tree-a9-resource-management-version1-draft",
+  catalog_version: "version1-a9-resource-management-2026-07-20",
+  scope: ["A9"],
   scenario_scope: ["cross_scenario"],
-  sources: a8Sources,
-  nodes: a8Nodes,
+  sources: a9Sources,
+  nodes: a9Nodes,
 };
 
 const allNodes = [
   ...g1Nodes,
   ...migratedInspectionNodes,
-  ...a8Nodes,
-  ...migratedA10Nodes,
+  ...a9Nodes,
+  ...migratedA11Nodes,
 ];
 const allSources = uniqueSources([
   ...g1Catalog.sources,
   ...migratedCatalog.sources,
-  ...a8Catalog.sources,
-  ...a10Sources,
+  ...a9Catalog.sources,
+  ...a11Sources,
 ]);
 const countBy = (key) =>
   allNodes.reduce((counts, node) => {
@@ -1733,11 +1758,11 @@ const countBy = (key) =>
 const combinedCatalog = {
   ...commonMetadata,
   catalog_id: "jd-variable-tree-review-version1",
-  catalog_version: "review-version1-ability-id-v2-a1-a10-2026-07-19",
+  catalog_version: "review-version1-ability-id-v3-a1-a11-2026-07-20",
   included_catalogs: [
     g1Catalog.catalog_id,
     migratedCatalog.catalog_id,
-    a8Catalog.catalog_id,
+    a9Catalog.catalog_id,
   ],
   scope: [
     "A1",
@@ -1746,11 +1771,11 @@ const combinedCatalog = {
     "A4",
     "A5",
     "A6",
-    "A7a",
-    "A7b",
+    "A7",
     "A8",
     "A9",
     "A10",
+    "A11",
   ],
   scenario_scope: [
     "cross_scenario",
@@ -1771,14 +1796,14 @@ const combinedCatalog = {
 
 writeJson("jd_variable_tree_g1_a1_a5_draft.json", g1Catalog);
 writeJson("jd_variable_tree_g2_g3_renumbered_draft.json", migratedCatalog);
-writeJson("jd_variable_tree_a8_resource_management_draft.json", a8Catalog);
+writeJson("jd_variable_tree_a9_resource_management_draft.json", a9Catalog);
 writeJson("jd_variable_tree_version1.json", combinedCatalog);
 
 console.log(
   [
     "knowledge/jd_variable_tree_g1_a1_a5_draft.json",
     "knowledge/jd_variable_tree_g2_g3_renumbered_draft.json",
-    "knowledge/jd_variable_tree_a8_resource_management_draft.json",
+    "knowledge/jd_variable_tree_a9_resource_management_draft.json",
     "knowledge/jd_variable_tree_version1.json",
     `${allNodes.length} nodes`,
   ].join("\n"),

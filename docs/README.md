@@ -17,8 +17,8 @@
 - [变量树开发、校验与发布](jd-variable-tree/README.md)
 - [version1 待确认问题与暂定方案](jd-variable-tree/JD业务变量树_version1_待确认问题与暂定方案.md)
 - [需求草案 v0.6](jd-variable-tree/需求草案-v0.6.md)
-- [A5–A8 阶段一结构草案](jd-variable-tree/JD业务变量树_高速巡检_A5_A6a_A6b_A7_A8_v0.1_阶段一结构草案.md)
-- [旧编号 A5/A6a/A6b/A7 机读说明](jd-variable-tree/JD业务变量树_A5_A6a_A6b_A7_高速与园区巡检_机读版.md)
+- [旧编号阶段一结构草案](jd-variable-tree/JD业务变量树_高速巡检_legacy_v0.1_阶段一结构草案.md)
+- [旧巡检树迁移源说明](jd-variable-tree/JD业务变量树_legacy_inspection_source_机读版.md)
 
 ## G1 用户侧设计
 

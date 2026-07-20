@@ -10,11 +10,11 @@
     A4: "交互到执行编排",
     A5: "监督 / 请求 / 交接",
     A6: "业务对象感知与状态理解",
-    A7a: "自定位",
-    A7b: "相对定位 / 相对几何",
-    A8: "健康 / 能源 / 资源管理",
-    A9: "导航与航迹执行",
-    A10: "飞行控制 / 执行机构",
+    A7: "自定位",
+    A8: "相对定位 / 相对几何",
+    A9: "健康 / 能源 / 资源管理",
+    A10: "导航与航迹执行",
+    A11: "飞行控制 / 执行机构",
   };
   const abilityVisualGroup = {
     A1: "human",
@@ -23,11 +23,11 @@
     A4: "human",
     A5: "human",
     A6: "perception",
-    A7a: "perception",
-    A7b: "perception",
+    A7: "perception",
     A8: "perception",
-    A9: "motion",
+    A9: "perception",
     A10: "motion",
+    A11: "motion",
   };
   const scenarioLabels = {
     cross_scenario: "跨业务场景",
@@ -134,7 +134,7 @@
 
   function shortId(nodeId) {
     const abilityRoot = nodeId.match(
-      /^PROPOSED-jd-tree-(A1|A2|A3|A4|A5|A6|A7a|A7b|A8|A9|A10)$/,
+      /^PROPOSED-jd-tree-(A1|A2|A3|A4|A5|A6|A7|A8|A9|A10|A11)$/,
     );
     if (abilityRoot) return abilityRoot[1];
     return nodeId.replace(/^PROPOSED-/, "");

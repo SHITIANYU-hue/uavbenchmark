@@ -199,7 +199,7 @@ PYTHONPATH=src .venv/bin/python tests/agent_contract_checks.py
 - 当前网页只执行到特定任务模版阶段，尚未运行真实 SUT 或 simulator；
 - 五类场景目前来自需求级 Summary 和变量域，还需要业务负责人逐项确认对象 taxonomy、接口、阈值和完成规则；
 - 当前受审字典覆盖 17 个 A、68 个 A×L1–L4 单元和 66 个 JD，但不包含 L5/L6 的逐 A 责任定义；
-- 早期白墙草案中的 `jd-8.1/8.2/8.3` 与当前 `jd-10.1/10.2/10.3` 语义不同，现作为 `PROPOSED` 非 canonical 候选保留，构建报告显式记录冲突；
+- 早期白墙草案中的 `jd-8.1/8.2/8.3` 与当前 `jd-11.1/11.2/11.3` 语义不同，现作为 `PROPOSED` 非 canonical 候选保留，构建报告显式记录冲突；
 - Agent 输出仍需确定性校验和人工确认，不能作为自动批准的业务规则；
 - threshold、metric 参数、业务完成判据和 simulator 接口尚未统一标定；
 - 当前示例不能替代真实平台、传感器和场景数据上的有效性验证。

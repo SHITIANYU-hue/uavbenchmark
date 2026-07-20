@@ -33,6 +33,16 @@ const axlIds = new Set(
     ),
   ),
 );
+const expectedAbilityScheme = "ability-id-v3-2026-07-20";
+
+if (
+  catalog.ability_id_scheme !== expectedAbilityScheme ||
+  catalog.numbering_scheme !== expectedAbilityScheme ||
+  jdDictionary.ability_id_scheme !== expectedAbilityScheme ||
+  axlCatalog.ability_id_scheme !== expectedAbilityScheme
+) {
+  errors.push(`变量树、JD 与 A×L 必须统一使用 ${expectedAbilityScheme}。`);
+}
 
 for (const node of nodes) {
   if (!node.node_id) {
@@ -224,10 +234,12 @@ for (const [kind, declared] of Object.entries(
   }
 }
 
-const forbiddenOwners = new Set(["A6a", "A6b", "A7", "A14"]);
 for (const node of nodes) {
-  if (forbiddenOwners.has(node.owner_a)) {
-    errors.push(`${node.node_id} 仍使用旧 owner_a：${node.owner_a}`);
+  if (
+    node.owner_a !== "MULTI" &&
+    (!scope.has(node.owner_a) || /[a-z]$/.test(node.owner_a))
+  ) {
+    errors.push(`${node.node_id} 使用了非当前 scope 的 owner_a：${node.owner_a}`);
   }
   if ((node.used_by_axl || []).some((cell) => /×L0$/.test(cell))) {
     errors.push(`${node.node_id} 将 L0 写入了 used_by_axl。`);

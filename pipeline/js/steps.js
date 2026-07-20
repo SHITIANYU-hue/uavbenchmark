@@ -332,7 +332,7 @@ function buildSpecificTemplateDescription(tpl) {
   const firstPara = narrative.split(/\n\s*\n/).map(s => s.trim()).filter(Boolean)[0] || "";
   const bindings = (tpl.slot_bindings || []).filter(s => s.status !== "TBD" && s.value != null && s.value !== "");
   const cov = (c && c.coverage_candidates) || [];
-  const priorityIds = ["jd-0.1", "jd-0.2", "jd-0.3", "jd-0.4", "jd-0.7", "jd-0.9", "jd-6.1", "jd-2.2", "jd-8.1"];
+  const priorityIds = ["jd-0.1", "jd-0.2", "jd-0.3", "jd-0.4", "jd-0.7", "jd-0.9", "jd-6.1", "jd-2.2", "jd-9.1"];
   function bulletsFor(side) {
     const rows = bindings.filter(s => jdSide(s.slot_id) === side);
     rows.sort((a, b) => {

@@ -1,7 +1,7 @@
 {
   "status": "pass",
-  "catalog_version": "full-17A-68AxL-66JD-ability-id-v2-2026-07-19",
-  "ability_id_scheme": "ability-id-v2-2026-07-19",
+  "catalog_version": "full-17A-68AxL-66JD-ability-id-v3-2026-07-20",
+  "ability_id_scheme": "ability-id-v3-2026-07-20",
   "ability_id_migration": {
     "A14": "A5",
     "A5": "A6",
@@ -14,6 +14,19 @@
     "A9b": "A11b",
     "A10": "A12",
     "A12": "A14"
+  },
+  "ability_id_migration_v2_to_v3": {
+    "A7a": "A7",
+    "A7b": "A8",
+    "A8": "A9",
+    "A9": "A10",
+    "A10": "A11",
+    "A11a": "A12",
+    "A11b": "A13",
+    "A12": "A14",
+    "A13": "A15",
+    "A14": "A16",
+    "A15": "A17"
   },
   "jd_local_prefix_migration": {
     "jd-14": "jd-5",
@@ -28,13 +41,26 @@
     "jd-10": "jd-12",
     "jd-12": "jd-14"
   },
+  "jd_local_prefix_migration_v2_to_v3": {
+    "jd-7a": "jd-7",
+    "jd-7b": "jd-8",
+    "jd-8": "jd-9",
+    "jd-9": "jd-10",
+    "jd-10": "jd-11",
+    "jd-11a": "jd-12",
+    "jd-11b": "jd-13",
+    "jd-12": "jd-14",
+    "jd-13": "jd-15",
+    "jd-14": "jd-16",
+    "jd-15": "jd-17"
+  },
   "source_versions": {
-    "axl": "axl-17A-ability-id-v2-2026-07-19",
-    "jd": "jd-66-slots-ability-id-v2-2026-07-19"
+    "axl": "axl-17A-ability-id-v3-2026-07-20",
+    "jd": "jd-66-slots-ability-id-v3-2026-07-20"
   },
   "source_sha256": {
-    "AxL责任定义字典_17A_68单元_机读版.md": "fd930ceaa454fbfc752450f802a1b1a158ad91f5e83d421be0fa125958856aeb",
-    "JD业务变量字典_66槽位_机读版.md": "9d7cdafd35c30a5e061ec9d84194305bad45244a1adf19f6c9667f99d168bd51"
+    "AxL责任定义字典_17A_68单元_机读版.md": "4dcd728dc9c4e22af93aec4108a5d0e7dfb2b131377143295b4515a0ac8009b6",
+    "JD业务变量字典_66槽位_机读版.md": "b832c94df23d187540014208cc17a654cb8e7b761111f2ed09fdb848351d6efb"
   },
   "validated_counts": {
     "g_groups": 6,
@@ -50,19 +76,19 @@
   "legacy_semantic_conflicts": [
     {
       "legacy_slot_id": "jd-8.1",
-      "slot_id": "jd-10.1",
+      "slot_id": "jd-11.1",
       "legacy_name": "控制接口",
       "current_name": "控制质量先验"
     },
     {
       "legacy_slot_id": "jd-8.2",
-      "slot_id": "jd-10.2",
+      "slot_id": "jd-11.2",
       "legacy_name": "控制约束",
       "current_name": "控制工作机制"
     },
     {
       "legacy_slot_id": "jd-8.3",
-      "slot_id": "jd-10.3",
+      "slot_id": "jd-11.3",
       "legacy_name": "平台与执行包络",
       "current_name": "控制处置策略适用集"
     }

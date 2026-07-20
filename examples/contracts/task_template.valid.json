@@ -13,7 +13,7 @@
     ],
     "out_of_scope": [
       "真实飞行动力学",
-      "A7b、A8、A14 正式评分"
+      "A8、A9、A16 正式评分"
     ]
   },
   "coverage": [
@@ -27,27 +27,27 @@
       "out_of_scope": ["目标世界坐标"]
     },
     {
-      "coverage_id": "a7a_l3",
+      "coverage_id": "a7_l3",
       "group": "G2",
-      "ability": "A7a",
+      "ability": "A7",
       "level": "L3",
       "role": "anomaly",
       "sut_responsibilities": ["正常定位与质量监测", "识别退化并标记不可信", "请求预授权保护", "上报并等待外部决定"],
       "out_of_scope": ["自主恢复与验证闭环", "执行保护动作"]
     },
     {
-      "coverage_id": "a9_l1",
+      "coverage_id": "a10_l1",
       "group": "G3",
-      "ability": "A9",
+      "ability": "A10",
       "level": "L1",
       "role": "auxiliary",
       "sut_responsibilities": ["输出航路约束、风险和偏差提示"],
       "out_of_scope": ["自主执行航路", "SPL", "collision rate"]
     },
     {
-      "coverage_id": "a10_l1",
+      "coverage_id": "a11_l1",
       "group": "G3",
-      "ability": "A10",
+      "ability": "A11",
       "level": "L1",
       "role": "auxiliary",
       "sut_responsibilities": ["评估当前飞行状态与安全包络", "输出控制调整建议"],

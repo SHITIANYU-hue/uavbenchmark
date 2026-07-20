@@ -1,12 +1,28 @@
 {
   "schema": "uav-benchmark-jd-variable-tree",
   "schema_version": "0.3.0",
-  "generated_at": "2026-07-19",
+  "generated_at": "2026-07-20",
   "generated_by": "scripts/generate_jd_variable_tree_version1.mjs",
-  "ability_id_scheme": "ability-id-v2-2026-07-19",
-  "numbering_scheme": "ability-id-v2-2026-07-19",
+  "ability_id_scheme": "ability-id-v3-2026-07-20",
+  "numbering_scheme": "ability-id-v3-2026-07-20",
   "numbering_authority_status": "current_authoritative_machine_baseline",
   "ability_renumbering": [
+    {
+      "from": "A1",
+      "to": "A1"
+    },
+    {
+      "from": "A2",
+      "to": "A2"
+    },
+    {
+      "from": "A3",
+      "to": "A3"
+    },
+    {
+      "from": "A4",
+      "to": "A4"
+    },
     {
       "from": "A14",
       "to": "A5"
@@ -17,47 +33,47 @@
     },
     {
       "from": "A6a",
-      "to": "A7a"
+      "to": "A7"
     },
     {
       "from": "A6b",
-      "to": "A7b"
-    },
-    {
-      "from": "A11",
       "to": "A8"
     },
     {
-      "from": "A7",
+      "from": "A11",
       "to": "A9"
     },
     {
-      "from": "A8",
+      "from": "A7",
       "to": "A10"
     },
     {
+      "from": "A8",
+      "to": "A11"
+    },
+    {
       "from": "A9a",
-      "to": "A11a"
-    },
-    {
-      "from": "A9b",
-      "to": "A11b"
-    },
-    {
-      "from": "A10",
       "to": "A12"
     },
     {
-      "from": "A13",
+      "from": "A9b",
       "to": "A13"
     },
     {
-      "from": "A12",
+      "from": "A10",
       "to": "A14"
     },
     {
-      "from": "A15",
+      "from": "A13",
       "to": "A15"
+    },
+    {
+      "from": "A12",
+      "to": "A16"
+    },
+    {
+      "from": "A15",
+      "to": "A17"
     }
   ],
   "l0_policy": {
@@ -159,7 +175,7 @@
     "notes"
   ],
   "authority_rules": [
-    "本 version1 使用 ability-id-v2-2026-07-19 权威机读编号；旧树仅作为迁移输入和审计证据。",
+    "本 version1 使用 ability-id-v3-2026-07-20 权威机读编号；旧树仅作为迁移输入和审计证据。",
     "canonical 语义继承旧受审资料；迁移后的 ID 通过 legacy_aliases 可追溯。",
     "A×L 仅作责任引用，L1–L4 不进入 JD 取值域；L0 是 episode 覆盖哨兵。",
     "缺少依据的阈值、时限、业务判据、安全规则和 simulator 接口保持 TBD。",
@@ -169,7 +185,7 @@
   "decision_log": [
     {
       "decision_id": "ability-renumbering-20260719",
-      "status": "authoritative_machine_baseline",
+      "status": "historical_superseded",
       "decision": [
         {
           "from": "A14",
@@ -212,7 +228,41 @@
           "to": "A12"
         },
         {
-          "from": "A13",
+          "from": "A12",
+          "to": "A14"
+        }
+      ]
+    },
+    {
+      "decision_id": "ability-renumbering-20260720",
+      "status": "current_authoritative_machine_baseline",
+      "decision": [
+        {
+          "from": "A7a",
+          "to": "A7"
+        },
+        {
+          "from": "A7b",
+          "to": "A8"
+        },
+        {
+          "from": "A8",
+          "to": "A9"
+        },
+        {
+          "from": "A9",
+          "to": "A10"
+        },
+        {
+          "from": "A10",
+          "to": "A11"
+        },
+        {
+          "from": "A11a",
+          "to": "A12"
+        },
+        {
+          "from": "A11b",
           "to": "A13"
         },
         {
@@ -220,8 +270,16 @@
           "to": "A14"
         },
         {
-          "from": "A15",
+          "from": "A13",
           "to": "A15"
+        },
+        {
+          "from": "A14",
+          "to": "A16"
+        },
+        {
+          "from": "A15",
+          "to": "A17"
         }
       ]
     },
@@ -242,13 +300,13 @@
     }
   ],
   "catalog_id": "jd-variable-tree-g2-g3-renumbered-version1-draft",
-  "catalog_version": "version1-a6-a7a-a7b-a9-a10-2026-07-19",
+  "catalog_version": "version1-a6-a7-a8-a10-a11-2026-07-20",
   "scope": [
     "A6",
-    "A7a",
-    "A7b",
-    "A9",
-    "A10"
+    "A7",
+    "A8",
+    "A10",
+    "A11"
   ],
   "scenario_scope": [
     "highway_inspection",
@@ -260,19 +318,19 @@
       "source_id": "L-JD66",
       "title": "JD业务变量字典_66槽位_机读版.md",
       "issuer": "UAV Benchmark team",
-      "source_type": "reviewed_team_dictionary",
-      "locator": "A6, A7a, A7b, A9 canonical slots",
+      "source_type": "legacy_team_dictionary_projection",
+      "locator": "旧 v1 编号 A6、A7、A8、A10 的 canonical slots",
       "url": null,
-      "evidence_grade": "authoritative_local"
+      "evidence_grade": "historical_local"
     },
     {
       "source_id": "L-AXL68",
       "title": "AxL责任定义字典_17A_68单元_机读版.md",
       "issuer": "UAV Benchmark team",
-      "source_type": "reviewed_team_dictionary",
-      "locator": "A6, A7a, A7b, A9 L1-L4",
+      "source_type": "legacy_team_dictionary_projection",
+      "locator": "旧 v1 编号 A6、A7、A8、A10 的 L1–L4",
       "url": null,
-      "evidence_grade": "authoritative_local"
+      "evidence_grade": "historical_local"
     },
     {
       "source_id": "L-SCENARIO",
@@ -491,20 +549,20 @@
       "evidence_grade": "team_material_only"
     },
     {
-      "source_id": "L-A10-JD66-V2",
+      "source_id": "L-A11-JD66-V3",
       "title": "JD业务变量字典_66槽位_机读版.md",
       "issuer": "UAV Benchmark team",
       "source_type": "reviewed_team_dictionary",
-      "locator": "ability-id-v2-2026-07-19：A10 与 jd-10.1、jd-10.2、jd-10.3 的 canonical 定义",
+      "locator": "ability-id-v3-2026-07-20：A11 与 jd-11.1、jd-11.2、jd-11.3 的 canonical 定义",
       "url": null,
       "evidence_grade": "authoritative_local"
     },
     {
-      "source_id": "L-A10-AXL68-V2",
+      "source_id": "L-A11-AXL68-V3",
       "title": "AxL责任定义字典_17A_68单元_机读版.md",
       "issuer": "UAV Benchmark team",
       "source_type": "reviewed_team_dictionary",
-      "locator": "ability-id-v2-2026-07-19：A10×L1–L4 的控制质量、执行、异常确认、处置与验证责任",
+      "locator": "ability-id-v3-2026-07-20：A11×L1–L4 的控制质量、执行、异常确认、处置与验证责任",
       "url": null,
       "evidence_grade": "authoritative_local"
     },
@@ -516,6 +574,15 @@
       "locator": "A14→A5 及后续 A 域顺延映射",
       "url": null,
       "evidence_grade": "confirmed_by_user_for_version1_draft"
+    },
+    {
+      "source_id": "L-RENUMBER-20260720",
+      "title": "A 域连续编号确认（2026-07-20）",
+      "issuer": "UAV Benchmark team",
+      "source_type": "team_decision",
+      "locator": "ability-id-v2 的 A7a/A7b/A11a/A11b 连续化，并将后续能力顺延为 A1–A17",
+      "url": null,
+      "evidence_grade": "confirmed_by_user"
     }
   ],
   "nodes": [
@@ -557,7 +624,7 @@
       "legacy_aliases": [
         "PROPOSED-jd-tree-A5"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -571,10 +638,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-tree-A7a",
+      "node_id": "PROPOSED-jd-tree-A7",
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
-      "owner_a": "A7a",
+      "owner_a": "A7",
       "name": "自定位 / 姿态航向估计",
       "definition": "描述绝对位姿来源、参考系、质量退化与定位策略适用性。",
       "node_kind": "capability_root",
@@ -607,7 +674,7 @@
       "legacy_aliases": [
         "PROPOSED-jd-tree-A6a"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -621,10 +688,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-tree-A7b",
+      "node_id": "PROPOSED-jd-tree-A8",
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
-      "owner_a": "A7b",
+      "owner_a": "A8",
       "name": "相对定位 / 方位关系估计",
       "definition": "描述相对道路、区域、车辆和检查对象的几何及恢复条件。",
       "node_kind": "capability_root",
@@ -657,7 +724,7 @@
       "legacy_aliases": [
         "PROPOSED-jd-tree-A6b"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6b → A7b；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -671,10 +738,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-tree-A9",
+      "node_id": "PROPOSED-jd-tree-A10",
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
-      "owner_a": "A9",
+      "owner_a": "A10",
       "name": "导航 / 航迹 / 轨迹管理",
       "definition": "描述道路/园区拓扑、巡检航路、重规划判据与航迹处置。",
       "node_kind": "capability_root",
@@ -707,7 +774,7 @@
       "legacy_aliases": [
         "PROPOSED-jd-tree-A7"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -756,7 +823,7 @@
       "legacy_aliases": [
         "jd-5.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -807,7 +874,7 @@
         "PROPOSED-jd-5.1.1",
         "jd-5.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -891,7 +958,7 @@
         "PROPOSED-jd-5.1.1.1",
         "jd-5.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -1034,7 +1101,7 @@
         "PROPOSED-jd-5.1.1.2",
         "jd-5.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -1182,7 +1249,7 @@
         "PROPOSED-jd-5.1.1.3",
         "jd-5.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -1363,7 +1430,7 @@
         "PROPOSED-jd-5.1.1.4",
         "jd-5.1"
       ],
-      "notes": "严重度阈值不得从车载数据集或常识外推为无人机可检测阈值。\n2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "严重度阈值不得从车载数据集或常识外推为无人机可检测阈值。\n2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -1416,7 +1483,7 @@
         "PROPOSED-jd-5.1.2",
         "jd-5.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -1526,7 +1593,7 @@
         "PROPOSED-jd-5.1.2.1",
         "jd-5.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -1543,7 +1610,7 @@
       "canonical_slot": "jd-6.1",
       "owner_a": "A6",
       "name": "停车区域业务语义",
-      "definition": "车辆所在区域在业务规则中的语义；几何位置本身由 A7b 描述。",
+      "definition": "车辆所在区域在业务规则中的语义；几何位置本身由 A8 描述。",
       "node_kind": "variable",
       "value_type": "enum",
       "value_domain": [
@@ -1686,13 +1753,13 @@
       ],
       "related_global_jd": [],
       "related_jd": [
-        "jd-7b.1"
+        "jd-8.1"
       ],
       "used_by_axl": [
         "A6×L1",
         "A6×L3",
-        "A7b×L1",
-        "A7b×L2"
+        "A8×L1",
+        "A8×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -1710,7 +1777,7 @@
         "PROPOSED-jd-5.1.2.2",
         "jd-5.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -1848,7 +1915,7 @@
         "PROPOSED-jd-5.1.2.3",
         "jd-5.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -1969,7 +2036,7 @@
         "PROPOSED-jd-5.1.2.4",
         "jd-5.1"
       ],
-      "notes": "具体判定规则必须由法规、标志标线或团队园区规则提供，缺少规则时不得生成 violation。\n2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "具体判定规则必须由法规、标志标线或团队园区规则提供，缺少规则时不得生成 violation。\n2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -2021,7 +2088,7 @@
         "PROPOSED-jd-5.1.3",
         "jd-5.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -2123,7 +2190,7 @@
         "PROPOSED-jd-5.1.3.1",
         "jd-5.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -2227,7 +2294,7 @@
         "PROPOSED-jd-5.1.3.2",
         "jd-5.1"
       ],
-      "notes": "不在本节点规定像素、字符高度或识别率阈值。\n2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "不在本节点规定像素、字符高度或识别率阈值。\n2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -2282,7 +2349,7 @@
         "PROPOSED-jd-5.1.3.3",
         "jd-5.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -2330,7 +2397,7 @@
       "legacy_aliases": [
         "jd-5.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -2381,7 +2448,7 @@
         "PROPOSED-jd-5.2.1",
         "jd-5.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -2439,7 +2506,7 @@
         "PROPOSED-jd-5.2.1.1",
         "jd-5.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -2538,7 +2605,7 @@
         "PROPOSED-jd-5.2.1.2",
         "jd-5.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -2653,7 +2720,7 @@
         "PROPOSED-jd-5.2.1.3",
         "jd-5.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -2758,7 +2825,7 @@
         "PROPOSED-jd-5.2.1.4",
         "jd-5.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -2822,7 +2889,7 @@
         "PROPOSED-jd-5.2.1.5",
         "jd-5.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -2876,7 +2943,7 @@
         "PROPOSED-jd-5.2.2",
         "jd-5.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -2979,7 +3046,7 @@
         "PROPOSED-jd-5.2.2.1",
         "jd-5.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -3078,7 +3145,7 @@
         "PROPOSED-jd-5.2.2.2",
         "jd-5.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -3162,13 +3229,13 @@
       ],
       "related_global_jd": [],
       "related_jd": [
-        "jd-7b.1",
-        "jd-9.2"
+        "jd-8.1",
+        "jd-10.2"
       ],
       "used_by_axl": [
         "A6×L1",
         "A6×L4",
-        "A7b×L1"
+        "A8×L1"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -3182,7 +3249,7 @@
         "PROPOSED-jd-5.2.2.3",
         "jd-5.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -3333,7 +3400,7 @@
         "PROPOSED-jd-5.2.2.4",
         "jd-5.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -3471,7 +3538,7 @@
         "PROPOSED-jd-5.2.2.5",
         "jd-5.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -3518,7 +3585,7 @@
       "legacy_aliases": [
         "jd-5.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -3571,7 +3638,7 @@
         "PROPOSED-jd-5.3.1",
         "jd-5.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -3688,7 +3755,7 @@
         "PROPOSED-jd-5.3.1.1",
         "jd-5.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -3794,7 +3861,7 @@
         "PROPOSED-jd-5.3.1.2",
         "jd-5.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -3883,7 +3950,7 @@
         "PROPOSED-jd-5.3.1.3",
         "jd-5.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -3973,7 +4040,7 @@
         "PROPOSED-jd-5.3.1.4",
         "jd-5.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -4020,7 +4087,7 @@
       "legacy_aliases": [
         "jd-5.4"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -4071,7 +4138,7 @@
         "PROPOSED-jd-5.4.1",
         "jd-5.4"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -4129,7 +4196,7 @@
         "PROPOSED-jd-5.4.1.1",
         "jd-5.4"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -4185,7 +4252,7 @@
         "PROPOSED-jd-5.4.1.2",
         "jd-5.4"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -4295,7 +4362,7 @@
         "PROPOSED-jd-5.4.1.3",
         "jd-5.4"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -4346,7 +4413,7 @@
         "PROPOSED-jd-5.4.2",
         "jd-5.4"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -4474,7 +4541,7 @@
         "PROPOSED-jd-5.4.2.1",
         "jd-5.4"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -4491,7 +4558,7 @@
       "canonical_slot": "jd-6.4",
       "owner_a": "A6",
       "name": "允许感知恢复策略集合",
-      "definition": "A6 可请求或选择的感知恢复策略；改变航迹由 A9 执行。",
+      "definition": "A6 可请求或选择的感知恢复策略；改变航迹由 A10 执行。",
       "node_kind": "variable",
       "value_type": "multi_enum",
       "value_domain": [
@@ -4584,7 +4651,7 @@
         "jd-0.5"
       ],
       "related_jd": [
-        "jd-9.4"
+        "jd-10.4"
       ],
       "used_by_axl": [
         "A6×L4"
@@ -4601,7 +4668,7 @@
         "PROPOSED-jd-5.4.2.2",
         "jd-5.4"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -4657,7 +4724,7 @@
         "PROPOSED-jd-5.4.2.3",
         "jd-5.4"
       ],
-      "notes": "2026-07-19 会议草案重编号：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -4669,10 +4736,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "jd-7a.1",
-      "parent_id": "PROPOSED-jd-tree-A7a",
-      "canonical_slot": "jd-7a.1",
-      "owner_a": "A7a",
+      "node_id": "jd-7.1",
+      "parent_id": "PROPOSED-jd-tree-A7",
+      "canonical_slot": "jd-7.1",
+      "owner_a": "A7",
       "name": "定位源需求",
       "definition": "该 JD 假设或要求平台支持的定位源集，例如 GNSS、视觉、激光、UWB 与磁定位。",
       "node_kind": "group",
@@ -4704,7 +4771,7 @@
       "legacy_aliases": [
         "jd-6a.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -4718,10 +4785,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.1.1",
-      "parent_id": "jd-7a.1",
-      "canonical_slot": "jd-7a.1",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.1.1",
+      "parent_id": "jd-7.1",
+      "canonical_slot": "jd-7.1",
+      "owner_a": "A7",
       "name": "坐标系与基准",
       "definition": "定义全局、局部和机体参考系以及高度基准。",
       "node_kind": "group",
@@ -4756,7 +4823,7 @@
         "PROPOSED-jd-6a.1.1",
         "jd-6a.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -4770,10 +4837,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.1.1.1",
-      "parent_id": "PROPOSED-jd-7a.1.1",
-      "canonical_slot": "jd-7a.1",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.1.1.1",
+      "parent_id": "PROPOSED-jd-7.1.1",
+      "canonical_slot": "jd-7.1",
+      "owner_a": "A7",
       "name": "绝对坐标参考系",
       "definition": "任务位置数据采用的绝对或地理坐标参考系。",
       "node_kind": "variable",
@@ -4841,8 +4908,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7a×L1",
-        "A7a×L2"
+        "A7×L1",
+        "A7×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -4857,7 +4924,7 @@
         "PROPOSED-jd-6a.1.1.1",
         "jd-6a.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -4871,10 +4938,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.1.1.2",
-      "parent_id": "PROPOSED-jd-7a.1.1",
-      "canonical_slot": "jd-7a.1",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.1.1.2",
+      "parent_id": "PROPOSED-jd-7.1.1",
+      "canonical_slot": "jd-7.1",
+      "owner_a": "A7",
       "name": "局部导航坐标系语义",
       "definition": "任务内部局部连续坐标的语义。",
       "node_kind": "variable",
@@ -4943,9 +5010,9 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7a×L1",
-        "A7a×L2",
-        "A7a×L3"
+        "A7×L1",
+        "A7×L2",
+        "A7×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -4961,7 +5028,7 @@
         "PROPOSED-jd-6a.1.1.2",
         "jd-6a.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -4975,10 +5042,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.1.1.3",
-      "parent_id": "PROPOSED-jd-7a.1.1",
-      "canonical_slot": "jd-7a.1",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.1.1.3",
+      "parent_id": "PROPOSED-jd-7.1.1",
+      "canonical_slot": "jd-7.1",
+      "owner_a": "A7",
       "name": "高度参考基准",
       "definition": "高度或垂向位置使用的参考基准。",
       "node_kind": "variable",
@@ -5068,8 +5135,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7a×L1",
-        "A7a×L2"
+        "A7×L1",
+        "A7×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -5085,7 +5152,7 @@
         "PROPOSED-jd-6a.1.1.3",
         "jd-6a.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -5099,10 +5166,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.1.2",
-      "parent_id": "jd-7a.1",
-      "canonical_slot": "jd-7a.1",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.1.2",
+      "parent_id": "jd-7.1",
+      "canonical_slot": "jd-7.1",
+      "owner_a": "A7",
       "name": "定位来源与组合",
       "definition": "定义可用的绝对位姿、航向和高度来源及其组合要求。",
       "node_kind": "group",
@@ -5138,7 +5205,7 @@
         "PROPOSED-jd-6a.1.2",
         "jd-6a.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -5152,10 +5219,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.1.2.1",
-      "parent_id": "PROPOSED-jd-7a.1.2",
-      "canonical_slot": "jd-7a.1",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.1.2.1",
+      "parent_id": "PROPOSED-jd-7.1.2",
+      "canonical_slot": "jd-7.1",
+      "owner_a": "A7",
       "name": "绝对定位来源集合",
       "definition": "可用于位置估计的来源集合。",
       "node_kind": "variable",
@@ -5273,10 +5340,10 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A7a×L1",
-        "A7a×L2",
-        "A7a×L3",
-        "A7a×L4"
+        "A7×L1",
+        "A7×L2",
+        "A7×L3",
+        "A7×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -5293,7 +5360,7 @@
         "PROPOSED-jd-6a.1.2.1",
         "jd-6a.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -5307,10 +5374,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.1.2.2",
-      "parent_id": "PROPOSED-jd-7a.1.2",
-      "canonical_slot": "jd-7a.1",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.1.2.2",
+      "parent_id": "PROPOSED-jd-7.1.2",
+      "canonical_slot": "jd-7.1",
+      "owner_a": "A7",
       "name": "高度来源集合",
       "definition": "可用于垂向位置估计的来源集合。",
       "node_kind": "variable",
@@ -5392,10 +5459,10 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7a×L1",
-        "A7a×L2",
-        "A7a×L3",
-        "A7a×L4"
+        "A7×L1",
+        "A7×L2",
+        "A7×L3",
+        "A7×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -5409,7 +5476,7 @@
         "PROPOSED-jd-6a.1.2.2",
         "jd-6a.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -5423,10 +5490,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.1.2.3",
-      "parent_id": "PROPOSED-jd-7a.1.2",
-      "canonical_slot": "jd-7a.1",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.1.2.3",
+      "parent_id": "PROPOSED-jd-7.1.2",
+      "canonical_slot": "jd-7.1",
+      "owner_a": "A7",
       "name": "航向来源集合",
       "definition": "可用于航向估计和约束的来源集合。",
       "node_kind": "variable",
@@ -5508,10 +5575,10 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7a×L1",
-        "A7a×L2",
-        "A7a×L3",
-        "A7a×L4"
+        "A7×L1",
+        "A7×L2",
+        "A7×L3",
+        "A7×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -5526,7 +5593,7 @@
         "PROPOSED-jd-6a.1.2.3",
         "jd-6a.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -5540,10 +5607,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.1.2.4",
-      "parent_id": "PROPOSED-jd-7a.1.2",
-      "canonical_slot": "jd-7a.1",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.1.2.4",
+      "parent_id": "PROPOSED-jd-7.1.2",
+      "canonical_slot": "jd-7.1",
+      "owner_a": "A7",
       "name": "定位来源组合方式",
       "definition": "定位来源是单源、主备、融合还是多实例一致性选择。",
       "node_kind": "variable",
@@ -5613,9 +5680,9 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7a×L2",
-        "A7a×L3",
-        "A7a×L4"
+        "A7×L2",
+        "A7×L3",
+        "A7×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -5629,7 +5696,7 @@
         "PROPOSED-jd-6a.1.2.4",
         "jd-6a.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -5641,10 +5708,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.1.2.5",
-      "parent_id": "PROPOSED-jd-7a.1.2",
-      "canonical_slot": "jd-7a.1",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.1.2.5",
+      "parent_id": "PROPOSED-jd-7.1.2",
+      "canonical_slot": "jd-7.1",
+      "owner_a": "A7",
       "name": "定位来源可用性时序",
       "definition": "来源在任务过程中的可用、间歇、退化和失锁时序。",
       "node_kind": "variable",
@@ -5729,9 +5796,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A7a×L2",
-        "A7a×L3",
-        "A7a×L4"
+        "A7×L2",
+        "A7×L3",
+        "A7×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -5745,7 +5812,7 @@
         "PROPOSED-jd-6a.1.2.5",
         "jd-6a.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -5758,10 +5825,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "jd-7a.2",
-      "parent_id": "PROPOSED-jd-tree-A7a",
-      "canonical_slot": "jd-7a.2",
-      "owner_a": "A7a",
+      "node_id": "jd-7.2",
+      "parent_id": "PROPOSED-jd-tree-A7",
+      "canonical_slot": "jd-7.2",
+      "owner_a": "A7",
       "name": "位姿质量先验",
       "definition": "该 JD 对位姿不确定度的容忍范围，包括平面、高度、姿态与航向。",
       "node_kind": "group",
@@ -5793,7 +5860,7 @@
       "legacy_aliases": [
         "jd-6a.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -5807,10 +5874,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.2.1",
-      "parent_id": "jd-7a.2",
-      "canonical_slot": "jd-7a.2",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.2.1",
+      "parent_id": "jd-7.2",
+      "canonical_slot": "jd-7.2",
+      "owner_a": "A7",
       "name": "精度与不确定度要求",
       "definition": "定义位姿分量的质量要求和不确定度表达。",
       "node_kind": "group",
@@ -5844,7 +5911,7 @@
         "PROPOSED-jd-6a.2.1",
         "jd-6a.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -5858,10 +5925,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.2.1.1",
-      "parent_id": "PROPOSED-jd-7a.2.1",
-      "canonical_slot": "jd-7a.2",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.2.1.1",
+      "parent_id": "PROPOSED-jd-7.2.1",
+      "canonical_slot": "jd-7.2",
+      "owner_a": "A7",
       "name": "水平位置不确定度要求",
       "definition": "水平位置误差或不确定度的允许范围。",
       "node_kind": "variable",
@@ -5887,10 +5954,10 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7a×L1",
-        "A7a×L2",
-        "A7a×L3",
-        "A7a×L4"
+        "A7×L1",
+        "A7×L2",
+        "A7×L3",
+        "A7×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -5906,7 +5973,7 @@
         "PROPOSED-jd-6a.2.1.1",
         "jd-6a.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -5919,10 +5986,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.2.1.2",
-      "parent_id": "PROPOSED-jd-7a.2.1",
-      "canonical_slot": "jd-7a.2",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.2.1.2",
+      "parent_id": "PROPOSED-jd-7.2.1",
+      "canonical_slot": "jd-7.2",
+      "owner_a": "A7",
       "name": "垂向位置不确定度要求",
       "definition": "高度误差或不确定度的允许范围。",
       "node_kind": "variable",
@@ -5948,10 +6015,10 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7a×L1",
-        "A7a×L2",
-        "A7a×L3",
-        "A7a×L4"
+        "A7×L1",
+        "A7×L2",
+        "A7×L3",
+        "A7×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -5967,7 +6034,7 @@
         "PROPOSED-jd-6a.2.1.2",
         "jd-6a.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -5980,10 +6047,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.2.1.3",
-      "parent_id": "PROPOSED-jd-7a.2.1",
-      "canonical_slot": "jd-7a.2",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.2.1.3",
+      "parent_id": "PROPOSED-jd-7.2.1",
+      "canonical_slot": "jd-7.2",
+      "owner_a": "A7",
       "name": "姿态不确定度要求",
       "definition": "滚转/俯仰姿态误差或不确定度的允许范围。",
       "node_kind": "variable",
@@ -6009,10 +6076,10 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7a×L1",
-        "A7a×L2",
-        "A7a×L3",
-        "A7a×L4"
+        "A7×L1",
+        "A7×L2",
+        "A7×L3",
+        "A7×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -6028,7 +6095,7 @@
         "PROPOSED-jd-6a.2.1.3",
         "jd-6a.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -6041,10 +6108,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.2.1.4",
-      "parent_id": "PROPOSED-jd-7a.2.1",
-      "canonical_slot": "jd-7a.2",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.2.1.4",
+      "parent_id": "PROPOSED-jd-7.2.1",
+      "canonical_slot": "jd-7.2",
+      "owner_a": "A7",
       "name": "航向不确定度要求",
       "definition": "航向误差或不确定度的允许范围。",
       "node_kind": "variable",
@@ -6070,10 +6137,10 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7a×L1",
-        "A7a×L2",
-        "A7a×L3",
-        "A7a×L4"
+        "A7×L1",
+        "A7×L2",
+        "A7×L3",
+        "A7×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -6089,7 +6156,7 @@
         "PROPOSED-jd-6a.2.1.4",
         "jd-6a.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -6102,10 +6169,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.2.1.5",
-      "parent_id": "PROPOSED-jd-7a.2.1",
-      "canonical_slot": "jd-7a.2",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.2.1.5",
+      "parent_id": "PROPOSED-jd-7.2.1",
+      "canonical_slot": "jd-7.2",
+      "owner_a": "A7",
       "name": "不确定度表达形式",
       "definition": "SUT 或 Fixture 使用的位姿不确定度表达。",
       "node_kind": "variable",
@@ -6185,9 +6252,9 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7a×L1",
-        "A7a×L2",
-        "A7a×L3"
+        "A7×L1",
+        "A7×L2",
+        "A7×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -6201,7 +6268,7 @@
         "PROPOSED-jd-6a.2.1.5",
         "jd-6a.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -6215,10 +6282,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.2.2",
-      "parent_id": "jd-7a.2",
-      "canonical_slot": "jd-7a.2",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.2.2",
+      "parent_id": "jd-7.2",
+      "canonical_slot": "jd-7.2",
+      "owner_a": "A7",
       "name": "质量状态与退化",
       "definition": "定义定位质量、跳变、漂移、多源冲突和时序问题。",
       "node_kind": "group",
@@ -6254,7 +6321,7 @@
         "PROPOSED-jd-6a.2.2",
         "jd-6a.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -6268,10 +6335,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.2.2.1",
-      "parent_id": "PROPOSED-jd-7a.2.2",
-      "canonical_slot": "jd-7a.2",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.2.2.1",
+      "parent_id": "PROPOSED-jd-7.2.2",
+      "canonical_slot": "jd-7.2",
+      "owner_a": "A7",
       "name": "定位质量状态",
       "definition": "对外暴露的定位质量状态；具体阈值由平台或任务确认。",
       "node_kind": "variable",
@@ -6354,10 +6421,10 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7a×L1",
-        "A7a×L2",
-        "A7a×L3",
-        "A7a×L4"
+        "A7×L1",
+        "A7×L2",
+        "A7×L3",
+        "A7×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -6371,7 +6438,7 @@
         "PROPOSED-jd-6a.2.2.1",
         "jd-6a.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -6384,10 +6451,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.2.2.2",
-      "parent_id": "PROPOSED-jd-7a.2.2",
-      "canonical_slot": "jd-7a.2",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.2.2.2",
+      "parent_id": "PROPOSED-jd-7.2.2",
+      "canonical_slot": "jd-7.2",
+      "owner_a": "A7",
       "name": "定位退化类型",
       "definition": "绝对定位来源或融合状态的退化类型。",
       "node_kind": "variable",
@@ -6509,9 +6576,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A7a×L2",
-        "A7a×L3",
-        "A7a×L4"
+        "A7×L2",
+        "A7×L3",
+        "A7×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -6526,7 +6593,7 @@
         "PROPOSED-jd-6a.2.2.2",
         "jd-6a.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -6539,10 +6606,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.2.2.3",
-      "parent_id": "PROPOSED-jd-7a.2.2",
-      "canonical_slot": "jd-7a.2",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.2.2.3",
+      "parent_id": "PROPOSED-jd-7.2.2",
+      "canonical_slot": "jd-7.2",
+      "owner_a": "A7",
       "name": "位姿连续性状态",
       "definition": "局部位姿输出是否连续，或发生 reset/jump。",
       "node_kind": "variable",
@@ -6614,9 +6681,9 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7a×L2",
-        "A7a×L3",
-        "A7a×L4"
+        "A7×L2",
+        "A7×L3",
+        "A7×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -6631,7 +6698,7 @@
         "PROPOSED-jd-6a.2.2.3",
         "jd-6a.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -6644,10 +6711,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.2.2.4",
-      "parent_id": "PROPOSED-jd-7a.2.2",
-      "canonical_slot": "jd-7a.2",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.2.2.4",
+      "parent_id": "PROPOSED-jd-7.2.2",
+      "canonical_slot": "jd-7.2",
+      "owner_a": "A7",
       "name": "多源一致性状态",
       "definition": "多个定位/姿态来源之间的一致性状态。",
       "node_kind": "variable",
@@ -6704,7 +6771,7 @@
       ],
       "unit": null,
       "activation_condition": {
-        "node": "PROPOSED-jd-7a.1.2.1",
+        "node": "PROPOSED-jd-7.1.2.1",
         "operator": "count_gte",
         "value": 2
       },
@@ -6722,9 +6789,9 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7a×L2",
-        "A7a×L3",
-        "A7a×L4"
+        "A7×L2",
+        "A7×L3",
+        "A7×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -6738,7 +6805,7 @@
         "PROPOSED-jd-6a.2.2.4",
         "jd-6a.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -6751,10 +6818,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.2.2.5",
-      "parent_id": "PROPOSED-jd-7a.2.2",
-      "canonical_slot": "jd-7a.2",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.2.2.5",
+      "parent_id": "PROPOSED-jd-7.2.2",
+      "canonical_slot": "jd-7.2",
+      "owner_a": "A7",
       "name": "定位状态时延要求",
       "definition": "位姿与质量状态从测量到可用输出的允许时延。",
       "node_kind": "variable",
@@ -6780,9 +6847,9 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7a×L1",
-        "A7a×L2",
-        "A7a×L3"
+        "A7×L1",
+        "A7×L2",
+        "A7×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -6796,7 +6863,7 @@
         "PROPOSED-jd-6a.2.2.5",
         "jd-6a.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -6809,10 +6876,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "jd-7a.3",
-      "parent_id": "PROPOSED-jd-tree-A7a",
-      "canonical_slot": "jd-7a.3",
-      "owner_a": "A7a",
+      "node_id": "jd-7.3",
+      "parent_id": "PROPOSED-jd-tree-A7",
+      "canonical_slot": "jd-7.3",
+      "owner_a": "A7",
       "name": "定位策略适用集",
       "definition": "该 JD 下 L4 自主处置可用且有效的定位策略子集，例如切换源、重定位、地标观测、等待收敛与外部辅助。",
       "node_kind": "group",
@@ -6844,7 +6911,7 @@
       "legacy_aliases": [
         "jd-6a.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -6858,10 +6925,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.3.1",
-      "parent_id": "jd-7a.3",
-      "canonical_slot": "jd-7a.3",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.3.1",
+      "parent_id": "jd-7.3",
+      "canonical_slot": "jd-7.3",
+      "owner_a": "A7",
       "name": "策略触发与允许动作",
       "definition": "定义定位退化时可用的策略集合和触发条件。",
       "node_kind": "group",
@@ -6895,7 +6962,7 @@
         "PROPOSED-jd-6a.3.1",
         "jd-6a.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -6909,10 +6976,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.3.1.1",
-      "parent_id": "PROPOSED-jd-7a.3.1",
-      "canonical_slot": "jd-7a.3",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.3.1.1",
+      "parent_id": "PROPOSED-jd-7.3.1",
+      "canonical_slot": "jd-7.3",
+      "owner_a": "A7",
       "name": "定位策略触发集合",
       "definition": "允许触发融合调整、来源切换或重定位的质量状态。",
       "node_kind": "variable",
@@ -7008,8 +7075,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7a×L3",
-        "A7a×L4"
+        "A7×L3",
+        "A7×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -7024,7 +7091,7 @@
         "PROPOSED-jd-6a.3.1.1",
         "jd-6a.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -7036,10 +7103,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.3.1.2",
-      "parent_id": "PROPOSED-jd-7a.3.1",
-      "canonical_slot": "jd-7a.3",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.3.1.2",
+      "parent_id": "PROPOSED-jd-7.3.1",
+      "canonical_slot": "jd-7.3",
+      "owner_a": "A7",
       "name": "允许定位策略集合",
       "definition": "任务允许的定位恢复与保护策略。",
       "node_kind": "variable",
@@ -7169,11 +7236,11 @@
       ],
       "related_global_jd": [],
       "related_jd": [
-        "jd-9.4",
+        "jd-10.4",
         "jd-12.2"
       ],
       "used_by_axl": [
-        "A7a×L4"
+        "A7×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -7188,7 +7255,7 @@
         "PROPOSED-jd-6a.3.1.2",
         "jd-6a.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -7200,17 +7267,17 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.3.1.3",
-      "parent_id": "PROPOSED-jd-7a.3.1",
-      "canonical_slot": "jd-7a.3",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.3.1.3",
+      "parent_id": "PROPOSED-jd-7.3.1",
+      "canonical_slot": "jd-7.3",
+      "owner_a": "A7",
       "name": "定位策略适用规则",
       "definition": "策略与来源状态、飞行阶段和可用备份之间的条件映射。",
       "node_kind": "variable",
       "value_type": "array",
       "value_domain": {
         "item_schema": {
-          "strategy": "enum_ref:PROPOSED-jd-7a.3.1.2",
+          "strategy": "enum_ref:PROPOSED-jd-7.3.1.2",
           "conditions": "expression"
         },
         "values": [],
@@ -7218,7 +7285,7 @@
       },
       "unit": null,
       "activation_condition": {
-        "node": "PROPOSED-jd-7a.3.1.2",
+        "node": "PROPOSED-jd-7.3.1.2",
         "operator": "non_empty"
       },
       "multiplicity": "zero_or_more",
@@ -7234,7 +7301,7 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7a×L4"
+        "A7×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -7249,7 +7316,7 @@
         "PROPOSED-jd-6a.3.1.3",
         "jd-6a.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -7261,10 +7328,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7a.3.1.4",
-      "parent_id": "PROPOSED-jd-7a.3.1",
-      "canonical_slot": "jd-7a.3",
-      "owner_a": "A7a",
+      "node_id": "PROPOSED-jd-7.3.1.4",
+      "parent_id": "PROPOSED-jd-7.3.1",
+      "canonical_slot": "jd-7.3",
+      "owner_a": "A7",
       "name": "定位恢复验证要求",
       "definition": "策略执行后是否必须验证位姿质量和连续性已恢复。",
       "node_kind": "variable",
@@ -7275,7 +7342,7 @@
       ],
       "unit": null,
       "activation_condition": {
-        "node": "PROPOSED-jd-7a.3.1.2",
+        "node": "PROPOSED-jd-7.3.1.2",
         "operator": "non_empty"
       },
       "multiplicity": "one",
@@ -7291,7 +7358,7 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7a×L4"
+        "A7×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -7305,7 +7372,7 @@
         "PROPOSED-jd-6a.3.1.4",
         "jd-6a.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6a → A7a；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -7317,10 +7384,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "jd-7b.1",
-      "parent_id": "PROPOSED-jd-tree-A7b",
-      "canonical_slot": "jd-7b.1",
-      "owner_a": "A7b",
+      "node_id": "jd-8.1",
+      "parent_id": "PROPOSED-jd-tree-A8",
+      "canonical_slot": "jd-8.1",
+      "owner_a": "A8",
       "name": "相对几何先验",
       "definition": "该 JD 典型相对距离、方位和朝向范围，以及精度要求。",
       "node_kind": "group",
@@ -7352,7 +7419,7 @@
       "legacy_aliases": [
         "jd-6b.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6b → A7b；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -7366,10 +7433,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7b.1.1",
-      "parent_id": "jd-7b.1",
-      "canonical_slot": "jd-7b.1",
-      "owner_a": "A7b",
+      "node_id": "PROPOSED-jd-8.1.1",
+      "parent_id": "jd-8.1",
+      "canonical_slot": "jd-8.1",
+      "owner_a": "A8",
       "name": "参考对象与先验可用性",
       "definition": "定义相对定位依附的参考对象，以及该参考对象先验的可用程度。",
       "node_kind": "group",
@@ -7404,7 +7471,7 @@
         "PROPOSED-jd-6b.1.1",
         "jd-6b.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6b → A7b；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -7418,10 +7485,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7b.1.1.1",
-      "parent_id": "PROPOSED-jd-7b.1.1",
-      "canonical_slot": "jd-7b.1",
-      "owner_a": "A7b",
+      "node_id": "PROPOSED-jd-8.1.1.1",
+      "parent_id": "PROPOSED-jd-8.1.1",
+      "canonical_slot": "jd-8.1",
+      "owner_a": "A8",
       "name": "相对几何参考对象",
       "definition": "相对位置/方位估计所依附的业务参考对象。",
       "node_kind": "variable",
@@ -7549,10 +7616,10 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A7b×L1",
-        "A7b×L2",
-        "A7b×L3",
-        "A7b×L4"
+        "A8×L1",
+        "A8×L2",
+        "A8×L3",
+        "A8×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -7572,7 +7639,7 @@
         "PROPOSED-jd-6b.1.1.1",
         "jd-6b.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6b → A7b；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -7584,10 +7651,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7b.1.2",
-      "parent_id": "jd-7b.1",
-      "canonical_slot": "jd-7b.1",
-      "owner_a": "A7b",
+      "node_id": "PROPOSED-jd-8.1.2",
+      "parent_id": "jd-8.1",
+      "canonical_slot": "jd-8.1",
+      "owner_a": "A8",
       "name": "几何表示与约束量",
       "definition": "定义相对几何的表达形式、任务要求的几何分量和取值范围先验。",
       "node_kind": "group",
@@ -7622,7 +7689,7 @@
         "PROPOSED-jd-6b.1.2",
         "jd-6b.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6b → A7b；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -7636,10 +7703,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7b.1.2.1",
-      "parent_id": "PROPOSED-jd-7b.1.2",
-      "canonical_slot": "jd-7b.1",
-      "owner_a": "A7b",
+      "node_id": "PROPOSED-jd-8.1.2.1",
+      "parent_id": "PROPOSED-jd-8.1.2",
+      "canonical_slot": "jd-8.1",
+      "owner_a": "A8",
       "name": "相对几何表示",
       "definition": "相对位置、方位与区域关系的表达方式。",
       "node_kind": "variable",
@@ -7733,8 +7800,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7b×L1",
-        "A7b×L2"
+        "A8×L1",
+        "A8×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -7751,7 +7818,7 @@
         "PROPOSED-jd-6b.1.2.1",
         "jd-6b.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6b → A7b；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -7765,12 +7832,12 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7b.1.2.2",
-      "parent_id": "PROPOSED-jd-7b.1.2",
-      "canonical_slot": "jd-7b.1",
-      "owner_a": "A7b",
+      "node_id": "PROPOSED-jd-8.1.2.2",
+      "parent_id": "PROPOSED-jd-8.1.2",
+      "canonical_slot": "jd-8.1",
+      "owner_a": "A8",
       "name": "必需相对几何量集合",
-      "definition": "任务要求 A7b 提供的相对几何分量。",
+      "definition": "任务要求 A8 提供的相对几何分量。",
       "node_kind": "variable",
       "value_type": "multi_enum",
       "value_domain": [
@@ -7887,9 +7954,9 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7b×L1",
-        "A7b×L2",
-        "A7b×L3"
+        "A8×L1",
+        "A8×L2",
+        "A8×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -7906,7 +7973,7 @@
         "PROPOSED-jd-6b.1.2.2",
         "jd-6b.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6b → A7b；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -7918,10 +7985,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7b.1.1.2",
-      "parent_id": "PROPOSED-jd-7b.1.1",
-      "canonical_slot": "jd-7b.1",
-      "owner_a": "A7b",
+      "node_id": "PROPOSED-jd-8.1.1.2",
+      "parent_id": "PROPOSED-jd-8.1.1",
+      "canonical_slot": "jd-8.1",
+      "owner_a": "A8",
       "name": "相对几何先验可用性",
       "definition": "任务开始时参考对象几何或地图先验的可用程度。",
       "node_kind": "variable",
@@ -7991,10 +8058,10 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7b×L1",
-        "A7b×L2",
-        "A7b×L3",
-        "A7b×L4"
+        "A8×L1",
+        "A8×L2",
+        "A8×L3",
+        "A8×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -8011,7 +8078,7 @@
         "PROPOSED-jd-6b.1.1.2",
         "jd-6b.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6b → A7b；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -8023,17 +8090,17 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7b.1.2.3",
-      "parent_id": "PROPOSED-jd-7b.1.2",
-      "canonical_slot": "jd-7b.1",
-      "owner_a": "A7b",
+      "node_id": "PROPOSED-jd-8.1.2.3",
+      "parent_id": "PROPOSED-jd-8.1.2",
+      "canonical_slot": "jd-8.1",
+      "owner_a": "A8",
       "name": "相对几何范围先验",
       "definition": "距离、偏差、角度等几何量的任务范围。",
       "node_kind": "variable",
       "value_type": "object",
       "value_domain": {
         "fields": {
-          "quantity": "enum_ref:PROPOSED-jd-7b.1.2.2",
+          "quantity": "enum_ref:PROPOSED-jd-8.1.2.2",
           "min": null,
           "max": null,
           "unit": "per_quantity"
@@ -8056,9 +8123,9 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7b×L1",
-        "A7b×L2",
-        "A7b×L3"
+        "A8×L1",
+        "A8×L2",
+        "A8×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -8072,7 +8139,7 @@
         "PROPOSED-jd-6b.1.2.3",
         "jd-6b.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6b → A7b；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -8084,10 +8151,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "jd-7b.2",
-      "parent_id": "PROPOSED-jd-tree-A7b",
-      "canonical_slot": "jd-7b.2",
-      "owner_a": "A7b",
+      "node_id": "jd-8.2",
+      "parent_id": "PROPOSED-jd-tree-A8",
+      "canonical_slot": "jd-8.2",
+      "owner_a": "A8",
       "name": "相对几何感知机制",
       "definition": "该 JD 使用的相对几何估计机制，例如双目、单目加深度估计、LiDAR、Radar 与多源融合。",
       "node_kind": "group",
@@ -8119,7 +8186,7 @@
       "legacy_aliases": [
         "jd-6b.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6b → A7b；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -8133,10 +8200,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7b.2.1",
-      "parent_id": "jd-7b.2",
-      "canonical_slot": "jd-7b.2",
-      "owner_a": "A7b",
+      "node_id": "PROPOSED-jd-8.2.1",
+      "parent_id": "jd-8.2",
+      "canonical_slot": "jd-8.2",
+      "owner_a": "A8",
       "name": "估计输入与机制",
       "definition": "定义相对几何估计所用的观测机制、语义地图和可见边界。",
       "node_kind": "group",
@@ -8170,7 +8237,7 @@
         "PROPOSED-jd-6b.2.1",
         "jd-6b.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6b → A7b；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -8184,10 +8251,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7b.2.1.1",
-      "parent_id": "PROPOSED-jd-7b.2.1",
-      "canonical_slot": "jd-7b.2",
-      "owner_a": "A7b",
+      "node_id": "PROPOSED-jd-8.2.1.1",
+      "parent_id": "PROPOSED-jd-8.2.1",
+      "canonical_slot": "jd-8.2",
+      "owner_a": "A8",
       "name": "相对几何估计机制集合",
       "definition": "允许或要求使用的相对几何估计机制。",
       "node_kind": "variable",
@@ -8297,10 +8364,10 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A7b×L1",
-        "A7b×L2",
-        "A7b×L3",
-        "A7b×L4"
+        "A8×L1",
+        "A8×L2",
+        "A8×L3",
+        "A8×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -8317,7 +8384,7 @@
         "PROPOSED-jd-6b.2.1.1",
         "jd-6b.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6b → A7b；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -8331,10 +8398,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7b.2.1.2",
-      "parent_id": "PROPOSED-jd-7b.2.1",
-      "canonical_slot": "jd-7b.2",
-      "owner_a": "A7b",
+      "node_id": "PROPOSED-jd-8.2.1.2",
+      "parent_id": "PROPOSED-jd-8.2.1",
+      "canonical_slot": "jd-8.2",
+      "owner_a": "A8",
       "name": "语义地图可用性",
       "definition": "道路、车道、停车区、消防通道或园区边界的语义地图是否可用。",
       "node_kind": "variable",
@@ -8403,10 +8470,10 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7b×L1",
-        "A7b×L2",
-        "A7b×L3",
-        "A7b×L4"
+        "A8×L1",
+        "A8×L2",
+        "A8×L3",
+        "A8×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -8422,7 +8489,7 @@
         "PROPOSED-jd-6b.2.1.2",
         "jd-6b.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6b → A7b；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -8434,10 +8501,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7b.2.1.3",
-      "parent_id": "PROPOSED-jd-7b.2.1",
-      "canonical_slot": "jd-7b.2",
-      "owner_a": "A7b",
+      "node_id": "PROPOSED-jd-8.2.1.3",
+      "parent_id": "PROPOSED-jd-8.2.1",
+      "canonical_slot": "jd-8.2",
+      "owner_a": "A8",
       "name": "边界/标线可见性",
       "definition": "车道线、停车位、禁停标线或消防通道标识的可观测状态。",
       "node_kind": "variable",
@@ -8519,10 +8586,10 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7b×L1",
-        "A7b×L2",
-        "A7b×L3",
-        "A7b×L4"
+        "A8×L1",
+        "A8×L2",
+        "A8×L3",
+        "A8×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -8538,7 +8605,7 @@
         "PROPOSED-jd-6b.2.1.3",
         "jd-6b.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6b → A7b；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -8551,10 +8618,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7b.2.2",
-      "parent_id": "jd-7b.2",
-      "canonical_slot": "jd-7b.2",
-      "owner_a": "A7b",
+      "node_id": "PROPOSED-jd-8.2.2",
+      "parent_id": "jd-8.2",
+      "canonical_slot": "jd-8.2",
+      "owner_a": "A8",
       "name": "对象关联与几何更新",
       "definition": "定义跨帧或重观测关联线索，以及相对几何的更新时序。",
       "node_kind": "group",
@@ -8589,7 +8656,7 @@
         "PROPOSED-jd-6b.2.2",
         "jd-6b.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6b → A7b；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -8603,10 +8670,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7b.2.2.1",
-      "parent_id": "PROPOSED-jd-7b.2.2",
-      "canonical_slot": "jd-7b.2",
-      "owner_a": "A7b",
+      "node_id": "PROPOSED-jd-8.2.2.1",
+      "parent_id": "PROPOSED-jd-8.2.2",
+      "canonical_slot": "jd-8.2",
+      "owner_a": "A8",
       "name": "对象关联线索集合",
       "definition": "跨帧或重观测时可使用的对象关联线索。",
       "node_kind": "variable",
@@ -8700,9 +8767,9 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7b×L2",
-        "A7b×L3",
-        "A7b×L4"
+        "A8×L2",
+        "A8×L3",
+        "A8×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -8719,7 +8786,7 @@
         "PROPOSED-jd-6b.2.2.1",
         "jd-6b.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6b → A7b；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -8731,10 +8798,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7b.2.2.2",
-      "parent_id": "PROPOSED-jd-7b.2.2",
-      "canonical_slot": "jd-7b.2",
-      "owner_a": "A7b",
+      "node_id": "PROPOSED-jd-8.2.2.2",
+      "parent_id": "PROPOSED-jd-8.2.2",
+      "canonical_slot": "jd-8.2",
+      "owner_a": "A8",
       "name": "相对几何更新模式",
       "definition": "相对几何是单次、按航段还是连续更新。",
       "node_kind": "variable",
@@ -8804,10 +8871,10 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7b×L1",
-        "A7b×L2",
-        "A7b×L3",
-        "A7b×L4"
+        "A8×L1",
+        "A8×L2",
+        "A8×L3",
+        "A8×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -8823,7 +8890,7 @@
         "PROPOSED-jd-6b.2.2.2",
         "jd-6b.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6b → A7b；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -8835,10 +8902,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "jd-7b.3",
-      "parent_id": "PROPOSED-jd-tree-A7b",
-      "canonical_slot": "jd-7b.3",
-      "owner_a": "A7b",
+      "node_id": "jd-8.3",
+      "parent_id": "PROPOSED-jd-tree-A8",
+      "canonical_slot": "jd-8.3",
+      "owner_a": "A8",
       "name": "相对定位策略适用集",
       "definition": "该 JD 下 L4 自主处置可用且有效的相对定位策略子集，例如换视角、重观测、扩搜、他机补观测与重新关联。",
       "node_kind": "group",
@@ -8870,7 +8937,7 @@
       "legacy_aliases": [
         "jd-6b.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6b → A7b；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -8884,10 +8951,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7b.3.1",
-      "parent_id": "jd-7b.3",
-      "canonical_slot": "jd-7b.3",
-      "owner_a": "A7b",
+      "node_id": "PROPOSED-jd-8.3.1",
+      "parent_id": "jd-8.3",
+      "canonical_slot": "jd-8.3",
+      "owner_a": "A8",
       "name": "退化触发与恢复策略",
       "definition": "定义相对定位退化条件，以及允许采用的恢复和重观测策略。",
       "node_kind": "group",
@@ -8921,7 +8988,7 @@
         "PROPOSED-jd-6b.3.1",
         "jd-6b.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6b → A7b；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -8935,10 +9002,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7b.3.1.1",
-      "parent_id": "PROPOSED-jd-7b.3.1",
-      "canonical_slot": "jd-7b.3",
-      "owner_a": "A7b",
+      "node_id": "PROPOSED-jd-8.3.1.1",
+      "parent_id": "PROPOSED-jd-8.3.1",
+      "canonical_slot": "jd-8.3",
+      "owner_a": "A8",
       "name": "相对定位退化触发集合",
       "definition": "允许触发恢复策略的相对定位状态。",
       "node_kind": "variable",
@@ -9035,8 +9102,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7b×L3",
-        "A7b×L4"
+        "A8×L3",
+        "A8×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -9053,7 +9120,7 @@
         "PROPOSED-jd-6b.3.1.1",
         "jd-6b.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6b → A7b；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -9065,10 +9132,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7b.3.1.2",
-      "parent_id": "PROPOSED-jd-7b.3.1",
-      "canonical_slot": "jd-7b.3",
-      "owner_a": "A7b",
+      "node_id": "PROPOSED-jd-8.3.1.2",
+      "parent_id": "PROPOSED-jd-8.3.1",
+      "canonical_slot": "jd-8.3",
+      "owner_a": "A8",
       "name": "允许相对定位恢复策略",
       "definition": "任务允许的相对定位恢复和重关联策略。",
       "node_kind": "variable",
@@ -9174,10 +9241,10 @@
       "related_global_jd": [],
       "related_jd": [
         "jd-6.4",
-        "jd-9.4"
+        "jd-10.4"
       ],
       "used_by_axl": [
-        "A7b×L4"
+        "A8×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -9192,7 +9259,7 @@
         "PROPOSED-jd-6b.3.1.2",
         "jd-6b.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6b → A7b；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -9204,10 +9271,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7b.3.2",
-      "parent_id": "jd-7b.3",
-      "canonical_slot": "jd-7b.3",
-      "owner_a": "A7b",
+      "node_id": "PROPOSED-jd-8.3.2",
+      "parent_id": "jd-8.3",
+      "canonical_slot": "jd-8.3",
+      "owner_a": "A8",
       "name": "重关联范围与恢复验证",
       "definition": "定义重新关联允许跨越的范围和策略执行后的恢复验证要求。",
       "node_kind": "group",
@@ -9241,7 +9308,7 @@
         "PROPOSED-jd-6b.3.2",
         "jd-6b.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6b → A7b；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -9255,10 +9322,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7b.3.2.1",
-      "parent_id": "PROPOSED-jd-7b.3.2",
-      "canonical_slot": "jd-7b.3",
-      "owner_a": "A7b",
+      "node_id": "PROPOSED-jd-8.3.2.1",
+      "parent_id": "PROPOSED-jd-8.3.2",
+      "canonical_slot": "jd-8.3",
+      "owner_a": "A8",
       "name": "重关联跨越范围",
       "definition": "重新关联允许跨越的观测范围。",
       "node_kind": "variable",
@@ -9313,7 +9380,7 @@
       ],
       "unit": null,
       "activation_condition": {
-        "node": "PROPOSED-jd-7b.3.1.2",
+        "node": "PROPOSED-jd-8.3.1.2",
         "contains": "reassociate"
       },
       "multiplicity": "one",
@@ -9329,8 +9396,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7b×L2",
-        "A7b×L4"
+        "A8×L2",
+        "A8×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -9345,7 +9412,7 @@
         "PROPOSED-jd-6b.3.2.1",
         "jd-6b.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6b → A7b；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -9357,10 +9424,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-7b.3.2.2",
-      "parent_id": "PROPOSED-jd-7b.3.2",
-      "canonical_slot": "jd-7b.3",
-      "owner_a": "A7b",
+      "node_id": "PROPOSED-jd-8.3.2.2",
+      "parent_id": "PROPOSED-jd-8.3.2",
+      "canonical_slot": "jd-8.3",
+      "owner_a": "A8",
       "name": "相对定位恢复验证要求",
       "definition": "策略执行后是否必须验证参考对象、关联身份和相对几何质量已恢复。",
       "node_kind": "variable",
@@ -9371,7 +9438,7 @@
       ],
       "unit": null,
       "activation_condition": {
-        "node": "PROPOSED-jd-7b.3.1.2",
+        "node": "PROPOSED-jd-8.3.1.2",
         "operator": "non_empty"
       },
       "multiplicity": "one",
@@ -9387,7 +9454,7 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A7b×L4"
+        "A8×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -9401,7 +9468,7 @@
         "PROPOSED-jd-6b.3.2.2",
         "jd-6b.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A6b → A7b；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -9413,10 +9480,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "jd-9.1",
-      "parent_id": "PROPOSED-jd-tree-A9",
-      "canonical_slot": "jd-9.1",
-      "owner_a": "A9",
+      "node_id": "jd-10.1",
+      "parent_id": "PROPOSED-jd-tree-A10",
+      "canonical_slot": "jd-10.1",
+      "owner_a": "A10",
       "name": "航路拓扑",
       "definition": "JD 的航路结构集，例如航点、线段、扫描与盘旋。",
       "node_kind": "group",
@@ -9448,7 +9515,7 @@
       "legacy_aliases": [
         "jd-7.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -9462,10 +9529,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.1.1",
-      "parent_id": "jd-9.1",
-      "canonical_slot": "jd-9.1",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.1.1",
+      "parent_id": "jd-10.1",
+      "canonical_slot": "jd-10.1",
+      "owner_a": "A10",
       "name": "拓扑要素与业务语义",
       "definition": "定义高速和园区巡检可共用的拓扑场景、节点和航段语义。",
       "node_kind": "group",
@@ -9501,7 +9568,7 @@
         "PROPOSED-jd-7.1.1",
         "jd-7.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -9515,10 +9582,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.1.1.1",
-      "parent_id": "PROPOSED-jd-9.1.1",
-      "canonical_slot": "jd-9.1",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.1.1.1",
+      "parent_id": "PROPOSED-jd-10.1.1",
+      "canonical_slot": "jd-10.1",
+      "owner_a": "A10",
       "name": "拓扑场景类型",
       "definition": "巡检航路依附的业务空间类型。",
       "node_kind": "variable",
@@ -9566,10 +9633,10 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A9×L1",
-        "A9×L2",
-        "A9×L3",
-        "A9×L4"
+        "A10×L1",
+        "A10×L2",
+        "A10×L3",
+        "A10×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -9584,7 +9651,7 @@
         "PROPOSED-jd-7.1.1.1",
         "jd-7.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -9596,10 +9663,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.1.1.2",
-      "parent_id": "PROPOSED-jd-9.1.1",
-      "canonical_slot": "jd-9.1",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.1.1.2",
+      "parent_id": "PROPOSED-jd-10.1.1",
+      "canonical_slot": "jd-10.1",
+      "owner_a": "A10",
       "name": "拓扑节点类型集合",
       "definition": "巡检航路图中的节点语义。",
       "node_kind": "variable",
@@ -9750,10 +9817,10 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A9×L1",
-        "A9×L2",
-        "A9×L3",
-        "A9×L4"
+        "A10×L1",
+        "A10×L2",
+        "A10×L3",
+        "A10×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -9770,7 +9837,7 @@
         "PROPOSED-jd-7.1.1.2",
         "jd-7.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -9782,10 +9849,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.1.1.3",
-      "parent_id": "PROPOSED-jd-9.1.1",
-      "canonical_slot": "jd-9.1",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.1.1.3",
+      "parent_id": "PROPOSED-jd-10.1.1",
+      "canonical_slot": "jd-10.1",
+      "owner_a": "A10",
       "name": "巡检航段类型集合",
       "definition": "连接航路节点的业务航段语义。",
       "node_kind": "variable",
@@ -9899,10 +9966,10 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A9×L1",
-        "A9×L2",
-        "A9×L3",
-        "A9×L4"
+        "A10×L1",
+        "A10×L2",
+        "A10×L3",
+        "A10×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -9919,7 +9986,7 @@
         "PROPOSED-jd-7.1.1.3",
         "jd-7.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -9931,10 +9998,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.1.2",
-      "parent_id": "jd-9.1",
-      "canonical_slot": "jd-9.1",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.1.2",
+      "parent_id": "jd-10.1",
+      "canonical_slot": "jd-10.1",
+      "owner_a": "A10",
       "name": "拓扑关系与可达性",
       "definition": "定义航段方向关系和计划航路的连通状态。",
       "node_kind": "group",
@@ -9972,7 +10039,7 @@
         "PROPOSED-jd-7.1.2",
         "jd-7.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -9986,10 +10053,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.1.2.1",
-      "parent_id": "PROPOSED-jd-9.1.2",
-      "canonical_slot": "jd-9.1",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.1.2.1",
+      "parent_id": "PROPOSED-jd-10.1.2",
+      "canonical_slot": "jd-10.1",
+      "owner_a": "A10",
       "name": "航段方向性",
       "definition": "航段允许的通行方向。",
       "node_kind": "variable",
@@ -10059,9 +10126,9 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A9×L1",
-        "A9×L2",
-        "A9×L3"
+        "A10×L1",
+        "A10×L2",
+        "A10×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -10076,7 +10143,7 @@
         "PROPOSED-jd-7.1.2.1",
         "jd-7.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -10088,10 +10155,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.1.2.2",
-      "parent_id": "PROPOSED-jd-9.1.2",
-      "canonical_slot": "jd-9.1",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.1.2.2",
+      "parent_id": "PROPOSED-jd-10.1.2",
+      "canonical_slot": "jd-10.1",
+      "owner_a": "A10",
       "name": "航路连通性状态",
       "definition": "计划航路在场景中的可连通状态。",
       "node_kind": "variable",
@@ -10159,9 +10226,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A9×L2",
-        "A9×L3",
-        "A9×L4"
+        "A10×L2",
+        "A10×L3",
+        "A10×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -10176,7 +10243,7 @@
         "PROPOSED-jd-7.1.2.2",
         "jd-7.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -10189,10 +10256,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "jd-9.2",
-      "parent_id": "PROPOSED-jd-tree-A9",
-      "canonical_slot": "jd-9.2",
-      "owner_a": "A9",
+      "node_id": "jd-10.2",
+      "parent_id": "PROPOSED-jd-tree-A10",
+      "canonical_slot": "jd-10.2",
+      "owner_a": "A10",
       "name": "导航工作机制",
       "definition": "该 JD 的导航工作范式，例如航点跟随、轨迹跟踪、矢量场制导、反应式避障与混合模式。",
       "node_kind": "group",
@@ -10224,7 +10291,7 @@
       "legacy_aliases": [
         "jd-7.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -10238,10 +10305,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.2.1",
-      "parent_id": "jd-9.2",
-      "canonical_slot": "jd-9.2",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.2.1",
+      "parent_id": "jd-10.2",
+      "canonical_slot": "jd-10.2",
+      "owner_a": "A10",
       "name": "航路表示与生成",
       "definition": "定义导航系统接收的航路形式和航路生成方式。",
       "node_kind": "group",
@@ -10275,7 +10342,7 @@
         "PROPOSED-jd-7.2.1",
         "jd-7.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -10289,10 +10356,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.2.1.1",
-      "parent_id": "PROPOSED-jd-9.2.1",
-      "canonical_slot": "jd-9.2",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.2.1.1",
+      "parent_id": "PROPOSED-jd-10.2.1",
+      "canonical_slot": "jd-10.2",
+      "owner_a": "A10",
       "name": "航路表示类型",
       "definition": "任务航路的机器可读表示语义。",
       "node_kind": "variable",
@@ -10373,10 +10440,10 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A9×L1",
-        "A9×L2",
-        "A9×L3",
-        "A9×L4"
+        "A10×L1",
+        "A10×L2",
+        "A10×L3",
+        "A10×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -10392,7 +10459,7 @@
         "PROPOSED-jd-7.2.1.1",
         "jd-7.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -10406,10 +10473,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.2.2",
-      "parent_id": "jd-9.2",
-      "canonical_slot": "jd-9.2",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.2.2",
+      "parent_id": "jd-10.2",
+      "canonical_slot": "jd-10.2",
+      "owner_a": "A10",
       "name": "巡检执行方式与观察动作",
       "definition": "定义巡检运动模式、航段执行顺序和附带观察动作。",
       "node_kind": "group",
@@ -10444,7 +10511,7 @@
         "PROPOSED-jd-7.2.2",
         "jd-7.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -10458,10 +10525,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.2.2.1",
-      "parent_id": "PROPOSED-jd-9.2.2",
-      "canonical_slot": "jd-9.2",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.2.2.1",
+      "parent_id": "PROPOSED-jd-10.2.2",
+      "canonical_slot": "jd-10.2",
+      "owner_a": "A10",
       "name": "巡检运动模式",
       "definition": "用于覆盖道路、园区或目标的巡检运动模式。",
       "node_kind": "variable",
@@ -10578,10 +10645,10 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A9×L1",
-        "A9×L2",
-        "A9×L3",
-        "A9×L4"
+        "A10×L1",
+        "A10×L2",
+        "A10×L3",
+        "A10×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -10599,7 +10666,7 @@
         "PROPOSED-jd-7.2.2.1",
         "jd-7.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -10611,10 +10678,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.2.1.2",
-      "parent_id": "PROPOSED-jd-9.2.1",
-      "canonical_slot": "jd-9.2",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.2.1.2",
+      "parent_id": "PROPOSED-jd-10.2.1",
+      "canonical_slot": "jd-10.2",
+      "owner_a": "A10",
       "name": "航路生成方式",
       "definition": "航路是预先给定、动态生成还是两者结合。",
       "node_kind": "variable",
@@ -10686,10 +10753,10 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A9×L1",
-        "A9×L2",
-        "A9×L3",
-        "A9×L4"
+        "A10×L1",
+        "A10×L2",
+        "A10×L3",
+        "A10×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -10704,7 +10771,7 @@
         "PROPOSED-jd-7.2.1.2",
         "jd-7.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -10716,10 +10783,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.2.2.2",
-      "parent_id": "PROPOSED-jd-9.2.2",
-      "canonical_slot": "jd-9.2",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.2.2.2",
+      "parent_id": "PROPOSED-jd-10.2.2",
+      "canonical_slot": "jd-10.2",
+      "owner_a": "A10",
       "name": "航段执行顺序",
       "definition": "航段执行的顺序约束。",
       "node_kind": "variable",
@@ -10787,9 +10854,9 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A9×L1",
-        "A9×L2",
-        "A9×L3"
+        "A10×L1",
+        "A10×L2",
+        "A10×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -10804,7 +10871,7 @@
         "PROPOSED-jd-7.2.2.2",
         "jd-7.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -10816,10 +10883,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.2.2.3",
-      "parent_id": "PROPOSED-jd-9.2.2",
-      "canonical_slot": "jd-9.2",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.2.2.3",
+      "parent_id": "PROPOSED-jd-10.2.2",
+      "canonical_slot": "jd-10.2",
+      "owner_a": "A10",
       "name": "航点/航段观察动作",
       "definition": "航点或航段附带的观察动作语义；载荷动作本体引用 A9a。",
       "node_kind": "variable",
@@ -10915,12 +10982,12 @@
       "related_jd": [
         "jd-9a.1",
         "jd-6.4",
-        "jd-7b.3"
+        "jd-8.3"
       ],
       "used_by_axl": [
-        "A9×L1",
-        "A9×L2",
-        "A9×L4"
+        "A10×L1",
+        "A10×L2",
+        "A10×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -10936,7 +11003,7 @@
         "PROPOSED-jd-7.2.2.3",
         "jd-7.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -10948,10 +11015,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "jd-9.3",
-      "parent_id": "PROPOSED-jd-tree-A9",
-      "canonical_slot": "jd-9.3",
-      "owner_a": "A9",
+      "node_id": "jd-10.3",
+      "parent_id": "PROPOSED-jd-tree-A10",
+      "canonical_slot": "jd-10.3",
+      "owner_a": "A10",
       "name": "轨迹重规划判据",
       "definition": "轨迹级重规划的触发条件，区别于 A4 的任务级 replan triggers。",
       "node_kind": "group",
@@ -10983,7 +11050,7 @@
       "legacy_aliases": [
         "jd-7.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -10997,10 +11064,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.3.1",
-      "parent_id": "jd-9.3",
-      "canonical_slot": "jd-9.3",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.3.1",
+      "parent_id": "jd-10.3",
+      "canonical_slot": "jd-10.3",
+      "owner_a": "A10",
       "name": "偏差与触发条件",
       "definition": "定义航段偏差维度、持续性判据和重规划触发条件。",
       "node_kind": "group",
@@ -11037,7 +11104,7 @@
         "PROPOSED-jd-7.3.1",
         "jd-7.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -11051,10 +11118,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.3.1.1",
-      "parent_id": "PROPOSED-jd-9.3.1",
-      "canonical_slot": "jd-9.3",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.3.1.1",
+      "parent_id": "PROPOSED-jd-10.3.1",
+      "canonical_slot": "jd-10.3",
+      "owner_a": "A10",
       "name": "轨迹偏差维度集合",
       "definition": "用于判定航迹偏离的维度。",
       "node_kind": "variable",
@@ -11148,9 +11215,9 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A9×L2",
-        "A9×L3",
-        "A9×L4"
+        "A10×L2",
+        "A10×L3",
+        "A10×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -11167,7 +11234,7 @@
         "PROPOSED-jd-7.3.1.1",
         "jd-7.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -11179,17 +11246,17 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.3.1.2",
-      "parent_id": "PROPOSED-jd-9.3.1",
-      "canonical_slot": "jd-9.3",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.3.1.2",
+      "parent_id": "PROPOSED-jd-10.3.1",
+      "canonical_slot": "jd-10.3",
+      "owner_a": "A10",
       "name": "偏差/持续性阈值包",
       "definition": "各偏差维度触发重规划所需的阈值和持续时间。",
       "node_kind": "variable",
       "value_type": "array",
       "value_domain": {
         "item_schema": {
-          "dimension": "enum_ref:PROPOSED-jd-9.3.1.1",
+          "dimension": "enum_ref:PROPOSED-jd-10.3.1.1",
           "threshold": null,
           "duration": null,
           "unit": "per_dimension"
@@ -11213,8 +11280,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A9×L2",
-        "A9×L3"
+        "A10×L2",
+        "A10×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -11228,7 +11295,7 @@
         "PROPOSED-jd-7.3.1.2",
         "jd-7.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -11241,10 +11308,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.3.1.3",
-      "parent_id": "PROPOSED-jd-9.3.1",
-      "canonical_slot": "jd-9.3",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.3.1.3",
+      "parent_id": "PROPOSED-jd-10.3.1",
+      "canonical_slot": "jd-10.3",
+      "owner_a": "A10",
       "name": "轨迹重规划触发集合",
       "definition": "允许触发轨迹级重规划的场景或质量状态。",
       "node_kind": "variable",
@@ -11389,14 +11456,14 @@
         "jd-0.10"
       ],
       "related_jd": [
-        "jd-7a.2",
-        "jd-7b.3",
+        "jd-7.2",
+        "jd-8.3",
         "jd-11.2",
         "jd-12.2"
       ],
       "used_by_axl": [
-        "A9×L3",
-        "A9×L4"
+        "A10×L3",
+        "A10×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -11414,7 +11481,7 @@
         "PROPOSED-jd-7.3.1.3",
         "jd-7.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -11426,10 +11493,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.3.2",
-      "parent_id": "jd-9.3",
-      "canonical_slot": "jd-9.3",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.3.2",
+      "parent_id": "jd-10.3",
+      "canonical_slot": "jd-10.3",
+      "owner_a": "A10",
       "name": "不可行原因与重规划范围",
       "definition": "定义航段不可行的原因和触发后允许修改的航路范围。",
       "node_kind": "group",
@@ -11466,7 +11533,7 @@
         "PROPOSED-jd-7.3.2",
         "jd-7.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -11480,10 +11547,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.3.2.1",
-      "parent_id": "PROPOSED-jd-9.3.2",
-      "canonical_slot": "jd-9.3",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.3.2.1",
+      "parent_id": "PROPOSED-jd-10.3.2",
+      "canonical_slot": "jd-10.3",
+      "owner_a": "A10",
       "name": "航段不可行原因集合",
       "definition": "航段被判定不可行的原因。",
       "node_kind": "variable",
@@ -11579,12 +11646,12 @@
       ],
       "related_jd": [
         "jd-2.2",
-        "jd-7a.2",
+        "jd-7.2",
         "jd-11.2"
       ],
       "used_by_axl": [
-        "A9×L3",
-        "A9×L4"
+        "A10×L3",
+        "A10×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -11602,7 +11669,7 @@
         "PROPOSED-jd-7.3.2.1",
         "jd-7.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -11615,10 +11682,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.3.2.2",
-      "parent_id": "PROPOSED-jd-9.3.2",
-      "canonical_slot": "jd-9.3",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.3.2.2",
+      "parent_id": "PROPOSED-jd-10.3.2",
+      "canonical_slot": "jd-10.3",
+      "owner_a": "A10",
       "name": "重规划范围",
       "definition": "触发后允许修改的航路范围。",
       "node_kind": "variable",
@@ -11691,8 +11758,8 @@
         "jd-4.4"
       ],
       "used_by_axl": [
-        "A9×L3",
-        "A9×L4"
+        "A10×L3",
+        "A10×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -11707,7 +11774,7 @@
         "PROPOSED-jd-7.3.2.2",
         "jd-7.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -11719,10 +11786,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "jd-9.4",
-      "parent_id": "PROPOSED-jd-tree-A9",
-      "canonical_slot": "jd-9.4",
-      "owner_a": "A9",
+      "node_id": "jd-10.4",
+      "parent_id": "PROPOSED-jd-tree-A10",
+      "canonical_slot": "jd-10.4",
+      "owner_a": "A10",
       "name": "航迹处置策略适用集",
       "definition": "该 JD 下 L4 可用且有效的运动处置策略子集，例如改高度、改航迹、等待、悬停与增加裕度。",
       "node_kind": "group",
@@ -11754,7 +11821,7 @@
       "legacy_aliases": [
         "jd-7.4"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -11768,12 +11835,12 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.4.1",
-      "parent_id": "jd-9.4",
-      "canonical_slot": "jd-9.4",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.4.1",
+      "parent_id": "jd-10.4",
+      "canonical_slot": "jd-10.4",
+      "owner_a": "A10",
       "name": "处置选择与适用规则",
-      "definition": "定义 A9 可选择的航迹处置、适用规则和安全等待点要求。",
+      "definition": "定义 A10 可选择的航迹处置、适用规则和安全等待点要求。",
       "node_kind": "group",
       "value_type": "none",
       "value_domain": null,
@@ -11807,7 +11874,7 @@
         "PROPOSED-jd-7.4.1",
         "jd-7.4"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -11821,12 +11888,12 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.4.1.1",
-      "parent_id": "PROPOSED-jd-9.4.1",
-      "canonical_slot": "jd-9.4",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.4.1.1",
+      "parent_id": "PROPOSED-jd-10.4.1",
+      "canonical_slot": "jd-10.4",
+      "owner_a": "A10",
       "name": "允许航迹处置策略集合",
-      "definition": "任务允许 A9 选择的运动层处置策略。",
+      "definition": "任务允许 A10 选择的运动层处置策略。",
       "node_kind": "variable",
       "value_type": "multi_enum",
       "value_domain": [
@@ -11957,11 +12024,11 @@
       ],
       "related_jd": [
         "jd-4.4",
-        "jd-10.2",
+        "jd-11.2",
         "jd-12.2"
       ],
       "used_by_axl": [
-        "A9×L4"
+        "A10×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -11977,7 +12044,7 @@
         "PROPOSED-jd-7.4.1.1",
         "jd-7.4"
       ],
-      "notes": "A9 选择航迹/运动目标；A10 执行控制；A12 决定系统级安全返航或中止。\n2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "A10 选择航迹/运动目标；A11 执行控制；A12 决定系统级安全返航或中止。\n2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -11989,17 +12056,17 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.4.1.2",
-      "parent_id": "PROPOSED-jd-9.4.1",
-      "canonical_slot": "jd-9.4",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.4.1.2",
+      "parent_id": "PROPOSED-jd-10.4.1",
+      "canonical_slot": "jd-10.4",
+      "owner_a": "A10",
       "name": "航迹策略适用规则",
       "definition": "策略与触发、飞行阶段、可用等待点、备选航路和安全约束之间的映射。",
       "node_kind": "variable",
       "value_type": "array",
       "value_domain": {
         "item_schema": {
-          "strategy": "enum_ref:PROPOSED-jd-9.4.1.1",
+          "strategy": "enum_ref:PROPOSED-jd-10.4.1.1",
           "conditions": "expression"
         },
         "values": [],
@@ -12007,7 +12074,7 @@
       },
       "unit": null,
       "activation_condition": {
-        "node": "PROPOSED-jd-9.4.1.1",
+        "node": "PROPOSED-jd-10.4.1.1",
         "operator": "non_empty"
       },
       "multiplicity": "zero_or_more",
@@ -12023,7 +12090,7 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A9×L4"
+        "A10×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -12037,7 +12104,7 @@
         "PROPOSED-jd-7.4.1.2",
         "jd-7.4"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -12049,10 +12116,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.4.1.3",
-      "parent_id": "PROPOSED-jd-9.4.1",
-      "canonical_slot": "jd-9.4",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.4.1.3",
+      "parent_id": "PROPOSED-jd-10.4.1",
+      "canonical_slot": "jd-10.4",
+      "owner_a": "A10",
       "name": "安全等待点要求",
       "definition": "等待或悬停策略是否必须使用已定义的安全等待点。",
       "node_kind": "variable",
@@ -12103,7 +12170,7 @@
       ],
       "unit": null,
       "activation_condition": {
-        "node": "PROPOSED-jd-9.4.1.1",
+        "node": "PROPOSED-jd-10.4.1.1",
         "operator": "intersects",
         "value": [
           "wait",
@@ -12125,7 +12192,7 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A9×L4"
+        "A10×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -12139,7 +12206,7 @@
         "PROPOSED-jd-7.4.1.3",
         "jd-7.4"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -12151,10 +12218,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.4.2",
-      "parent_id": "jd-9.4",
-      "canonical_slot": "jd-9.4",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.4.2",
+      "parent_id": "jd-10.4",
+      "canonical_slot": "jd-10.4",
+      "owner_a": "A10",
       "name": "可用资源与处置验证",
       "definition": "定义备选航路资源和处置执行后的验证要求。",
       "node_kind": "group",
@@ -12190,7 +12257,7 @@
         "PROPOSED-jd-7.4.2",
         "jd-7.4"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -12204,10 +12271,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.4.2.1",
-      "parent_id": "PROPOSED-jd-9.4.2",
-      "canonical_slot": "jd-9.4",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.4.2.1",
+      "parent_id": "PROPOSED-jd-10.4.2",
+      "canonical_slot": "jd-10.4",
+      "owner_a": "A10",
       "name": "备选航路可用性",
       "definition": "任务是否提供可用于改航或返回的备选航路。",
       "node_kind": "variable",
@@ -12265,8 +12332,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A9×L3",
-        "A9×L4"
+        "A10×L3",
+        "A10×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -12281,7 +12348,7 @@
         "PROPOSED-jd-7.4.2.1",
         "jd-7.4"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -12293,10 +12360,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-9.4.2.2",
-      "parent_id": "PROPOSED-jd-9.4.2",
-      "canonical_slot": "jd-9.4",
-      "owner_a": "A9",
+      "node_id": "PROPOSED-jd-10.4.2.2",
+      "parent_id": "PROPOSED-jd-10.4.2",
+      "canonical_slot": "jd-10.4",
+      "owner_a": "A10",
       "name": "处置后航路验证要求",
       "definition": "执行航迹处置后是否必须验证新航路可行、约束满足且目标仍可观测。",
       "node_kind": "variable",
@@ -12307,7 +12374,7 @@
       ],
       "unit": null,
       "activation_condition": {
-        "node": "PROPOSED-jd-9.4.1.1",
+        "node": "PROPOSED-jd-10.4.1.1",
         "operator": "non_empty"
       },
       "multiplicity": "one",
@@ -12323,11 +12390,11 @@
       ],
       "related_global_jd": [],
       "related_jd": [
-        "jd-7a.2",
-        "jd-7b.1"
+        "jd-7.2",
+        "jd-8.1"
       ],
       "used_by_axl": [
-        "A9×L4"
+        "A10×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -12341,7 +12408,7 @@
         "PROPOSED-jd-7.4.2.2",
         "jd-7.4"
       ],
-      "notes": "2026-07-19 会议草案重编号：A7 → A9；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
       "projection_targets": [
         "user_config",
         "sut_input"
@@ -12354,10 +12421,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-tree-A10",
+      "node_id": "PROPOSED-jd-tree-A11",
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "飞行控制 / 执行机构",
       "definition": "描述飞行控制、控制质量、控制工作机制与控制处置策略相关的 JD 业务变量；白墙窄缝内容保留为场景化候选分支。",
       "node_kind": "capability_root",
@@ -12381,23 +12448,23 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
         "L-A8-V06",
-        "L-A10-JD66-V2",
-        "L-A10-AXL68-V2"
+        "L-A11-JD66-V3",
+        "L-A11-AXL68-V3"
       ],
       "evidence_status": "authoritative_existing",
       "review_status": "reviewed",
       "legacy_aliases": [
         "PROPOSED-jd-tree-A8"
       ],
-      "notes": "未在此处处理需求草案 v0.6 与现有 66 槽位字典中 jd-10.1/8.2/8.3 的含义冲突；A10 分支不代表完成正式编号迁移。\n2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。\nA10 能力根与 canonical 槽位以 ability-id-v2 权威字典为准；v0.6 平台基准和避障树仅作为非 canonical 候选保留。",
+      "notes": "未在此处处理需求草案 v0.6 与现有 66 槽位字典中 jd-11.1/jd-11.2/jd-11.3 的含义冲突；A11 分支不代表完成正式编号迁移。\n2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。\nA11 能力根与 canonical 槽位以 ability-id-v3 权威字典为准；v0.6 平台基准和避障树仅作为非 canonical 候选保留。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -12411,10 +12478,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "jd-10.1",
-      "parent_id": "PROPOSED-jd-tree-A10",
-      "canonical_slot": "jd-10.1",
-      "owner_a": "A10",
+      "node_id": "jd-11.1",
+      "parent_id": "PROPOSED-jd-tree-A11",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
       "name": "控制质量先验",
       "definition": "该 JD 对控制质量的容忍范围，包括位置、姿态、速度与航向误差。",
       "node_kind": "group",
@@ -12450,29 +12517,29 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L1",
-        "A10×L2",
-        "A10×L3"
+        "A11×L1",
+        "A11×L2",
+        "A11×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
-        "L-A10-JD66-V2",
-        "L-A10-AXL68-V2"
+        "L-A11-JD66-V3",
+        "L-A11-AXL68-V3"
       ],
       "evidence_status": "authoritative_existing",
       "derivation_status": "given",
       "review_status": "reviewed",
       "legacy_aliases": [],
-      "notes": "canonical 名称与定义取自 ability-id-v2 权威机读源；具体子维度尚待建设。"
+      "notes": "canonical 名称与定义取自 ability-id-v3 权威机读源；具体子维度尚待建设。"
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "jd-10.2",
-      "parent_id": "PROPOSED-jd-tree-A10",
-      "canonical_slot": "jd-10.2",
-      "owner_a": "A10",
+      "node_id": "jd-11.2",
+      "parent_id": "PROPOSED-jd-tree-A11",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
       "name": "控制工作机制",
       "definition": "该 JD 的控制工作范式，例如 PID、MPC、自适应控制、增益调度与 RL controller。",
       "node_kind": "group",
@@ -12508,28 +12575,28 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L1",
-        "A10×L2"
+        "A11×L1",
+        "A11×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
-        "L-A10-JD66-V2",
-        "L-A10-AXL68-V2"
+        "L-A11-JD66-V3",
+        "L-A11-AXL68-V3"
       ],
       "evidence_status": "authoritative_existing",
       "derivation_status": "given",
       "review_status": "reviewed",
       "legacy_aliases": [],
-      "notes": "canonical 名称与定义取自 ability-id-v2 权威机读源；具体子维度尚待建设。"
+      "notes": "canonical 名称与定义取自 ability-id-v3 权威机读源；具体子维度尚待建设。"
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "jd-10.3",
-      "parent_id": "PROPOSED-jd-tree-A10",
-      "canonical_slot": "jd-10.3",
-      "owner_a": "A10",
+      "node_id": "jd-11.3",
+      "parent_id": "PROPOSED-jd-tree-A11",
+      "canonical_slot": "jd-11.3",
+      "owner_a": "A11",
       "name": "控制处置策略适用集",
       "definition": "该 JD 下 L4 可用且有效的控制处置策略子集，例如模式切换、降速、增大裕度、等待稳定与请求检查。",
       "node_kind": "group",
@@ -12565,27 +12632,27 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L4"
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
-        "L-A10-JD66-V2",
-        "L-A10-AXL68-V2"
+        "L-A11-JD66-V3",
+        "L-A11-AXL68-V3"
       ],
       "evidence_status": "authoritative_existing",
       "derivation_status": "given",
       "review_status": "reviewed",
       "legacy_aliases": [],
-      "notes": "canonical 名称与定义取自 ability-id-v2 权威机读源；具体子维度尚待建设。"
+      "notes": "canonical 名称与定义取自 ability-id-v3 权威机读源；具体子维度尚待建设。"
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.platform-interface-v0.6",
-      "parent_id": "PROPOSED-jd-tree-A10",
+      "node_id": "PROPOSED-jd-11.platform-interface-v0.6",
+      "parent_id": "PROPOSED-jd-tree-A11",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "v0.6 候选：控制接口/指令类型",
       "definition": "需求草案 v0.6 §2.5 的平台基准：控制接口/指令类型。",
       "node_kind": "variable",
@@ -12628,8 +12695,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -12641,9 +12708,9 @@
       "review_status": "proposed",
       "legacy_aliases": [
         "jd-8.1",
-        "jd-10.1"
+        "jd-11.1"
       ],
-      "notes": "平台基准固定；按需求草案 v0.6 原样展示。\n2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。\n该节点来自旧 A8 白墙 v0.6 平台基准，与新 A10 canonical 槽位语义冲突；当前保留为非 canonical 候选，不覆盖 jd-10.1/10.2/10.3。",
+      "notes": "平台基准固定；按需求草案 v0.6 原样展示。\n2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。\n该节点来自旧 A8 白墙 v0.6 平台基准，与新 A11 canonical 槽位语义冲突；当前保留为非 canonical 候选，不覆盖 jd-11.1/jd-11.2/jd-11.3。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -12657,10 +12724,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.platform-constraints-v0.6",
-      "parent_id": "PROPOSED-jd-tree-A10",
+      "node_id": "PROPOSED-jd-11.platform-constraints-v0.6",
+      "parent_id": "PROPOSED-jd-tree-A11",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "v0.6 候选：控制约束（v_max / 姿态角 / Δt / f_c）",
       "definition": "需求草案 v0.6 §2.5 的平台基准：控制约束。",
       "node_kind": "variable",
@@ -12703,8 +12770,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -12716,9 +12783,9 @@
       "review_status": "proposed",
       "legacy_aliases": [
         "jd-8.2",
-        "jd-10.2"
+        "jd-11.2"
       ],
-      "notes": "草案只给出 v_max 与 f_c 的占位基准；姿态角、Δt 及最终可行值待仿真团队校准。\n2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。\n该节点来自旧 A8 白墙 v0.6 平台基准，与新 A10 canonical 槽位语义冲突；当前保留为非 canonical 候选，不覆盖 jd-10.1/10.2/10.3。",
+      "notes": "草案只给出 v_max 与 f_c 的占位基准；姿态角、Δt 及最终可行值待仿真团队校准。\n2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。\n该节点来自旧 A8 白墙 v0.6 平台基准，与新 A11 canonical 槽位语义冲突；当前保留为非 canonical 候选，不覆盖 jd-11.1/jd-11.2/jd-11.3。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -12732,10 +12799,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.execution-envelope-v0.6",
-      "parent_id": "PROPOSED-jd-tree-A10",
+      "node_id": "PROPOSED-jd-11.execution-envelope-v0.6",
+      "parent_id": "PROPOSED-jd-tree-A11",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "v0.6 候选：执行包络（多旋翼 / 高度带 / 物理执行）",
       "definition": "需求草案 v0.6 §2.5 的平台基准：执行包络。",
       "node_kind": "variable",
@@ -12778,8 +12845,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -12791,9 +12858,9 @@
       "review_status": "proposed",
       "legacy_aliases": [
         "jd-8.3",
-        "jd-10.3"
+        "jd-11.3"
       ],
-      "notes": "草案将平台基准整体固定；高度带与其他物理执行值待仿真团队校准。\n2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。\n该节点来自旧 A8 白墙 v0.6 平台基准，与新 A10 canonical 槽位语义冲突；当前保留为非 canonical 候选，不覆盖 jd-10.1/10.2/10.3。",
+      "notes": "草案将平台基准整体固定；高度带与其他物理执行值待仿真团队校准。\n2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。\n该节点来自旧 A8 白墙 v0.6 平台基准，与新 A11 canonical 槽位语义冲突；当前保留为非 canonical 候选，不覆盖 jd-11.1/jd-11.2/jd-11.3。",
       "projection_targets": [
         "world_config",
         "user_config",
@@ -12807,10 +12874,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5",
-      "parent_id": "PROPOSED-jd-tree-A10",
+      "node_id": "PROPOSED-jd-11.5",
+      "parent_id": "PROPOSED-jd-tree-A11",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "候选避障变量树（旧 jd-8.5 草案）",
       "definition": "需求草案 v0.6 的白墙避障树，包括障碍物与障碍物布局。",
       "node_kind": "group",
@@ -12830,8 +12897,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -12843,9 +12910,9 @@
       "review_status": "proposed",
       "legacy_aliases": [
         "jd-8.5",
-        "jd-10.5"
+        "jd-11.5"
       ],
-      "notes": "jd-10.5 为需求草案 v0.6 新增分支；是否进入正式 66 槽位编号体系仍待确认。\n2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。\njd-10.5 尚未进入 66 槽位权威字典；本分支及其子节点均为非 canonical 候选。",
+      "notes": "jd-11.5 为需求草案 v0.6 新增分支；是否进入正式 66 槽位编号体系仍待确认。\n2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。\njd-11.5 尚未进入 66 槽位权威字典；本分支及其子节点均为非 canonical 候选。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -12857,10 +12924,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.1",
-      "parent_id": "PROPOSED-jd-10.5",
+      "node_id": "PROPOSED-jd-11.5.1",
+      "parent_id": "PROPOSED-jd-11.5",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "障碍物",
       "definition": "单面白墙自身的几何、外观与缝属性。",
       "node_kind": "group",
@@ -12880,8 +12947,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -12894,9 +12961,9 @@
       "legacy_aliases": [
         "jd-8.5.1",
         "jd-8.5",
-        "jd-10.5.1"
+        "jd-11.5.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -12908,10 +12975,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.1.1",
-      "parent_id": "PROPOSED-jd-10.5.1",
+      "node_id": "PROPOSED-jd-11.5.1.1",
+      "parent_id": "PROPOSED-jd-11.5.1",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "几何",
       "definition": "白墙本体的几何属性。",
       "node_kind": "group",
@@ -12931,8 +12998,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -12945,9 +13012,9 @@
       "legacy_aliases": [
         "jd-8.5.1.1",
         "jd-8.5",
-        "jd-10.5.1.1"
+        "jd-11.5.1.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -12959,10 +13026,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.1.1.1",
-      "parent_id": "PROPOSED-jd-10.5.1.1",
+      "node_id": "PROPOSED-jd-11.5.1.1.1",
+      "parent_id": "PROPOSED-jd-11.5.1.1",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "墙高",
       "definition": "白墙高度档位。",
       "node_kind": "variable",
@@ -13016,8 +13083,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -13030,9 +13097,9 @@
       "legacy_aliases": [
         "jd-8.5.1.1.1",
         "jd-8.5",
-        "jd-10.5.1.1.1"
+        "jd-11.5.1.1.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -13044,10 +13111,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.1.1.2",
-      "parent_id": "PROPOSED-jd-10.5.1.1",
+      "node_id": "PROPOSED-jd-11.5.1.1.2",
+      "parent_id": "PROPOSED-jd-11.5.1.1",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "墙厚",
       "definition": "白墙厚度档位；缝道长等于墙厚。",
       "node_kind": "variable",
@@ -13101,8 +13168,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -13115,9 +13182,9 @@
       "legacy_aliases": [
         "jd-8.5.1.1.2",
         "jd-8.5",
-        "jd-10.5.1.1.2"
+        "jd-11.5.1.1.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -13129,10 +13196,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.1.1.3",
-      "parent_id": "PROPOSED-jd-10.5.1.1",
+      "node_id": "PROPOSED-jd-11.5.1.1.3",
+      "parent_id": "PROPOSED-jd-11.5.1.1",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "墙宽",
       "definition": "白墙宽度档位；宽墙用于强制穿缝。",
       "node_kind": "variable",
@@ -13186,8 +13253,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -13200,9 +13267,9 @@
       "legacy_aliases": [
         "jd-8.5.1.1.3",
         "jd-8.5",
-        "jd-10.5.1.1.3"
+        "jd-11.5.1.1.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -13214,10 +13281,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.1.1.4",
-      "parent_id": "PROPOSED-jd-10.5.1.1",
+      "node_id": "PROPOSED-jd-11.5.1.1.4",
+      "parent_id": "PROPOSED-jd-11.5.1.1",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "墙外形",
       "definition": "白墙外形类别。",
       "node_kind": "variable",
@@ -13271,8 +13338,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -13285,9 +13352,9 @@
       "legacy_aliases": [
         "jd-8.5.1.1.4",
         "jd-8.5",
-        "jd-10.5.1.1.4"
+        "jd-11.5.1.1.4"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -13299,10 +13366,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.1.2",
-      "parent_id": "PROPOSED-jd-10.5.1",
+      "node_id": "PROPOSED-jd-11.5.1.2",
+      "parent_id": "PROPOSED-jd-11.5.1",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "外观（墙纹理 / 缝墙对比度）",
       "definition": "白墙纹理和缝/墙对比度。",
       "node_kind": "group",
@@ -13322,8 +13389,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -13336,9 +13403,9 @@
       "legacy_aliases": [
         "jd-8.5.1.2",
         "jd-8.5",
-        "jd-10.5.1.2"
+        "jd-11.5.1.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -13350,10 +13417,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.1.2.1",
-      "parent_id": "PROPOSED-jd-10.5.1.2",
+      "node_id": "PROPOSED-jd-11.5.1.2.1",
+      "parent_id": "PROPOSED-jd-11.5.1.2",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "纹理复杂度",
       "definition": "墙面纹理复杂度。",
       "node_kind": "variable",
@@ -13407,8 +13474,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -13421,9 +13488,9 @@
       "legacy_aliases": [
         "jd-8.5.1.2.1",
         "jd-8.5",
-        "jd-10.5.1.2.1"
+        "jd-11.5.1.2.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -13435,10 +13502,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.1.2.2",
-      "parent_id": "PROPOSED-jd-10.5.1.2",
+      "node_id": "PROPOSED-jd-11.5.1.2.2",
+      "parent_id": "PROPOSED-jd-11.5.1.2",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "缝/墙对比度",
       "definition": "缝与墙面的视觉对比度。",
       "node_kind": "variable",
@@ -13492,8 +13559,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -13506,9 +13573,9 @@
       "legacy_aliases": [
         "jd-8.5.1.2.2",
         "jd-8.5",
-        "jd-10.5.1.2.2"
+        "jd-11.5.1.2.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -13520,10 +13587,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.1.3",
-      "parent_id": "PROPOSED-jd-10.5.1",
+      "node_id": "PROPOSED-jd-11.5.1.3",
+      "parent_id": "PROPOSED-jd-11.5.1",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "缝（单缝 schema；多缝时列表值）",
       "definition": "单缝 schema；一墙多缝时各叶子取列表值。",
       "node_kind": "group",
@@ -13543,8 +13610,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -13557,9 +13624,9 @@
       "legacy_aliases": [
         "jd-8.5.1.3",
         "jd-8.5",
-        "jd-10.5.1.3"
+        "jd-11.5.1.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -13571,10 +13638,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.1.3.1",
-      "parent_id": "PROPOSED-jd-10.5.1.3",
+      "node_id": "PROPOSED-jd-11.5.1.3.1",
+      "parent_id": "PROPOSED-jd-11.5.1.3",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "缝宽（比值）",
       "definition": "目标缝宽相对机身等效直径的比值；连续值域，同档内可连续变化。",
       "node_kind": "variable",
@@ -13639,8 +13706,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -13653,9 +13720,9 @@
       "legacy_aliases": [
         "jd-8.5.1.3.1",
         "jd-8.5",
-        "jd-10.5.1.3.1"
+        "jd-11.5.1.3.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -13667,10 +13734,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.1.3.2",
-      "parent_id": "PROPOSED-jd-10.5.1.3",
+      "node_id": "PROPOSED-jd-11.5.1.3.2",
+      "parent_id": "PROPOSED-jd-11.5.1.3",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "缝纵向位置",
       "definition": "缝在白墙纵向上的位置。",
       "node_kind": "variable",
@@ -13724,8 +13791,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -13738,9 +13805,9 @@
       "legacy_aliases": [
         "jd-8.5.1.3.2",
         "jd-8.5",
-        "jd-10.5.1.3.2"
+        "jd-11.5.1.3.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -13752,10 +13819,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.1.3.3",
-      "parent_id": "PROPOSED-jd-10.5.1.3",
+      "node_id": "PROPOSED-jd-11.5.1.3.3",
+      "parent_id": "PROPOSED-jd-11.5.1.3",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "缝横向位置",
       "definition": "缝在白墙横向上的位置。",
       "node_kind": "variable",
@@ -13809,8 +13876,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -13823,9 +13890,9 @@
       "legacy_aliases": [
         "jd-8.5.1.3.3",
         "jd-8.5",
-        "jd-10.5.1.3.3"
+        "jd-11.5.1.3.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -13837,10 +13904,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.1.3.4",
-      "parent_id": "PROPOSED-jd-10.5.1.3",
+      "node_id": "PROPOSED-jd-11.5.1.3.4",
+      "parent_id": "PROPOSED-jd-11.5.1.3",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "缝形状",
       "definition": "缝的形状类别。",
       "node_kind": "variable",
@@ -13894,8 +13961,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -13908,9 +13975,9 @@
       "legacy_aliases": [
         "jd-8.5.1.3.4",
         "jd-8.5",
-        "jd-10.5.1.3.4"
+        "jd-11.5.1.3.4"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -13922,10 +13989,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.1.4",
-      "parent_id": "PROPOSED-jd-10.5.1",
+      "node_id": "PROPOSED-jd-11.5.1.4",
+      "parent_id": "PROPOSED-jd-11.5.1",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "缝数",
       "definition": "单面墙上的缝数量；约束缝列表长度。",
       "node_kind": "variable",
@@ -13979,13 +14046,13 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
       "constraints": [
-        "len(jd-10.5.1.3.1..jd-10.5.1.3.4) == jd-10.5.1.4"
+        "len(jd-11.5.1.3.1..jd-11.5.1.3.4) == jd-11.5.1.4"
       ],
       "source": [
         "L-A8-V06"
@@ -13995,9 +14062,9 @@
       "legacy_aliases": [
         "jd-8.5.1.4",
         "jd-8.5",
-        "jd-10.5.1.4"
+        "jd-11.5.1.4"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -14009,10 +14076,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.1.5",
-      "parent_id": "PROPOSED-jd-10.5.1",
+      "node_id": "PROPOSED-jd-11.5.1.5",
+      "parent_id": "PROPOSED-jd-11.5.1",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "缝间排列",
       "definition": "同一面墙上多缝之间的排列方式。",
       "node_kind": "variable",
@@ -14054,7 +14121,7 @@
       ],
       "unit": null,
       "activation_condition": {
-        "node": "PROPOSED-jd-10.5.1.4",
+        "node": "PROPOSED-jd-11.5.1.4",
         "operator": ">=",
         "value": 2
       },
@@ -14070,8 +14137,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -14084,9 +14151,9 @@
       "legacy_aliases": [
         "jd-8.5.1.5",
         "jd-8.5",
-        "jd-10.5.1.5"
+        "jd-11.5.1.5"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -14098,10 +14165,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.1.6",
-      "parent_id": "PROPOSED-jd-10.5.1",
+      "node_id": "PROPOSED-jd-11.5.1.6",
+      "parent_id": "PROPOSED-jd-11.5.1",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "缝间距",
       "definition": "同一面墙上多缝之间的距离档位。",
       "node_kind": "variable",
@@ -14143,7 +14210,7 @@
       ],
       "unit": null,
       "activation_condition": {
-        "node": "PROPOSED-jd-10.5.1.4",
+        "node": "PROPOSED-jd-11.5.1.4",
         "operator": ">=",
         "value": 2
       },
@@ -14159,8 +14226,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -14173,9 +14240,9 @@
       "legacy_aliases": [
         "jd-8.5.1.6",
         "jd-8.5",
-        "jd-10.5.1.6"
+        "jd-11.5.1.6"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -14187,10 +14254,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.1.7",
-      "parent_id": "PROPOSED-jd-10.5.1",
+      "node_id": "PROPOSED-jd-11.5.1.7",
+      "parent_id": "PROPOSED-jd-11.5.1",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "目标缝",
       "definition": "需要穿越的目标缝编号；作为评分锚点和缝宽难度取值对象。",
       "node_kind": "variable",
@@ -14244,13 +14311,13 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
       "constraints": [
-        "jd-10.5.1.7 <= jd-10.5.1.4"
+        "jd-11.5.1.7 <= jd-11.5.1.4"
       ],
       "source": [
         "L-A8-V06"
@@ -14260,9 +14327,9 @@
       "legacy_aliases": [
         "jd-8.5.1.7",
         "jd-8.5",
-        "jd-10.5.1.7"
+        "jd-11.5.1.7"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -14274,10 +14341,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.2",
-      "parent_id": "PROPOSED-jd-10.5",
+      "node_id": "PROPOSED-jd-11.5.2",
+      "parent_id": "PROPOSED-jd-11.5",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "障碍物布局",
       "definition": "多面白墙的数量、间距、角度、缝对齐、排列拓扑和运动。",
       "node_kind": "group",
@@ -14297,8 +14364,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -14311,9 +14378,9 @@
       "legacy_aliases": [
         "jd-8.5.2",
         "jd-8.5",
-        "jd-10.5.2"
+        "jd-11.5.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -14325,10 +14392,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.2.1",
-      "parent_id": "PROPOSED-jd-10.5.2",
+      "node_id": "PROPOSED-jd-11.5.2.1",
+      "parent_id": "PROPOSED-jd-11.5.2",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "墙数",
       "definition": "场景中的白墙数量。",
       "node_kind": "variable",
@@ -14393,8 +14460,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -14407,9 +14474,9 @@
       "legacy_aliases": [
         "jd-8.5.2.1",
         "jd-8.5",
-        "jd-10.5.2.1"
+        "jd-11.5.2.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -14421,10 +14488,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.2.2",
-      "parent_id": "PROPOSED-jd-10.5.2",
+      "node_id": "PROPOSED-jd-11.5.2.2",
+      "parent_id": "PROPOSED-jd-11.5.2",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "墙间距",
       "definition": "多面墙之间的距离档位。",
       "node_kind": "variable",
@@ -14478,8 +14545,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -14492,9 +14559,9 @@
       "legacy_aliases": [
         "jd-8.5.2.2",
         "jd-8.5",
-        "jd-10.5.2.2"
+        "jd-11.5.2.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -14506,10 +14573,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.2.3",
-      "parent_id": "PROPOSED-jd-10.5.2",
+      "node_id": "PROPOSED-jd-11.5.2.3",
+      "parent_id": "PROPOSED-jd-11.5.2",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "摆放角度 θ",
       "definition": "白墙相对飞行方向的摆放角度；草案给出有效缝宽 = 缝宽·cosθ。",
       "node_kind": "variable",
@@ -14574,8 +14641,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -14588,9 +14655,9 @@
       "legacy_aliases": [
         "jd-8.5.2.3",
         "jd-8.5",
-        "jd-10.5.2.3"
+        "jd-11.5.2.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -14602,10 +14669,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.2.4",
-      "parent_id": "PROPOSED-jd-10.5.2",
+      "node_id": "PROPOSED-jd-11.5.2.4",
+      "parent_id": "PROPOSED-jd-11.5.2",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "缝对齐性",
       "definition": "多面墙之间缝的对齐关系。",
       "node_kind": "variable",
@@ -14659,8 +14726,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -14673,9 +14740,9 @@
       "legacy_aliases": [
         "jd-8.5.2.4",
         "jd-8.5",
-        "jd-10.5.2.4"
+        "jd-11.5.2.4"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -14687,10 +14754,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.2.5",
-      "parent_id": "PROPOSED-jd-10.5.2",
+      "node_id": "PROPOSED-jd-11.5.2.5",
+      "parent_id": "PROPOSED-jd-11.5.2",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "排列拓扑",
       "definition": "多面墙的排列拓扑。",
       "node_kind": "variable",
@@ -14755,8 +14822,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -14769,9 +14836,9 @@
       "legacy_aliases": [
         "jd-8.5.2.5",
         "jd-8.5",
-        "jd-10.5.2.5"
+        "jd-11.5.2.5"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -14783,10 +14850,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.2.6",
-      "parent_id": "PROPOSED-jd-10.5.2",
+      "node_id": "PROPOSED-jd-11.5.2.6",
+      "parent_id": "PROPOSED-jd-11.5.2",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "墙运动",
       "definition": "白墙是静止还是运动；运动仅在 D3–D4 启用。",
       "node_kind": "variable",
@@ -14829,8 +14896,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -14843,9 +14910,9 @@
       "legacy_aliases": [
         "jd-8.5.2.6",
         "jd-8.5",
-        "jd-10.5.2.6"
+        "jd-11.5.2.6"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -14857,10 +14924,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.2.6.1",
-      "parent_id": "PROPOSED-jd-10.5.2.6",
+      "node_id": "PROPOSED-jd-11.5.2.6.1",
+      "parent_id": "PROPOSED-jd-11.5.2.6",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "速度",
       "definition": "运动墙的速度档位。",
       "node_kind": "variable",
@@ -14902,7 +14969,7 @@
       ],
       "unit": null,
       "activation_condition": {
-        "node": "PROPOSED-jd-10.5.2.6",
+        "node": "PROPOSED-jd-11.5.2.6",
         "operator": "equals",
         "value": "运动"
       },
@@ -14918,8 +14985,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -14932,9 +14999,9 @@
       "legacy_aliases": [
         "jd-8.5.2.6.1",
         "jd-8.5",
-        "jd-10.5.2.6.1"
+        "jd-11.5.2.6.1"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -14946,10 +15013,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.2.6.2",
-      "parent_id": "PROPOSED-jd-10.5.2.6",
+      "node_id": "PROPOSED-jd-11.5.2.6.2",
+      "parent_id": "PROPOSED-jd-11.5.2.6",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "方向",
       "definition": "运动墙的运动方向。",
       "node_kind": "variable",
@@ -15002,7 +15069,7 @@
       ],
       "unit": null,
       "activation_condition": {
-        "node": "PROPOSED-jd-10.5.2.6",
+        "node": "PROPOSED-jd-11.5.2.6",
         "operator": "equals",
         "value": "运动"
       },
@@ -15018,8 +15085,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -15032,9 +15099,9 @@
       "legacy_aliases": [
         "jd-8.5.2.6.2",
         "jd-8.5",
-        "jd-10.5.2.6.2"
+        "jd-11.5.2.6.2"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
@@ -15046,10 +15113,10 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
-      "node_id": "PROPOSED-jd-10.5.2.6.3",
-      "parent_id": "PROPOSED-jd-10.5.2.6",
+      "node_id": "PROPOSED-jd-11.5.2.6.3",
+      "parent_id": "PROPOSED-jd-11.5.2.6",
       "canonical_slot": null,
-      "owner_a": "A10",
+      "owner_a": "A11",
       "name": "运动模式",
       "definition": "运动墙的运动模式。",
       "node_kind": "variable",
@@ -15091,7 +15158,7 @@
       ],
       "unit": null,
       "activation_condition": {
-        "node": "PROPOSED-jd-10.5.2.6",
+        "node": "PROPOSED-jd-11.5.2.6",
         "operator": "equals",
         "value": "运动"
       },
@@ -15107,8 +15174,8 @@
       "related_global_jd": [],
       "related_jd": [],
       "used_by_axl": [
-        "A10×L3",
-        "A10×L4"
+        "A11×L3",
+        "A11×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -15121,9 +15188,9 @@
       "legacy_aliases": [
         "jd-8.5.2.6.3",
         "jd-8.5",
-        "jd-10.5.2.6.3"
+        "jd-11.5.2.6.3"
       ],
-      "notes": "2026-07-19 会议草案重编号：A8 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A8 → A11；语义与取值保持原来源口径。",
       "projection_targets": [
         "world_config",
         "harness"
