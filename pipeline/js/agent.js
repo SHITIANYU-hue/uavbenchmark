@@ -332,3 +332,33 @@ async function fillTbdDomains() {
   state.fillTbdLoading = false;
   render();
 }
+
+async function loadTreeDomains() {
+  state.fillTbdLoading = true; state.fillTbdError = null; state.fillTbdNotice = null; render();
+  try {
+    const r = await fetch("/api/jd-tree/domains", {cache: "no-store"});
+    if (!r.ok) throw new Error("变量树数据不可用");
+    const d = await r.json();
+    const treeSlots = d.slots || {};
+    const edits = getEdits();
+    let applied = 0, skipped = 0;
+    edits.forEach(e => {
+      const tree = treeSlots[e.slot_id];
+      if (!tree) { skipped++; return; }
+      if (tree.options && tree.options.length > 0) {
+        setEdit(e.slot_id, "binding_mode", "enum");
+        setEdit(e.slot_id, "allowed_values", tree.options.join(", "));
+        if (!e.value && tree.options[0]) setEdit(e.slot_id, "value", tree.options[0]);
+        applied++;
+      } else if (tree.value_type && tree.value_type.includes("number")) {
+        setEdit(e.slot_id, "binding_mode", "range");
+        applied++;
+      }
+    });
+    state.fillTbdNotice = "从变量树加载了 " + applied + " 个域" + (skipped ? "（" + skipped + " 个无树数据）" : "");
+  } catch (e) {
+    state.fillTbdError = String(e.message || e);
+  }
+  state.fillTbdLoading = false;
+  render();
+}

@@ -196,10 +196,12 @@ function renderStep3() {
         '<span class="lvl-pill lv-L3">' + escapeHtml(e.slot_id) + '</span>'
       ).join("") + '</div></div>';
   }
-  h += '<div class="action-row" style="margin:0 0 12px"><span class="action-note">当前 TBD ' + tbdCount + ' 个</span>'
+  h += '<div class="action-row" style="margin:0 0 12px"><span class="action-note">当前 TBD ' + tbdCount + ' 个</span><div>'
+    + '<button class="btn" type="button" onclick="loadTreeDomains()"' +
+    (state.fillTbdLoading ? " disabled" : "") + '>从变量树加载</button> '
     + '<button class="btn" type="button" onclick="fillTbdDomains()"' +
     (state.fillTbdLoading || tbdCount === 0 || !providerReady() ? " disabled" : "") + ">" +
-    (state.fillTbdLoading ? "智能填写中..." : "智能填写 TBD") + "</button></div>";
+    (state.fillTbdLoading ? "智能填写中..." : "智能填写 TBD") + "</button></div></div>";
   if (state.fillTbdError) h += '<div class="choice-card dependency selected" style="margin-bottom:10px"><b>智能填写失败</b><p>' + escapeHtml(state.fillTbdError) + "</p></div>";
   if (state.fillTbdNotice) h += '<div class="choice-card selected" style="margin-bottom:10px"><b>' + escapeHtml(state.fillTbdNotice) + "</b></div>";
   const styleSelect = "padding:4px 8px;border:1px solid var(--line-strong);border-radius:6px;font-size:10px";
