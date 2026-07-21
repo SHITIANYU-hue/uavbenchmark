@@ -467,6 +467,19 @@ main {
     margin-right: 4px;
     color: #356d9b;
   }
+  .case-badge.mode-range, .case-badge.mode-enum {
+    border-left-color: #9c6a2d;
+    background: #f8efdf;
+    color: #7a521d;
+  }
+  .case-badge.mode-range .case-label, .case-badge.mode-enum .case-label {
+    color: #9c6a2d;
+  }
+  .case-badge .mode-icon {
+    display: inline-block;
+    margin-right: 3px;
+    font-weight: 700;
+  }
 
 .detail-dialog {
   width: min(940px, calc(100vw - 32px));
@@ -1315,10 +1328,38 @@ pre {
 
   function caseBadgeHtml(node) {
     if (!state.caseVisible || !state.caseData || !state.caseData.values) return "";
-    const val = state.caseData.values[node.node_id];
-    if (val === undefined) return "";
+    const entry = state.caseData.values[node.node_id];
+    if (entry === undefined) return "";
     const caseName = state.caseData.case_name || "案例";
-    return `<div class="case-badge"><span class="case-label">${escapeHtml(caseName)}:</span>${formatCaseValue(val)}</div>`;
+    const mode = entry.mode || "fixed";
+
+    let modeIcon, modeClass, displayVal;
+    if (mode === "fixed") {
+      modeIcon = "🔒";
+      modeClass = "";
+      displayVal = formatCaseValue(entry.value);
+    } else if (mode === "range") {
+      modeIcon = "🔀";
+      modeClass = "mode-range";
+      const unit = entry.unit ? escapeHtml(entry.unit) : "";
+      displayVal = `[${entry.min}, ${entry.max}]${unit ? " " + unit : ""}`;
+      if (entry.label) displayVal = escapeHtml(entry.label) + ": " + displayVal;
+    } else if (mode === "enum") {
+      modeIcon = "🔀";
+      modeClass = "mode-enum";
+      if (entry.options) {
+        displayVal = entry.options.map(o => escapeHtml(String(o))).join(" | ");
+      } else {
+        displayVal = formatCaseValue(entry.value);
+      }
+      if (entry.label) displayVal = escapeHtml(entry.label) + ": [" + displayVal + "]";
+    } else {
+      modeIcon = "";
+      modeClass = "";
+      displayVal = formatCaseValue(entry.value || entry);
+    }
+
+    return `<div class="case-badge ${modeClass}"><span class="mode-icon">${modeIcon}</span><span class="case-label">${escapeHtml(caseName)}:</span>${displayVal}</div>`;
   }
 
   function renderBranch(node) {
