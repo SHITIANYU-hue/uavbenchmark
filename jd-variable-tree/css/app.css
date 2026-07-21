@@ -15,6 +15,12 @@
   --group-perception-soft: #eaf4e9;
   --group-motion: #e8882e;
   --group-motion-soft: #fbefe3;
+  --group-payload: #4f9f9b;
+  --group-payload-soft: #e6f3f2;
+  --group-compliance: #a46797;
+  --group-compliance-soft: #f4eaf1;
+  --group-safety: #d85e68;
+  --group-safety-soft: #f9e9eb;
   --group-global: #34495e;
   --group-global-soft: #e8edf2;
   --accent: #356d9b;
@@ -42,6 +48,21 @@ body[data-ability-group="perception"] {
 body[data-ability-group="motion"] {
   --primary: var(--group-motion);
   --primary-soft: var(--group-motion-soft);
+}
+
+body[data-ability-group="payload"] {
+  --primary: var(--group-payload);
+  --primary-soft: var(--group-payload-soft);
+}
+
+body[data-ability-group="compliance"] {
+  --primary: var(--group-compliance);
+  --primary-soft: var(--group-compliance-soft);
+}
+
+body[data-ability-group="safety"] {
+  --primary: var(--group-safety);
+  --primary-soft: var(--group-safety-soft);
 }
 
 body[data-ability-group="global"] {
@@ -178,7 +199,7 @@ main {
 
 .ability-tabs {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(178px, 1fr));
   gap: 8px;
   margin-bottom: 12px;
 }
@@ -217,6 +238,18 @@ main {
   color: var(--group-motion);
 }
 
+.ability-tab.group-payload strong {
+  color: var(--group-payload);
+}
+
+.ability-tab.group-compliance strong {
+  color: var(--group-compliance);
+}
+
+.ability-tab.group-safety strong {
+  color: var(--group-safety);
+}
+
 .ability-tab.group-global strong {
   color: var(--group-global);
 }
@@ -248,6 +281,24 @@ main {
   border-color: var(--group-motion);
   background: var(--group-motion-soft);
   box-shadow: inset 0 0 0 1px var(--group-motion);
+}
+
+.ability-tab.group-payload[aria-selected="true"] {
+  border-color: var(--group-payload);
+  background: var(--group-payload-soft);
+  box-shadow: inset 0 0 0 1px var(--group-payload);
+}
+
+.ability-tab.group-compliance[aria-selected="true"] {
+  border-color: var(--group-compliance);
+  background: var(--group-compliance-soft);
+  box-shadow: inset 0 0 0 1px var(--group-compliance);
+}
+
+.ability-tab.group-safety[aria-selected="true"] {
+  border-color: var(--group-safety);
+  background: var(--group-safety-soft);
+  box-shadow: inset 0 0 0 1px var(--group-safety);
 }
 
 .ability-tab.group-global[aria-selected="true"] {

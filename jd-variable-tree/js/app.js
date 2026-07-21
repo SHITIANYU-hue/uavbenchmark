@@ -3,34 +3,9 @@
 
   const DATA_URL = "knowledge/jd_variable_tree_version1.json";
   const COMMENT_STORAGE_KEY = "uav-benchmark-jd-comments-version1";
-  const abilities = {
-    A1: "意图 / 交互入口",
-    A2: "任务规范 / 约束模型",
-    A3: "意图推理 / 任务解释",
-    A4: "交互到执行编排",
-    A5: "监督 / 请求 / 交接",
-    A6: "业务对象感知与状态理解",
-    A7: "自定位",
-    A8: "相对定位 / 相对几何",
-    A9: "健康 / 能源 / 资源管理",
-    A10: "导航与航迹执行",
-    A11: "飞行控制 / 执行机构",
-    GLOBAL: "JD-global / 共享业务变量",
-  };
-  const abilityVisualGroup = {
-    A1: "human",
-    A2: "human",
-    A3: "human",
-    A4: "human",
-    A5: "human",
-    A6: "perception",
-    A7: "perception",
-    A8: "perception",
-    A9: "perception",
-    A10: "motion",
-    A11: "motion",
-    GLOBAL: "global",
-  };
+  let abilities = {};
+  let abilityOrder = [];
+  const abilityVisualGroup = {};
   const scenarioLabels = {
     cross_scenario: "跨业务场景",
     highway_inspection: "高速巡检",
@@ -135,9 +110,7 @@
   }
 
   function shortId(nodeId) {
-    const abilityRoot = nodeId.match(
-      /^PROPOSED-jd-tree-(A1|A2|A3|A4|A5|A6|A7|A8|A9|A10|A11)$/,
-    );
+    const abilityRoot = nodeId.match(/^PROPOSED-jd-tree-(A\d+)$/);
     if (abilityRoot) return abilityRoot[1];
     if (nodeId === "PROPOSED-jd-tree-global") return "JD-global";
     return nodeId.replace(/^PROPOSED-/, "");
@@ -252,7 +225,33 @@
       }
       state.childrenByParent.get(node.parent_id).push(node);
     }
+    buildAbilityRegistry();
     migrateLegacyComments();
+  }
+
+  function visualGroupForAbility(ability) {
+    const number = Number(ability.slice(1));
+    if (number <= 5) return "human";
+    if (number <= 9) return "perception";
+    if (number <= 11) return "motion";
+    if (number <= 13) return "payload";
+    if (number <= 15) return "compliance";
+    return "safety";
+  }
+
+  function buildAbilityRegistry() {
+    abilityOrder = [...(state.catalog.scope || []), "GLOBAL"];
+    abilities = {};
+    for (const ability of state.catalog.scope || []) {
+      const root = state.nodeById.get(rootIdForAbility(ability));
+      abilities[ability] = root?.name || ability;
+      abilityVisualGroup[ability] = visualGroupForAbility(ability);
+    }
+    abilities.GLOBAL = "JD-global / 共享业务变量";
+    abilityVisualGroup.GLOBAL = "global";
+    if (!abilities[state.selectedAbility]) {
+      state.selectedAbility = abilityOrder[0] || "GLOBAL";
+    }
   }
 
   function migrateLegacyComments() {
@@ -276,8 +275,9 @@
   }
 
   function renderTabs() {
-    elements.abilityTabs.innerHTML = Object.entries(abilities)
-      .map(([ability, name]) => {
+    elements.abilityTabs.innerHTML = abilityOrder
+      .map((ability) => {
+        const name = abilities[ability];
         const count = nodesForAbility(ability).filter(
           (node) => node.node_kind === "variable",
         ).length;

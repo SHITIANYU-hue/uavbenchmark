@@ -55,6 +55,29 @@ for (const node of nodes) {
   nodeById.set(node.node_id, node);
 }
 
+const siblingsByParent = new Map();
+for (const node of nodes.filter((item) => item.parent_id)) {
+  if (!siblingsByParent.has(node.parent_id)) {
+    siblingsByParent.set(node.parent_id, []);
+  }
+  siblingsByParent.get(node.parent_id).push(node);
+}
+for (const [parentId, siblings] of siblingsByParent) {
+  const normalizedNames = new Map();
+  for (const sibling of siblings) {
+    const normalized = String(sibling.name || "")
+      .replace(/\s+/g, "")
+      .toLowerCase();
+    if (!normalizedNames.has(normalized)) normalizedNames.set(normalized, []);
+    normalizedNames.get(normalized).push(sibling.node_id);
+  }
+  for (const [name, ids] of normalizedNames) {
+    if (name && ids.length > 1) {
+      errors.push(`${parentId} 下存在同名节点：${ids.join(", ")}`);
+    }
+  }
+}
+
 for (const node of nodes) {
   if (node.parent_id && !nodeById.has(node.parent_id)) {
     errors.push(`${node.node_id} 的父节点不存在：${node.parent_id}`);
@@ -436,6 +459,64 @@ for (const [kind, declared] of Object.entries(
     errors.push(
       `counts_by_kind.${kind} 不一致：声明 ${declared}，实际 ${actual}。`,
     );
+  }
+}
+
+if (catalog.expansion_policy?.status === "research_draft") {
+  for (const ability of scope) {
+    const leafCount = nodes.filter(
+      (node) => node.owner_a === ability && node.node_kind === "variable",
+    ).length;
+    if (leafCount < catalog.expansion_policy.minimum_local_leaf_target) {
+      errors.push(
+        `${ability} 只有 ${leafCount} 个变量叶子，低于全量扩展审计下限 ${catalog.expansion_policy.minimum_local_leaf_target}。`,
+      );
+    }
+  }
+
+  const globalLeafCount = nodes.filter(
+    (node) => node.owner_a === "MULTI" && node.node_kind === "variable",
+  ).length;
+  if (globalLeafCount < 100) {
+    errors.push(`JD-global 只有 ${globalLeafCount} 个变量叶子，低于全量扩展审计下限 100。`);
+  }
+
+  const expansionGroups = nodes.filter(
+    (node) =>
+      node.node_kind === "group" &&
+      /^PROPOSED-jd-[^.]+(?:\.[^.]+)*\.EX\d+$/.test(node.node_id),
+  );
+  for (const group of expansionGroups) {
+    const children = nodes.filter((node) => node.parent_id === group.node_id);
+    if (
+      children.length !== 2 ||
+      children.some((node) => node.node_kind !== "variable")
+    ) {
+      errors.push(`${group.node_id} 必须恰好包含两个原子变量叶子。`);
+      continue;
+    }
+    const conditionLeaf = children.find((node) => node.value_type === "condition_set");
+    const valueLeaf = children.find((node) => node.value_type !== "condition_set");
+    if (
+      !conditionLeaf ||
+      !valueLeaf ||
+      !(conditionLeaf.depends_on || []).includes(valueLeaf.node_id)
+    ) {
+      errors.push(`${group.node_id} 的配置值与启用/判定叶子关系不完整。`);
+    }
+  }
+
+  for (const node of nodes.filter(
+    (item) =>
+      item.node_kind === "variable" && item.node_id.includes(".EX"),
+  )) {
+    if (
+      !Array.isArray(node.value_domain) ||
+      node.value_domain.length === 0 ||
+      node.value_domain.some((item) => item.value !== "TBD")
+    ) {
+      errors.push(`${node.node_id} 的研究扩展取值必须保持显式 TBD。`);
+    }
   }
 }
 

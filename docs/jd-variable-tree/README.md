@@ -11,6 +11,7 @@
 | `../../knowledge/jd_variable_tree_legacy_inspection_source.json` | 旧巡检树迁移源；仅用于生成与审计 |
 | `../../knowledge/jd_variable_tree_legacy_white_wall_v0_6.json` | 旧白墙 v0.6 迁移源；仅用于生成与审计 |
 | `../../scripts/generate_jd_variable_tree_version1.mjs` | 汇总和迁移变量树数据 |
+| `../../scripts/expand_jd_variable_tree_version1.mjs` | 在 66 个 canonical 槽位不变的前提下扩展 A1–A17 与 JD-global |
 | `../../scripts/validate_jd_variable_tree_version1.mjs` | 结构、编号与引用校验 |
 | `../../scripts/build_jd_variable_tree_standalone.mjs` | 生成可独立打开的单文件 HTML |
 | `../../JD业务变量树_version1.html` | 构建产物；用于分享，不应直接手工编辑 |
@@ -21,6 +22,7 @@
 
 ```bash
 node scripts/generate_jd_variable_tree_version1.mjs
+node scripts/expand_jd_variable_tree_version1.mjs
 node scripts/validate_jd_variable_tree_version1.mjs
 node scripts/build_jd_variable_tree_standalone.mjs
 ```
