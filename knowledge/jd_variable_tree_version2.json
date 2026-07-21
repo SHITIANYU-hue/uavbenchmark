@@ -2,7 +2,7 @@
   "schema": "uav-benchmark-jd-variable-tree",
   "schema_version": "2.0",
   "catalog_id": "jd-variable-tree-v2",
-  "catalog_version": "2.0",
+  "catalog_version": "2.0.1",
   "generated_at": "2026-07-21",
   "ability_id_scheme": "ability-id-v3-2026-07-20",
   "pattern": "4-layer: ontology / method+envelope / quality / fallback",
@@ -41,7 +41,7 @@
       "canonical_slot": "jd-1.1",
       "owner_a": "A1",
       "name": "jd-1.1 本体目录",
-      "definition": "本体目录层",
+      "definition": "本体目录",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -163,7 +163,7 @@
       "canonical_slot": "jd-1.2",
       "owner_a": "A1",
       "name": "jd-1.2 方法与边界",
-      "definition": "方法与边界层",
+      "definition": "方法与边界",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -247,7 +247,7 @@
       "canonical_slot": "jd-1.3",
       "owner_a": "A1",
       "name": "jd-1.3 质量标准",
-      "definition": "质量标准层",
+      "definition": "质量标准",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -310,7 +310,7 @@
       "canonical_slot": "jd-1.4",
       "owner_a": "A1",
       "name": "jd-1.4 兜底协议",
-      "definition": "兜底协议层",
+      "definition": "兜底协议",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -412,8 +412,8 @@
       "value_type": "ref",
       "value_domain": [
         {
-          "value": "→A5 请求交接",
-          "label_zh": "→A5 请求交接"
+          "value": "→A5请求交接",
+          "label_zh": "→A5请求交接"
         },
         {
           "value": "人工介入",
@@ -458,7 +458,7 @@
       "canonical_slot": "jd-2.1",
       "owner_a": "A2",
       "name": "jd-2.1 本体目录",
-      "definition": "本体目录层",
+      "definition": "本体目录",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -575,7 +575,7 @@
       "canonical_slot": "jd-2.2",
       "owner_a": "A2",
       "name": "jd-2.2 方法与边界",
-      "definition": "方法与边界层",
+      "definition": "方法与边界",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -638,7 +638,7 @@
       "canonical_slot": "jd-2.3",
       "owner_a": "A2",
       "name": "jd-2.3 质量标准",
-      "definition": "质量标准层",
+      "definition": "质量标准",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -714,7 +714,7 @@
       "canonical_slot": "jd-2.4",
       "owner_a": "A2",
       "name": "jd-2.4 兜底协议",
-      "definition": "兜底协议层",
+      "definition": "兜底协议",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -786,12 +786,12 @@
           "label_zh": "推断合理值"
         },
         {
-          "value": "请求用户确认",
-          "label_zh": "请求用户确认"
+          "value": "请求确认",
+          "label_zh": "请求确认"
         },
         {
-          "value": "中止任务",
-          "label_zh": "中止任务"
+          "value": "中止",
+          "label_zh": "中止"
         }
       ],
       "unit": "",
@@ -832,7 +832,7 @@
       "canonical_slot": "jd-3.1",
       "owner_a": "A3",
       "name": "jd-3.1 本体目录",
-      "definition": "本体目录层",
+      "definition": "本体目录",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -949,7 +949,7 @@
       "canonical_slot": "jd-3.2",
       "owner_a": "A3",
       "name": "jd-3.2 方法与边界",
-      "definition": "方法与边界层",
+      "definition": "方法与边界",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -1033,7 +1033,7 @@
       "canonical_slot": "jd-3.3",
       "owner_a": "A3",
       "name": "jd-3.3 质量标准",
-      "definition": "质量标准层",
+      "definition": "质量标准",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -1143,7 +1143,7 @@
       "canonical_slot": "jd-3.4",
       "owner_a": "A3",
       "name": "jd-3.4 兜底协议",
-      "definition": "兜底协议层",
+      "definition": "兜底协议",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -1223,8 +1223,8 @@
           "label_zh": "降级执行"
         },
         {
-          "value": "请求人确认",
-          "label_zh": "请求人确认"
+          "value": "请求确认",
+          "label_zh": "请求确认"
         }
       ],
       "unit": "",
@@ -1249,12 +1249,12 @@
       "value_type": "ref",
       "value_domain": [
         {
-          "value": "→A4 编排执行",
-          "label_zh": "→A4 编排执行"
+          "value": "→A4编排执行",
+          "label_zh": "→A4编排执行"
         },
         {
-          "value": "→A5 请求交接",
-          "label_zh": "→A5 请求交接"
+          "value": "→A5请求交接",
+          "label_zh": "→A5请求交接"
         }
       ],
       "unit": "",
@@ -1295,7 +1295,7 @@
       "canonical_slot": "jd-4.1",
       "owner_a": "A4",
       "name": "jd-4.1 本体目录",
-      "definition": "本体目录层",
+      "definition": "本体目录",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -1449,7 +1449,7 @@
       "canonical_slot": "jd-4.2",
       "owner_a": "A4",
       "name": "jd-4.2 方法与边界",
-      "definition": "方法与边界层",
+      "definition": "方法与边界",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -1521,8 +1521,8 @@
           "label_zh": "tool_call"
         },
         {
-          "value": "skill调用",
-          "label_zh": "skill调用"
+          "value": "skill",
+          "label_zh": "skill"
         },
         {
           "value": "trajectory",
@@ -1575,7 +1575,7 @@
       "canonical_slot": "jd-4.3",
       "owner_a": "A4",
       "name": "jd-4.3 质量标准",
-      "definition": "质量标准层",
+      "definition": "质量标准",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -1651,7 +1651,7 @@
       "canonical_slot": "jd-4.4",
       "owner_a": "A4",
       "name": "jd-4.4 兜底协议",
-      "definition": "兜底协议层",
+      "definition": "兜底协议",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -1794,7 +1794,7 @@
       "canonical_slot": "jd-5.1",
       "owner_a": "A5",
       "name": "jd-5.1 本体目录",
-      "definition": "本体目录层",
+      "definition": "本体目录",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -1886,7 +1886,7 @@
       "canonical_slot": "jd-5.2",
       "owner_a": "A5",
       "name": "jd-5.2 方法与边界",
-      "definition": "方法与边界层",
+      "definition": "方法与边界",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -2008,7 +2008,7 @@
       "canonical_slot": "jd-5.3",
       "owner_a": "A5",
       "name": "jd-5.3 质量标准",
-      "definition": "质量标准层",
+      "definition": "质量标准",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -2071,7 +2071,7 @@
       "canonical_slot": "jd-5.4",
       "owner_a": "A5",
       "name": "jd-5.4 兜底协议",
-      "definition": "兜底协议层",
+      "definition": "兜底协议",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -2214,7 +2214,7 @@
       "canonical_slot": "jd-6.1",
       "owner_a": "A6",
       "name": "jd-6.1 本体目录",
-      "definition": "本体目录层",
+      "definition": "本体目录",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -2319,7 +2319,7 @@
       "canonical_slot": "jd-6.2",
       "owner_a": "A6",
       "name": "jd-6.2 方法与边界",
-      "definition": "方法与边界层",
+      "definition": "方法与边界",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -2365,8 +2365,8 @@
           "label_zh": "声学"
         },
         {
-          "value": "多模态融合",
-          "label_zh": "多模态融合"
+          "value": "融合",
+          "label_zh": "融合"
         }
       ],
       "unit": "",
@@ -2445,7 +2445,7 @@
       "canonical_slot": "jd-6.3",
       "owner_a": "A6",
       "name": "jd-6.3 质量标准",
-      "definition": "质量标准层",
+      "definition": "质量标准",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -2529,7 +2529,7 @@
       "canonical_slot": "jd-6.4",
       "owner_a": "A6",
       "name": "jd-6.4 兜底协议",
-      "definition": "兜底协议层",
+      "definition": "兜底协议",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -2639,12 +2639,12 @@
       "value_type": "ref",
       "value_domain": [
         {
-          "value": "→A12 载荷执行",
-          "label_zh": "→A12 载荷执行"
+          "value": "→A12载荷",
+          "label_zh": "→A12载荷"
         },
         {
-          "value": "→A5 请求交接",
-          "label_zh": "→A5 请求交接"
+          "value": "→A5请求交接",
+          "label_zh": "→A5请求交接"
         }
       ],
       "unit": "",
@@ -2685,7 +2685,7 @@
       "canonical_slot": "jd-7.1",
       "owner_a": "A7",
       "name": "jd-7.1 本体目录",
-      "definition": "本体目录层",
+      "definition": "本体目录",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -2735,8 +2735,8 @@
           "label_zh": "惯导"
         },
         {
-          "value": "多源融合",
-          "label_zh": "多源融合"
+          "value": "融合",
+          "label_zh": "融合"
         }
       ],
       "unit": "",
@@ -2777,7 +2777,7 @@
       "canonical_slot": "jd-7.2",
       "owner_a": "A7",
       "name": "jd-7.2 方法与边界",
-      "definition": "方法与边界层",
+      "definition": "方法与边界",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -2882,7 +2882,7 @@
       "canonical_slot": "jd-7.3",
       "owner_a": "A7",
       "name": "jd-7.3 质量标准",
-      "definition": "质量标准层",
+      "definition": "质量标准",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -2966,7 +2966,7 @@
       "canonical_slot": "jd-7.4",
       "owner_a": "A7",
       "name": "jd-7.4 兜底协议",
-      "definition": "兜底协议层",
+      "definition": "兜底协议",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -3008,8 +3008,8 @@
           "label_zh": "精度退化"
         },
         {
-          "value": "时间同步失败",
-          "label_zh": "时间同步失败"
+          "value": "同步失败",
+          "label_zh": "同步失败"
         }
       ],
       "unit": "",
@@ -3076,12 +3076,12 @@
       "value_type": "ref",
       "value_domain": [
         {
-          "value": "→A11 控制飞行",
-          "label_zh": "→A11 控制飞行"
+          "value": "→A11控制",
+          "label_zh": "→A11控制"
         },
         {
-          "value": "→A16 安全包络",
-          "label_zh": "→A16 安全包络"
+          "value": "→A16安全",
+          "label_zh": "→A16安全"
         }
       ],
       "unit": "",
@@ -3122,7 +3122,7 @@
       "canonical_slot": "jd-8.1",
       "owner_a": "A8",
       "name": "jd-8.1 本体目录",
-      "definition": "本体目录层",
+      "definition": "本体目录",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -3231,7 +3231,7 @@
       "canonical_slot": "jd-8.2",
       "owner_a": "A8",
       "name": "jd-8.2 方法与边界",
-      "definition": "方法与边界层",
+      "definition": "方法与边界",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -3261,8 +3261,8 @@
           "label_zh": "双目视觉"
         },
         {
-          "value": "单目+深度估计",
-          "label_zh": "单目+深度估计"
+          "value": "单目+深度",
+          "label_zh": "单目+深度"
         },
         {
           "value": "LiDAR",
@@ -3273,8 +3273,8 @@
           "label_zh": "Radar"
         },
         {
-          "value": "多源融合",
-          "label_zh": "多源融合"
+          "value": "融合",
+          "label_zh": "融合"
         }
       ],
       "unit": "",
@@ -3315,7 +3315,7 @@
       "canonical_slot": "jd-8.3",
       "owner_a": "A8",
       "name": "jd-8.3 质量标准",
-      "definition": "质量标准层",
+      "definition": "质量标准",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -3399,7 +3399,7 @@
       "canonical_slot": "jd-8.4",
       "owner_a": "A8",
       "name": "jd-8.4 兜底协议",
-      "definition": "兜底协议层",
+      "definition": "兜底协议",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -3425,16 +3425,16 @@
       "value_type": "enum",
       "value_domain": [
         {
-          "value": "目标遮挡",
-          "label_zh": "目标遮挡"
+          "value": "遮挡",
+          "label_zh": "遮挡"
         },
         {
           "value": "关联歧义",
           "label_zh": "关联歧义"
         },
         {
-          "value": "目标丢失",
-          "label_zh": "目标丢失"
+          "value": "丢失",
+          "label_zh": "丢失"
         },
         {
           "value": "精度退化",
@@ -3505,12 +3505,12 @@
       "value_type": "ref",
       "value_domain": [
         {
-          "value": "→A6 环境感知",
-          "label_zh": "→A6 环境感知"
+          "value": "→A6感知",
+          "label_zh": "→A6感知"
         },
         {
-          "value": "→A10 导航飞行",
-          "label_zh": "→A10 导航飞行"
+          "value": "→A10导航",
+          "label_zh": "→A10导航"
         }
       ],
       "unit": "",
@@ -3551,7 +3551,7 @@
       "canonical_slot": "jd-9.1",
       "owner_a": "A9",
       "name": "jd-9.1 本体目录",
-      "definition": "本体目录层",
+      "definition": "本体目录",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -3635,7 +3635,7 @@
       "canonical_slot": "jd-9.2",
       "owner_a": "A9",
       "name": "jd-9.2 方法与边界",
-      "definition": "方法与边界层",
+      "definition": "方法与边界",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -3715,7 +3715,7 @@
       "canonical_slot": "jd-9.3",
       "owner_a": "A9",
       "name": "jd-9.3 质量标准",
-      "definition": "质量标准层",
+      "definition": "质量标准",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -3799,7 +3799,7 @@
       "canonical_slot": "jd-9.4",
       "owner_a": "A9",
       "name": "jd-9.4 兜底协议",
-      "definition": "兜底协议层",
+      "definition": "兜底协议",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -3833,12 +3833,12 @@
           "label_zh": "突然下降"
         },
         {
-          "value": "消耗异常加速",
-          "label_zh": "消耗异常加速"
+          "value": "消耗加速",
+          "label_zh": "消耗加速"
         },
         {
-          "value": "资源不平衡",
-          "label_zh": "资源不平衡"
+          "value": "不平衡",
+          "label_zh": "不平衡"
         }
       ],
       "unit": "",
@@ -3871,16 +3871,16 @@
           "label_zh": "切链路"
         },
         {
-          "value": "关闭非关键载荷",
-          "label_zh": "关闭非关键载荷"
+          "value": "关闭载荷",
+          "label_zh": "关闭载荷"
         },
         {
           "value": "降采样",
           "label_zh": "降采样"
         },
         {
-          "value": "保留返航窗口",
-          "label_zh": "保留返航窗口"
+          "value": "保留返航",
+          "label_zh": "保留返航"
         },
         {
           "value": "紧急返航",
@@ -3909,12 +3909,12 @@
       "value_type": "ref",
       "value_domain": [
         {
-          "value": "→A4 编排执行",
-          "label_zh": "→A4 编排执行"
+          "value": "→A4编排",
+          "label_zh": "→A4编排"
         },
         {
-          "value": "→A16 安全包络",
-          "label_zh": "→A16 安全包络"
+          "value": "→A16安全",
+          "label_zh": "→A16安全"
         }
       ],
       "unit": "",
@@ -3955,7 +3955,7 @@
       "canonical_slot": "jd-10.1",
       "owner_a": "A10",
       "name": "jd-10.1 本体目录",
-      "definition": "本体目录层",
+      "definition": "本体目录",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -4060,7 +4060,7 @@
       "canonical_slot": "jd-10.2",
       "owner_a": "A10",
       "name": "jd-10.2 方法与边界",
-      "definition": "方法与边界层",
+      "definition": "方法与边界",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -4102,8 +4102,8 @@
           "label_zh": "反应式避障"
         },
         {
-          "value": "混合模式",
-          "label_zh": "混合模式"
+          "value": "混合",
+          "label_zh": "混合"
         }
       ],
       "unit": "",
@@ -4144,7 +4144,7 @@
       "canonical_slot": "jd-10.3",
       "owner_a": "A10",
       "name": "jd-10.3 质量标准",
-      "definition": "质量标准层",
+      "definition": "质量标准",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -4228,7 +4228,7 @@
       "canonical_slot": "jd-10.4",
       "owner_a": "A10",
       "name": "jd-10.4 兜底协议",
-      "definition": "兜底协议层",
+      "definition": "兜底协议",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -4308,8 +4308,8 @@
           "label_zh": "悬停等待"
         },
         {
-          "value": "切换备降航路",
-          "label_zh": "切换备降航路"
+          "value": "切换备降",
+          "label_zh": "切换备降"
         },
         {
           "value": "紧急返航",
@@ -4338,12 +4338,12 @@
       "value_type": "ref",
       "value_domain": [
         {
-          "value": "→A11 控制飞行",
-          "label_zh": "→A11 控制飞行"
+          "value": "→A11控制",
+          "label_zh": "→A11控制"
         },
         {
-          "value": "→A4 编排执行",
-          "label_zh": "→A4 编排执行"
+          "value": "→A4编排",
+          "label_zh": "→A4编排"
         }
       ],
       "unit": "",
@@ -4383,8 +4383,8 @@
       "parent_id": "ROOT-A11",
       "canonical_slot": "jd-11.1",
       "owner_a": "A11",
-      "name": "jd-11.1 本体目录",
-      "definition": "本体目录层",
+      "name": "jd-11.1 飞行场景目录",
+      "definition": "本体目录",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -4400,8 +4400,29 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "VAR-A11-1-1",
+      "node_id": "SUB-A11-1-1",
       "parent_id": "GROUP-A11-1",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "场景类型",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "n/a",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-1-1",
+      "parent_id": "SUB-A11-1-1",
       "canonical_slot": "jd-11.1",
       "owner_a": "A11",
       "name": "场景类型集",
@@ -4442,14 +4463,111 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "VAR-A11-1-2",
+      "node_id": "VAR-A11-1-1-2",
+      "parent_id": "SUB-A11-1-1",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "遭遇方式",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "绕行",
+          "label_zh": "绕行"
+        },
+        {
+          "value": "穿越",
+          "label_zh": "穿越"
+        },
+        {
+          "value": "沿面飞行",
+          "label_zh": "沿面飞行"
+        },
+        {
+          "value": "抵近观察",
+          "label_zh": "抵近观察"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "SUB-A11-1-2",
       "parent_id": "GROUP-A11-1",
       "canonical_slot": "jd-11.1",
       "owner_a": "A11",
-      "name": "场景几何特征",
+      "name": "障碍物几何",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "n/a",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-2-1",
+      "parent_id": "SUB-A11-1-2",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "障碍物形态",
       "definition": "",
       "node_kind": "variable",
-      "value_type": "object",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "面状结构",
+          "label_zh": "面状结构"
+        },
+        {
+          "value": "线状结构",
+          "label_zh": "线状结构"
+        },
+        {
+          "value": "体状物体",
+          "label_zh": "体状物体"
+        },
+        {
+          "value": "不规则物体",
+          "label_zh": "不规则物体"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-2-2",
+      "parent_id": "SUB-A11-1-2",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "障碍物尺寸向量",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "vector3_or_object",
       "value_domain": null,
       "unit": "",
       "multiplicity": "single",
@@ -4463,11 +4581,467 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "VAR-A11-1-3",
+      "node_id": "VAR-A11-1-2-3",
+      "parent_id": "SUB-A11-1-2",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "边缘规则性",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "规则",
+          "label_zh": "规则"
+        },
+        {
+          "value": "混合",
+          "label_zh": "混合"
+        },
+        {
+          "value": "不规则",
+          "label_zh": "不规则"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "SUB-A11-1-3",
+      "parent_id": "GROUP-A11-1",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "通行空间几何",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "n/a",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-3-1",
+      "parent_id": "SUB-A11-1-3",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "通行空间类型",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "开放间隙",
+          "label_zh": "开放间隙"
+        },
+        {
+          "value": "孔洞/开口",
+          "label_zh": "孔洞/开口"
+        },
+        {
+          "value": "狭窄通道",
+          "label_zh": "狭窄通道"
+        },
+        {
+          "value": "结构间隙",
+          "label_zh": "结构间隙"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-3-2",
+      "parent_id": "SUB-A11-1-3",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "通行空间尺寸向量",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "vector3_or_object",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-3-3",
+      "parent_id": "SUB-A11-1-3",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "通行空间偏移",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "vector2_or_object",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-3-4",
+      "parent_id": "SUB-A11-1-3",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "通行截面形状",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "矩形",
+          "label_zh": "矩形"
+        },
+        {
+          "value": "圆形",
+          "label_zh": "圆形"
+        },
+        {
+          "value": "不规则",
+          "label_zh": "不规则"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "SUB-A11-1-4",
+      "parent_id": "GROUP-A11-1",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "障碍物布局",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "n/a",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-4-1",
+      "parent_id": "SUB-A11-1-4",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "障碍物数量",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "integer_or_range",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-4-2",
+      "parent_id": "SUB-A11-1-4",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "障碍物间距",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "number_or_range",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-4-3",
+      "parent_id": "SUB-A11-1-4",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "相对摆放角度",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "number_or_range",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-4-4",
+      "parent_id": "SUB-A11-1-4",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "排列拓扑",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "直线",
+          "label_zh": "直线"
+        },
+        {
+          "value": "扇形",
+          "label_zh": "扇形"
+        },
+        {
+          "value": "错位",
+          "label_zh": "错位"
+        },
+        {
+          "value": "网格",
+          "label_zh": "网格"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "SUB-A11-1-5",
+      "parent_id": "GROUP-A11-1",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "障碍物动态性",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "n/a",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-5-1",
+      "parent_id": "SUB-A11-1-5",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "运动状态",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "静止",
+          "label_zh": "静止"
+        },
+        {
+          "value": "运动",
+          "label_zh": "运动"
+        },
+        {
+          "value": "未知",
+          "label_zh": "未知"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-5-2",
+      "parent_id": "SUB-A11-1-5",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "速度向量",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "vector3_or_object",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-5-3",
+      "parent_id": "SUB-A11-1-5",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "运动模式",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "匀速",
+          "label_zh": "匀速"
+        },
+        {
+          "value": "往复",
+          "label_zh": "往复"
+        },
+        {
+          "value": "随机",
+          "label_zh": "随机"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-5-4",
+      "parent_id": "SUB-A11-1-5",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "运动可预测性",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "可预测",
+          "label_zh": "可预测"
+        },
+        {
+          "value": "部分可预测",
+          "label_zh": "部分可预测"
+        },
+        {
+          "value": "不可预测",
+          "label_zh": "不可预测"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "SUB-A11-1-6",
       "parent_id": "GROUP-A11-1",
       "canonical_slot": "jd-11.1",
       "owner_a": "A11",
       "name": "控制目标类型",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "n/a",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-6-1",
+      "parent_id": "SUB-A11-1-6",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "控制目标类型集",
       "definition": "",
       "node_kind": "variable",
       "value_type": "multi_enum",
@@ -4481,20 +5055,92 @@
           "label_zh": "速度"
         },
         {
-          "value": "加速度",
-          "label_zh": "加速度"
+          "value": "加速度/力",
+          "label_zh": "加速度/力"
         },
         {
           "value": "姿态",
           "label_zh": "姿态"
         },
         {
-          "value": "角速度",
-          "label_zh": "角速度"
+          "value": "机体系角速度",
+          "label_zh": "机体系角速度"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-6-2",
+      "parent_id": "SUB-A11-1-6",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "控制保持/跟踪模式",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "multi_enum",
+      "value_domain": [
+        {
+          "value": "姿态保持",
+          "label_zh": "姿态保持"
         },
         {
-          "value": "保持模式",
-          "label_zh": "保持模式"
+          "value": "高度保持",
+          "label_zh": "高度保持"
+        },
+        {
+          "value": "位置/悬停保持",
+          "label_zh": "位置/悬停保持"
+        },
+        {
+          "value": "速度跟踪",
+          "label_zh": "速度跟踪"
+        },
+        {
+          "value": "轨迹片段跟踪",
+          "label_zh": "轨迹片段跟踪"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-6-3",
+      "parent_id": "SUB-A11-1-6",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "指令参考系",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "局部NED",
+          "label_zh": "局部NED"
+        },
+        {
+          "value": "机体系FRD",
+          "label_zh": "机体系FRD"
+        },
+        {
+          "value": "全局坐标参考",
+          "label_zh": "全局坐标参考"
         }
       ],
       "unit": "",
@@ -4513,8 +5159,8 @@
       "parent_id": "ROOT-A11",
       "canonical_slot": "jd-11.2",
       "owner_a": "A11",
-      "name": "jd-11.2 方法与边界",
-      "definition": "方法与边界层",
+      "name": "jd-11.2 控制机制与包络",
+      "definition": "方法与边界",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -4530,11 +5176,32 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "VAR-A11-2-1",
+      "node_id": "SUB-A11-2-1",
       "parent_id": "GROUP-A11-2",
       "canonical_slot": "jd-11.2",
       "owner_a": "A11",
-      "name": "控制器与方法",
+      "name": "控制器与回路",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "n/a",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-2-1-1",
+      "parent_id": "SUB-A11-2-1",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "控制器家族",
       "definition": "",
       "node_kind": "variable",
       "value_type": "enum",
@@ -4548,24 +5215,16 @@
           "label_zh": "MPC"
         },
         {
-          "value": "自适应",
-          "label_zh": "自适应"
+          "value": "自适应控制",
+          "label_zh": "自适应控制"
         },
         {
           "value": "增益调度",
           "label_zh": "增益调度"
         },
         {
-          "value": "RL",
-          "label_zh": "RL"
-        },
-        {
-          "value": "级联结构",
-          "label_zh": "级联结构"
-        },
-        {
-          "value": "分配机制",
-          "label_zh": "分配机制"
+          "value": "RL controller",
+          "label_zh": "RL controller"
         }
       ],
       "unit": "",
@@ -4580,11 +5239,121 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "VAR-A11-2-2",
+      "node_id": "VAR-A11-2-1-2",
+      "parent_id": "SUB-A11-2-1",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "控制回路结构",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "级联PID",
+          "label_zh": "级联PID"
+        },
+        {
+          "value": "部分外环旁路",
+          "label_zh": "部分外环旁路"
+        },
+        {
+          "value": "其他",
+          "label_zh": "其他"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-2-1-3",
+      "parent_id": "SUB-A11-2-1",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "控制分配机制",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "静态Mixer",
+          "label_zh": "静态Mixer"
+        },
+        {
+          "value": "效能矩阵",
+          "label_zh": "效能矩阵"
+        },
+        {
+          "value": "其他",
+          "label_zh": "其他"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "SUB-A11-2-2",
       "parent_id": "GROUP-A11-2",
       "canonical_slot": "jd-11.2",
       "owner_a": "A11",
-      "name": "执行包络",
+      "name": "指令接口约束",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "n/a",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-2-2-1",
+      "parent_id": "SUB-A11-2-2",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "指令更新频率范围",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "number_or_range",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-2-2-2",
+      "parent_id": "SUB-A11-2-2",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "指令时延与超时边界",
       "definition": "",
       "node_kind": "variable",
       "value_type": "object",
@@ -4601,12 +5370,218 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "VAR-A11-2-3",
+      "node_id": "VAR-A11-2-2-3",
+      "parent_id": "SUB-A11-2-2",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "指令连续性要求",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "SUB-A11-2-3",
+      "parent_id": "GROUP-A11-2",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "运动与姿态动态包络",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "n/a",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-2-3-1",
+      "parent_id": "SUB-A11-2-3",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "水平速度包络",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "number_or_range_or_axis",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-2-3-2",
+      "parent_id": "SUB-A11-2-3",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "垂向速度包络",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "number_or_range_or_axis",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-2-3-3",
+      "parent_id": "SUB-A11-2-3",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "加速度/减速度包络",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "number_or_range_or_axis",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-2-3-4",
+      "parent_id": "SUB-A11-2-3",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "姿态角包络",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "number_or_range_or_axis",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-2-3-5",
+      "parent_id": "SUB-A11-2-3",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "角速度包络",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "number_or_range_or_axis",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "SUB-A11-2-4",
       "parent_id": "GROUP-A11-2",
       "canonical_slot": "jd-11.2",
       "owner_a": "A11",
       "name": "执行机构约束",
       "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "n/a",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-2-4-1",
+      "parent_id": "SUB-A11-2-4",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "控制轴可用性",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "可用",
+          "label_zh": "可用"
+        },
+        {
+          "value": "部分可用",
+          "label_zh": "部分可用"
+        },
+        {
+          "value": "不可用",
+          "label_zh": "不可用"
+        },
+        {
+          "value": "未知",
+          "label_zh": "未知"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-2-4-2",
+      "parent_id": "SUB-A11-2-4",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "执行机构输出与速率限制",
+      "definition": "",
       "node_kind": "variable",
       "value_type": "object",
       "value_domain": null,
@@ -4622,11 +5597,213 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "VAR-A11-2-4",
+      "node_id": "VAR-A11-2-4-3",
+      "parent_id": "SUB-A11-2-4",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "执行余量下限",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "number_range_or_axis",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "SUB-A11-2-5",
       "parent_id": "GROUP-A11-2",
       "canonical_slot": "jd-11.2",
       "owner_a": "A11",
-      "name": "指令接口约束",
+      "name": "所需状态估计",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "n/a",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-2-5-1",
+      "parent_id": "SUB-A11-2-5",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "所需状态估计引用",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "multi_reference",
+      "value_domain": [
+        {
+          "value": "绝对位置/速度",
+          "label_zh": "绝对位置/速度"
+        },
+        {
+          "value": "姿态/航向",
+          "label_zh": "姿态/航向"
+        },
+        {
+          "value": "相对几何",
+          "label_zh": "相对几何"
+        },
+        {
+          "value": "状态质量前提",
+          "label_zh": "状态质量前提"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-2-5-2",
+      "parent_id": "SUB-A11-2-5",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "执行机构可用状态",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "可用",
+          "label_zh": "可用"
+        },
+        {
+          "value": "降级可用",
+          "label_zh": "降级可用"
+        },
+        {
+          "value": "不可用",
+          "label_zh": "不可用"
+        },
+        {
+          "value": "未知",
+          "label_zh": "未知"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "SUB-A11-2-6",
+      "parent_id": "GROUP-A11-2",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "包络修正",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "n/a",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-2-6-1",
+      "parent_id": "SUB-A11-2-6",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "环境扰动修正",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-2-6-2",
+      "parent_id": "SUB-A11-2-6",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "载荷配置修正",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-2-6-3",
+      "parent_id": "SUB-A11-2-6",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "控制模式修正",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-2-6-4",
+      "parent_id": "SUB-A11-2-6",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "任务阶段适用性",
       "definition": "",
       "node_kind": "variable",
       "value_type": "object",
@@ -4647,8 +5824,8 @@
       "parent_id": "ROOT-A11",
       "canonical_slot": "jd-11.3",
       "owner_a": "A11",
-      "name": "jd-11.3 质量标准",
-      "definition": "质量标准层",
+      "name": "jd-11.3 控制质量标准",
+      "definition": "质量标准",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -4664,17 +5841,17 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "VAR-A11-3-1",
+      "node_id": "SUB-A11-3-1",
       "parent_id": "GROUP-A11-3",
       "canonical_slot": "jd-11.3",
       "owner_a": "A11",
       "name": "跟踪误差标准",
       "definition": "",
-      "node_kind": "variable",
-      "value_type": "object",
+      "node_kind": "group",
+      "value_type": "",
       "value_domain": null,
       "unit": "",
-      "multiplicity": "single",
+      "multiplicity": "n/a",
       "configuration_side": "shared",
       "difficulty_direction": "neutral",
       "applicable_scenarios": [
@@ -4685,11 +5862,11 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "VAR-A11-3-2",
-      "parent_id": "GROUP-A11-3",
+      "node_id": "VAR-A11-3-1-1",
+      "parent_id": "SUB-A11-3-1",
       "canonical_slot": "jd-11.3",
       "owner_a": "A11",
-      "name": "瞬态稳定性标准",
+      "name": "位置误差容忍范围",
       "definition": "",
       "node_kind": "variable",
       "value_type": "object",
@@ -4706,15 +5883,322 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "VAR-A11-3-3",
+      "node_id": "VAR-A11-3-1-2",
+      "parent_id": "SUB-A11-3-1",
+      "canonical_slot": "jd-11.3",
+      "owner_a": "A11",
+      "name": "速度误差容忍范围",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-3-1-3",
+      "parent_id": "SUB-A11-3-1",
+      "canonical_slot": "jd-11.3",
+      "owner_a": "A11",
+      "name": "姿态误差容忍范围",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-3-1-4",
+      "parent_id": "SUB-A11-3-1",
+      "canonical_slot": "jd-11.3",
+      "owner_a": "A11",
+      "name": "航向误差容忍范围",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "number_or_range",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "SUB-A11-3-2",
+      "parent_id": "GROUP-A11-3",
+      "canonical_slot": "jd-11.3",
+      "owner_a": "A11",
+      "name": "瞬态与稳定性标准",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "n/a",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-3-2-1",
+      "parent_id": "SUB-A11-3-2",
+      "canonical_slot": "jd-11.3",
+      "owner_a": "A11",
+      "name": "误差评价方式",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "瞬时误差",
+          "label_zh": "瞬时误差"
+        },
+        {
+          "value": "最大绝对误差",
+          "label_zh": "最大绝对误差"
+        },
+        {
+          "value": "均方根误差",
+          "label_zh": "均方根误差"
+        },
+        {
+          "value": "稳态误差",
+          "label_zh": "稳态误差"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-3-2-2",
+      "parent_id": "SUB-A11-3-2",
+      "canonical_slot": "jd-11.3",
+      "owner_a": "A11",
+      "name": "超调容忍范围",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "number_or_range",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-3-2-3",
+      "parent_id": "SUB-A11-3-2",
+      "canonical_slot": "jd-11.3",
+      "owner_a": "A11",
+      "name": "稳定/调节时间要求",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "duration_or_range",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-3-2-4",
+      "parent_id": "SUB-A11-3-2",
+      "canonical_slot": "jd-11.3",
+      "owner_a": "A11",
+      "name": "振荡与抖动容忍范围",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "SUB-A11-3-3",
       "parent_id": "GROUP-A11-3",
       "canonical_slot": "jd-11.3",
       "owner_a": "A11",
       "name": "执行余量标准",
       "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "n/a",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-3-3-1",
+      "parent_id": "SUB-A11-3-3",
+      "canonical_slot": "jd-11.3",
+      "owner_a": "A11",
+      "name": "执行机构饱和状态",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "未饱和",
+          "label_zh": "未饱和"
+        },
+        {
+          "value": "上限饱和",
+          "label_zh": "上限饱和"
+        },
+        {
+          "value": "下限饱和",
+          "label_zh": "下限饱和"
+        },
+        {
+          "value": "动态速率饱和",
+          "label_zh": "动态速率饱和"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-3-3-2",
+      "parent_id": "SUB-A11-3-3",
+      "canonical_slot": "jd-11.3",
+      "owner_a": "A11",
+      "name": "剩余控制权威",
+      "definition": "",
       "node_kind": "variable",
       "value_type": "object",
       "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "SUB-A11-3-4",
+      "parent_id": "GROUP-A11-3",
+      "canonical_slot": "jd-11.3",
+      "owner_a": "A11",
+      "name": "质量激活阶段",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "n/a",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-3-4-1",
+      "parent_id": "SUB-A11-3-4",
+      "canonical_slot": "jd-11.3",
+      "owner_a": "A11",
+      "name": "控制质量激活阶段",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "multi_enum",
+      "value_domain": [
+        {
+          "value": "起飞/降落",
+          "label_zh": "起飞/降落"
+        },
+        {
+          "value": "航线飞行/转场",
+          "label_zh": "航线飞行/转场"
+        },
+        {
+          "value": "连续扫描",
+          "label_zh": "连续扫描"
+        },
+        {
+          "value": "定点定视角",
+          "label_zh": "定点定视角"
+        },
+        {
+          "value": "抵近检查",
+          "label_zh": "抵近检查"
+        }
+      ],
       "unit": "",
       "multiplicity": "single",
       "configuration_side": "shared",
@@ -4731,8 +6215,8 @@
       "parent_id": "ROOT-A11",
       "canonical_slot": "jd-11.4",
       "owner_a": "A11",
-      "name": "jd-11.4 兜底协议",
-      "definition": "兜底协议层",
+      "name": "jd-11.4 控制处置协议",
+      "definition": "兜底协议",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -4748,18 +6232,39 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "VAR-A11-4-1",
+      "node_id": "SUB-A11-4-1",
       "parent_id": "GROUP-A11-4",
       "canonical_slot": "jd-11.4",
       "owner_a": "A11",
-      "name": "异常类型",
+      "name": "异常触发",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "n/a",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-4-1-1",
+      "parent_id": "SUB-A11-4-1",
+      "canonical_slot": "jd-11.4",
+      "owner_a": "A11",
+      "name": "控制异常类别",
       "definition": "",
       "node_kind": "variable",
-      "value_type": "enum",
+      "value_type": "multi_enum",
       "value_domain": [
         {
-          "value": "持续误差",
-          "label_zh": "持续误差"
+          "value": "持续控制误差",
+          "label_zh": "持续控制误差"
         },
         {
           "value": "执行机构饱和",
@@ -4774,8 +6279,8 @@
           "label_zh": "姿态异常"
         },
         {
-          "value": "风扰退化",
-          "label_zh": "风扰退化"
+          "value": "风扰控制退化",
+          "label_zh": "风扰控制退化"
         }
       ],
       "unit": "",
@@ -4790,26 +6295,47 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "VAR-A11-4-2",
+      "node_id": "SUB-A11-4-2",
       "parent_id": "GROUP-A11-4",
       "canonical_slot": "jd-11.4",
       "owner_a": "A11",
-      "name": "处置动作",
+      "name": "处置动作集",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "n/a",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-4-2-1",
+      "parent_id": "SUB-A11-4-2",
+      "canonical_slot": "jd-11.4",
+      "owner_a": "A11",
+      "name": "局部控制处置动作集",
       "definition": "",
       "node_kind": "variable",
-      "value_type": "enum",
+      "value_type": "multi_enum",
       "value_domain": [
         {
-          "value": "降速",
-          "label_zh": "降速"
+          "value": "降速/降低激进度",
+          "label_zh": "降速/降低激进度"
         },
         {
-          "value": "增大裕度",
-          "label_zh": "增大裕度"
+          "value": "增大控制余量",
+          "label_zh": "增大控制余量"
         },
         {
-          "value": "切换模式",
-          "label_zh": "切换模式"
+          "value": "切换控制模式",
+          "label_zh": "切换控制模式"
         },
         {
           "value": "等待稳定",
@@ -4832,11 +6358,74 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "VAR-A11-4-3",
+      "node_id": "SUB-A11-4-3",
       "parent_id": "GROUP-A11-4",
       "canonical_slot": "jd-11.4",
       "owner_a": "A11",
-      "name": "切换保护规则",
+      "name": "策略适用条件",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "n/a",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-4-3-1",
+      "parent_id": "SUB-A11-4-3",
+      "canonical_slot": "jd-11.4",
+      "owner_a": "A11",
+      "name": "适用任务阶段",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "multi_reference",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-4-3-2",
+      "parent_id": "SUB-A11-4-3",
+      "canonical_slot": "jd-11.4",
+      "owner_a": "A11",
+      "name": "适用控制模式",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "multi_reference",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-4-3-3",
+      "parent_id": "SUB-A11-4-3",
+      "canonical_slot": "jd-11.4",
+      "owner_a": "A11",
+      "name": "所需剩余控制权威",
       "definition": "",
       "node_kind": "variable",
       "value_type": "object",
@@ -4853,15 +6442,133 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "VAR-A11-4-4",
+      "node_id": "SUB-A11-4-4",
       "parent_id": "GROUP-A11-4",
       "canonical_slot": "jd-11.4",
       "owner_a": "A11",
-      "name": "验证与升级",
+      "name": "模式切换保护",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "n/a",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-4-4-1",
+      "parent_id": "SUB-A11-4-4",
+      "canonical_slot": "jd-11.4",
+      "owner_a": "A11",
+      "name": "模式切换保护规则",
       "definition": "",
       "node_kind": "variable",
       "value_type": "object",
       "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "SUB-A11-4-5",
+      "parent_id": "GROUP-A11-4",
+      "canonical_slot": "jd-11.4",
+      "owner_a": "A11",
+      "name": "处置后验证与升级",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "n/a",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-4-5-1",
+      "parent_id": "SUB-A11-4-5",
+      "canonical_slot": "jd-11.4",
+      "owner_a": "A11",
+      "name": "处置后控制状态",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "已恢复",
+          "label_zh": "已恢复"
+        },
+        {
+          "value": "部分恢复",
+          "label_zh": "部分恢复"
+        },
+        {
+          "value": "未恢复",
+          "label_zh": "未恢复"
+        },
+        {
+          "value": "无法验证",
+          "label_zh": "无法验证"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-4-5-2",
+      "parent_id": "SUB-A11-4-5",
+      "canonical_slot": "jd-11.4",
+      "owner_a": "A11",
+      "name": "跨能力升级目标",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "multi_reference",
+      "value_domain": [
+        {
+          "value": "→A7自身定位",
+          "label_zh": "→A7自身定位"
+        },
+        {
+          "value": "→A9资源管理",
+          "label_zh": "→A9资源管理"
+        },
+        {
+          "value": "→A10导航飞行",
+          "label_zh": "→A10导航飞行"
+        },
+        {
+          "value": "→A16安全包络",
+          "label_zh": "→A16安全包络"
+        }
+      ],
       "unit": "",
       "multiplicity": "single",
       "configuration_side": "shared",
@@ -4900,7 +6607,7 @@
       "canonical_slot": "jd-12.1",
       "owner_a": "A12",
       "name": "jd-12.1 本体目录",
-      "definition": "本体目录层",
+      "definition": "本体目录",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -5017,7 +6724,7 @@
       "canonical_slot": "jd-12.2",
       "owner_a": "A12",
       "name": "jd-12.2 方法与边界",
-      "definition": "方法与边界层",
+      "definition": "方法与边界",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -5097,7 +6804,7 @@
       "canonical_slot": "jd-12.3",
       "owner_a": "A12",
       "name": "jd-12.3 质量标准",
-      "definition": "质量标准层",
+      "definition": "质量标准",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -5194,7 +6901,7 @@
       "canonical_slot": "jd-12.4",
       "owner_a": "A12",
       "name": "jd-12.4 兜底协议",
-      "definition": "兜底协议层",
+      "definition": "兜底协议",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -5308,12 +7015,12 @@
       "value_type": "ref",
       "value_domain": [
         {
-          "value": "→A13 成果呈现",
-          "label_zh": "→A13 成果呈现"
+          "value": "→A13成果",
+          "label_zh": "→A13成果"
         },
         {
-          "value": "→A5 请求交接",
-          "label_zh": "→A5 请求交接"
+          "value": "→A5请求交接",
+          "label_zh": "→A5请求交接"
         }
       ],
       "unit": "",
@@ -5354,7 +7061,7 @@
       "canonical_slot": "jd-13.1",
       "owner_a": "A13",
       "name": "jd-13.1 本体目录",
-      "definition": "本体目录层",
+      "definition": "本体目录",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -5446,7 +7153,7 @@
       "canonical_slot": "jd-13.2",
       "owner_a": "A13",
       "name": "jd-13.2 方法与边界",
-      "definition": "方法与边界层",
+      "definition": "方法与边界",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -5530,7 +7237,7 @@
       "canonical_slot": "jd-13.3",
       "owner_a": "A13",
       "name": "jd-13.3 质量标准",
-      "definition": "质量标准层",
+      "definition": "质量标准",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -5640,7 +7347,7 @@
       "canonical_slot": "jd-13.4",
       "owner_a": "A13",
       "name": "jd-13.4 兜底协议",
-      "definition": "兜底协议层",
+      "definition": "兜底协议",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -5712,8 +7419,8 @@
           "label_zh": "重拍"
         },
         {
-          "value": "补充扫描",
-          "label_zh": "补充扫描"
+          "value": "补扫",
+          "label_zh": "补扫"
         },
         {
           "value": "换角度",
@@ -5754,12 +7461,12 @@
       "value_type": "ref",
       "value_domain": [
         {
-          "value": "→A12 载荷执行",
-          "label_zh": "→A12 载荷执行"
+          "value": "→A12载荷",
+          "label_zh": "→A12载荷"
         },
         {
-          "value": "→A5 请求交接",
-          "label_zh": "→A5 请求交接"
+          "value": "→A5请求交接",
+          "label_zh": "→A5请求交接"
         }
       ],
       "unit": "",
@@ -5800,7 +7507,7 @@
       "canonical_slot": "jd-14.1",
       "owner_a": "A14",
       "name": "jd-14.1 本体目录",
-      "definition": "本体目录层",
+      "definition": "本体目录",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -5842,8 +7549,8 @@
           "label_zh": "卫星中继"
         },
         {
-          "value": "Mesh网络",
-          "label_zh": "Mesh网络"
+          "value": "Mesh",
+          "label_zh": "Mesh"
         }
       ],
       "unit": "",
@@ -5884,7 +7591,7 @@
       "canonical_slot": "jd-14.2",
       "owner_a": "A14",
       "name": "jd-14.2 方法与边界",
-      "definition": "方法与边界层",
+      "definition": "方法与边界",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -5968,7 +7675,7 @@
       "canonical_slot": "jd-14.3",
       "owner_a": "A14",
       "name": "jd-14.3 质量标准",
-      "definition": "质量标准层",
+      "definition": "质量标准",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -6052,7 +7759,7 @@
       "canonical_slot": "jd-14.4",
       "owner_a": "A14",
       "name": "jd-14.4 兜底协议",
-      "definition": "兜底协议层",
+      "definition": "兜底协议",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -6072,7 +7779,7 @@
       "parent_id": "GROUP-A14-4",
       "canonical_slot": "jd-14.4",
       "owner_a": "A14",
-      "name": "链路异常类型",
+      "name": "异常类型",
       "definition": "",
       "node_kind": "variable",
       "value_type": "enum",
@@ -6162,12 +7869,12 @@
       "value_type": "ref",
       "value_domain": [
         {
-          "value": "→A16 安全包络",
-          "label_zh": "→A16 安全包络"
+          "value": "→A16安全",
+          "label_zh": "→A16安全"
         },
         {
-          "value": "→A4 编排执行",
-          "label_zh": "→A4 编排执行"
+          "value": "→A4编排",
+          "label_zh": "→A4编排"
         }
       ],
       "unit": "",
@@ -6208,7 +7915,7 @@
       "canonical_slot": "jd-15.1",
       "owner_a": "A15",
       "name": "jd-15.1 本体目录",
-      "definition": "本体目录层",
+      "definition": "本体目录",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -6292,7 +7999,7 @@
       "canonical_slot": "jd-15.2",
       "owner_a": "A15",
       "name": "jd-15.2 方法与边界",
-      "definition": "方法与边界层",
+      "definition": "方法与边界",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -6372,7 +8079,7 @@
       "canonical_slot": "jd-15.3",
       "owner_a": "A15",
       "name": "jd-15.3 质量标准",
-      "definition": "质量标准层",
+      "definition": "质量标准",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -6406,8 +8113,8 @@
           "label_zh": "部分过期"
         },
         {
-          "value": "缺失关键授权",
-          "label_zh": "缺失关键授权"
+          "value": "缺失关键",
+          "label_zh": "缺失关键"
         }
       ],
       "unit": "",
@@ -6448,7 +8155,7 @@
       "canonical_slot": "jd-15.4",
       "owner_a": "A15",
       "name": "jd-15.4 兜底协议",
-      "definition": "兜底协议层",
+      "definition": "兜底协议",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -6532,10 +8239,6 @@
           "label_zh": "等待恢复"
         },
         {
-          "value": "复核交通",
-          "label_zh": "复核交通"
-        },
-        {
           "value": "退避返航",
           "label_zh": "退避返航"
         }
@@ -6562,12 +8265,12 @@
       "value_type": "ref",
       "value_domain": [
         {
-          "value": "→A16 安全包络",
-          "label_zh": "→A16 安全包络"
+          "value": "→A16安全",
+          "label_zh": "→A16安全"
         },
         {
-          "value": "→A4 编排执行",
-          "label_zh": "→A4 编排执行"
+          "value": "→A4编排",
+          "label_zh": "→A4编排"
         }
       ],
       "unit": "",
@@ -6608,7 +8311,7 @@
       "canonical_slot": "jd-16.1",
       "owner_a": "A16",
       "name": "jd-16.1 本体目录",
-      "definition": "本体目录层",
+      "definition": "本体目录",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -6688,7 +8391,7 @@
       "canonical_slot": "jd-16.2",
       "owner_a": "A16",
       "name": "jd-16.2 方法与边界",
-      "definition": "方法与边界层",
+      "definition": "方法与边界",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -6768,7 +8471,7 @@
       "canonical_slot": "jd-16.3",
       "owner_a": "A16",
       "name": "jd-16.3 质量标准",
-      "definition": "质量标准层",
+      "definition": "质量标准",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -6869,7 +8572,7 @@
       "canonical_slot": "jd-16.4",
       "owner_a": "A16",
       "name": "jd-16.4 兜底协议",
-      "definition": "兜底协议层",
+      "definition": "兜底协议",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -6975,12 +8678,12 @@
       "value_type": "ref",
       "value_domain": [
         {
-          "value": "→A4 编排执行",
-          "label_zh": "→A4 编排执行"
+          "value": "→A4编排",
+          "label_zh": "→A4编排"
         },
         {
-          "value": "→A17 审计日志",
-          "label_zh": "→A17 审计日志"
+          "value": "→A17审计",
+          "label_zh": "→A17审计"
         }
       ],
       "unit": "",
@@ -7021,7 +8724,7 @@
       "canonical_slot": "jd-17.1",
       "owner_a": "A17",
       "name": "jd-17.1 本体目录",
-      "definition": "本体目录层",
+      "definition": "本体目录",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -7113,7 +8816,7 @@
       "canonical_slot": "jd-17.2",
       "owner_a": "A17",
       "name": "jd-17.2 方法与边界",
-      "definition": "方法与边界层",
+      "definition": "方法与边界",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -7193,7 +8896,7 @@
       "canonical_slot": "jd-17.3",
       "owner_a": "A17",
       "name": "jd-17.3 质量标准",
-      "definition": "质量标准层",
+      "definition": "质量标准",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -7294,7 +8997,7 @@
       "canonical_slot": "jd-17.4",
       "owner_a": "A17",
       "name": "jd-17.4 兜底协议",
-      "definition": "兜底协议层",
+      "definition": "兜底协议",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
