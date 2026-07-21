@@ -3,49 +3,828 @@
   "case_name": "白墙窄缝穿梭",
   "case_name_en": "White Wall Narrow Gap",
   "ability": "A11",
-  "description": "无人机在白墙环境中穿越狭窄缝隙。世界侧：两面平行白墙形成通道。平台侧：MPC低速高精度飞行。",
+  "description": "无人机从起点飞到终点，途中穿过若干带缝白墙。D1-D4 四档难度×每档3题=12题最小集+1扩展题。",
+  "doc_reference": "白墙.md v0.6",
+  "axes": {
+    "D": {
+      "description": "干扰难度 D1-D4（世界的属性）",
+      "levels": [
+        "D1",
+        "D2",
+        "D3",
+        "D4"
+      ]
+    },
+    "L": {
+      "description": "自主等级（HB 8737 映射，挂在 D 上的铭牌）",
+      "mapping": {
+        "D1": "等级3",
+        "D2": "等级3",
+        "D3": "等级3",
+        "D4": "等级4"
+      }
+    }
+  },
+  "scoring": {
+    "SR": "成功率 = 到达终点+无碰撞+未越界+时限内",
+    "CR": "碰撞率 = 发生≥1次碰撞的episode占比",
+    "SPL": "路径效率 = S×l/max(p,l)"
+  },
   "values": {
-    "VAR-A11-1-1-1": {"mode": "fixed", "value": "窄缝穿越"},
-    "VAR-A11-1-1-2": {"mode": "fixed", "value": "穿越"},
-    "VAR-A11-1-2-1": {"mode": "fixed", "value": "障碍物"},
-    "VAR-A11-1-3-1": {"mode": "fixed", "value": "面状结构"},
-    "VAR-A11-1-3-3": {"mode": "fixed", "value": "规则"},
-    "VAR-A11-1-3-4": {"mode": "fixed", "value": "狭窄通道"},
-    "VAR-A11-1-3-6": {"mode": "fixed", "value": "矩形"},
-    "VAR-A11-1-3-2": {"mode": "range", "min": 2.5, "max": 4.0, "unit": "m", "label": "高度", "fields": ["高度"]},
-    "VAR-A11-1-3-5": {"mode": "range", "min": 1.2, "max": 2.0, "unit": "m", "label": "净宽", "fields": ["净宽", "净高"]},
-    "VAR-A11-1-4-1": {"mode": "enum", "options": [2, 3], "value": 2, "label": "障碍物数量"},
-    "VAR-A11-1-4-4": {"mode": "enum", "options": ["平行", "错位"], "value": "平行", "label": "排列拓扑"},
-    "VAR-A11-1-5-1": {"mode": "enum", "options": ["静止", "匀速运动"], "value": "静止", "label": "运动状态"},
-    "VAR-A11-1-5-4": {"mode": "fixed", "value": "可预测"},
-    "VAR-A11-1-6-1": {"mode": "fixed", "value": ["位置", "姿态", "角速度"]},
-    "VAR-A11-1-6-2": {"mode": "enum", "options": ["位置/悬停保持", "轨迹片段跟踪", "速度跟踪"], "value": ["位置/悬停保持", "轨迹片段跟踪"], "label": "控制模式"},
-    "VAR-A11-1-6-3": {"mode": "fixed", "value": "机体系FRD"},
-
-    "VAR-A11-2-1-1": {"mode": "enum", "options": ["PID", "MPC", "自适应控制"], "value": "MPC", "label": "控制器"},
-    "VAR-A11-2-1-2": {"mode": "fixed", "value": "级联PID"},
-    "VAR-A11-2-2-1": {"mode": "range", "min": 0, "max": 3, "unit": "m/s", "label": "水平速度上限"},
-    "VAR-A11-2-2-2": {"mode": "range", "min": 0, "max": 2, "unit": "m/s", "label": "垂向速度上限"},
-    "VAR-A11-2-3-1": {"mode": "range", "min": 1, "max": 3, "unit": "m/s²", "label": "加速度上限"},
-    "VAR-A11-2-3-2": {"mode": "range", "min": 10, "max": 20, "unit": "°", "label": "姿态角上限"},
-    "VAR-A11-2-3-3": {"mode": "range", "min": 30, "max": 90, "unit": "°/s", "label": "角速度上限"},
-    "VAR-A11-2-4-1": {"mode": "fixed", "value": "全部可用"},
-    "VAR-A11-2-4-3": {"mode": "fixed", "value": "20%"},
-    "VAR-A11-2-5-1": {"mode": "fixed", "value": "100Hz"},
-
-    "VAR-A11-3-1-1": {"mode": "range", "min": 0.1, "max": 0.3, "unit": "m", "label": "位置误差容忍"},
-    "VAR-A11-3-1-2": {"mode": "fixed", "value": "≤0.3m/s"},
-    "VAR-A11-3-1-3": {"mode": "fixed", "value": "≤3°"},
-    "VAR-A11-3-1-4": {"mode": "fixed", "value": "≤2°"},
-    "VAR-A11-3-2-1": {"mode": "fixed", "value": "RMS"},
-    "VAR-A11-3-2-2": {"mode": "range", "min": 0.03, "max": 0.1, "unit": "m", "label": "超调容忍"},
-    "VAR-A11-3-2-3": {"mode": "fixed", "value": "≤0.5s"},
-    "VAR-A11-3-3-1": {"mode": "fixed", "value": "未饱和"},
-    "VAR-A11-3-3-2": {"mode": "fixed", "value": "≥20%"},
-
-    "VAR-A11-4-1-1": {"mode": "enum", "options": ["持续控制误差", "执行机构饱和", "振荡", "姿态异常", "风扰控制退化"], "value": ["振荡", "风扰退化"], "label": "关注异常"},
-    "VAR-A11-4-2-1": {"mode": "enum", "options": ["降速/降低激进度", "增大控制余量", "切换控制模式", "等待稳定", "请求检查"], "value": ["降速/降低激进度", "增大控制余量", "切换控制模式"], "label": "处置动作"},
-    "VAR-A11-4-5-1": {"mode": "fixed", "value": "部分恢复可接受"},
-    "VAR-A11-4-5-2": {"mode": "fixed", "value": ["→A7自身定位", "→A10导航飞行", "→A16安全包络"]}
+    "VAR-A11-1-1-1": {
+      "mode": "fixed",
+      "value": "窄缝穿越"
+    },
+    "VAR-A11-1-1-2": {
+      "mode": "fixed",
+      "value": "穿越"
+    },
+    "VAR-A11-1-2-1": {
+      "mode": "fixed",
+      "value": "障碍物"
+    },
+    "VAR-A11-1-3-1": {
+      "mode": "fixed",
+      "value": "面状结构"
+    },
+    "DOC-V1.1.1-墙高": {
+      "mode": "enum",
+      "options": [
+        "低",
+        "中",
+        "高"
+      ],
+      "value": "中",
+      "label": "墙高",
+      "difficulty": "↑越高越难"
+    },
+    "DOC-V1.1.2-墙厚": {
+      "mode": "enum",
+      "options": [
+        "薄",
+        "中",
+        "厚"
+      ],
+      "value": "中",
+      "label": "墙厚(缝道长)",
+      "difficulty": "↑越厚越难"
+    },
+    "DOC-V1.1.3-墙宽": {
+      "mode": "fixed",
+      "value": "宽(强制穿缝)",
+      "label": "墙宽"
+    },
+    "DOC-V1.1.4-墙外形": {
+      "mode": "enum",
+      "options": [
+        "矩形板",
+        "弧形",
+        "不规则"
+      ],
+      "value": "矩形板",
+      "label": "墙外形",
+      "difficulty": "↑异形越难"
+    },
+    "VAR-A11-1-3-3": {
+      "mode": "fixed",
+      "value": "规则"
+    },
+    "DOC-V1.3.1-缝宽比值": {
+      "mode": "range",
+      "min": 1.2,
+      "max": 3.0,
+      "unit": "×机身直径",
+      "label": "缝宽(目标缝)",
+      "difficulty": "↑越窄越难(核心轴)",
+      "d_levels": {
+        "D1": 3.0,
+        "D2": 2.0,
+        "D3": 1.5,
+        "D4": 1.2
+      },
+      "note": "连续值域，相对机身等效直径(~0.3m)"
+    },
+    "DOC-V1.3.2-缝纵向位置": {
+      "mode": "enum",
+      "options": [
+        "居中",
+        "偏上",
+        "偏下"
+      ],
+      "value": "居中",
+      "label": "缝纵向位置",
+      "difficulty": "偏离飞行高度越多越难"
+    },
+    "DOC-V1.3.3-缝横向位置": {
+      "mode": "enum",
+      "options": [
+        "居中",
+        "偏左",
+        "偏右"
+      ],
+      "value": "居中",
+      "label": "缝横向位置",
+      "difficulty": "偏移越多越难"
+    },
+    "DOC-V1.3.4-缝形状": {
+      "mode": "enum",
+      "options": [
+        "矩形",
+        "圆孔",
+        "拱形"
+      ],
+      "value": "矩形",
+      "label": "缝形状",
+      "difficulty": "↑异形越难"
+    },
+    "VAR-A11-1-3-4": {
+      "mode": "fixed",
+      "value": "狭窄通道"
+    },
+    "VAR-A11-1-3-6": {
+      "mode": "fixed",
+      "value": "矩形"
+    },
+    "DOC-V1.4-缝数": {
+      "mode": "enum",
+      "options": [
+        1,
+        2,
+        3
+      ],
+      "value": 1,
+      "label": "缝数",
+      "difficulty": "↑多缝越难(选缝+感知)"
+    },
+    "DOC-V1.5-缝间排列": {
+      "mode": "enum",
+      "options": [
+        "并排(横向)",
+        "上下(纵向)",
+        "混合"
+      ],
+      "value": null,
+      "label": "缝间排列",
+      "condition": "缝数≥2启用"
+    },
+    "DOC-V1.6-缝间距": {
+      "mode": "enum",
+      "options": [
+        "大",
+        "中",
+        "近"
+      ],
+      "value": null,
+      "label": "缝间距",
+      "condition": "缝数≥2启用"
+    },
+    "DOC-V1.7-目标缝": {
+      "mode": "fixed",
+      "value": 1,
+      "label": "目标缝(hidden GT)",
+      "note": "评分锚点，缝数=1时自明"
+    },
+    "DOC-V1.2.1-纹理复杂度": {
+      "mode": "enum",
+      "options": [
+        "无",
+        "轻纹理",
+        "复杂纹理"
+      ],
+      "value": "无",
+      "label": "纹理复杂度",
+      "difficulty": "↑越复杂越难"
+    },
+    "DOC-V1.2.2-缝墙对比度": {
+      "mode": "enum",
+      "options": [
+        "高",
+        "中",
+        "低"
+      ],
+      "value": "高",
+      "label": "缝/墙对比度",
+      "difficulty": "↓越低越难"
+    },
+    "VAR-A11-1-4-1": {
+      "mode": "enum",
+      "options": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "value": 1,
+      "label": "墙数",
+      "difficulty": "↑越多越难",
+      "d_levels": {
+        "D1": "1-2",
+        "D2": "2-3",
+        "D3": 3,
+        "D4": "4+"
+      }
+    },
+    "VAR-A11-1-4-2": {
+      "mode": "enum",
+      "options": [
+        "大",
+        "中",
+        "近"
+      ],
+      "value": "大",
+      "label": "墙间距",
+      "difficulty": "↓近偏难",
+      "d_levels": {
+        "D1": "大",
+        "D2": "中",
+        "D3": "近",
+        "D4": "近"
+      }
+    },
+    "VAR-A11-1-4-3": {
+      "mode": "enum",
+      "options": [
+        0,
+        15,
+        30,
+        45
+      ],
+      "value": 0,
+      "unit": "°",
+      "label": "摆放角度",
+      "difficulty": "↑越大越难(有效缝宽缩)",
+      "d_levels": {
+        "D1": 0,
+        "D2": 15,
+        "D3": 30,
+        "D4": "30/45"
+      }
+    },
+    "DOC-V2.4-缝对齐性": {
+      "mode": "enum",
+      "options": [
+        "对齐(廊道)",
+        "部分错开",
+        "错开(迷宫)"
+      ],
+      "value": "对齐",
+      "label": "缝对齐性",
+      "difficulty": "↑越错开越难",
+      "d_levels": {
+        "D1": "对齐",
+        "D2": "对齐",
+        "D3": "部分错开",
+        "D4": "错开"
+      }
+    },
+    "VAR-A11-1-4-4": {
+      "mode": "enum",
+      "options": [
+        "直线",
+        "扇形",
+        "错位",
+        "网格"
+      ],
+      "value": "直线",
+      "label": "排列拓扑",
+      "d_levels": {
+        "D1": "直线",
+        "D2": "直线",
+        "D3": "直线/错位",
+        "D4": "直线/扇形/网格"
+      }
+    },
+    "VAR-A11-1-5-1": {
+      "mode": "enum",
+      "options": [
+        "静止",
+        "运动"
+      ],
+      "value": "静止",
+      "label": "运动状态",
+      "d_levels": {
+        "D1": "静止",
+        "D2": "静止",
+        "D3": "静止/运动",
+        "D4": "运动"
+      }
+    },
+    "DOC-V2.6.1-墙运动速度": {
+      "mode": "enum",
+      "options": [
+        "慢",
+        "中",
+        "快"
+      ],
+      "value": null,
+      "label": "墙运动速度",
+      "condition": "运动时启用"
+    },
+    "DOC-V2.6.2-墙运动方向": {
+      "mode": "enum",
+      "options": [
+        "X+",
+        "X-",
+        "Y+",
+        "Y-"
+      ],
+      "value": null,
+      "label": "墙运动方向",
+      "condition": "运动时启用"
+    },
+    "VAR-A11-1-5-3": {
+      "mode": "enum",
+      "options": [
+        "匀速",
+        "往复",
+        "随机"
+      ],
+      "value": null,
+      "label": "运动模式",
+      "condition": "运动时启用"
+    },
+    "VAR-A11-1-5-4": {
+      "mode": "fixed",
+      "value": "可预测"
+    },
+    "VAR-A11-1-6-1": {
+      "mode": "fixed",
+      "value": [
+        "位置",
+        "姿态",
+        "角速度"
+      ]
+    },
+    "VAR-A11-1-6-2": {
+      "mode": "fixed",
+      "value": [
+        "位置/悬停保持",
+        "轨迹片段跟踪"
+      ]
+    },
+    "VAR-A11-1-6-3": {
+      "mode": "fixed",
+      "value": "机体系FRD"
+    },
+    "VAR-A11-2-1-1": {
+      "mode": "fixed",
+      "value": "PID/MPC（SUT自带）",
+      "note": "被测policy模型如YOPO"
+    },
+    "VAR-A11-2-1-2": {
+      "mode": "fixed",
+      "value": "级联PID"
+    },
+    "VAR-A11-2-2-1": {
+      "mode": "fixed",
+      "value": [
+        0,
+        3
+      ],
+      "unit": "m/s",
+      "label": "水平速度上限",
+      "note": "jd-8.2 v_max~3m/s"
+    },
+    "VAR-A11-2-2-2": {
+      "mode": "fixed",
+      "value": [
+        0,
+        2
+      ],
+      "unit": "m/s",
+      "label": "垂向速度上限"
+    },
+    "VAR-A11-2-3-1": {
+      "mode": "fixed",
+      "value": [
+        -2,
+        2
+      ],
+      "unit": "m/s²"
+    },
+    "VAR-A11-2-3-2": {
+      "mode": "fixed",
+      "value": [
+        -15,
+        15
+      ],
+      "unit": "°"
+    },
+    "VAR-A11-2-3-3": {
+      "mode": "fixed",
+      "value": [
+        -60,
+        60
+      ],
+      "unit": "°/s"
+    },
+    "VAR-A11-2-4-1": {
+      "mode": "fixed",
+      "value": "全部可用"
+    },
+    "VAR-A11-2-4-3": {
+      "mode": "fixed",
+      "value": "20%"
+    },
+    "VAR-A11-2-5-1": {
+      "mode": "fixed",
+      "value": "≥10Hz",
+      "note": "jd-8.2 f_c≥10Hz"
+    },
+    "DOC-V5.3-机身等效直径": {
+      "mode": "fixed",
+      "value": 0.3,
+      "unit": "m",
+      "label": "机身等效直径",
+      "note": "缝宽标尺，缝宽=比值×此值"
+    },
+    "DOC-V5.1-控制接口": {
+      "mode": "fixed",
+      "value": "velocity-cmd / waypoint-tracking",
+      "note": "jd-8.1"
+    },
+    "VAR-A11-3-1-1": {
+      "mode": "range",
+      "min": 0.1,
+      "max": 0.3,
+      "unit": "m",
+      "label": "位置误差容忍"
+    },
+    "VAR-A11-3-2-1": {
+      "mode": "fixed",
+      "value": "RMS"
+    },
+    "DOC-成功条件": {
+      "mode": "fixed",
+      "value": [
+        "到达终点(距离≤ε)",
+        "全程无碰撞",
+        "未越界",
+        "时限T内完成"
+      ],
+      "label": "成功定义(jd-0.7)"
+    },
+    "VAR-A11-4-1-1": {
+      "mode": "enum",
+      "options": [
+        "持续控制误差",
+        "执行机构饱和",
+        "振荡",
+        "姿态异常",
+        "风扰控制退化"
+      ],
+      "value": [
+        "振荡",
+        "风扰控制退化"
+      ],
+      "label": "关注异常"
+    },
+    "VAR-A11-4-2-1": {
+      "mode": "enum",
+      "options": [
+        "降速/降低激进度",
+        "增大控制余量",
+        "切换控制模式",
+        "等待稳定",
+        "请求检查"
+      ],
+      "value": [
+        "降速/降低激进度",
+        "增大控制余量"
+      ],
+      "label": "处置动作"
+    },
+    "VAR-A11-4-5-1": {
+      "mode": "fixed",
+      "value": "部分恢复可接受"
+    },
+    "DOC-V4.1-场地尺寸": {
+      "mode": "enum",
+      "options": [
+        "大",
+        "中",
+        "小"
+      ],
+      "value": "大",
+      "label": "场地尺寸",
+      "d_levels": {
+        "D1": "大",
+        "D2": "中",
+        "D3": "中",
+        "D4": "小"
+      }
+    },
+    "DOC-V4.2-地面天花板约束": {
+      "mode": "enum",
+      "options": [
+        "无",
+        "有地面",
+        "有地+顶"
+      ],
+      "value": "无",
+      "label": "地面/天花板约束",
+      "d_levels": {
+        "D1": "无",
+        "D2": "无",
+        "D3": "有地面",
+        "D4": "有地+顶"
+      }
+    },
+    "DOC-V3.1.1-风速": {
+      "mode": "enum",
+      "options": [
+        "无",
+        "微风",
+        "恒风",
+        "阵风"
+      ],
+      "value": "无",
+      "label": "风速",
+      "d_levels": {
+        "D1": "无",
+        "D2": "无",
+        "D3": "微风/恒风",
+        "D4": "恒风/阵风"
+      }
+    },
+    "DOC-V3.1.2-风向": {
+      "mode": "enum",
+      "options": [
+        "X+",
+        "X-",
+        "Y+",
+        "Y-"
+      ],
+      "value": null,
+      "label": "风向",
+      "condition": "风速≠无时启用"
+    },
+    "DOC-V3.1.3-风场类型": {
+      "mode": "enum",
+      "options": [
+        "均匀",
+        "阵风",
+        "切变"
+      ],
+      "value": null,
+      "label": "风场类型"
+    },
+    "DOC-V3.2.1-定位扰动类型": {
+      "mode": "enum",
+      "options": [
+        "无",
+        "GNSS多径",
+        "跳变",
+        "失锁",
+        "源不一致"
+      ],
+      "value": "无",
+      "label": "定位扰动类型",
+      "d_levels": {
+        "D1": "无",
+        "D2": "无",
+        "D3": "GNSS多径",
+        "D4": "跳变/失锁"
+      }
+    },
+    "DOC-V3.2.2-定位扰动强度": {
+      "mode": "enum",
+      "options": [
+        "轻",
+        "中",
+        "重"
+      ],
+      "value": null,
+      "label": "定位扰动强度",
+      "condition": "类型≠无时启用"
+    },
+    "DOC-V3.2.4-定位注入时刻": {
+      "mode": "fixed",
+      "value": "穿第一缝后(M2约束)",
+      "label": "定位注入时刻"
+    },
+    "DOC-V3.3.1-光照基线": {
+      "mode": "fixed",
+      "value": "明亮",
+      "label": "光照基线",
+      "note": "全档启用，本期固定明亮"
+    },
+    "DOC-V3.3.2-光线扰动": {
+      "mode": "enum",
+      "options": [
+        "无",
+        "逆光",
+        "阴影扫掠",
+        "频闪",
+        "光强突变"
+      ],
+      "value": "无",
+      "label": "光线扰动",
+      "d_levels": {
+        "D3": "无",
+        "D4": "逆光(D4-T10)"
+      }
+    },
+    "DOC-V3.3.4-光线注入时刻": {
+      "mode": "fixed",
+      "value": "穿第一缝后(M2约束)"
+    },
+    "DOC-V3.4.1-天气类型": {
+      "mode": "enum",
+      "options": [
+        "晴",
+        "阴",
+        "雾",
+        "雨"
+      ],
+      "value": "晴",
+      "label": "天气类型",
+      "d_levels": {
+        "D3": "晴",
+        "D4": "雾(D4-T11)"
+      }
+    },
+    "DOC-V3.4.2-天气强度": {
+      "mode": "enum",
+      "options": [
+        "轻",
+        "中",
+        "重"
+      ],
+      "value": null,
+      "label": "天气强度",
+      "condition": "类型≠晴时启用"
+    },
+    "DOC-V3.4.3-天气注入时刻": {
+      "mode": "fixed",
+      "value": "穿第一缝后(M2约束)"
+    }
+  },
+  "d_level_matrix": {
+    "D1": {
+      "缝宽": "3.0×",
+      "墙数": "1-2",
+      "纹理": "无",
+      "角度": "0°",
+      "间距": "大",
+      "对齐": "对齐",
+      "扰动": "无",
+      "L": "等级3"
+    },
+    "D2": {
+      "缝宽": "2.0×",
+      "墙数": "2-3",
+      "纹理": "轻",
+      "角度": "0-15°",
+      "间距": "中",
+      "对齐": "对齐",
+      "扰动": "无",
+      "L": "等级3"
+    },
+    "D3": {
+      "缝宽": "1.5×",
+      "墙数": "3",
+      "纹理": "复杂",
+      "角度": "30°",
+      "间距": "近",
+      "对齐": "部分错开",
+      "扰动": "单一(风/定位/移动墙)",
+      "L": "等级3"
+    },
+    "D4": {
+      "缝宽": "1.2×",
+      "墙数": "4+",
+      "纹理": "复杂",
+      "对比度": "低",
+      "角度": "30/45°",
+      "间距": "近",
+      "对齐": "错开(迷宫)",
+      "扰动": "≥2种联合",
+      "L": "等级4"
+    }
+  },
+  "tasks": [
+    {
+      "id": "T01",
+      "D": "D1",
+      "seed": 11,
+      "main_var": "单墙基线",
+      "gap": "3.0×",
+      "walls": 1,
+      "disturbance": "无"
+    },
+    {
+      "id": "T02",
+      "D": "D1",
+      "seed": 12,
+      "main_var": "墙间距",
+      "gap": "3.0×",
+      "walls": 2,
+      "disturbance": "无"
+    },
+    {
+      "id": "T03",
+      "D": "D1",
+      "seed": 13,
+      "main_var": "缝宽",
+      "gap": "3.2×/2.8×",
+      "walls": 2,
+      "disturbance": "无"
+    },
+    {
+      "id": "T04",
+      "D": "D2",
+      "seed": 21,
+      "main_var": "缝纵向位置",
+      "gap": "2.0×",
+      "walls": 2,
+      "disturbance": "无"
+    },
+    {
+      "id": "T05",
+      "D": "D2",
+      "seed": 22,
+      "main_var": "纹理",
+      "gap": "2.0×",
+      "walls": 3,
+      "disturbance": "无"
+    },
+    {
+      "id": "T06",
+      "D": "D2",
+      "seed": 23,
+      "main_var": "摆放角度",
+      "gap": "2.0×",
+      "walls": 2,
+      "disturbance": "无"
+    },
+    {
+      "id": "T07",
+      "D": "D3",
+      "seed": 31,
+      "main_var": "风",
+      "gap": "1.5×",
+      "walls": 3,
+      "disturbance": "风"
+    },
+    {
+      "id": "T08",
+      "D": "D3",
+      "seed": 32,
+      "main_var": "定位扰动",
+      "gap": "1.5×",
+      "walls": 3,
+      "disturbance": "定位"
+    },
+    {
+      "id": "T09",
+      "D": "D3",
+      "seed": 33,
+      "main_var": "移动墙",
+      "gap": "1.5×",
+      "walls": 3,
+      "disturbance": "移动墙"
+    },
+    {
+      "id": "T10",
+      "D": "D4",
+      "seed": 41,
+      "main_var": "移动墙+风+光线扰动",
+      "gap": "1.2×",
+      "walls": 4,
+      "disturbance": "风+移动墙+逆光"
+    },
+    {
+      "id": "T11",
+      "D": "D4",
+      "seed": 42,
+      "main_var": "阵风+移动墙+天气",
+      "gap": "1.2×",
+      "walls": 4,
+      "disturbance": "阵风+移动墙+雾"
+    },
+    {
+      "id": "T12",
+      "D": "D4",
+      "seed": 43,
+      "main_var": "定位+移动墙+风",
+      "gap": "1.2×",
+      "walls": "4+",
+      "disturbance": "定位+移动墙+风"
+    },
+    {
+      "id": "T13",
+      "D": "D3",
+      "seed": 51,
+      "main_var": "多缝选缝(扩展)",
+      "gap": "1.5×目标/3.0×诱饵",
+      "walls": 1,
+      "disturbance": "风"
+    }
+  ],
+  "notes": {
+    "missing_tree_vars": "DOC- prefixed keys are variables from 白墙.md not yet in jd_variable_tree_version2.json. To be added: 墙厚, 墙宽, 缝宽比值, 缝纵向/横向位置, 缝形状, 缝数, 缝间排列, 缝间距, 目标缝, 纹理复杂度, 缝墙对比度, 缝对齐性, 墙运动速度/方向, 机身直径, 控制接口",
+    "m2_constraint": "D3-D4的干扰不在起飞即注入——须先经正常穿缝窗口(M2约束)",
+    "l_pinned_to_d": "白墙无人在环，L被D钉死：D1-D3→等级3，D4→等级4"
   }
 }
