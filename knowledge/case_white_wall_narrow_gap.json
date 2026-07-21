@@ -89,22 +89,22 @@
       "mode": "fixed",
       "value": "规则"
     },
-    "DOC-V1.3.1-缝宽比值": {
-      "mode": "range",
-      "min": 1.2,
-      "max": 3.0,
-      "unit": "×机身直径",
-      "label": "缝宽(目标缝)",
-      "difficulty": "↑越窄越难(核心轴)",
+    "VAR-A11-1-7-1": {
+      "mode": "enum",
+      "options": [
+        "静止",
+        "运动"
+      ],
+      "value": "静止",
+      "label": "运动状态",
       "d_levels": {
-        "D1": 3.0,
-        "D2": 2.0,
-        "D3": 1.5,
-        "D4": 1.2
-      },
-      "note": "连续值域，相对机身等效直径(~0.3m)"
+        "D1": "静止",
+        "D2": "静止",
+        "D3": "静止/运动",
+        "D4": "运动"
+      }
     },
-    "DOC-V1.3.2-缝纵向位置": {
+    "VAR-A11-1-5-2": {
       "mode": "enum",
       "options": [
         "居中",
@@ -115,27 +115,20 @@
       "label": "缝纵向位置",
       "difficulty": "偏离飞行高度越多越难"
     },
-    "DOC-V1.3.3-缝横向位置": {
+    "VAR-A11-1-7-3": {
       "mode": "enum",
       "options": [
-        "居中",
-        "偏左",
-        "偏右"
+        "匀速",
+        "往复",
+        "随机"
       ],
-      "value": "居中",
-      "label": "缝横向位置",
-      "difficulty": "偏移越多越难"
+      "value": null,
+      "label": "运动模式",
+      "condition": "运动时启用"
     },
-    "DOC-V1.3.4-缝形状": {
-      "mode": "enum",
-      "options": [
-        "矩形",
-        "圆孔",
-        "拱形"
-      ],
-      "value": "矩形",
-      "label": "缝形状",
-      "difficulty": "↑异形越难"
+    "VAR-A11-1-5-4": {
+      "mode": "fixed",
+      "value": "可预测"
     },
     "VAR-A11-1-3-4": {
       "mode": "fixed",
@@ -145,7 +138,7 @@
       "mode": "fixed",
       "value": "矩形"
     },
-    "DOC-V1.4-缝数": {
+    "VAR-A11-1-5-5": {
       "mode": "enum",
       "options": [
         1,
@@ -156,7 +149,7 @@
       "label": "缝数",
       "difficulty": "↑多缝越难(选缝+感知)"
     },
-    "DOC-V1.5-缝间排列": {
+    "VAR-A11-1-5-6": {
       "mode": "enum",
       "options": [
         "并排(横向)",
@@ -167,7 +160,7 @@
       "label": "缝间排列",
       "condition": "缝数≥2启用"
     },
-    "DOC-V1.6-缝间距": {
+    "VAR-A11-1-5-7": {
       "mode": "enum",
       "options": [
         "大",
@@ -178,33 +171,11 @@
       "label": "缝间距",
       "condition": "缝数≥2启用"
     },
-    "DOC-V1.7-目标缝": {
+    "VAR-A11-1-5-8": {
       "mode": "fixed",
       "value": 1,
       "label": "目标缝(hidden GT)",
       "note": "评分锚点，缝数=1时自明"
-    },
-    "DOC-V1.2.1-纹理复杂度": {
-      "mode": "enum",
-      "options": [
-        "无",
-        "轻纹理",
-        "复杂纹理"
-      ],
-      "value": "无",
-      "label": "纹理复杂度",
-      "difficulty": "↑越复杂越难"
-    },
-    "DOC-V1.2.2-缝墙对比度": {
-      "mode": "enum",
-      "options": [
-        "高",
-        "中",
-        "低"
-      ],
-      "value": "高",
-      "label": "缝/墙对比度",
-      "difficulty": "↓越低越难"
     },
     "VAR-A11-1-4-1": {
       "mode": "enum",
@@ -260,7 +231,7 @@
         "D4": "30/45"
       }
     },
-    "DOC-V2.4-缝对齐性": {
+    "VAR-A11-1-6-4": {
       "mode": "enum",
       "options": [
         "对齐(廊道)",
@@ -277,7 +248,7 @@
         "D4": "错开"
       }
     },
-    "VAR-A11-1-4-4": {
+    "VAR-A11-1-6-5": {
       "mode": "enum",
       "options": [
         "直线",
@@ -292,21 +263,6 @@
         "D2": "直线",
         "D3": "直线/错位",
         "D4": "直线/扇形/网格"
-      }
-    },
-    "VAR-A11-1-5-1": {
-      "mode": "enum",
-      "options": [
-        "静止",
-        "运动"
-      ],
-      "value": "静止",
-      "label": "运动状态",
-      "d_levels": {
-        "D1": "静止",
-        "D2": "静止",
-        "D3": "静止/运动",
-        "D4": "运动"
       }
     },
     "DOC-V2.6.1-墙运动速度": {
@@ -331,21 +287,6 @@
       "value": null,
       "label": "墙运动方向",
       "condition": "运动时启用"
-    },
-    "VAR-A11-1-5-3": {
-      "mode": "enum",
-      "options": [
-        "匀速",
-        "往复",
-        "随机"
-      ],
-      "value": null,
-      "label": "运动模式",
-      "condition": "运动时启用"
-    },
-    "VAR-A11-1-5-4": {
-      "mode": "fixed",
-      "value": "可预测"
     },
     "VAR-A11-1-6-1": {
       "mode": "fixed",
@@ -431,14 +372,14 @@
       "value": "≥10Hz",
       "note": "jd-8.2 f_c≥10Hz"
     },
-    "DOC-V5.3-机身等效直径": {
+    "VAR-A11-2-8-2": {
       "mode": "fixed",
       "value": 0.3,
       "unit": "m",
       "label": "机身等效直径",
       "note": "缝宽标尺，缝宽=比值×此值"
     },
-    "DOC-V5.1-控制接口": {
+    "VAR-A11-2-8-1": {
       "mode": "fixed",
       "value": "velocity-cmd / waypoint-tracking",
       "note": "jd-8.1"
@@ -823,7 +764,7 @@
     }
   ],
   "notes": {
-    "missing_tree_vars": "DOC- prefixed keys are variables from 白墙.md not yet in jd_variable_tree_version2.json. To be added: 墙厚, 墙宽, 缝宽比值, 缝纵向/横向位置, 缝形状, 缝数, 缝间排列, 缝间距, 目标缝, 纹理复杂度, 缝墙对比度, 缝对齐性, 墙运动速度/方向, 机身直径, 控制接口",
+    "missing_tree_vars": "Global JDs (jd-0.2/0.3) and sub-fields (墙高/墙厚/墙运动速度/方向) still use DOC- prefix",
     "m2_constraint": "D3-D4的干扰不在起飞即注入——须先经正常穿缝窗口(M2约束)",
     "l_pinned_to_d": "白墙无人在环，L被D钉死：D1-D3→等级3，D4→等级4"
   }

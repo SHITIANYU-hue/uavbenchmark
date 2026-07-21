@@ -1,8 +1,8 @@
 {
   "schema": "uav-benchmark-jd-variable-tree",
-  "schema_version": "2.1",
+  "schema_version": "2.2",
   "catalog_id": "jd-variable-tree-v2",
-  "catalog_version": "2.1.0",
+  "catalog_version": "2.2.0",
   "generated_at": "2026-07-21",
   "ability_id_scheme": "ability-id-v3-2026-07-20",
   "pattern": "4-layer: ontology(world) / method+envelope(platform) / quality(grader) / fallback(sut)",
@@ -414,10 +414,6 @@
         {
           "value": "→A5请求交接",
           "label_zh": "→A5请求交接"
-        },
-        {
-          "value": "人工介入",
-          "label_zh": "人工介入"
         }
       ],
       "unit": "",
@@ -506,14 +502,6 @@
         {
           "value": "覆盖率",
           "label_zh": "覆盖率"
-        },
-        {
-          "value": "重叠率",
-          "label_zh": "重叠率"
-        },
-        {
-          "value": "拍摄间隔",
-          "label_zh": "拍摄间隔"
         }
       ],
       "unit": "",
@@ -752,8 +740,8 @@
           "label_zh": "类型错误"
         },
         {
-          "value": "相互冲突",
-          "label_zh": "相互冲突"
+          "value": "冲突",
+          "label_zh": "冲突"
         }
       ],
       "unit": "",
@@ -782,8 +770,8 @@
           "label_zh": "用默认值"
         },
         {
-          "value": "推断合理值",
-          "label_zh": "推断合理值"
+          "value": "推断",
+          "label_zh": "推断"
         },
         {
           "value": "请求确认",
@@ -880,14 +868,6 @@
         {
           "value": "投送",
           "label_zh": "投送"
-        },
-        {
-          "value": "侦查",
-          "label_zh": "侦查"
-        },
-        {
-          "value": "监视",
-          "label_zh": "监视"
         }
       ],
       "unit": "",
@@ -1114,8 +1094,8 @@
       "value_type": "enum",
       "value_domain": [
         {
-          "value": "全部完成=完成",
-          "label_zh": "全部完成=完成"
+          "value": "全部完成",
+          "label_zh": "全部完成"
         },
         {
           "value": "部分完成",
@@ -1183,10 +1163,6 @@
         {
           "value": "超时",
           "label_zh": "超时"
-        },
-        {
-          "value": "约束冲突",
-          "label_zh": "约束冲突"
         }
       ],
       "unit": "",
@@ -4363,7 +4339,7 @@
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "控制飞行",
-      "definition": "执行飞行控制指令，维持稳定飞行并在异常时处置。",
+      "definition": "控制飞行能力",
       "node_kind": "capability_root",
       "value_type": "",
       "value_domain": null,
@@ -4384,7 +4360,7 @@
       "canonical_slot": "jd-11.1",
       "owner_a": "A11",
       "name": "jd-11.1 飞行场景目录",
-      "definition": "世界侧：场景里有什么实体，实体长什么样、怎么运动",
+      "definition": "世界侧：场景里有什么实体，实体长什么样",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -4755,6 +4731,10 @@
           "label_zh": "圆形"
         },
         {
+          "value": "拱形",
+          "label_zh": "拱形"
+        },
+        {
           "value": "不规则",
           "label_zh": "不规则"
         }
@@ -4775,8 +4755,8 @@
       "parent_id": "GROUP-A11-1",
       "canonical_slot": "jd-11.1",
       "owner_a": "A11",
-      "name": "实体特征 — 布局",
-      "definition": "多个实体的空间关系",
+      "name": "实体特征 — 外观",
+      "definition": "实体的表面视觉属性",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -4796,6 +4776,395 @@
       "parent_id": "SUB-A11-1-4",
       "canonical_slot": "jd-11.1",
       "owner_a": "A11",
+      "name": "纹理复杂度",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "无",
+          "label_zh": "无"
+        },
+        {
+          "value": "轻纹理",
+          "label_zh": "轻纹理"
+        },
+        {
+          "value": "复杂纹理",
+          "label_zh": "复杂纹理"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "world",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-4-2",
+      "parent_id": "SUB-A11-1-4",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "缝墙对比度",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "高",
+          "label_zh": "高"
+        },
+        {
+          "value": "中",
+          "label_zh": "中"
+        },
+        {
+          "value": "低",
+          "label_zh": "低"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "world",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-4-3",
+      "parent_id": "SUB-A11-1-4",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "材质类型",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "混凝土",
+          "label_zh": "混凝土"
+        },
+        {
+          "value": "金属",
+          "label_zh": "金属"
+        },
+        {
+          "value": "玻璃",
+          "label_zh": "玻璃"
+        },
+        {
+          "value": "木材",
+          "label_zh": "木材"
+        },
+        {
+          "value": "白墙",
+          "label_zh": "白墙"
+        },
+        {
+          "value": "混合",
+          "label_zh": "混合"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "world",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "SUB-A11-1-5",
+      "parent_id": "GROUP-A11-1",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "实体特征 — 缝",
+      "definition": "墙上开口（缝）的属性",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "n/a",
+      "configuration_side": "world",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-5-1",
+      "parent_id": "SUB-A11-1-5",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "缝宽比值",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "number_or_range",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "world",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-5-2",
+      "parent_id": "SUB-A11-1-5",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "缝纵向位置",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "居中",
+          "label_zh": "居中"
+        },
+        {
+          "value": "偏上",
+          "label_zh": "偏上"
+        },
+        {
+          "value": "偏下",
+          "label_zh": "偏下"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "world",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-5-3",
+      "parent_id": "SUB-A11-1-5",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "缝横向位置",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "居中",
+          "label_zh": "居中"
+        },
+        {
+          "value": "偏左",
+          "label_zh": "偏左"
+        },
+        {
+          "value": "偏右",
+          "label_zh": "偏右"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "world",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-5-4",
+      "parent_id": "SUB-A11-1-5",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "缝形状",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "矩形",
+          "label_zh": "矩形"
+        },
+        {
+          "value": "圆孔",
+          "label_zh": "圆孔"
+        },
+        {
+          "value": "拱形",
+          "label_zh": "拱形"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "world",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-5-5",
+      "parent_id": "SUB-A11-1-5",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "缝数",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "integer_or_range",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "world",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-5-6",
+      "parent_id": "SUB-A11-1-5",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "缝间排列",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "并排(横向)",
+          "label_zh": "并排(横向)"
+        },
+        {
+          "value": "上下(纵向)",
+          "label_zh": "上下(纵向)"
+        },
+        {
+          "value": "混合",
+          "label_zh": "混合"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "world",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-5-7",
+      "parent_id": "SUB-A11-1-5",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "缝间距",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "大",
+          "label_zh": "大"
+        },
+        {
+          "value": "中",
+          "label_zh": "中"
+        },
+        {
+          "value": "近",
+          "label_zh": "近"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "world",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-5-8",
+      "parent_id": "SUB-A11-1-5",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "目标缝索引",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "integer",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "world",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "SUB-A11-1-6",
+      "parent_id": "GROUP-A11-1",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "实体特征 — 布局",
+      "definition": "多个实体的空间关系",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "n/a",
+      "configuration_side": "world",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-6-1",
+      "parent_id": "SUB-A11-1-6",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
       "name": "障碍物数量",
       "definition": "",
       "node_kind": "variable",
@@ -4813,8 +5182,8 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "VAR-A11-1-4-2",
-      "parent_id": "SUB-A11-1-4",
+      "node_id": "VAR-A11-1-6-2",
+      "parent_id": "SUB-A11-1-6",
       "canonical_slot": "jd-11.1",
       "owner_a": "A11",
       "name": "障碍物间距",
@@ -4834,8 +5203,8 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "VAR-A11-1-4-3",
-      "parent_id": "SUB-A11-1-4",
+      "node_id": "VAR-A11-1-6-3",
+      "parent_id": "SUB-A11-1-6",
       "canonical_slot": "jd-11.1",
       "owner_a": "A11",
       "name": "相对摆放角度",
@@ -4855,8 +5224,42 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "VAR-A11-1-4-4",
-      "parent_id": "SUB-A11-1-4",
+      "node_id": "VAR-A11-1-6-4",
+      "parent_id": "SUB-A11-1-6",
+      "canonical_slot": "jd-11.1",
+      "owner_a": "A11",
+      "name": "缝对齐性",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "对齐(廊道)",
+          "label_zh": "对齐(廊道)"
+        },
+        {
+          "value": "部分错开",
+          "label_zh": "部分错开"
+        },
+        {
+          "value": "错开(迷宫)",
+          "label_zh": "错开(迷宫)"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "world",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-1-6-5",
+      "parent_id": "SUB-A11-1-6",
       "canonical_slot": "jd-11.1",
       "owner_a": "A11",
       "name": "排列拓扑",
@@ -4893,12 +5296,12 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "SUB-A11-1-5",
+      "node_id": "SUB-A11-1-7",
       "parent_id": "GROUP-A11-1",
       "canonical_slot": "jd-11.1",
       "owner_a": "A11",
       "name": "实体特征 — 运动",
-      "definition": "实体本身的运动状态（如动墙）",
+      "definition": "实体本身的运动状态",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -4914,8 +5317,8 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "VAR-A11-1-5-1",
-      "parent_id": "SUB-A11-1-5",
+      "node_id": "VAR-A11-1-7-1",
+      "parent_id": "SUB-A11-1-7",
       "canonical_slot": "jd-11.1",
       "owner_a": "A11",
       "name": "运动状态",
@@ -4948,8 +5351,8 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "VAR-A11-1-5-2",
-      "parent_id": "SUB-A11-1-5",
+      "node_id": "VAR-A11-1-7-2",
+      "parent_id": "SUB-A11-1-7",
       "canonical_slot": "jd-11.1",
       "owner_a": "A11",
       "name": "速度向量",
@@ -4969,8 +5372,8 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "VAR-A11-1-5-3",
-      "parent_id": "SUB-A11-1-5",
+      "node_id": "VAR-A11-1-7-3",
+      "parent_id": "SUB-A11-1-7",
       "canonical_slot": "jd-11.1",
       "owner_a": "A11",
       "name": "运动模式",
@@ -5003,8 +5406,8 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "VAR-A11-1-5-4",
-      "parent_id": "SUB-A11-1-5",
+      "node_id": "VAR-A11-1-7-4",
+      "parent_id": "SUB-A11-1-7",
       "canonical_slot": "jd-11.1",
       "owner_a": "A11",
       "name": "运动可预测性",
@@ -5037,7 +5440,7 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "SUB-A11-1-6",
+      "node_id": "SUB-A11-1-8",
       "parent_id": "GROUP-A11-1",
       "canonical_slot": "jd-11.1",
       "owner_a": "A11",
@@ -5058,8 +5461,8 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "VAR-A11-1-6-1",
-      "parent_id": "SUB-A11-1-6",
+      "node_id": "VAR-A11-1-8-1",
+      "parent_id": "SUB-A11-1-8",
       "canonical_slot": "jd-11.1",
       "owner_a": "A11",
       "name": "控制目标类型集",
@@ -5100,8 +5503,8 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "VAR-A11-1-6-2",
-      "parent_id": "SUB-A11-1-6",
+      "node_id": "VAR-A11-1-8-2",
+      "parent_id": "SUB-A11-1-8",
       "canonical_slot": "jd-11.1",
       "owner_a": "A11",
       "name": "控制保持/跟踪模式",
@@ -5142,8 +5545,8 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "VAR-A11-1-6-3",
-      "parent_id": "SUB-A11-1-6",
+      "node_id": "VAR-A11-1-8-3",
+      "parent_id": "SUB-A11-1-8",
       "canonical_slot": "jd-11.1",
       "owner_a": "A11",
       "name": "指令参考系",
@@ -5824,6 +6227,82 @@
       "definition": "",
       "node_kind": "variable",
       "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "SUB-A11-2-8",
+      "parent_id": "GROUP-A11-2",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "平台基准",
+      "definition": "平台固有属性",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "multiplicity": "n/a",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-2-8-1",
+      "parent_id": "SUB-A11-2-8",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "控制接口类型",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "velocity-cmd",
+          "label_zh": "velocity-cmd"
+        },
+        {
+          "value": "waypoint-tracking",
+          "label_zh": "waypoint-tracking"
+        },
+        {
+          "value": "attitude-cmd",
+          "label_zh": "attitude-cmd"
+        }
+      ],
+      "unit": "",
+      "multiplicity": "single",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "VAR-A11-2-8-2",
+      "parent_id": "SUB-A11-2-8",
+      "canonical_slot": "jd-11.2",
+      "owner_a": "A11",
+      "name": "机身等效直径",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "number",
       "value_domain": null,
       "unit": "",
       "multiplicity": "single",
