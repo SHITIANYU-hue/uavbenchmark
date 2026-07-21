@@ -95,7 +95,7 @@
     {
       "a_id": "A1",
       "g_group": "G1",
-      "ability": "意图 / 交互入口",
+      "ability": "意图入口",
       "global_jd": [
         "jd-0.4"
       ],
@@ -158,7 +158,7 @@
     {
       "a_id": "A2",
       "g_group": "G1",
-      "ability": "任务规范 / 约束模型",
+      "ability": "外部填参",
       "global_jd": [
         "jd-0.6",
         "jd-0.10"
@@ -220,7 +220,7 @@
     {
       "a_id": "A3",
       "g_group": "G1",
-      "ability": "意图推理 / 任务解释",
+      "ability": "分步推理",
       "global_jd": [
         "jd-0.4"
       ],
@@ -278,7 +278,7 @@
     {
       "a_id": "A4",
       "g_group": "G1",
-      "ability": "交互到执行编排",
+      "ability": "编排执行",
       "global_jd": [
         "jd-0.1",
         "jd-0.7"
@@ -342,7 +342,7 @@
     {
       "a_id": "A5",
       "g_group": "G1",
-      "ability": "监督 / 请求 / 交接",
+      "ability": "请求交接",
       "global_jd": [
         "jd-0.4",
         "jd-0.5"
@@ -402,7 +402,7 @@
     {
       "a_id": "A6",
       "g_group": "G2",
-      "ability": "环境感知 / 态势感知",
+      "ability": "环境感知",
       "global_jd": [
         "jd-0.2",
         "jd-0.3",
@@ -468,7 +468,7 @@
     {
       "a_id": "A7",
       "g_group": "G2",
-      "ability": "自定位 / 姿态航向估计",
+      "ability": "自身定位",
       "global_jd": [
         "jd-0.2",
         "jd-0.3",
@@ -531,7 +531,7 @@
     {
       "a_id": "A8",
       "g_group": "G2",
-      "ability": "相对定位 / 方位关系估计",
+      "ability": "相对定位",
       "global_jd": [
         "jd-0.2",
         "jd-0.3",
@@ -592,7 +592,7 @@
     {
       "a_id": "A9",
       "g_group": "G2",
-      "ability": "健康 / 能源 / 资源管理",
+      "ability": "资源管理",
       "global_jd": [
         "jd-0.9",
         "jd-0.1",
@@ -654,7 +654,7 @@
     {
       "a_id": "A10",
       "g_group": "G3",
-      "ability": "导航 / 航迹 / 轨迹管理",
+      "ability": "导航飞行",
       "global_jd": [
         "jd-0.2",
         "jd-0.6",
@@ -719,7 +719,7 @@
     {
       "a_id": "A11",
       "g_group": "G3",
-      "ability": "飞行控制 / 执行机构",
+      "ability": "控制飞行",
       "global_jd": [
         "jd-0.3",
         "jd-0.9",
@@ -781,7 +781,7 @@
     {
       "a_id": "A12",
       "g_group": "G4",
-      "ability": "载荷动作执行",
+      "ability": "载荷执行",
       "global_jd": [
         "jd-0.9",
         "jd-0.5"
@@ -841,7 +841,7 @@
     {
       "a_id": "A13",
       "g_group": "G4",
-      "ability": "载荷成果生成 / 远端呈现",
+      "ability": "成果呈现",
       "global_jd": [
         "jd-0.7",
         "jd-0.4",
@@ -902,7 +902,7 @@
     {
       "a_id": "A14",
       "g_group": "G5",
-      "ability": "通信 / C2 / 遥测",
+      "ability": "通信链路",
       "global_jd": [
         "jd-0.8",
         "jd-0.5"
@@ -962,7 +962,7 @@
     {
       "a_id": "A15",
       "g_group": "G5",
-      "ability": "空域 / 交通 / 合规接入",
+      "ability": "合规申报",
       "global_jd": [
         "jd-0.6",
         "jd-0.5"
@@ -1030,7 +1030,7 @@
     {
       "a_id": "A16",
       "g_group": "G6",
-      "ability": "安全包络 / 运行保证 / 处置建议",
+      "ability": "安全包络",
       "global_jd": [
         "jd-0.10",
         "jd-0.6",
@@ -1093,7 +1093,7 @@
     {
       "a_id": "A17",
       "g_group": "G6",
-      "ability": "日志 / 审计 / 保证证据",
+      "ability": "审计日志",
       "global_jd": [
         "jd-0.6",
         "jd-0.5"
@@ -1157,7 +1157,7 @@
       "a_id": "A1",
       "level": "L1",
       "g_group": "G1",
-      "ability": "意图 / 交互入口",
+      "ability": "意图入口",
       "level_label": "域内潜在自主",
       "inherits_levels": [],
       "responsibility": "能通过{jd-1.2 指称方式集}和{jd-1.3 业务术语表}理解来自{jd-0.4 在场人角色}的飞控输入。",
@@ -1172,7 +1172,7 @@
       "a_id": "A1",
       "level": "L2",
       "g_group": "G1",
-      "ability": "意图 / 交互入口",
+      "ability": "意图入口",
       "level_label": "域内受令自主",
       "inherits_levels": [
         "L1"
@@ -1188,7 +1188,7 @@
       "a_id": "A1",
       "level": "L3",
       "g_group": "G1",
-      "ability": "意图 / 交互入口",
+      "ability": "意图入口",
       "level_label": "域内监督自主",
       "inherits_levels": [
         "L1",
@@ -1206,7 +1206,7 @@
       "a_id": "A1",
       "level": "L4",
       "g_group": "G1",
-      "ability": "意图 / 交互入口",
+      "ability": "意图入口",
       "level_label": "域内主导自主",
       "inherits_levels": [
         "L1",
@@ -1225,7 +1225,7 @@
       "a_id": "A2",
       "level": "L1",
       "g_group": "G1",
-      "ability": "任务规范 / 约束模型",
+      "ability": "外部填参",
       "level_label": "域内潜在自主",
       "inherits_levels": [],
       "responsibility": "能理解{jd-2.1 任务参数表}和{jd-2.2 平台参数表}中由人显式给定的参数，例如方向、距离、速度和高度。",
@@ -1239,7 +1239,7 @@
       "a_id": "A2",
       "level": "L2",
       "g_group": "G1",
-      "ability": "任务规范 / 约束模型",
+      "ability": "外部填参",
       "level_label": "域内受令自主",
       "inherits_levels": [
         "L1"
@@ -1255,7 +1255,7 @@
       "a_id": "A2",
       "level": "L3",
       "g_group": "G1",
-      "ability": "任务规范 / 约束模型",
+      "ability": "外部填参",
       "level_label": "域内监督自主",
       "inherits_levels": [
         "L1",
@@ -1273,7 +1273,7 @@
       "a_id": "A2",
       "level": "L4",
       "g_group": "G1",
-      "ability": "任务规范 / 约束模型",
+      "ability": "外部填参",
       "level_label": "域内主导自主",
       "inherits_levels": [
         "L1",
@@ -1291,7 +1291,7 @@
       "a_id": "A3",
       "level": "L1",
       "g_group": "G1",
-      "ability": "意图推理 / 任务解释",
+      "ability": "分步推理",
       "level_label": "域内潜在自主",
       "inherits_levels": [],
       "responsibility": "能理解{jd-3.1 任务技能库}中单个技能的动作含义、参数和局部影响。",
@@ -1304,7 +1304,7 @@
       "a_id": "A3",
       "level": "L2",
       "g_group": "G1",
-      "ability": "意图推理 / 任务解释",
+      "ability": "分步推理",
       "level_label": "域内受令自主",
       "inherits_levels": [
         "L1"
@@ -1319,7 +1319,7 @@
       "a_id": "A3",
       "level": "L3",
       "g_group": "G1",
-      "ability": "意图推理 / 任务解释",
+      "ability": "分步推理",
       "level_label": "域内监督自主",
       "inherits_levels": [
         "L1",
@@ -1337,7 +1337,7 @@
       "a_id": "A3",
       "level": "L4",
       "g_group": "G1",
-      "ability": "意图推理 / 任务解释",
+      "ability": "分步推理",
       "level_label": "域内主导自主",
       "inherits_levels": [
         "L1",
@@ -1355,7 +1355,7 @@
       "a_id": "A4",
       "level": "L1",
       "g_group": "G1",
-      "ability": "交互到执行编排",
+      "ability": "编排执行",
       "level_label": "域内潜在自主",
       "inherits_levels": [],
       "responsibility": "能通过{jd-4.5 编排输出机制}发出单点动作，并理解其局部后续效果。",
@@ -1368,7 +1368,7 @@
       "a_id": "A4",
       "level": "L2",
       "g_group": "G1",
-      "ability": "交互到执行编排",
+      "ability": "编排执行",
       "level_label": "域内受令自主",
       "inherits_levels": [
         "L1"
@@ -1384,7 +1384,7 @@
       "a_id": "A4",
       "level": "L3",
       "g_group": "G1",
-      "ability": "交互到执行编排",
+      "ability": "编排执行",
       "level_label": "域内监督自主",
       "inherits_levels": [
         "L1",
@@ -1402,7 +1402,7 @@
       "a_id": "A4",
       "level": "L4",
       "g_group": "G1",
-      "ability": "交互到执行编排",
+      "ability": "编排执行",
       "level_label": "域内主导自主",
       "inherits_levels": [
         "L1",
@@ -1421,7 +1421,7 @@
       "a_id": "A5",
       "level": "L1",
       "g_group": "G1",
-      "ability": "监督 / 请求 / 交接",
+      "ability": "请求交接",
       "level_label": "域内潜在自主",
       "inherits_levels": [],
       "responsibility": "能向{jd-0.4 在场人角色}围绕局部动作及时提示状态、风险和操作建议。",
@@ -1434,7 +1434,7 @@
       "a_id": "A5",
       "level": "L2",
       "g_group": "G1",
-      "ability": "监督 / 请求 / 交接",
+      "ability": "请求交接",
       "level_label": "域内受令自主",
       "inherits_levels": [
         "L1"
@@ -1449,7 +1449,7 @@
       "a_id": "A5",
       "level": "L3",
       "g_group": "G1",
-      "ability": "监督 / 请求 / 交接",
+      "ability": "请求交接",
       "level_label": "域内监督自主",
       "inherits_levels": [
         "L1",
@@ -1467,7 +1467,7 @@
       "a_id": "A5",
       "level": "L4",
       "g_group": "G1",
-      "ability": "监督 / 请求 / 交接",
+      "ability": "请求交接",
       "level_label": "域内主导自主",
       "inherits_levels": [
         "L1",
@@ -1485,7 +1485,7 @@
       "a_id": "A6",
       "level": "L1",
       "g_group": "G2",
-      "ability": "环境感知 / 态势感知",
+      "ability": "环境感知",
       "level_label": "域内潜在自主",
       "inherits_levels": [],
       "responsibility": "能使用{jd-6.3 感知模态集}中的可用模态作业，识别{jd-6.1 业务对象类目}中的对象（target / confuser / obstacle / risk）并提示。",
@@ -1499,7 +1499,7 @@
       "a_id": "A6",
       "level": "L2",
       "g_group": "G2",
-      "ability": "环境感知 / 态势感知",
+      "ability": "环境感知",
       "level_label": "域内受令自主",
       "inherits_levels": [
         "L1"
@@ -1515,7 +1515,7 @@
       "a_id": "A6",
       "level": "L3",
       "g_group": "G2",
-      "ability": "环境感知 / 态势感知",
+      "ability": "环境感知",
       "level_label": "域内监督自主",
       "inherits_levels": [
         "L1",
@@ -1534,7 +1534,7 @@
       "a_id": "A6",
       "level": "L4",
       "g_group": "G2",
-      "ability": "环境感知 / 态势感知",
+      "ability": "环境感知",
       "level_label": "域内主导自主",
       "inherits_levels": [
         "L1",
@@ -1552,7 +1552,7 @@
       "a_id": "A7",
       "level": "L1",
       "g_group": "G2",
-      "ability": "自定位 / 姿态航向估计",
+      "ability": "自身定位",
       "level_label": "域内潜在自主",
       "inherits_levels": [],
       "responsibility": "能基于{jd-7.1 定位源需求}中的可用源，按{jd-7.2 位姿质量先验}上报自身位置、高度、姿态、航向及定位质量。",
@@ -1566,7 +1566,7 @@
       "a_id": "A7",
       "level": "L2",
       "g_group": "G2",
-      "ability": "自定位 / 姿态航向估计",
+      "ability": "自身定位",
       "level_label": "域内受令自主",
       "inherits_levels": [
         "L1"
@@ -1582,7 +1582,7 @@
       "a_id": "A7",
       "level": "L3",
       "g_group": "G2",
-      "ability": "自定位 / 姿态航向估计",
+      "ability": "自身定位",
       "level_label": "域内监督自主",
       "inherits_levels": [
         "L1",
@@ -1601,7 +1601,7 @@
       "a_id": "A7",
       "level": "L4",
       "g_group": "G2",
-      "ability": "自定位 / 姿态航向估计",
+      "ability": "自身定位",
       "level_label": "域内主导自主",
       "inherits_levels": [
         "L1",
@@ -1618,7 +1618,7 @@
       "a_id": "A8",
       "level": "L1",
       "g_group": "G2",
-      "ability": "相对定位 / 方位关系估计",
+      "ability": "相对定位",
       "level_label": "域内潜在自主",
       "inherits_levels": [],
       "responsibility": "能用{jd-8.2 相对几何感知机制}估计目标、障碍或他机相对自身的距离、方位和朝向，并按{jd-8.1 相对几何先验}评估可信度。",
@@ -1632,7 +1632,7 @@
       "a_id": "A8",
       "level": "L2",
       "g_group": "G2",
-      "ability": "相对定位 / 方位关系估计",
+      "ability": "相对定位",
       "level_label": "域内受令自主",
       "inherits_levels": [
         "L1"
@@ -1647,7 +1647,7 @@
       "a_id": "A8",
       "level": "L3",
       "g_group": "G2",
-      "ability": "相对定位 / 方位关系估计",
+      "ability": "相对定位",
       "level_label": "域内监督自主",
       "inherits_levels": [
         "L1",
@@ -1665,7 +1665,7 @@
       "a_id": "A8",
       "level": "L4",
       "g_group": "G2",
-      "ability": "相对定位 / 方位关系估计",
+      "ability": "相对定位",
       "level_label": "域内主导自主",
       "inherits_levels": [
         "L1",
@@ -1682,7 +1682,7 @@
       "a_id": "A9",
       "level": "L1",
       "g_group": "G2",
-      "ability": "健康 / 能源 / 资源管理",
+      "ability": "资源管理",
       "level_label": "域内潜在自主",
       "inherits_levels": [],
       "responsibility": "能基于{jd-9.1 资源消耗包络}提示电量、链路、传感器、执行器、{jd-0.9 载荷集}和算力的基础状态及风险。",
@@ -1696,7 +1696,7 @@
       "a_id": "A9",
       "level": "L2",
       "g_group": "G2",
-      "ability": "健康 / 能源 / 资源管理",
+      "ability": "资源管理",
       "level_label": "域内受令自主",
       "inherits_levels": [
         "L1"
@@ -1712,7 +1712,7 @@
       "a_id": "A9",
       "level": "L3",
       "g_group": "G2",
-      "ability": "健康 / 能源 / 资源管理",
+      "ability": "资源管理",
       "level_label": "域内监督自主",
       "inherits_levels": [
         "L1",
@@ -1730,7 +1730,7 @@
       "a_id": "A9",
       "level": "L4",
       "g_group": "G2",
-      "ability": "健康 / 能源 / 资源管理",
+      "ability": "资源管理",
       "level_label": "域内主导自主",
       "inherits_levels": [
         "L1",
@@ -1747,7 +1747,7 @@
       "a_id": "A10",
       "level": "L1",
       "g_group": "G3",
-      "ability": "导航 / 航迹 / 轨迹管理",
+      "ability": "导航飞行",
       "level_label": "域内潜在自主",
       "inherits_levels": [],
       "responsibility": "能用{jd-10.2 导航工作机制}维持局部运动目标，例如高度、方向、速度或悬停点。",
@@ -1760,7 +1760,7 @@
       "a_id": "A10",
       "level": "L2",
       "g_group": "G3",
-      "ability": "导航 / 航迹 / 轨迹管理",
+      "ability": "导航飞行",
       "level_label": "域内受令自主",
       "inherits_levels": [
         "L1"
@@ -1776,7 +1776,7 @@
       "a_id": "A10",
       "level": "L3",
       "g_group": "G3",
-      "ability": "导航 / 航迹 / 轨迹管理",
+      "ability": "导航飞行",
       "level_label": "域内监督自主",
       "inherits_levels": [
         "L1",
@@ -1795,7 +1795,7 @@
       "a_id": "A10",
       "level": "L4",
       "g_group": "G3",
-      "ability": "导航 / 航迹 / 轨迹管理",
+      "ability": "导航飞行",
       "level_label": "域内主导自主",
       "inherits_levels": [
         "L1",
@@ -1813,7 +1813,7 @@
       "a_id": "A11",
       "level": "L1",
       "g_group": "G3",
-      "ability": "飞行控制 / 执行机构",
+      "ability": "控制飞行",
       "level_label": "域内潜在自主",
       "inherits_levels": [],
       "responsibility": "能基于{jd-11.2 控制工作机制}理解飞控级控制状态（稳定 / 定高 / 悬停 / 姿态保持），按{jd-11.1 控制质量先验}识别偏差或异常并提出修正。",
@@ -1827,7 +1827,7 @@
       "a_id": "A11",
       "level": "L2",
       "g_group": "G3",
-      "ability": "飞行控制 / 执行机构",
+      "ability": "控制飞行",
       "level_label": "域内受令自主",
       "inherits_levels": [
         "L1"
@@ -1843,7 +1843,7 @@
       "a_id": "A11",
       "level": "L3",
       "g_group": "G3",
-      "ability": "飞行控制 / 执行机构",
+      "ability": "控制飞行",
       "level_label": "域内监督自主",
       "inherits_levels": [
         "L1",
@@ -1861,7 +1861,7 @@
       "a_id": "A11",
       "level": "L4",
       "g_group": "G3",
-      "ability": "飞行控制 / 执行机构",
+      "ability": "控制飞行",
       "level_label": "域内主导自主",
       "inherits_levels": [
         "L1",
@@ -1878,7 +1878,7 @@
       "a_id": "A12",
       "level": "L1",
       "g_group": "G4",
-      "ability": "载荷动作执行",
+      "ability": "载荷执行",
       "level_label": "域内潜在自主",
       "inherits_levels": [],
       "responsibility": "能基于{jd-0.9 载荷集}发出{jd-12.1 载荷动作目录}中的单次动作工具调用（拍照 / 喊话 / 投送 / 采样等），不保证下游执行结果。",
@@ -1892,7 +1892,7 @@
       "a_id": "A12",
       "level": "L2",
       "g_group": "G4",
-      "ability": "载荷动作执行",
+      "ability": "载荷执行",
       "level_label": "域内受令自主",
       "inherits_levels": [
         "L1"
@@ -1908,7 +1908,7 @@
       "a_id": "A12",
       "level": "L3",
       "g_group": "G4",
-      "ability": "载荷动作执行",
+      "ability": "载荷执行",
       "level_label": "域内监督自主",
       "inherits_levels": [
         "L1",
@@ -1925,7 +1925,7 @@
       "a_id": "A12",
       "level": "L4",
       "g_group": "G4",
-      "ability": "载荷动作执行",
+      "ability": "载荷执行",
       "level_label": "域内主导自主",
       "inherits_levels": [
         "L1",
@@ -1942,7 +1942,7 @@
       "a_id": "A13",
       "level": "L1",
       "g_group": "G4",
-      "ability": "载荷成果生成 / 远端呈现",
+      "ability": "成果呈现",
       "level_label": "域内潜在自主",
       "inherits_levels": [],
       "responsibility": "能在载荷工具调用返回时识别并展示{jd-13.1 成果格式}中的单次成果（图像 / 视频首帧 / 喊话记录 / 投送确认 / 采样记录），不主动维护或验证质量。",
@@ -1955,7 +1955,7 @@
       "a_id": "A13",
       "level": "L2",
       "g_group": "G4",
-      "ability": "载荷成果生成 / 远端呈现",
+      "ability": "成果呈现",
       "level_label": "域内受令自主",
       "inherits_levels": [
         "L1"
@@ -1970,7 +1970,7 @@
       "a_id": "A13",
       "level": "L3",
       "g_group": "G4",
-      "ability": "载荷成果生成 / 远端呈现",
+      "ability": "成果呈现",
       "level_label": "域内监督自主",
       "inherits_levels": [
         "L1",
@@ -1988,7 +1988,7 @@
       "a_id": "A13",
       "level": "L4",
       "g_group": "G4",
-      "ability": "载荷成果生成 / 远端呈现",
+      "ability": "成果呈现",
       "level_label": "域内主导自主",
       "inherits_levels": [
         "L1",
@@ -2006,7 +2006,7 @@
       "a_id": "A14",
       "level": "L1",
       "g_group": "G5",
-      "ability": "通信 / C2 / 遥测",
+      "ability": "通信链路",
       "level_label": "域内潜在自主",
       "inherits_levels": [],
       "responsibility": "能展示{jd-0.8 通信基建}的链路、C2 和遥测状态，以及{jd-14.2 地面站拓扑}中的地面站基础状态与风险。",
@@ -2020,7 +2020,7 @@
       "a_id": "A14",
       "level": "L2",
       "g_group": "G5",
-      "ability": "通信 / C2 / 遥测",
+      "ability": "通信链路",
       "level_label": "域内受令自主",
       "inherits_levels": [
         "L1"
@@ -2035,7 +2035,7 @@
       "a_id": "A14",
       "level": "L3",
       "g_group": "G5",
-      "ability": "通信 / C2 / 遥测",
+      "ability": "通信链路",
       "level_label": "域内监督自主",
       "inherits_levels": [
         "L1",
@@ -2053,7 +2053,7 @@
       "a_id": "A14",
       "level": "L4",
       "g_group": "G5",
-      "ability": "通信 / C2 / 遥测",
+      "ability": "通信链路",
       "level_label": "域内主导自主",
       "inherits_levels": [
         "L1",
@@ -2070,7 +2070,7 @@
       "a_id": "A15",
       "level": "L1",
       "g_group": "G5",
-      "ability": "空域 / 交通 / 合规接入",
+      "ability": "合规申报",
       "level_label": "域内潜在自主",
       "inherits_levels": [],
       "responsibility": "能展示{jd-15.4 授权生命周期}、{jd-15.2 地理围栏集}、{jd-15.1 空域类别}和{jd-15.3 交通信息源需求}的基础状态及风险。",
@@ -2086,7 +2086,7 @@
       "a_id": "A15",
       "level": "L2",
       "g_group": "G5",
-      "ability": "空域 / 交通 / 合规接入",
+      "ability": "合规申报",
       "level_label": "域内受令自主",
       "inherits_levels": [
         "L1"
@@ -2104,7 +2104,7 @@
       "a_id": "A15",
       "level": "L3",
       "g_group": "G5",
-      "ability": "空域 / 交通 / 合规接入",
+      "ability": "合规申报",
       "level_label": "域内监督自主",
       "inherits_levels": [
         "L1",
@@ -2123,7 +2123,7 @@
       "a_id": "A15",
       "level": "L4",
       "g_group": "G5",
-      "ability": "空域 / 交通 / 合规接入",
+      "ability": "合规申报",
       "level_label": "域内主导自主",
       "inherits_levels": [
         "L1",
@@ -2140,7 +2140,7 @@
       "a_id": "A16",
       "level": "L1",
       "g_group": "G6",
-      "ability": "安全包络 / 运行保证 / 处置建议",
+      "ability": "安全包络",
       "level_label": "域内潜在自主",
       "inherits_levels": [],
       "responsibility": "能基于{jd-0.10 安全包络先验}和{jd-16.1 分相位安全阈值}上报低电、越界、姿态、链路或定位异常等局部安全状态。",
@@ -2154,7 +2154,7 @@
       "a_id": "A16",
       "level": "L2",
       "g_group": "G6",
-      "ability": "安全包络 / 运行保证 / 处置建议",
+      "ability": "安全包络",
       "level_label": "域内受令自主",
       "inherits_levels": [
         "L1"
@@ -2170,7 +2170,7 @@
       "a_id": "A16",
       "level": "L3",
       "g_group": "G6",
-      "ability": "安全包络 / 运行保证 / 处置建议",
+      "ability": "安全包络",
       "level_label": "域内监督自主",
       "inherits_levels": [
         "L1",
@@ -2188,7 +2188,7 @@
       "a_id": "A16",
       "level": "L4",
       "g_group": "G6",
-      "ability": "安全包络 / 运行保证 / 处置建议",
+      "ability": "安全包络",
       "level_label": "域内主导自主",
       "inherits_levels": [
         "L1",
@@ -2206,7 +2206,7 @@
       "a_id": "A17",
       "level": "L1",
       "g_group": "G6",
-      "ability": "日志 / 审计 / 保证证据",
+      "ability": "审计日志",
       "level_label": "域内潜在自主",
       "inherits_levels": [],
       "responsibility": "能按{jd-17.1 事件类目}记录基础事件、状态和操作记录。",
@@ -2219,7 +2219,7 @@
       "a_id": "A17",
       "level": "L2",
       "g_group": "G6",
-      "ability": "日志 / 审计 / 保证证据",
+      "ability": "审计日志",
       "level_label": "域内受令自主",
       "inherits_levels": [
         "L1"
@@ -2235,7 +2235,7 @@
       "a_id": "A17",
       "level": "L3",
       "g_group": "G6",
-      "ability": "日志 / 审计 / 保证证据",
+      "ability": "审计日志",
       "level_label": "域内监督自主",
       "inherits_levels": [
         "L1",
@@ -2253,7 +2253,7 @@
       "a_id": "A17",
       "level": "L4",
       "g_group": "G6",
-      "ability": "日志 / 审计 / 保证证据",
+      "ability": "审计日志",
       "level_label": "域内主导自主",
       "inherits_levels": [
         "L1",
