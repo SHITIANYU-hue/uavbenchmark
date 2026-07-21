@@ -1,7 +1,7 @@
 {
   "schema": "uav-benchmark-jd-variable-tree",
   "schema_version": "0.3.0",
-  "generated_at": "2026-07-21",
+  "generated_at": "2026-07-22",
   "generated_by": "scripts/generate_jd_variable_tree_version1.mjs",
   "ability_id_scheme": "ability-id-v3-2026-07-20",
   "numbering_scheme": "ability-id-v3-2026-07-20",
@@ -411,7 +411,7 @@
       "canonical_slot": null,
       "owner_a": "MULTI",
       "name": "JD 业务变量树 version1",
-      "definition": "按 ability-id-v3-2026-07-20 汇总 A1–A11 当前已建设分支，包含 A9 健康 / 能源 / 资源管理；页面按单项能力切换，不显示组别标题。",
+      "definition": "按 ability-id-v3-2026-07-20 汇总 A1–A11 当前已建设分支，并单列跨能力共享的 JD-global 审阅分支；页面按单项能力或 global 分支切换，不显示组别标题。",
       "node_kind": "catalog_root",
       "value_type": "none",
       "value_domain": null,

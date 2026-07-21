@@ -23,7 +23,7 @@ const currentJdById = new Map(
   currentJdDictionary.variables.map((variable) => [variable.id, variable]),
 );
 
-const generatedAt = "2026-07-21";
+const generatedAt = "2026-07-22";
 const schemaVersion = "0.3.0";
 const nodeSchemaVersion = "jd-tree/0.3.0";
 const catalogRootId = "PROPOSED-jd-tree-version1";
@@ -360,6 +360,55 @@ const a11Sources = [
       "交办公路〔2026〕8号；巡检飞行方式、抵近检查、定点定视角、飞行状态与影像质量要求",
     url: "https://xxgk.mot.gov.cn/jigou/glj/202602/P020260228435553861410.pdf",
     evidence_grade: "authoritative_external_scoped",
+  },
+];
+
+const globalCorrectionSources = [
+  {
+    source_id: "L-GLOBAL-JD66-V3",
+    title: "JD业务变量字典_66槽位_机读版.md",
+    issuer: "UAV Benchmark team",
+    source_type: "reviewed_team_dictionary",
+    locator:
+      "ability-id-v3-2026-07-20：jd-0.1–jd-0.10 canonical 全局定义与 related_a",
+    url: null,
+    evidence_grade: "authoritative_local",
+  },
+  {
+    source_id: "L-GLOBAL-AXL68-V3",
+    title: "AxL责任定义字典_17A_68单元_机读版.md",
+    issuer: "UAV Benchmark team",
+    source_type: "reviewed_team_dictionary",
+    locator: "ability-id-v3-2026-07-20：A×L 对 jd-0.1–jd-0.10 的责任引用",
+    url: null,
+    evidence_grade: "authoritative_local",
+  },
+  {
+    source_id: "L-GLOBAL-SCENARIO-REGISTRY",
+    title: "knowledge/business_scenario_registry.json",
+    issuer: "UAV Benchmark team",
+    source_type: "machine_readable_scenario_registry",
+    locator: "高速、油田、桥梁、园区等场景对 global JD 的现有绑定与 TBD 口径",
+    url: null,
+    evidence_grade: "team_material",
+  },
+  {
+    source_id: "L-GLOBAL-TASK-BACKBONE",
+    title: "knowledge/task_template_backbone.json",
+    issuer: "UAV Benchmark team",
+    source_type: "machine_readable_task_contract",
+    locator: "任务模板对工作空间和任务完成判据等 global JD 的使用关系",
+    url: null,
+    evidence_grade: "team_material",
+  },
+  {
+    source_id: "L-GLOBAL-G1-SETUP",
+    title: "G1_benchmark_setup.zh.md",
+    issuer: "UAV Benchmark team",
+    source_type: "team_design",
+    locator: "在场人角色、人机确认、任务约束、完成语义和审计关系",
+    url: null,
+    evidence_grade: "team_material",
   },
 ];
 
@@ -953,7 +1002,7 @@ const g1Nodes = [
     owner_a: "MULTI",
     name: "JD 业务变量树 version1",
     definition:
-      "按 ability-id-v3-2026-07-20 汇总 A1–A11 当前已建设分支，包含 A9 健康 / 能源 / 资源管理；页面按单项能力切换，不显示组别标题。",
+      "按 ability-id-v3-2026-07-20 汇总 A1–A11 当前已建设分支，并单列跨能力共享的 JD-global 审阅分支；页面按单项能力或 global 分支切换，不显示组别标题。",
     node_kind: "catalog_root",
     value_type: "none",
     value_domain: null,
@@ -1492,6 +1541,130 @@ const migratedInspectionNodes = oldInspection.nodes
   .filter(Boolean)
   .map(normalizeCanonicalNode);
 
+const correctionScenarios = [
+  "cross_scenario",
+  "highway_inspection",
+  "campus_inspection",
+  "white_wall_narrow_gap",
+];
+const correctionDomainItem = (
+  value,
+  label,
+  sourceRefs = [],
+  status = "inferred_candidate",
+  scenarios = correctionScenarios,
+) => ({
+  value,
+  label_zh: label,
+  source_refs: sourceRefs,
+  status,
+  applicable_scenarios: scenarios,
+});
+
+// 纹理与局部对比度首先是世界侧可感知性条件。A11 只通过场景 Profile
+// 引用这些变量，避免把感知条件重复定义成飞控内在属性。
+migratedInspectionNodes.push(
+  baseNode({
+    node_id: "PROPOSED-jd-6.2.2.6",
+    parent_id: "PROPOSED-jd-6.2.2",
+    canonical_slot: "jd-6.2",
+    owner_a: "A6",
+    name: "目标 / 背景表面纹理复杂度",
+    definition:
+      "目标、障碍物或检查面相对背景的表面纹理复杂程度；用于配置可感知性条件，不等同于控制器能力或观测结果。",
+    node_kind: "variable",
+    value_type: "enum_or_metric",
+    value_domain: [
+      correctionDomainItem(
+        "none",
+        "无明显纹理",
+        ["L-A8-V06"],
+        "team_material_only",
+      ),
+      correctionDomainItem(
+        "light_texture",
+        "轻纹理",
+        ["L-A8-V06"],
+        "team_material_only",
+      ),
+      correctionDomainItem(
+        "complex_texture",
+        "复杂纹理",
+        ["L-A8-V06"],
+        "team_material_only",
+      ),
+      correctionDomainItem("TBD", "跨场景度量方法与阈值 TBD", [], "TBD"),
+    ],
+    multiplicity: "one_per_observed_surface",
+    difficulty_direction: "context_dependent",
+    configuration_side: "world",
+    projection_targets: ["world_config", "harness"],
+    visibility: ["sut_visible", "grader_visible", "hidden_gt"],
+    observation_channel: ["sut_input", "grader", "hidden_gt"],
+    applicable_scenarios: correctionScenarios,
+    related_global_jd: ["jd-0.3"],
+    related_jd: ["PROPOSED-jd-11.5.8.1"],
+    used_by_axl: ["A6×L1", "A6×L2", "A6×L3", "A6×L4"],
+    source: ["L-A8-V06"],
+    evidence_status: "inferred_candidate",
+    derivation_status: "proposed",
+    review_status: "proposed",
+    notes:
+      "无 / 轻纹理 / 复杂纹理仅来自白墙窄缝 v0.6 团队草案。能否跨高速、园区和其他场景复用，以及客观度量方法，均待确认。",
+  }),
+  baseNode({
+    node_id: "PROPOSED-jd-6.2.2.7",
+    parent_id: "PROPOSED-jd-6.2.2",
+    canonical_slot: "jd-6.2",
+    owner_a: "A6",
+    name: "目标 / 开口—背景局部对比度",
+    definition:
+      "目标、病害、开口或通行空间与其局部背景之间的可辨识对比条件；它是世界侧场景变量，观测后的低对比退化状态仍由 PROPOSED-jd-6.2.2.4 表达。",
+    node_kind: "variable",
+    value_type: "enum_or_metric",
+    value_domain: [
+      correctionDomainItem(
+        "high",
+        "高",
+        ["L-A8-V06"],
+        "team_material_only",
+      ),
+      correctionDomainItem(
+        "medium",
+        "中",
+        ["L-A8-V06"],
+        "team_material_only",
+      ),
+      correctionDomainItem(
+        "low",
+        "低",
+        ["L-A8-V06"],
+        "team_material_only",
+      ),
+      correctionDomainItem("TBD", "对比度计算口径与档位阈值 TBD", [], "TBD"),
+    ],
+    multiplicity: "one_per_target_background_pair",
+    difficulty_direction: "decreasing",
+    configuration_side: "world",
+    projection_targets: ["world_config", "harness"],
+    visibility: ["sut_visible", "grader_visible", "hidden_gt"],
+    observation_channel: ["sut_input", "grader", "hidden_gt"],
+    applicable_scenarios: correctionScenarios,
+    related_global_jd: ["jd-0.3"],
+    related_jd: [
+      "PROPOSED-jd-6.2.2.4",
+      "PROPOSED-jd-11.5.8.2",
+    ],
+    used_by_axl: ["A6×L1", "A6×L2", "A6×L3", "A6×L4"],
+    source: ["L-A8-V06"],
+    evidence_status: "inferred_candidate",
+    derivation_status: "proposed",
+    review_status: "proposed",
+    notes:
+      "高 / 中 / 低只保留白墙窄缝 v0.6 原始档位；未发明亮度、色差、纹理或传感器域的计算公式与阈值。",
+  }),
+);
+
 const a11Scenarios = [
   "cross_scenario",
   "highway_inspection",
@@ -1631,6 +1804,7 @@ function addA11Leaf({
   valueType,
   domain,
   unit = null,
+  multiplicity = "one",
   difficulty = "context_dependent",
   activationCondition = null,
   relatedJd = [],
@@ -1686,6 +1860,7 @@ function addA11Leaf({
       value_domain: domain,
       unit,
       activation_condition: activationCondition,
+      multiplicity,
       difficulty_direction: difficulty,
       related_global_jd: authoritativeA11Ability.global_jd,
       related_jd: relatedJd,
@@ -2928,6 +3103,11 @@ const profileGroups = [
     "A11 控制要求绑定",
     "将场景 Profile 投影到 jd-11.1、jd-11.2、jd-11.3、PROPOSED-jd-11.4，并引用 A16 安全边界。",
   ],
+  [
+    "PROPOSED-jd-11.5.8",
+    "外观与可感知性 Profile 引用",
+    "引用 A6 的表面纹理与局部对比变量，以及 jd-0.3 的光学基线和动态光线扰动；A11 不重复定义感知变量。",
+  ],
 ];
 for (const [id, name, definition] of profileGroups) {
   addA11Group({
@@ -3063,6 +3243,100 @@ profileLeaf({
     a11DomainItem("irregular", "不规则", [], "inferred_candidate"),
     a11Tbd("其他截面形状 TBD"),
   ],
+});
+profileLeaf({
+  id: "PROPOSED-jd-11.5.2.5",
+  parent: "PROPOSED-jd-11.5.2",
+  name: "通行空间数量",
+  definition:
+    "同一宿主障碍物或当前局部场景中可被引用的通行空间实例数量。",
+  valueType: "integer_or_range",
+  domain: [
+    a11DomainItem(1, "1", ["L-A8-V06"], "team_material_only"),
+    a11DomainItem(2, "2", ["L-A8-V06"], "team_material_only"),
+    a11DomainItem(3, "3", ["L-A8-V06"], "team_material_only"),
+    a11Tbd("跨场景数量范围与上限 TBD"),
+  ],
+  difficulty: "context_dependent",
+  notes:
+    "1 / 2 / 3 来自白墙窄缝 v0.6 的缝数档位，只是已给示例值，不是跨场景通用上限。",
+});
+profileLeaf({
+  id: "PROPOSED-jd-11.5.2.6",
+  parent: "PROPOSED-jd-11.5.2",
+  name: "通行空间实例集合",
+  definition:
+    "由稳定实例 ID、所属障碍物、空间类型、尺寸、形状与偏移组成的通行空间列表；允许同一墙体或结构包含多个孔洞 / 缝隙。",
+  valueType: "array_of_reference_objects",
+  domain: [a11Tbd("实例对象 schema、唯一 ID 规则与数量上限 TBD")],
+  multiplicity: "many",
+  difficulty: "context_dependent",
+  dependsOn: ["PROPOSED-jd-11.5.2.5"],
+  constraints: [
+    {
+      rule: "collection_length_matches_count",
+      count_node: "PROPOSED-jd-11.5.2.5",
+      status: "proposed",
+    },
+  ],
+  notes:
+    "本节点抽象 v0.6 的“一墙多缝 + 列表值”方法，但不直接规定 simulator 字段。",
+});
+profileLeaf({
+  id: "PROPOSED-jd-11.5.2.7",
+  parent: "PROPOSED-jd-11.5.2",
+  name: "同一障碍物内排列",
+  definition:
+    "同一宿主障碍物内多个通行空间的相对排列关系；仅在通行空间数量不少于 2 时启用。",
+  valueType: "enum",
+  domain: [
+    a11DomainItem(
+      "horizontal",
+      "并排（横向）",
+      ["L-A8-V06"],
+      "team_material_only",
+    ),
+    a11DomainItem(
+      "vertical",
+      "上下（纵向）",
+      ["L-A8-V06"],
+      "team_material_only",
+    ),
+    a11DomainItem(
+      "mixed",
+      "混合",
+      ["L-A8-V06"],
+      "team_material_only",
+    ),
+    a11Tbd("跨场景排列 taxonomy TBD"),
+  ],
+  activationCondition: {
+    node: "PROPOSED-jd-11.5.2.5",
+    operator: "greater_than_or_equal",
+    value: 2,
+  },
+  difficulty: "non_monotonic",
+});
+profileLeaf({
+  id: "PROPOSED-jd-11.5.2.8",
+  parent: "PROPOSED-jd-11.5.2",
+  name: "同一障碍物内通行空间间距",
+  definition:
+    "同一宿主障碍物内多个通行空间之间的距离或距离集合；仅在通行空间数量不少于 2 时启用。",
+  valueType: "number_range_or_enum",
+  domain: [
+    a11DomainItem("large", "大", ["L-A8-V06"], "team_material_only"),
+    a11DomainItem("medium", "中", ["L-A8-V06"], "team_material_only"),
+    a11DomainItem("near", "近", ["L-A8-V06"], "team_material_only"),
+    a11Tbd("距离定义、单位与档位阈值 TBD"),
+  ],
+  unit: "m_or_normalized_TBD",
+  activationCondition: {
+    node: "PROPOSED-jd-11.5.2.5",
+    operator: "greater_than_or_equal",
+    value: 2,
+  },
+  difficulty: "context_dependent",
 });
 
 profileLeaf({
@@ -3232,6 +3506,7 @@ profileLeaf({
   valueType: "reference",
   domain: [a11Tbd("目标实例 ID 与选择规则 TBD")],
   relatedJd: ["jd-10.1", "jd-10.2"],
+  dependsOn: ["PROPOSED-jd-11.5.2.6"],
 });
 profileLeaf({
   id: "PROPOSED-jd-11.5.5.4",
@@ -3358,6 +3633,47 @@ for (const binding of [
   });
 }
 
+for (const appearanceBinding of [
+  [
+    "PROPOSED-jd-11.5.8.1",
+    "表面纹理条件引用",
+    "PROPOSED-jd-6.2.2.6",
+    "引用 A6 的目标 / 背景表面纹理复杂度；A11 只消费该条件形成控制场景 Profile。",
+  ],
+  [
+    "PROPOSED-jd-11.5.8.2",
+    "局部对比条件引用",
+    "PROPOSED-jd-6.2.2.7",
+    "引用 A6 的目标 / 开口—背景局部对比度；A11 不复制感知退化 taxonomy。",
+  ],
+  [
+    "PROPOSED-jd-11.5.8.3",
+    "光学基线与动态光线扰动引用",
+    "PROPOSED-jd-0.3.3",
+    "引用 jd-0.3 下的静态光照基线与动态光线扰动，并保持两者分别启用。",
+  ],
+]) {
+  profileLeaf({
+    id: appearanceBinding[0],
+    parent: "PROPOSED-jd-11.5.8",
+    name: appearanceBinding[1],
+    definition: appearanceBinding[3],
+    valueType: "reference",
+    domain: [
+      a11DomainItem(
+        appearanceBinding[2],
+        `引用 ${appearanceBinding[2]}`,
+        ["L-A8-V06"],
+        "inferred_candidate",
+      ),
+    ],
+    relatedJd: [appearanceBinding[2]],
+    configurationSide: "world",
+    projectionTargets: ["world_config", "harness"],
+    source: ["L-A8-V06"],
+  });
+}
+
 const oldA8NodeById = new Map(
   oldA8.nodes.map((node) => [node.node_id, node]),
 );
@@ -3417,6 +3733,7 @@ a11Nodes.push(
       "PROPOSED-jd-11.5.5",
       "PROPOSED-jd-11.5.6",
       "PROPOSED-jd-11.5.7",
+      "PROPOSED-jd-11.5.8",
     ],
     used_by_axl: ["A11×L3", "A11×L4"],
     source: ["L-A8-V06"],
@@ -3429,6 +3746,1111 @@ a11Nodes.push(
     example_bindings: whiteWallExampleBindings,
   }),
 );
+
+const globalCanonicalVariables = currentJdDictionary.variables.filter(
+  (variable) => variable.scope === "global",
+);
+const globalCanonicalIds = globalCanonicalVariables.map(
+  (variable) => variable.id,
+);
+const axlRefsUsingGlobal = (globalId) =>
+  currentAxlCatalog.abilities.flatMap((ability) =>
+    Object.entries(ability.levels)
+      .filter(([, level]) => (level.jd_refs || []).includes(globalId))
+      .map(([level]) => `${ability.a_id}×${level}`),
+  );
+const globalScenarios = [
+  "cross_scenario",
+  "highway_inspection",
+  "campus_inspection",
+  "white_wall_narrow_gap",
+];
+const globalDomainItem = (
+  value,
+  label,
+  sourceRefs = [],
+  status = "team_material_only",
+) => ({
+  value,
+  label_zh: label,
+  source_refs: sourceRefs,
+  status,
+  applicable_scenarios: globalScenarios,
+});
+const globalTbd = (label) =>
+  globalDomainItem("TBD", label, [], "TBD");
+const globalSlotConfiguration = {
+  "jd-0.1": "shared",
+  "jd-0.2": "world",
+  "jd-0.3": "world",
+  "jd-0.4": "user",
+  "jd-0.5": "shared",
+  "jd-0.6": "shared",
+  "jd-0.7": "shared",
+  "jd-0.8": "world",
+  "jd-0.9": "shared",
+  "jd-0.10": "shared",
+};
+const globalNodes = [
+  baseNode({
+    node_id: "PROPOSED-jd-tree-global",
+    parent_id: catalogRootId,
+    owner_a: "MULTI",
+    name: "JD-global / 共享业务变量",
+    definition:
+      "展示跨多项能力共享、但不归任何单一 A 独占的 jd-0.1–jd-0.10 全局 JD 分支。",
+    node_kind: "global_root",
+    applicable_scenarios: globalScenarios,
+    configuration_side: "shared",
+    projection_targets: ["world_config", "user_config", "sut_input", "harness"],
+    visibility: ["sut_visible", "grader_visible", "hidden_gt"],
+    observation_channel: ["sut_input", "grader", "hidden_gt"],
+    related_global_jd: globalCanonicalIds,
+    source: ["L-GLOBAL-JD66-V3", "L-GLOBAL-AXL68-V3"],
+    evidence_status: "authoritative_existing",
+    derivation_status: "derived",
+    review_status: "proposed",
+    notes:
+      "global JD 不是新的 Axx，也不改写 A×L 责任边界。页面单列只是为了审阅共享变量。",
+  }),
+];
+
+for (const variable of globalCanonicalVariables) {
+  const configurationSide = globalSlotConfiguration[variable.id] || "shared";
+  globalNodes.push(
+    baseNode({
+      node_id: variable.id,
+      parent_id: "PROPOSED-jd-tree-global",
+      canonical_slot: variable.id,
+      owner_a: "MULTI",
+      name: variable.name,
+      definition: variable.description,
+      node_kind: "group",
+      applicable_scenarios: globalScenarios,
+      configuration_side: configurationSide,
+      projection_targets: defaultProjectionTargets(configurationSide),
+      visibility: ["sut_visible", "grader_visible", "hidden_gt"],
+      observation_channel: ["sut_input", "grader", "hidden_gt"],
+      related_global_jd: [variable.id],
+      related_jd: [],
+      used_by_axl: axlRefsUsingGlobal(variable.id),
+      source: ["L-GLOBAL-JD66-V3", "L-GLOBAL-AXL68-V3"],
+      evidence_status: "authoritative_existing",
+      derivation_status: "given",
+      review_status: "reviewed",
+      notes:
+        "canonical 名称与定义来自当前 66 槽位字典；下级 PROPOSED 节点只做可审计细分，不改变 global JD 权威语义。",
+    }),
+  );
+}
+
+function addGlobalGroup(id, name, definition, options = {}) {
+  const globalId = options.globalId || "jd-0.3";
+  const configurationSide =
+    options.configurationSide || globalSlotConfiguration[globalId] || "shared";
+  globalNodes.push(
+    baseNode({
+      node_id: id,
+      parent_id: options.parent || globalId,
+      canonical_slot: globalId,
+      owner_a: "MULTI",
+      name,
+      definition,
+      node_kind: "group",
+      applicable_scenarios: globalScenarios,
+      configuration_side: configurationSide,
+      projection_targets:
+        options.projectionTargets || defaultProjectionTargets(configurationSide),
+      visibility: ["sut_visible", "grader_visible", "hidden_gt"],
+      observation_channel: ["sut_input", "grader", "hidden_gt"],
+      related_global_jd: [globalId],
+      related_jd: options.relatedJd || [],
+      used_by_axl: axlRefsUsingGlobal(globalId),
+      source: options.source || ["L-A8-V06"],
+      evidence_status: options.evidenceStatus || "team_material_only",
+      derivation_status: options.derivationStatus || "given",
+      review_status: "proposed",
+      notes: options.notes || null,
+    }),
+  );
+}
+
+function addGlobalLeaf({
+  id,
+  parent,
+  name,
+  definition,
+  valueType,
+  domain,
+  unit = null,
+  difficulty = "context_dependent",
+  activationCondition = null,
+  multiplicity = "one",
+  dependsOn = [],
+  constraints = [],
+  relatedJd = [],
+  globalId = "jd-0.3",
+  source = ["L-A8-V06"],
+  configurationSide = null,
+  projectionTargets = null,
+  visibility = ["sut_visible", "grader_visible", "hidden_gt"],
+  observationChannel = ["sut_input", "grader", "hidden_gt"],
+  evidenceStatus = null,
+  derivationStatus = null,
+  notes = null,
+}) {
+  const resolvedConfigurationSide =
+    configurationSide || globalSlotConfiguration[globalId] || "shared";
+  const statuses = (domain || []).map((item) => item?.status).filter(Boolean);
+  const allTbd = statuses.length > 0 && statuses.every((status) => status === "TBD");
+  globalNodes.push(
+    baseNode({
+      node_id: id,
+      parent_id: parent,
+      canonical_slot: globalId,
+      owner_a: "MULTI",
+      name,
+      definition,
+      node_kind: "variable",
+      value_type: valueType,
+      value_domain: domain,
+      unit,
+      activation_condition: activationCondition,
+      multiplicity,
+      difficulty_direction: difficulty,
+      configuration_side: resolvedConfigurationSide,
+      projection_targets:
+        projectionTargets || defaultProjectionTargets(resolvedConfigurationSide),
+      visibility,
+      observation_channel: observationChannel,
+      applicable_scenarios: globalScenarios,
+      related_global_jd: [globalId],
+      related_jd: relatedJd,
+      used_by_axl: axlRefsUsingGlobal(globalId),
+      depends_on: dependsOn,
+      constraints,
+      source,
+      evidence_status:
+        evidenceStatus || (allTbd ? "TBD" : "team_material_only"),
+      derivation_status:
+        derivationStatus || (allTbd ? "TBD" : "given"),
+      review_status: "proposed",
+      notes,
+    }),
+  );
+}
+
+const globalAuthoritativeItem = (value, label) =>
+  globalDomainItem(
+    value,
+    label,
+    ["L-GLOBAL-JD66-V3"],
+    "authoritative_existing",
+  );
+const globalProposedItem = (value, label, refs = []) =>
+  globalDomainItem(value, label, refs, "inferred_candidate");
+const globalCommonSources = [
+  "L-GLOBAL-JD66-V3",
+  "L-GLOBAL-AXL68-V3",
+  "L-GLOBAL-SCENARIO-REGISTRY",
+];
+
+const globalSimpleLeafSpecs = [
+  // jd-0.1 任务时长
+  {
+    globalId: "jd-0.1",
+    id: "PROPOSED-jd-0.1.1",
+    name: "时间作用范围",
+    definition: "时长或时间预算作用于整个任务、任务阶段、航段还是单项活动。",
+    valueType: "enum",
+    domain: [
+      globalProposedItem("mission", "整个任务", ["L-GLOBAL-AXL68-V3"]),
+      globalProposedItem("phase", "任务阶段", ["L-GLOBAL-AXL68-V3"]),
+      globalProposedItem("segment", "航段", ["L-GLOBAL-AXL68-V3"]),
+      globalProposedItem("activity", "单项活动", ["L-GLOBAL-TASK-BACKBONE"]),
+    ],
+  },
+  {
+    globalId: "jd-0.1",
+    id: "PROPOSED-jd-0.1.2",
+    name: "持续时间值 / 范围",
+    definition: "指定时间作用范围对应的持续时间、允许范围及不确定度。",
+    valueType: "duration_range_object",
+    domain: [globalTbd("数值范围、不确定度和单位换算规则 TBD")],
+    unit: "s_or_declared_unit",
+  },
+  {
+    globalId: "jd-0.1",
+    id: "PROPOSED-jd-0.1.3",
+    name: "时间预算",
+    definition: "可供任务、阶段、航段或活动使用的时间预算。",
+    valueType: "duration_or_range",
+    domain: [globalTbd("预算值、软硬约束属性和阈值 TBD")],
+    unit: "s_or_declared_unit",
+  },
+  {
+    globalId: "jd-0.1",
+    id: "PROPOSED-jd-0.1.4",
+    name: "截止时间 / 时间窗",
+    definition: "任务或活动允许开始、持续或完成的绝对或相对时间窗。",
+    valueType: "absolute_or_relative_time_window",
+    domain: [globalTbd("时间基准、起止值和时区规则 TBD")],
+  },
+  {
+    globalId: "jd-0.1",
+    id: "PROPOSED-jd-0.1.5",
+    name: "长短程属性",
+    definition: "对任务时间跨度的业务分档；正式分档阈值保持 TBD。",
+    valueType: "enum_or_rule",
+    domain: [
+      globalAuthoritativeItem("short_duration", "短程"),
+      globalAuthoritativeItem("long_duration", "长程"),
+      globalTbd("分档边界及是否增加中程 TBD"),
+    ],
+  },
+
+  // jd-0.2 工作空间结构
+  {
+    globalId: "jd-0.2",
+    id: "PROPOSED-jd-0.2.1",
+    name: "场景空间类型",
+    definition: "任务空间按开放区域、沿线走廊、网络、表面、封闭空间或混合结构组织的类别。",
+    valueType: "multi_enum",
+    domain: [
+      globalProposedItem("open_area", "开放区域", ["L-GLOBAL-SCENARIO-REGISTRY"]),
+      globalProposedItem("linear_corridor", "沿线 / 走廊", ["L-GLOBAL-SCENARIO-REGISTRY"]),
+      globalProposedItem("network", "道路 / 通道网络", ["L-GLOBAL-SCENARIO-REGISTRY"]),
+      globalProposedItem("surface_or_facade", "检查面 / 立面", ["L-GLOBAL-SCENARIO-REGISTRY"]),
+      globalProposedItem("enclosed_or_restricted", "封闭 / 受限空间", ["L-A8-V06"]),
+      globalProposedItem("mixed", "混合结构", ["L-GLOBAL-SCENARIO-REGISTRY"]),
+      globalTbd("正式空间 taxonomy TBD"),
+    ],
+    source: [...globalCommonSources, "L-A8-V06"],
+  },
+  {
+    globalId: "jd-0.2",
+    id: "PROPOSED-jd-0.2.2",
+    name: "空间尺度与外包边界",
+    definition: "工作空间的尺度、范围、外包几何和高度层范围。",
+    valueType: "geometry_or_bounds_object",
+    domain: [globalTbd("几何表示、坐标参考和数值范围 TBD")],
+  },
+  {
+    globalId: "jd-0.2",
+    id: "PROPOSED-jd-0.2.3",
+    name: "空间拓扑表示",
+    definition: "区域、走廊、节点、边、表面与体空间之间的连接和包含关系。",
+    valueType: "graph_or_geometry_reference",
+    domain: [globalTbd("拓扑 schema 与引用格式 TBD")],
+    relatedJd: ["jd-10.1"],
+  },
+  {
+    globalId: "jd-0.2",
+    id: "PROPOSED-jd-0.2.4",
+    name: "工作空间边界集合",
+    definition: "描述任务空间范围的物理、地理或业务边界；安全阈值另引用 jd-0.10。",
+    valueType: "array_of_geometry_references",
+    domain: [globalTbd("边界类别、几何和版本规则 TBD")],
+    multiplicity: "one_or_more",
+    relatedJd: ["jd-0.10"],
+  },
+  {
+    globalId: "jd-0.2",
+    id: "PROPOSED-jd-0.2.5",
+    name: "障碍物区域集合",
+    definition: "工作空间中影响可达性或观察关系的静态、动态或临时障碍区域引用。",
+    valueType: "array_of_object_or_geometry_references",
+    domain: [globalTbd("障碍物 registry、动态属性和引用规则 TBD")],
+    multiplicity: "zero_or_more",
+    relatedJd: ["PROPOSED-jd-11.5"],
+  },
+  {
+    globalId: "jd-0.2",
+    id: "PROPOSED-jd-0.2.6",
+    name: "可通行 / 可观察区域集合",
+    definition: "任务允许进入、穿越、驻留或获得有效观察的区域、走廊、表面和通行空间集合。",
+    valueType: "array_of_geometry_references",
+    domain: [globalTbd("区域分类、可达条件和有效期 TBD")],
+    multiplicity: "one_or_more",
+    relatedJd: ["jd-10.1", "PROPOSED-jd-11.5.2"],
+  },
+
+  // jd-0.4 在场人角色
+  {
+    globalId: "jd-0.4",
+    id: "PROPOSED-jd-0.4.1",
+    name: "角色类别",
+    definition: "任务中存在、监督、请求、批准、处置或接收结果的人类角色类别。",
+    valueType: "multi_enum_or_registry_ref",
+    domain: [
+      globalProposedItem("requester", "任务请求者", ["L-GLOBAL-G1-SETUP"]),
+      globalProposedItem("operator", "操作员 / 飞手", ["L-GLOBAL-G1-SETUP"]),
+      globalProposedItem("supervisor", "任务监督者", ["L-GLOBAL-G1-SETUP"]),
+      globalProposedItem("approver", "批准 / 决策角色", ["L-GLOBAL-G1-SETUP"]),
+      globalProposedItem("field_personnel", "现场人员", ["L-GLOBAL-SCENARIO-REGISTRY"]),
+      globalProposedItem("result_recipient", "结果接收者", ["L-GLOBAL-G1-SETUP"]),
+      globalTbd("正式角色 registry 与 taxonomy TBD"),
+    ],
+    source: ["L-GLOBAL-JD66-V3", "L-GLOBAL-G1-SETUP", "L-GLOBAL-SCENARIO-REGISTRY"],
+  },
+  {
+    globalId: "jd-0.4",
+    id: "PROPOSED-jd-0.4.2",
+    name: "职责范围",
+    definition: "角色在本任务、阶段或事件中的职责边界。",
+    valueType: "role_scope_object",
+    domain: [globalTbd("职责 schema 与边界表达 TBD")],
+  },
+  {
+    globalId: "jd-0.4",
+    id: "PROPOSED-jd-0.4.3",
+    name: "权限与决策权",
+    definition: "角色可查看、请求、批准、纠偏、暂停、继续或接管的权限集合。",
+    valueType: "permission_set",
+    domain: [globalTbd("权限 taxonomy 与冲突规则 TBD")],
+    relatedJd: ["jd-0.5"],
+  },
+  {
+    globalId: "jd-0.4",
+    id: "PROPOSED-jd-0.4.4",
+    name: "位置与可达性",
+    definition: "角色的现场 / 远程位置、可联系状态和交互可达性。",
+    valueType: "presence_and_reachability_object",
+    domain: [globalTbd("位置粒度、可达状态和更新时间 TBD")],
+  },
+  {
+    globalId: "jd-0.4",
+    id: "PROPOSED-jd-0.4.5",
+    name: "角色关系与升级链",
+    definition: "多个角色之间的委托、监督、批准、替代和升级关系。",
+    valueType: "directed_role_graph",
+    domain: [globalTbd("关系类型、优先级和闭环规则 TBD")],
+    multiplicity: "zero_or_more",
+    relatedJd: ["jd-0.5"],
+  },
+
+  // jd-0.5 人机确认协议
+  {
+    globalId: "jd-0.5",
+    id: "PROPOSED-jd-0.5.1",
+    name: "交互 / 确认类型",
+    definition: "人机之间需要执行的确认、纠偏、批准、审计、通知、等待或继续动作。",
+    valueType: "multi_enum",
+    domain: [
+      globalAuthoritativeItem("confirm", "确认"),
+      globalAuthoritativeItem("correct", "纠偏"),
+      globalAuthoritativeItem("approve", "批准"),
+      globalAuthoritativeItem("audit", "审计"),
+      globalAuthoritativeItem("notify", "通知"),
+      globalAuthoritativeItem("wait", "等待"),
+      globalAuthoritativeItem("continue", "继续执行"),
+    ],
+  },
+  {
+    globalId: "jd-0.5",
+    id: "PROPOSED-jd-0.5.2",
+    name: "发起者与接收者",
+    definition: "一次交互的发起角色、目标角色及替代 / 升级接收者。",
+    valueType: "role_reference_object",
+    domain: [globalTbd("角色引用、广播和替代规则 TBD")],
+    relatedJd: ["jd-0.4"],
+  },
+  {
+    globalId: "jd-0.5",
+    id: "PROPOSED-jd-0.5.3",
+    name: "触发条件",
+    definition: "确认、通知、等待或纠偏协议被启用的任务状态、风险或边界条件。",
+    valueType: "condition_expression_or_reference",
+    domain: [globalTbd("条件表达式和优先级 TBD")],
+  },
+  {
+    globalId: "jd-0.5",
+    id: "PROPOSED-jd-0.5.4",
+    name: "交互载荷与必要披露",
+    definition: "交互中必须提供的状态、风险、选项、证据和影响说明。",
+    valueType: "message_contract_object",
+    domain: [globalTbd("必要字段、证据级别和呈现规则 TBD")],
+  },
+  {
+    globalId: "jd-0.5",
+    id: "PROPOSED-jd-0.5.5",
+    name: "响应状态",
+    definition: "交互请求从等待到批准、拒绝、纠偏、取消或无响应的状态。",
+    valueType: "enum",
+    domain: [
+      globalProposedItem("pending", "等待响应", ["L-GLOBAL-G1-SETUP"]),
+      globalProposedItem("approved", "已批准", ["L-GLOBAL-G1-SETUP"]),
+      globalProposedItem("rejected", "已拒绝", ["L-GLOBAL-G1-SETUP"]),
+      globalProposedItem("corrected", "已纠偏", ["L-GLOBAL-G1-SETUP"]),
+      globalProposedItem("cancelled", "已取消", ["L-GLOBAL-G1-SETUP"]),
+      globalProposedItem("no_response", "无响应", ["L-GLOBAL-G1-SETUP"]),
+      globalTbd("正式状态机 TBD"),
+    ],
+    source: ["L-GLOBAL-JD66-V3", "L-GLOBAL-G1-SETUP"],
+  },
+  {
+    globalId: "jd-0.5",
+    id: "PROPOSED-jd-0.5.6",
+    name: "等待与响应时间窗",
+    definition: "等待响应、提醒、失效和继续执行的时间窗口；具体时限保持 TBD。",
+    valueType: "time_window_object",
+    domain: [globalTbd("响应时限、提醒与超时规则 TBD")],
+    relatedJd: ["jd-0.1"],
+  },
+  {
+    globalId: "jd-0.5",
+    id: "PROPOSED-jd-0.5.7",
+    name: "后续动作与升级规则",
+    definition: "不同响应状态下允许继续、等待、重试、升级、暂停或交接的规则。",
+    valueType: "state_transition_rule_set",
+    domain: [globalTbd("状态迁移、优先级与安全引用 TBD")],
+    relatedJd: ["jd-5.1", "jd-0.10"],
+  },
+  {
+    globalId: "jd-0.5",
+    id: "PROPOSED-jd-0.5.8",
+    name: "审计与证据关联",
+    definition: "交互事件与请求、响应、任务 Trace、证据和最终处置之间的可追溯关联。",
+    valueType: "reference_set",
+    domain: [globalTbd("事件 ID、Trace 和证据引用格式 TBD")],
+  },
+
+  // jd-0.6 合规域
+  {
+    globalId: "jd-0.6",
+    id: "PROPOSED-jd-0.6.1",
+    name: "合规来源类别",
+    definition: "任务适用约束来自空域、法规、组织制度、业务规范或其他受审规则的类别。",
+    valueType: "multi_enum",
+    domain: [
+      globalAuthoritativeItem("airspace", "空域约束"),
+      globalAuthoritativeItem("law_or_regulation", "法规 / 规章"),
+      globalAuthoritativeItem("organizational_policy", "组织制度"),
+      globalAuthoritativeItem("business_specification", "业务规范"),
+      globalProposedItem("contract_or_site_rule", "合同 / 场地规则", ["L-GLOBAL-SCENARIO-REGISTRY"]),
+      globalTbd("正式合规来源 taxonomy TBD"),
+    ],
+  },
+  {
+    globalId: "jd-0.6",
+    id: "PROPOSED-jd-0.6.2",
+    name: "适用辖区与场景范围",
+    definition: "合规规则适用的地域、空域、组织、场地、业务场景和任务阶段。",
+    valueType: "scope_object",
+    domain: [globalTbd("辖区、场景和阶段引用格式 TBD")],
+  },
+  {
+    globalId: "jd-0.6",
+    id: "PROPOSED-jd-0.6.3",
+    name: "规则与约束引用集",
+    definition: "适用标准、法规条款、组织规则或业务规范的版本化引用集合。",
+    valueType: "array_of_versioned_references",
+    domain: [globalTbd("来源标识、条款粒度和版本格式 TBD")],
+    multiplicity: "one_or_more",
+  },
+  {
+    globalId: "jd-0.6",
+    id: "PROPOSED-jd-0.6.4",
+    name: "生效时间与版本",
+    definition: "合规规则的版本、发布日期、生效期、失效期和替代关系。",
+    valueType: "version_and_validity_object",
+    domain: [globalTbd("日期格式、版本冲突和追溯规则 TBD")],
+  },
+  {
+    globalId: "jd-0.6",
+    id: "PROPOSED-jd-0.6.5",
+    name: "优先级与冲突关系",
+    definition: "多项合规约束之间的优先级、覆盖、并行适用和冲突状态。",
+    valueType: "rule_relation_graph",
+    domain: [globalTbd("优先级、冲突消解和人工确认规则 TBD")],
+    relatedJd: ["jd-0.5"],
+  },
+  {
+    globalId: "jd-0.6",
+    id: "PROPOSED-jd-0.6.6",
+    name: "许可 / 批准证据",
+    definition: "任务执行所需许可、批准、豁免或证明材料的引用和有效状态。",
+    valueType: "array_of_evidence_references",
+    domain: [globalTbd("证据类型、有效性和可见性规则 TBD")],
+    multiplicity: "zero_or_more",
+  },
+
+  // jd-0.7 任务完成判据
+  {
+    globalId: "jd-0.7",
+    id: "PROPOSED-jd-0.7.1",
+    name: "任务结果状态",
+    definition: "任务整体或局部单元的完成、部分完成、失败、终止或中止状态。",
+    valueType: "enum",
+    domain: [
+      globalAuthoritativeItem("completed", "完成"),
+      globalAuthoritativeItem("partially_completed", "部分完成"),
+      globalAuthoritativeItem("failed", "失败"),
+      globalAuthoritativeItem("terminated", "终止"),
+      globalAuthoritativeItem("aborted", "中止"),
+    ],
+  },
+  {
+    globalId: "jd-0.7",
+    id: "PROPOSED-jd-0.7.2",
+    name: "判定作用范围",
+    definition: "完成判据作用于任务、阶段、航段、业务对象、事件或输出产物的范围。",
+    valueType: "multi_enum_or_reference",
+    domain: [
+      globalProposedItem("mission", "任务", ["L-GLOBAL-TASK-BACKBONE"]),
+      globalProposedItem("phase", "阶段", ["L-GLOBAL-AXL68-V3"]),
+      globalProposedItem("segment", "航段", ["L-GLOBAL-AXL68-V3"]),
+      globalProposedItem("business_object", "业务对象", ["L-GLOBAL-SCENARIO-REGISTRY"]),
+      globalProposedItem("output_artifact", "输出产物", ["L-GLOBAL-SCENARIO-REGISTRY"]),
+    ],
+  },
+  {
+    globalId: "jd-0.7",
+    id: "PROPOSED-jd-0.7.3",
+    name: "完成谓词集合",
+    definition: "用于判断任务结果状态的结构化业务条件集合。",
+    valueType: "array_of_predicate_objects",
+    domain: [globalTbd("谓词 schema、变量引用和比较规则 TBD")],
+    multiplicity: "one_or_more",
+  },
+  {
+    globalId: "jd-0.7",
+    id: "PROPOSED-jd-0.7.4",
+    name: "必要证据集合",
+    definition: "支持完成、部分完成、失败或终止判断所需的输出、事件、Trace 或 Grader 证据。",
+    valueType: "array_of_evidence_requirements",
+    domain: [globalTbd("证据类型、完整性和可见性规则 TBD")],
+    multiplicity: "zero_or_more",
+  },
+  {
+    globalId: "jd-0.7",
+    id: "PROPOSED-jd-0.7.5",
+    name: "判据聚合逻辑",
+    definition: "多个对象、航段、阶段和证据如何聚合为任务级结果状态。",
+    valueType: "logic_expression_or_rule_set",
+    domain: [globalTbd("AND / OR、数量、比例和例外规则 TBD")],
+  },
+  {
+    globalId: "jd-0.7",
+    id: "PROPOSED-jd-0.7.6",
+    name: "未完成 / 终止原因",
+    definition: "部分完成、失败、终止或中止状态对应的业务原因与责任引用。",
+    valueType: "reason_code_or_reference_set",
+    domain: [globalTbd("原因 taxonomy、归因和多原因规则 TBD")],
+  },
+
+  // jd-0.8 通信基建
+  {
+    globalId: "jd-0.8",
+    id: "PROPOSED-jd-0.8.1",
+    name: "通信链路类别",
+    definition: "任务可用的指挥控制、遥测、载荷数据、告警或地面回传链路类别。",
+    valueType: "multi_enum_or_registry_ref",
+    domain: [
+      globalProposedItem("command_and_control", "指挥控制链路", ["L-GLOBAL-AXL68-V3"]),
+      globalProposedItem("telemetry", "遥测链路", ["L-GLOBAL-AXL68-V3"]),
+      globalProposedItem("payload_data", "载荷数据链路", ["L-GLOBAL-SCENARIO-REGISTRY"]),
+      globalProposedItem("alerting", "告警 / 通知链路", ["L-GLOBAL-SCENARIO-REGISTRY"]),
+      globalProposedItem("backhaul", "地面回传 / 骨干链路", ["L-GLOBAL-SCENARIO-REGISTRY"]),
+      globalTbd("正式链路 taxonomy TBD"),
+    ],
+  },
+  {
+    globalId: "jd-0.8",
+    id: "PROPOSED-jd-0.8.2",
+    name: "基础设施节点集合",
+    definition: "地面站、基站、中继、边缘节点、远端平台或其他通信基础设施实例集合。",
+    valueType: "array_of_infrastructure_references",
+    domain: [globalTbd("节点 registry、能力和归属字段 TBD")],
+    multiplicity: "one_or_more",
+  },
+  {
+    globalId: "jd-0.8",
+    id: "PROPOSED-jd-0.8.3",
+    name: "网络拓扑",
+    definition: "平台、地面站、中继、边缘节点和远端服务之间的连接关系。",
+    valueType: "network_graph",
+    domain: [globalTbd("拓扑 schema、方向性和动态变化规则 TBD")],
+  },
+  {
+    globalId: "jd-0.8",
+    id: "PROPOSED-jd-0.8.4",
+    name: "覆盖区域 / 时间窗",
+    definition: "链路或基础设施在空间和时间上的可用覆盖范围。",
+    valueType: "spatiotemporal_coverage_object",
+    domain: [globalTbd("覆盖几何、时间窗和更新规则 TBD")],
+    relatedJd: ["jd-0.2", "jd-0.1"],
+  },
+  {
+    globalId: "jd-0.8",
+    id: "PROPOSED-jd-0.8.5",
+    name: "链路可用性与质量状态",
+    definition: "链路可用、退化、间歇、中断或未知的状态及其质量观测。",
+    valueType: "state_and_quality_object",
+    domain: [globalTbd("质量指标、阈值、更新频率和不确定度 TBD")],
+  },
+  {
+    globalId: "jd-0.8",
+    id: "PROPOSED-jd-0.8.6",
+    name: "冗余与切换关系",
+    definition: "主备链路、中继路径、替代基础设施及其切换适用条件。",
+    valueType: "redundancy_and_failover_rule_set",
+    domain: [globalTbd("主备优先级、切换和恢复规则 TBD")],
+  },
+
+  // jd-0.9 载荷集
+  {
+    globalId: "jd-0.9",
+    id: "PROPOSED-jd-0.9.1",
+    name: "载荷类别",
+    definition: "任务所需传感、成像、测距、通信、照明、喊话或其他执行载荷的类别。",
+    valueType: "multi_enum_or_registry_ref",
+    domain: [
+      globalProposedItem("rgb_imaging", "RGB 成像", ["L-GLOBAL-SCENARIO-REGISTRY"]),
+      globalProposedItem("thermal_imaging", "热红外成像", ["L-GLOBAL-SCENARIO-REGISTRY"]),
+      globalProposedItem("depth_or_ranging", "深度 / 测距", ["L-GLOBAL-SCENARIO-REGISTRY"]),
+      globalProposedItem("radar", "雷达", ["L-GLOBAL-SCENARIO-REGISTRY"]),
+      globalProposedItem("lighting", "照明 / 灯光", ["L-GLOBAL-SCENARIO-REGISTRY"]),
+      globalProposedItem("speaker", "喊话 / 声学执行载荷", ["L-GLOBAL-SCENARIO-REGISTRY"]),
+      globalProposedItem("other_task_actuator", "其他任务执行载荷", ["L-GLOBAL-SCENARIO-REGISTRY"]),
+      globalTbd("正式载荷 taxonomy TBD"),
+    ],
+  },
+  {
+    globalId: "jd-0.9",
+    id: "PROPOSED-jd-0.9.2",
+    name: "载荷实例集合",
+    definition: "本任务可用载荷的稳定实例 ID、型号、版本、安装位和状态引用集合。",
+    valueType: "array_of_payload_profile_references",
+    domain: [globalTbd("载荷 profile schema、ID 和版本规则 TBD")],
+    multiplicity: "one_or_more",
+  },
+  {
+    globalId: "jd-0.9",
+    id: "PROPOSED-jd-0.9.3",
+    name: "载荷能力与模态",
+    definition: "各载荷提供的观测模态、执行能力和输出产品类型。",
+    valueType: "capability_set_or_reference",
+    domain: [globalTbd("能力 taxonomy、产品类型和参数引用 TBD")],
+    relatedJd: ["jd-6.3", "jd-12.1"],
+  },
+  {
+    globalId: "jd-0.9",
+    id: "PROPOSED-jd-0.9.4",
+    name: "安装与朝向关系",
+    definition: "载荷相对平台的安装位置、可动轴、视场和默认朝向关系。",
+    valueType: "mount_and_orientation_object",
+    domain: [globalTbd("安装参考系、视场和云台关系 TBD")],
+    relatedJd: ["jd-2.2", "PROPOSED-jd-11.5.5.4"],
+  },
+  {
+    globalId: "jd-0.9",
+    id: "PROPOSED-jd-0.9.5",
+    name: "载荷组合与依赖",
+    definition: "多个载荷同时、互斥、主辅、校准依赖或融合使用的关系。",
+    valueType: "dependency_and_exclusion_rule_set",
+    domain: [globalTbd("组合、互斥和依赖规则 TBD")],
+    multiplicity: "zero_or_more",
+  },
+  {
+    globalId: "jd-0.9",
+    id: "PROPOSED-jd-0.9.6",
+    name: "可用与工作状态",
+    definition: "载荷是否安装、可用、校准、启用、退化、故障或未知。",
+    valueType: "state_object",
+    domain: [globalTbd("正式状态机、退化原因和更新时间 TBD")],
+  },
+  {
+    globalId: "jd-0.9",
+    id: "PROPOSED-jd-0.9.7",
+    name: "校准与时间同步状态",
+    definition: "载荷内参、外参、跨载荷配准和时间同步的可用状态及版本。",
+    valueType: "calibration_and_sync_object",
+    domain: [globalTbd("校准状态、误差指标和有效期 TBD")],
+  },
+  {
+    globalId: "jd-0.9",
+    id: "PROPOSED-jd-0.9.8",
+    name: "资源需求引用",
+    definition: "载荷对电力、计算、存储、带宽和执行机构资源的需求引用。",
+    valueType: "resource_profile_reference",
+    domain: [globalTbd("资源 profile schema 与单位 TBD")],
+    relatedJd: ["jd-9.1", "jd-0.8"],
+  },
+
+  // jd-0.10 安全包络先验
+  {
+    globalId: "jd-0.10",
+    id: "PROPOSED-jd-0.10.1",
+    name: "安全边界类别",
+    definition: "任务执行前声明的空间、运动、姿态、间隔、资源、环境或任务阶段安全边界类别。",
+    valueType: "multi_enum",
+    domain: [
+      globalProposedItem("spatial", "空间 / 区域边界", ["L-GLOBAL-AXL68-V3"]),
+      globalProposedItem("kinematic", "速度 / 加速度边界", ["L-GLOBAL-AXL68-V3"]),
+      globalProposedItem("attitude", "姿态 / 航向边界", ["L-GLOBAL-AXL68-V3"]),
+      globalProposedItem("separation", "净空 / 间隔边界", ["L-GLOBAL-AXL68-V3"]),
+      globalProposedItem("resource_reserve", "资源 / 最低储备", ["L-GLOBAL-SCENARIO-REGISTRY"]),
+      globalProposedItem("environmental", "环境条件边界", ["L-GLOBAL-SCENARIO-REGISTRY"]),
+      globalProposedItem("phase_specific", "任务阶段专用边界", ["L-GLOBAL-AXL68-V3"]),
+      globalTbd("正式安全边界 taxonomy TBD"),
+    ],
+  },
+  {
+    globalId: "jd-0.10",
+    id: "PROPOSED-jd-0.10.2",
+    name: "允许范围 / 阈值对象",
+    definition: "安全边界对应的允许范围、上限、下限、单位和比较方向。",
+    valueType: "typed_bound_object",
+    domain: [globalTbd("各类别的变量、单位、范围和阈值 TBD")],
+  },
+  {
+    globalId: "jd-0.10",
+    id: "PROPOSED-jd-0.10.3",
+    name: "适用对象与任务阶段",
+    definition: "安全边界适用的平台、载荷、人员、空间、航段、阶段或任务状态。",
+    valueType: "scope_and_reference_object",
+    domain: [globalTbd("对象引用、阶段和状态条件 TBD")],
+  },
+  {
+    globalId: "jd-0.10",
+    id: "PROPOSED-jd-0.10.4",
+    name: "最低安全储备",
+    definition: "任务执行前声明的最低能源、时间、通信、控制或其他安全储备。",
+    valueType: "reserve_requirement_object",
+    domain: [globalTbd("储备类别、数值、单位和计算方法 TBD")],
+    relatedJd: ["jd-0.1", "jd-0.8", "jd-0.9", "jd-9.2"],
+  },
+  {
+    globalId: "jd-0.10",
+    id: "PROPOSED-jd-0.10.5",
+    name: "边界来源与权威级别",
+    definition: "安全边界来自法规、组织制度、平台限制、任务合同或风险评估的来源及权威关系。",
+    valueType: "source_and_authority_reference",
+    domain: [globalTbd("来源类别、权威级别和版本规则 TBD")],
+    relatedJd: ["jd-0.6", "jd-2.2"],
+  },
+  {
+    globalId: "jd-0.10",
+    id: "PROPOSED-jd-0.10.6",
+    name: "边界组合与优先级",
+    definition: "多项安全边界同时适用时的交集、覆盖、优先级和冲突状态。",
+    valueType: "constraint_relation_rule_set",
+    domain: [globalTbd("组合、冲突消解和保守选择规则 TBD")],
+  },
+  {
+    globalId: "jd-0.10",
+    id: "PROPOSED-jd-0.10.7",
+    name: "违反状态与处置引用",
+    definition: "安全边界正常、接近、违反或未知的状态，以及对 A16 处置责任的引用。",
+    valueType: "state_and_action_reference",
+    domain: [globalTbd("状态阈值、迟滞和 A16 处置映射 TBD")],
+    relatedJd: ["jd-16.1", "jd-16.2"],
+  },
+];
+
+for (const spec of globalSimpleLeafSpecs) {
+  addGlobalLeaf({
+    parent: spec.globalId,
+    source: spec.source || globalCommonSources,
+    evidenceStatus: spec.evidenceStatus || "inferred_candidate",
+    derivationStatus: spec.derivationStatus || "proposed",
+    ...spec,
+  });
+}
+
+addGlobalGroup(
+  "PROPOSED-jd-0.3.1",
+  "风扰动",
+  "风速、风向和风场时间 / 空间结构；实际数值范围由平台与场景资料决定。",
+  { source: ["L-A8-V06", "W-AIRSIM"] },
+);
+addGlobalGroup(
+  "PROPOSED-jd-0.3.2",
+  "定位扰动",
+  "对定位来源或融合结果施加的退化类型、强度、持续时间和发生窗口。",
+  { source: ["L-A8-V06", "W-PX4-EKF"] },
+);
+addGlobalGroup(
+  "PROPOSED-jd-0.3.3",
+  "光学基线与光线扰动",
+  "将静态光照基线与动态光线扰动分开配置；光照基线存在不等于光线扰动已启用。",
+  { source: ["L-A8-V06", "W-AIRSIM"] },
+);
+addGlobalGroup(
+  "PROPOSED-jd-0.3.4",
+  "天气与能见度条件",
+  "天气基线、能见度退化及其强度和发生窗口。",
+  { source: ["L-A8-V06", "W-AIRSIM", "W-CARLA"] },
+);
+addGlobalGroup(
+  "PROPOSED-jd-0.3.5",
+  "启用、组合与发生窗口",
+  "统一表达扰动 Profile 是否启用、哪些类型处于活动状态、如何组合及何时生效。",
+  {
+    source: ["L-GLOBAL-JD66-V3", "L-A8-V06"],
+    evidenceStatus: "inferred_candidate",
+    derivationStatus: "proposed",
+    notes:
+      "本组用于替换“光照=0、天气=1”一类含义不清的扁平布尔写法，不规定 simulator 字段。",
+  },
+);
+
+addGlobalLeaf({
+  id: "PROPOSED-jd-0.3.1.1",
+  parent: "PROPOSED-jd-0.3.1",
+  name: "风速大小",
+  definition: "风速度向量的大小；跨场景取值范围和档位阈值保持 TBD。",
+  valueType: "number_or_range",
+  domain: [globalTbd("风速范围与档位阈值 TBD")],
+  unit: "m/s",
+  source: ["L-A8-V06", "W-AIRSIM"],
+});
+addGlobalLeaf({
+  id: "PROPOSED-jd-0.3.1.2",
+  parent: "PROPOSED-jd-0.3.1",
+  name: "风向与参考系",
+  definition: "风向向量及其坐标参考系。",
+  valueType: "vector3_with_reference_frame",
+  domain: [
+    globalDomainItem("X+", "X+", ["L-A8-V06"]),
+    globalDomainItem("X-", "X-", ["L-A8-V06"]),
+    globalDomainItem("Y+", "Y+", ["L-A8-V06"]),
+    globalDomainItem("Y-", "Y-", ["L-A8-V06"]),
+    globalTbd("其他方向与参考系 TBD"),
+  ],
+  source: ["L-A8-V06", "W-AIRSIM"],
+  notes: "X / Y 方向只保留 v0.6 原始示例；通用坐标系和 3D 方向表达待确认。",
+});
+addGlobalLeaf({
+  id: "PROPOSED-jd-0.3.1.3",
+  parent: "PROPOSED-jd-0.3.1",
+  name: "风场类型",
+  definition: "风扰动在时间和空间上的结构类别。",
+  valueType: "enum",
+  domain: [
+    globalDomainItem("uniform", "均匀", ["L-A8-V06"]),
+    globalDomainItem("gust", "阵风", ["L-A8-V06"]),
+    globalDomainItem("shear", "切变", ["L-A8-V06"]),
+    globalTbd("正式风场 taxonomy TBD"),
+  ],
+  source: ["L-A8-V06", "W-AIRSIM"],
+});
+
+addGlobalLeaf({
+  id: "PROPOSED-jd-0.3.2.1",
+  parent: "PROPOSED-jd-0.3.2",
+  name: "定位扰动类型",
+  definition: "定位来源或融合状态的退化类别。",
+  valueType: "multi_enum",
+  domain: [
+    globalDomainItem("gnss_multipath", "GNSS 多径", ["L-A8-V06", "W-PX4-EKF"]),
+    globalDomainItem("jump", "跳变", ["L-A8-V06", "W-PX4-EKF"]),
+    globalDomainItem("loss", "失锁", ["L-A8-V06", "W-PX4-EKF"]),
+    globalDomainItem("source_inconsistency", "源不一致", ["L-A8-V06", "W-PX4-EKF"]),
+    globalTbd("正式退化 taxonomy TBD"),
+  ],
+  source: ["L-A8-V06", "W-PX4-EKF"],
+  relatedJd: ["jd-7.2"],
+});
+addGlobalLeaf({
+  id: "PROPOSED-jd-0.3.2.2",
+  parent: "PROPOSED-jd-0.3.2",
+  name: "定位扰动强度",
+  definition: "定位扰动的幅度或质量影响程度；指标和阈值保持 TBD。",
+  valueType: "metric_or_enum",
+  domain: [globalTbd("强度指标、单位与阈值 TBD")],
+  source: ["L-A8-V06", "W-PX4-EKF"],
+});
+addGlobalLeaf({
+  id: "PROPOSED-jd-0.3.2.3",
+  parent: "PROPOSED-jd-0.3.2",
+  name: "定位扰动持续时间",
+  definition: "一次定位扰动持续或保持的时间。",
+  valueType: "duration_or_range",
+  domain: [globalTbd("持续时间范围与档位阈值 TBD")],
+  unit: "s",
+  source: ["L-A8-V06"],
+});
+addGlobalLeaf({
+  id: "PROPOSED-jd-0.3.2.4",
+  parent: "PROPOSED-jd-0.3.2",
+  name: "定位扰动发生窗口",
+  definition: "定位扰动相对任务阶段、事件或时间轴的开始与结束窗口。",
+  valueType: "event_or_time_window",
+  domain: [globalTbd("任务阶段 / 事件锚点和时间范围 TBD")],
+  source: ["L-A8-V06"],
+});
+
+addGlobalLeaf({
+  id: "PROPOSED-jd-0.3.3.1",
+  parent: "PROPOSED-jd-0.3.3",
+  name: "光照基线（静态）",
+  definition: "未施加动态光线扰动时的场景基础光照状态。",
+  valueType: "enum_or_metric",
+  domain: [
+    globalDomainItem("bright", "明亮", ["L-A8-V06"]),
+    globalDomainItem("dim", "昏暗", ["L-A8-V06"]),
+    globalDomainItem("night", "夜间", ["L-A8-V06"]),
+    globalTbd("客观光照量、单位与档位阈值 TBD"),
+  ],
+  source: ["L-A8-V06", "W-AIRSIM"],
+  notes:
+    "光照基线是始终需要配置的场景状态，不应使用“光照=0”表达未启用。",
+});
+addGlobalLeaf({
+  id: "PROPOSED-jd-0.3.3.2",
+  parent: "PROPOSED-jd-0.3.3",
+  name: "动态光线扰动类型",
+  definition: "相对光照基线随时间变化或局部扫掠的光线扰动类别。",
+  valueType: "multi_enum",
+  domain: [
+    globalDomainItem("none", "无", ["L-A8-V06"]),
+    globalDomainItem("backlight", "逆光", ["L-A8-V06"]),
+    globalDomainItem("moving_shadow", "阴影扫掠", ["L-A8-V06"]),
+    globalDomainItem("flicker", "频闪", ["L-A8-V06"]),
+    globalDomainItem("intensity_step", "光强突变", ["L-A8-V06"]),
+    globalTbd("正式光线扰动 taxonomy TBD"),
+  ],
+  source: ["L-A8-V06", "W-AIRSIM"],
+  notes:
+    "“光线=0”只能解释为本节点未激活，不能解释为没有基础光照。",
+});
+addGlobalLeaf({
+  id: "PROPOSED-jd-0.3.3.3",
+  parent: "PROPOSED-jd-0.3.3",
+  name: "动态光线扰动强度",
+  definition: "动态光线变化相对基线的幅度或速率；指标和阈值保持 TBD。",
+  valueType: "metric_or_enum",
+  domain: [globalTbd("强度指标、单位与阈值 TBD")],
+  activationCondition: {
+    node: "PROPOSED-jd-0.3.3.2",
+    operator: "not_contains_only",
+    value: "none",
+  },
+  source: ["L-A8-V06", "W-AIRSIM"],
+});
+addGlobalLeaf({
+  id: "PROPOSED-jd-0.3.3.4",
+  parent: "PROPOSED-jd-0.3.3",
+  name: "动态光线扰动发生窗口",
+  definition: "动态光线扰动相对任务阶段、事件或时间轴的开始与结束窗口。",
+  valueType: "event_or_time_window",
+  domain: [globalTbd("任务阶段 / 事件锚点和时间范围 TBD")],
+  activationCondition: {
+    node: "PROPOSED-jd-0.3.3.2",
+    operator: "not_contains_only",
+    value: "none",
+  },
+  source: ["L-A8-V06"],
+});
+
+addGlobalLeaf({
+  id: "PROPOSED-jd-0.3.4.1",
+  parent: "PROPOSED-jd-0.3.4",
+  name: "天气 / 大气状态类型",
+  definition: "天气或大气能见度状态类别；昼夜和光照强弱仍归光照基线。",
+  valueType: "multi_enum",
+  domain: [
+    globalDomainItem("clear", "晴", ["L-A8-V06"]),
+    globalDomainItem("cloudy", "阴", ["L-A8-V06"]),
+    globalDomainItem("fog", "雾", ["L-A8-V06"]),
+    globalDomainItem("rain", "雨", ["L-A8-V06"]),
+    globalTbd("正式天气 taxonomy TBD"),
+  ],
+  source: ["L-A8-V06", "W-AIRSIM", "W-CARLA"],
+});
+addGlobalLeaf({
+  id: "PROPOSED-jd-0.3.4.2",
+  parent: "PROPOSED-jd-0.3.4",
+  name: "天气 / 能见度退化强度",
+  definition: "雾、雨、云量等条件的物理或归一化强度；变量和阈值保持 TBD。",
+  valueType: "metric_object",
+  domain: [globalTbd("按天气类型选择的强度变量、单位与阈值 TBD")],
+  source: ["L-A8-V06", "W-AIRSIM", "W-CARLA"],
+});
+addGlobalLeaf({
+  id: "PROPOSED-jd-0.3.4.3",
+  parent: "PROPOSED-jd-0.3.4",
+  name: "天气变化发生窗口",
+  definition: "非基线天气条件相对任务阶段、事件或时间轴的开始与结束窗口。",
+  valueType: "event_or_time_window",
+  domain: [globalTbd("任务阶段 / 事件锚点和时间范围 TBD")],
+  source: ["L-A8-V06"],
+});
+
+addGlobalLeaf({
+  id: "PROPOSED-jd-0.3.5.1",
+  parent: "PROPOSED-jd-0.3.5",
+  name: "扰动 Profile 启用状态",
+  definition: "是否为本任务实例启用 jd-0.3 扰动 Profile。",
+  valueType: "boolean",
+  domain: [
+    globalDomainItem(false, "未启用", ["L-GLOBAL-JD66-V3"], "inferred_candidate"),
+    globalDomainItem(true, "已启用", ["L-GLOBAL-JD66-V3"], "inferred_candidate"),
+  ],
+  source: ["L-GLOBAL-JD66-V3"],
+  evidenceStatus: "inferred_candidate",
+  derivationStatus: "proposed",
+});
+addGlobalLeaf({
+  id: "PROPOSED-jd-0.3.5.2",
+  parent: "PROPOSED-jd-0.3.5",
+  name: "活动扰动类型集合",
+  definition: "当前 Profile 中实际启用的扰动类型集合；静态光照基线不计入活动扰动。",
+  valueType: "multi_enum",
+  domain: [
+    globalDomainItem("wind", "风扰动", ["L-A8-V06"]),
+    globalDomainItem("localization", "定位扰动", ["L-A8-V06"]),
+    globalDomainItem("dynamic_light", "动态光线扰动", ["L-A8-V06"]),
+    globalDomainItem("adverse_weather", "非基线天气 / 能见度退化", ["L-A8-V06"]),
+  ],
+  activationCondition: {
+    node: "PROPOSED-jd-0.3.5.1",
+    operator: "equals",
+    value: true,
+  },
+  source: ["L-A8-V06"],
+  evidenceStatus: "inferred_candidate",
+  derivationStatus: "proposed",
+});
+addGlobalLeaf({
+  id: "PROPOSED-jd-0.3.5.3",
+  parent: "PROPOSED-jd-0.3.5",
+  name: "同时活动扰动数量",
+  definition: "由活动扰动类型集合在给定发生窗口内派生的同时活动类型数量。",
+  valueType: "derived_integer",
+  domain: [globalTbd("计算窗口和重叠规则 TBD")],
+  difficulty: "context_dependent",
+  dependsOn: ["PROPOSED-jd-0.3.5.2"],
+  source: ["L-GLOBAL-JD66-V3", "L-A8-V06"],
+  evidenceStatus: "inferred_candidate",
+  derivationStatus: "proposed",
+});
+addGlobalLeaf({
+  id: "PROPOSED-jd-0.3.5.4",
+  parent: "PROPOSED-jd-0.3.5",
+  name: "扰动组合关系",
+  definition: "多个扰动按同时、顺序、重叠或条件触发方式组合的关系。",
+  valueType: "rule_or_event_graph",
+  domain: [globalTbd("组合关系 schema 与冲突规则 TBD")],
+  multiplicity: "one_or_more",
+  dependsOn: ["PROPOSED-jd-0.3.5.2"],
+  source: ["L-GLOBAL-JD66-V3", "L-A8-V06"],
+  evidenceStatus: "inferred_candidate",
+  derivationStatus: "proposed",
+});
+addGlobalLeaf({
+  id: "PROPOSED-jd-0.3.5.5",
+  parent: "PROPOSED-jd-0.3.5",
+  name: "Profile 总体发生窗口",
+  definition: "整个扰动 Profile 相对任务阶段、事件或时间轴的总生效窗口。",
+  valueType: "event_or_time_window",
+  domain: [globalTbd("任务阶段 / 事件锚点和时间范围 TBD")],
+  source: ["L-GLOBAL-JD66-V3", "L-A8-V06"],
+  evidenceStatus: "inferred_candidate",
+  derivationStatus: "proposed",
+});
 
 const migratedNodes = [...migratedInspectionNodes];
 
@@ -3586,6 +5008,9 @@ const migratedCatalog = {
   scenario_scope: [...new Set(oldInspection.scenario_scope || [])],
   sources: uniqueSources([
     ...oldInspection.sources.map(migrateSource),
+    oldA8.sources
+      .filter((source) => source.source_id === "L-A8-V06")
+      .map(migrateSource)[0],
     g1Sources.find((source) => source.source_id === "L-RENUMBER-20260719"),
     g1Sources.find((source) => source.source_id === "L-RENUMBER-20260720"),
   ]),
@@ -3622,17 +5047,40 @@ const a11Catalog = {
   nodes: a11Nodes,
 };
 
+const globalCatalog = {
+  ...commonMetadata,
+  catalog_id: "jd-variable-tree-global-version1-draft",
+  catalog_version: "version1-global-jd-0-1-to-0-10-2026-07-22",
+  scope: [],
+  global_scope: globalCanonicalIds,
+  scenario_scope: globalScenarios,
+  sources: uniqueSources([
+    ...globalCorrectionSources,
+    ...oldA8.sources
+      .filter((source) => source.source_id === "L-A8-V06")
+      .map(migrateSource),
+    ...oldInspection.sources
+      .filter((source) =>
+        ["W-AIRSIM", "W-CARLA", "W-PX4-EKF"].includes(source.source_id),
+      )
+      .map(migrateSource),
+  ]),
+  nodes: globalNodes,
+};
+
 const allNodes = [
   ...g1Nodes,
   ...migratedInspectionNodes,
   ...a9Nodes,
   ...a11Nodes,
+  ...globalNodes,
 ];
 const allSources = uniqueSources([
   ...g1Catalog.sources,
   ...migratedCatalog.sources,
   ...a9Catalog.sources,
   ...a11Catalog.sources,
+  ...globalCatalog.sources,
 ]);
 const countBy = (key) =>
   allNodes.reduce((counts, node) => {
@@ -3644,12 +5092,13 @@ const countBy = (key) =>
 const combinedCatalog = {
   ...commonMetadata,
   catalog_id: "jd-variable-tree-review-version1",
-  catalog_version: "review-version1-ability-id-v3-a1-a11-2026-07-21",
+  catalog_version: "review-version1-ability-id-v3-a1-a11-global-2026-07-22",
   included_catalogs: [
     g1Catalog.catalog_id,
     migratedCatalog.catalog_id,
     a9Catalog.catalog_id,
     a11Catalog.catalog_id,
+    globalCatalog.catalog_id,
   ],
   scope: [
     "A1",
@@ -3664,6 +5113,7 @@ const combinedCatalog = {
     "A10",
     "A11",
   ],
+  global_scope: globalCanonicalIds,
   scenario_scope: [
     "cross_scenario",
     "highway_inspection",
@@ -3679,12 +5129,17 @@ const combinedCatalog = {
   nodes: allNodes,
   open_questions_document:
     "docs/jd-variable-tree/JD业务变量树_version1_待确认问题与暂定方案.md",
+  correction_audit_document:
+    "docs/jd-variable-tree/JD业务变量树_version1_本轮更正审计.md",
+  detail_expansion_blueprint_document:
+    "docs/jd-variable-tree/JD业务变量树_version1_详细度审计与扩展蓝图.md",
 };
 
 writeJson("jd_variable_tree_g1_a1_a5_draft.json", g1Catalog);
 writeJson("jd_variable_tree_g2_g3_renumbered_draft.json", migratedCatalog);
 writeJson("jd_variable_tree_a9_resource_management_draft.json", a9Catalog);
 writeJson("jd_variable_tree_a11_control_draft.json", a11Catalog);
+writeJson("jd_variable_tree_global_draft.json", globalCatalog);
 writeJson("jd_variable_tree_version1.json", combinedCatalog);
 
 console.log(
@@ -3693,6 +5148,7 @@ console.log(
     "knowledge/jd_variable_tree_g2_g3_renumbered_draft.json",
     "knowledge/jd_variable_tree_a9_resource_management_draft.json",
     "knowledge/jd_variable_tree_a11_control_draft.json",
+    "knowledge/jd_variable_tree_global_draft.json",
     "knowledge/jd_variable_tree_version1.json",
     `${allNodes.length} nodes`,
   ].join("\n"),

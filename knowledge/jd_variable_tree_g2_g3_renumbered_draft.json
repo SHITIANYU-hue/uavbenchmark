@@ -1,7 +1,7 @@
 {
   "schema": "uav-benchmark-jd-variable-tree",
   "schema_version": "0.3.0",
-  "generated_at": "2026-07-21",
+  "generated_at": "2026-07-22",
   "generated_by": "scripts/generate_jd_variable_tree_version1.mjs",
   "ability_id_scheme": "ability-id-v3-2026-07-20",
   "numbering_scheme": "ability-id-v3-2026-07-20",
@@ -536,6 +536,15 @@
       "locator": "world-side weather, actors and snapshots",
       "url": "https://carla.readthedocs.io/en/latest/core_world/",
       "evidence_grade": "source_supported"
+    },
+    {
+      "source_id": "L-A8-V06",
+      "title": "需求草案-v0.6.md",
+      "issuer": "UAV Benchmark team",
+      "source_type": "team_draft",
+      "locator": "§2.0、§2.1、§2.2、§2.5",
+      "url": null,
+      "evidence_grade": "team_material_only"
     },
     {
       "source_id": "L-RENUMBER-20260719",
@@ -12389,6 +12398,237 @@
         "grader"
       ],
       "derivation_status": "given"
+    },
+    {
+      "schema_version": "jd-tree/0.3.0",
+      "node_id": "PROPOSED-jd-6.2.2.6",
+      "parent_id": "PROPOSED-jd-6.2.2",
+      "canonical_slot": "jd-6.2",
+      "owner_a": "A6",
+      "name": "目标 / 背景表面纹理复杂度",
+      "definition": "目标、障碍物或检查面相对背景的表面纹理复杂程度；用于配置可感知性条件，不等同于控制器能力或观测结果。",
+      "node_kind": "variable",
+      "value_type": "enum_or_metric",
+      "value_domain": [
+        {
+          "value": "none",
+          "label_zh": "无明显纹理",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection",
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "light_texture",
+          "label_zh": "轻纹理",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection",
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "complex_texture",
+          "label_zh": "复杂纹理",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection",
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "TBD",
+          "label_zh": "跨场景度量方法与阈值 TBD",
+          "source_refs": [],
+          "status": "TBD",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection",
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one_per_observed_surface",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "world",
+      "projection_targets": [
+        "world_config",
+        "harness"
+      ],
+      "visibility": [
+        "sut_visible",
+        "grader_visible",
+        "hidden_gt"
+      ],
+      "observation_channel": [
+        "sut_input",
+        "grader",
+        "hidden_gt"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario",
+        "highway_inspection",
+        "campus_inspection",
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [
+        "jd-0.3"
+      ],
+      "related_jd": [
+        "PROPOSED-jd-11.5.8.1"
+      ],
+      "used_by_axl": [
+        "A6×L1",
+        "A6×L2",
+        "A6×L3",
+        "A6×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": "无 / 轻纹理 / 复杂纹理仅来自白墙窄缝 v0.6 团队草案。能否跨高速、园区和其他场景复用，以及客观度量方法，均待确认。"
+    },
+    {
+      "schema_version": "jd-tree/0.3.0",
+      "node_id": "PROPOSED-jd-6.2.2.7",
+      "parent_id": "PROPOSED-jd-6.2.2",
+      "canonical_slot": "jd-6.2",
+      "owner_a": "A6",
+      "name": "目标 / 开口—背景局部对比度",
+      "definition": "目标、病害、开口或通行空间与其局部背景之间的可辨识对比条件；它是世界侧场景变量，观测后的低对比退化状态仍由 PROPOSED-jd-6.2.2.4 表达。",
+      "node_kind": "variable",
+      "value_type": "enum_or_metric",
+      "value_domain": [
+        {
+          "value": "high",
+          "label_zh": "高",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection",
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "medium",
+          "label_zh": "中",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection",
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "low",
+          "label_zh": "低",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection",
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "TBD",
+          "label_zh": "对比度计算口径与档位阈值 TBD",
+          "source_refs": [],
+          "status": "TBD",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection",
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one_per_target_background_pair",
+      "difficulty_direction": "decreasing",
+      "configuration_side": "world",
+      "projection_targets": [
+        "world_config",
+        "harness"
+      ],
+      "visibility": [
+        "sut_visible",
+        "grader_visible",
+        "hidden_gt"
+      ],
+      "observation_channel": [
+        "sut_input",
+        "grader",
+        "hidden_gt"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario",
+        "highway_inspection",
+        "campus_inspection",
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [
+        "jd-0.3"
+      ],
+      "related_jd": [
+        "PROPOSED-jd-6.2.2.4",
+        "PROPOSED-jd-11.5.8.2"
+      ],
+      "used_by_axl": [
+        "A6×L1",
+        "A6×L2",
+        "A6×L3",
+        "A6×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": "高 / 中 / 低只保留白墙窄缝 v0.6 原始档位；未发明亮度、色差、纹理或传感器域的计算公式与阈值。"
     }
   ]
 }

@@ -223,12 +223,13 @@
 - `JD业务变量树_version1.html`
 - `jd-variable-tree/` 下的构建源码
 
-同时新增四个可追溯的中间数据文件：
+同时新增五个可追溯的中间数据文件：
 
 - `knowledge/jd_variable_tree_g1_a1_a5_draft.json`
 - `knowledge/jd_variable_tree_g2_g3_renumbered_draft.json`
 - `knowledge/jd_variable_tree_a9_resource_management_draft.json`
 - `knowledge/jd_variable_tree_a11_control_draft.json`
+- `knowledge/jd_variable_tree_global_draft.json`
 
 旧编号巡检树和白墙 v0.6 草案分别以 `legacy_inspection_source`、`legacy_white_wall_v0_6` 文件保留，作为迁移输入和审计证据。version1 的 `numbering_scheme` 已同步为 `ability-id-v3-2026-07-20`。
 
@@ -249,7 +250,7 @@
 7. world / user / harness / grader 的 Hidden GT 边界。
 8. 跨场景通用节点与场景专用候选值的正式审核流程。
 
-## 15. A11 canonical 槽位、11.4/11.5 与白墙 v0.6 草案的处理
+## 补充：A11 canonical 槽位、11.4/11.5 与白墙 v0.6 草案的处理
 
 已采用保守方案：
 
@@ -262,6 +263,16 @@
 - `PROPOSED-jd-11.5` 的 `canonical_slot` 保持空值，不计入当前 66 槽位。白墙窄缝原始草案作为其下的 `EXAMPLE-jd-11.5-white-wall-v0.6` 具体示例保留，原始候选取值可在节点详情中审阅。
 - 平台静态参数引用 `jd-2.2`，航路和几何轨迹选择引用 A10，安全包络和兜底引用 A16；A11 保留闭环控制质量、控制机制、局部恢复和当前动态执行包络。
 
+### 纹理、多通行空间与 `jd-0.3` 的本轮更正
+
+- 表面纹理复杂度和目标 / 开口—背景局部对比度定义在 A6 `jd-6.2` 下；A11 `11.5.8` 只引用，不复制感知变量。
+- `11.5.2` 使用“通行空间数量 + 实例集合”支持同一墙体或结构包含多个孔洞 / 缝隙；排列和间距只在数量不少于 2 时启用。
+- `jd-0.1`–`jd-0.10` 全部继续作为跨 A 共享 global JD，不迁移为任何新 Axx；页面在同一个 `JD-global` 分支中完整展示。
+- 静态光照基线与动态光线扰动分列，不能以 `光照=0` 表达“未启用扰动”。
+- v0.6 中的纹理、对比度、缝数、排列和间距档位保留为团队资料候选，不视为跨场景正式 taxonomy 或阈值。
+
+详细证据、原布尔字段解释和待确认项见 `docs/jd-variable-tree/JD业务变量树_version1_本轮更正审计.md`。
+
 ### 待确认
 
 - `PROPOSED-jd-11.4` 是否进入正式 JD Catalog，正式名称是否采用“控制执行条件与动态包络”。
@@ -273,7 +284,7 @@
 - 白墙窄缝示例中的平台基准、控制接口和约束字段最终归入 `jd-2.2`、A11、A16，还是继续只保留为示例数据。
 - 高速桥梁、门架、隔音屏、园区建筑立面、杆线和移动目标等 Profile 候选是否保留，以及各自需要哪些公开来源。
 
-## 16. 建议验收顺序
+## 15. 建议验收顺序
 
 1. 先确认完整 A 域重编号和 local JD 前缀迁移。
 2. 再确认 L0 数据合同。

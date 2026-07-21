@@ -15,6 +15,7 @@
     A9: "健康 / 能源 / 资源管理",
     A10: "导航与航迹执行",
     A11: "飞行控制 / 执行机构",
+    GLOBAL: "JD-global / 共享业务变量",
   };
   const abilityVisualGroup = {
     A1: "human",
@@ -28,6 +29,7 @@
     A9: "perception",
     A10: "motion",
     A11: "motion",
+    GLOBAL: "global",
   };
   const scenarioLabels = {
     cross_scenario: "跨业务场景",
@@ -137,7 +139,46 @@
       /^PROPOSED-jd-tree-(A1|A2|A3|A4|A5|A6|A7|A8|A9|A10|A11)$/,
     );
     if (abilityRoot) return abilityRoot[1];
+    if (nodeId === "PROPOSED-jd-tree-global") return "JD-global";
     return nodeId.replace(/^PROPOSED-/, "");
+  }
+
+  function rootIdForAbility(ability) {
+    return ability === "GLOBAL"
+      ? "PROPOSED-jd-tree-global"
+      : `PROPOSED-jd-tree-${ability}`;
+  }
+
+  function nodesForAbility(ability) {
+    if (ability !== "GLOBAL") {
+      return state.nodes.filter((node) => node.owner_a === ability);
+    }
+    const result = [];
+    const pending = [rootIdForAbility(ability)];
+    const visited = new Set();
+    while (pending.length) {
+      const nodeId = pending.pop();
+      if (visited.has(nodeId)) continue;
+      visited.add(nodeId);
+      const node = state.nodeById.get(nodeId);
+      if (!node) continue;
+      result.push(node);
+      for (const child of state.childrenByParent.get(nodeId) || []) {
+        pending.push(child.node_id);
+      }
+    }
+    return result;
+  }
+
+  function displayAbilityForNode(node) {
+    if (
+      node.node_id === "PROPOSED-jd-tree-global" ||
+      /^jd-0\.(?:[1-9]|10)$/.test(node.node_id) ||
+      node.node_id.startsWith("PROPOSED-jd-0.")
+    ) {
+      return "GLOBAL";
+    }
+    return node.owner_a;
   }
 
   function loadReviewState() {
@@ -237,13 +278,17 @@
   function renderTabs() {
     elements.abilityTabs.innerHTML = Object.entries(abilities)
       .map(([ability, name]) => {
-        const count = state.nodes.filter(
-          (node) => node.owner_a === ability && node.node_kind === "variable",
+        const count = nodesForAbility(ability).filter(
+          (node) => node.node_kind === "variable",
         ).length;
+        const displayName =
+          ability === "GLOBAL"
+            ? "JD-global · 共享业务变量"
+            : `${ability} · ${name}`;
         return `<button class="ability-tab group-${abilityVisualGroup[ability]}" type="button" role="tab"
           data-ability="${ability}"
           aria-selected="${ability === state.selectedAbility}">
-          <strong>${ability} · ${escapeHtml(name)}</strong>
+          <strong>${escapeHtml(displayName)}</strong>
           <span>${count} 个变量叶子</span>
         </button>`;
       })
@@ -251,6 +296,7 @@
   }
 
   function nodeClass(node) {
+    if (node.node_kind === "global_root") return "root global-root";
     if (node.node_kind === "capability_root") return "root";
     if (
       node.node_id === "PROPOSED-jd-11.4" ||
@@ -295,13 +341,12 @@
   }
 
   function renderMap() {
-    const root = state.nodeById.get(
-      `PROPOSED-jd-tree-${state.selectedAbility}`,
-    );
-    const count = state.nodes.filter(
-      (node) => node.owner_a === state.selectedAbility,
-    ).length;
-    elements.mapTitle.textContent = `${state.selectedAbility} · ${abilities[state.selectedAbility]}`;
+    const root = state.nodeById.get(rootIdForAbility(state.selectedAbility));
+    const count = nodesForAbility(state.selectedAbility).length;
+    elements.mapTitle.textContent =
+      state.selectedAbility === "GLOBAL"
+        ? "JD-global · 共享业务变量"
+        : `${state.selectedAbility} · ${abilities[state.selectedAbility]}`;
     elements.mapCount.textContent = `${count} 个节点，点击任一标签查看详情`;
     elements.mindmap.innerHTML = root
       ? renderBranch(root)
@@ -572,8 +617,9 @@
     if (!node) return;
     state.activeNodeId = nodeId;
     state.highlightedNodeId = nodeId;
-    if (node.owner_a !== state.selectedAbility) {
-      state.selectedAbility = node.owner_a;
+    const displayAbility = displayAbilityForNode(node);
+    if (displayAbility !== state.selectedAbility) {
+      state.selectedAbility = displayAbility;
       renderTabs();
     }
     renderMap();

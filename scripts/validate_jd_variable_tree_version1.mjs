@@ -198,13 +198,42 @@ for (const canonicalId of expectedCanonical) {
 }
 
 const expectedCanonicalSet = new Set(expectedCanonical);
+const expectedGlobalCanonicalVariables = jdDictionary.variables.filter(
+  (variable) =>
+    variable.scope === "global" &&
+    nodes.some((node) => node.node_id === variable.id),
+);
+const allowedCanonicalSet = new Set([
+  ...expectedCanonical,
+  ...expectedGlobalCanonicalVariables.map((variable) => variable.id),
+]);
 for (const node of nodes) {
   if (
     node.canonical_slot &&
     node.node_id === node.canonical_slot &&
-    !expectedCanonicalSet.has(node.node_id)
+    !allowedCanonicalSet.has(node.node_id)
   ) {
     errors.push(`${node.node_id} 被标成 canonical，但不在当前 66 槽位字典。`);
+  }
+}
+
+for (const variable of expectedGlobalCanonicalVariables) {
+  const matches = nodes.filter(
+    (node) =>
+      node.node_id === variable.id && node.canonical_slot === variable.id,
+  );
+  if (matches.length !== 1) {
+    errors.push(
+      `${variable.id} 应恰好有一个 global canonical 节点，实际为 ${matches.length}。`,
+    );
+    continue;
+  }
+  if (
+    matches[0].owner_a !== "MULTI" ||
+    matches[0].name !== variable.name ||
+    matches[0].definition !== variable.description
+  ) {
+    errors.push(`${variable.id} 与全局 JD 权威定义不一致。`);
   }
 }
 
@@ -242,6 +271,97 @@ if (
   errors.push(
     "PROPOSED-jd-11.5 必须通过控制要求绑定引用 PROPOSED-jd-11.4。",
   );
+}
+
+for (const requiredNode of [
+  "PROPOSED-jd-6.2.2.6",
+  "PROPOSED-jd-6.2.2.7",
+  "PROPOSED-jd-11.5.2.5",
+  "PROPOSED-jd-11.5.2.6",
+  "PROPOSED-jd-11.5.2.7",
+  "PROPOSED-jd-11.5.2.8",
+  "PROPOSED-jd-11.5.8",
+  "PROPOSED-jd-11.5.8.1",
+  "PROPOSED-jd-11.5.8.2",
+  "PROPOSED-jd-11.5.8.3",
+]) {
+  if (!nodeById.has(requiredNode)) {
+    errors.push(`本轮 A6/A11 更正缺少节点：${requiredNode}`);
+  }
+}
+
+const passageCollection = nodeById.get("PROPOSED-jd-11.5.2.6");
+if (
+  passageCollection &&
+  (passageCollection.multiplicity !== "many" ||
+    !(passageCollection.depends_on || []).includes(
+      "PROPOSED-jd-11.5.2.5",
+    ))
+) {
+  errors.push("通行空间实例集合必须支持 many，并依赖通行空间数量。");
+}
+
+const targetPassage = nodeById.get("PROPOSED-jd-11.5.5.3");
+if (
+  targetPassage &&
+  !(targetPassage.depends_on || []).includes("PROPOSED-jd-11.5.2.6")
+) {
+  errors.push("目标通行空间必须引用通行空间实例集合。");
+}
+
+const globalRoots = nodes.filter((node) => node.node_kind === "global_root");
+if (
+  globalRoots.length !== 1 ||
+  globalRoots[0].node_id !== "PROPOSED-jd-tree-global" ||
+  globalRoots[0].owner_a !== "MULTI"
+) {
+  errors.push("必须恰好有一个 MULTI 所有的 JD-global 根节点。");
+}
+const expectedGlobalIds = jdDictionary.variables
+  .filter((variable) => variable.scope === "global")
+  .map((variable) => variable.id);
+if (
+  JSON.stringify(catalog.global_scope || []) !==
+  JSON.stringify(expectedGlobalIds)
+) {
+  errors.push("catalog.global_scope 必须按权威字典顺序完整列出 jd-0.1–jd-0.10。");
+}
+for (const globalId of expectedGlobalIds) {
+  const canonical = nodeById.get(globalId);
+  if (
+    !canonical ||
+    canonical.parent_id !== "PROPOSED-jd-tree-global" ||
+    canonical.canonical_slot !== globalId
+  ) {
+    errors.push(`${globalId} 必须作为 JD-global 下的 canonical 节点出现一次。`);
+  }
+  if (!nodes.some((node) => node.parent_id === globalId)) {
+    errors.push(`${globalId} 尚未展开任何子维度。`);
+  }
+}
+for (const requiredNode of [
+  "jd-0.3",
+  "PROPOSED-jd-0.3.1",
+  "PROPOSED-jd-0.3.2",
+  "PROPOSED-jd-0.3.3",
+  "PROPOSED-jd-0.3.4",
+  "PROPOSED-jd-0.3.5",
+  "PROPOSED-jd-0.3.3.1",
+  "PROPOSED-jd-0.3.3.2",
+  "PROPOSED-jd-0.3.5.1",
+  "PROPOSED-jd-0.3.5.2",
+]) {
+  if (!nodeById.has(requiredNode)) {
+    errors.push(`jd-0.3 共享扰动树缺少节点：${requiredNode}`);
+  }
+}
+if (
+  (nodeById.get("PROPOSED-jd-0.3.3.1")?.notes || "").includes("光照=0") ===
+    false ||
+  (nodeById.get("PROPOSED-jd-0.3.3.2")?.notes || "").includes("光线=0") ===
+    false
+) {
+  errors.push("jd-0.3 必须显式区分静态光照基线与动态光线扰动布尔语义。");
 }
 
 const whiteWallExamples = nodes.filter(
@@ -340,7 +460,8 @@ console.log(
   [
     `OK: ${nodes.length} nodes`,
     `OK: ${new Set(nodes.map((node) => node.node_id)).size} unique IDs`,
-    `OK: ${expectedCanonical.length} canonical slots`,
+    `OK: ${expectedCanonical.length} local canonical slots`,
+    `OK: ${expectedGlobalCanonicalVariables.length} global canonical slots`,
     "OK: no orphan parent, cycle, missing leaf source, or A×L0 value",
   ].join("\n"),
 );

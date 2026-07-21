@@ -1,7 +1,7 @@
 {
   "schema": "uav-benchmark-jd-variable-tree",
   "schema_version": "0.3.0",
-  "generated_at": "2026-07-21",
+  "generated_at": "2026-07-22",
   "generated_by": "scripts/generate_jd_variable_tree_version1.mjs",
   "ability_id_scheme": "ability-id-v3-2026-07-20",
   "numbering_scheme": "ability-id-v3-2026-07-20",
@@ -334,7 +334,7 @@
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
       "owner_a": "A9",
-      "name": "健康 / 能源 / 资源管理",
+      "name": "资源管理",
       "definition": "描述健康、能源与资源管理相关的 JD 业务变量；A×L 仅作为责任引用，不作为变量取值。",
       "node_kind": "capability_root",
       "value_type": "none",

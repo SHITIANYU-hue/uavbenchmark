@@ -1,7 +1,7 @@
 {
   "schema": "uav-benchmark-jd-variable-tree",
   "schema_version": "0.3.0",
-  "generated_at": "2026-07-21",
+  "generated_at": "2026-07-22",
   "generated_by": "scripts/generate_jd_variable_tree_version1.mjs",
   "ability_id_scheme": "ability-id-v3-2026-07-20",
   "numbering_scheme": "ability-id-v3-2026-07-20",
@@ -418,7 +418,7 @@
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
       "owner_a": "A11",
-      "name": "飞行控制 / 执行机构",
+      "name": "控制飞行",
       "definition": "描述飞行控制、执行机构、控制质量、控制工作机制与局部控制恢复相关的 JD 业务变量；近障与受限空间条件通过非 canonical 场景 Profile 绑定到正式槽位。",
       "node_kind": "capability_root",
       "value_type": "none",
@@ -6554,6 +6554,60 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
+      "node_id": "PROPOSED-jd-11.5.8",
+      "parent_id": "PROPOSED-jd-11.5",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "外观与可感知性 Profile 引用",
+      "definition": "引用 A6 的表面纹理与局部对比变量，以及 jd-0.3 的光学基线和动态光线扰动；A11 不重复定义感知变量。",
+      "node_kind": "group",
+      "value_type": "none",
+      "value_domain": null,
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "TBD",
+      "configuration_side": "world",
+      "projection_targets": [
+        "world_config",
+        "harness"
+      ],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_input",
+        "sut_trace",
+        "grader"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario",
+        "highway_inspection",
+        "campus_inspection"
+      ],
+      "related_global_jd": [
+        "jd-0.3",
+        "jd-0.9",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06",
+        "W-MOT-UAV-BRIDGE"
+      ],
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.3.0",
       "node_id": "PROPOSED-jd-11.5.1.1",
       "parent_id": "PROPOSED-jd-11.5.1",
       "canonical_slot": null,
@@ -7154,6 +7208,403 @@
       ],
       "unit": null,
       "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "world",
+      "projection_targets": [
+        "world_config",
+        "harness"
+      ],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_input",
+        "grader",
+        "hidden_gt"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario",
+        "highway_inspection",
+        "campus_inspection"
+      ],
+      "related_global_jd": [
+        "jd-0.3",
+        "jd-0.9",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06",
+        "W-MOT-UAV-BRIDGE"
+      ],
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.3.0",
+      "node_id": "PROPOSED-jd-11.5.2.5",
+      "parent_id": "PROPOSED-jd-11.5.2",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "通行空间数量",
+      "definition": "同一宿主障碍物或当前局部场景中可被引用的通行空间实例数量。",
+      "node_kind": "variable",
+      "value_type": "integer_or_range",
+      "value_domain": [
+        {
+          "value": 1,
+          "label_zh": "1",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        },
+        {
+          "value": 2,
+          "label_zh": "2",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        },
+        {
+          "value": 3,
+          "label_zh": "3",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        },
+        {
+          "value": "TBD",
+          "label_zh": "跨场景数量范围与上限 TBD",
+          "source_refs": [],
+          "status": "TBD",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "world",
+      "projection_targets": [
+        "world_config",
+        "harness"
+      ],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_input",
+        "grader",
+        "hidden_gt"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario",
+        "highway_inspection",
+        "campus_inspection"
+      ],
+      "related_global_jd": [
+        "jd-0.3",
+        "jd-0.9",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06",
+        "W-MOT-UAV-BRIDGE"
+      ],
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": "1 / 2 / 3 来自白墙窄缝 v0.6 的缝数档位，只是已给示例值，不是跨场景通用上限。"
+    },
+    {
+      "schema_version": "jd-tree/0.3.0",
+      "node_id": "PROPOSED-jd-11.5.2.6",
+      "parent_id": "PROPOSED-jd-11.5.2",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "通行空间实例集合",
+      "definition": "由稳定实例 ID、所属障碍物、空间类型、尺寸、形状与偏移组成的通行空间列表；允许同一墙体或结构包含多个孔洞 / 缝隙。",
+      "node_kind": "variable",
+      "value_type": "array_of_reference_objects",
+      "value_domain": [
+        {
+          "value": "TBD",
+          "label_zh": "实例对象 schema、唯一 ID 规则与数量上限 TBD",
+          "source_refs": [],
+          "status": "TBD",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "many",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "world",
+      "projection_targets": [
+        "world_config",
+        "harness"
+      ],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_input",
+        "grader",
+        "hidden_gt"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario",
+        "highway_inspection",
+        "campus_inspection"
+      ],
+      "related_global_jd": [
+        "jd-0.3",
+        "jd-0.9",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [],
+      "depends_on": [
+        "PROPOSED-jd-11.5.2.5"
+      ],
+      "mutual_exclusion_group": null,
+      "constraints": [
+        {
+          "rule": "collection_length_matches_count",
+          "count_node": "PROPOSED-jd-11.5.2.5",
+          "status": "proposed"
+        }
+      ],
+      "source": [
+        "L-A8-V06",
+        "W-MOT-UAV-BRIDGE"
+      ],
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": "本节点抽象 v0.6 的“一墙多缝 + 列表值”方法，但不直接规定 simulator 字段。"
+    },
+    {
+      "schema_version": "jd-tree/0.3.0",
+      "node_id": "PROPOSED-jd-11.5.2.7",
+      "parent_id": "PROPOSED-jd-11.5.2",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "同一障碍物内排列",
+      "definition": "同一宿主障碍物内多个通行空间的相对排列关系；仅在通行空间数量不少于 2 时启用。",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "horizontal",
+          "label_zh": "并排（横向）",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        },
+        {
+          "value": "vertical",
+          "label_zh": "上下（纵向）",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        },
+        {
+          "value": "mixed",
+          "label_zh": "混合",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        },
+        {
+          "value": "TBD",
+          "label_zh": "跨场景排列 taxonomy TBD",
+          "source_refs": [],
+          "status": "TBD",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": {
+        "node": "PROPOSED-jd-11.5.2.5",
+        "operator": "greater_than_or_equal",
+        "value": 2
+      },
+      "multiplicity": "one",
+      "difficulty_direction": "non_monotonic",
+      "configuration_side": "world",
+      "projection_targets": [
+        "world_config",
+        "harness"
+      ],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_input",
+        "grader",
+        "hidden_gt"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario",
+        "highway_inspection",
+        "campus_inspection"
+      ],
+      "related_global_jd": [
+        "jd-0.3",
+        "jd-0.9",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06",
+        "W-MOT-UAV-BRIDGE"
+      ],
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.3.0",
+      "node_id": "PROPOSED-jd-11.5.2.8",
+      "parent_id": "PROPOSED-jd-11.5.2",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "同一障碍物内通行空间间距",
+      "definition": "同一宿主障碍物内多个通行空间之间的距离或距离集合；仅在通行空间数量不少于 2 时启用。",
+      "node_kind": "variable",
+      "value_type": "number_range_or_enum",
+      "value_domain": [
+        {
+          "value": "large",
+          "label_zh": "大",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        },
+        {
+          "value": "medium",
+          "label_zh": "中",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        },
+        {
+          "value": "near",
+          "label_zh": "近",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        },
+        {
+          "value": "TBD",
+          "label_zh": "距离定义、单位与档位阈值 TBD",
+          "source_refs": [],
+          "status": "TBD",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        }
+      ],
+      "unit": "m_or_normalized_TBD",
+      "activation_condition": {
+        "node": "PROPOSED-jd-11.5.2.5",
+        "operator": "greater_than_or_equal",
+        "value": 2
+      },
       "multiplicity": "one",
       "difficulty_direction": "context_dependent",
       "configuration_side": "world",
@@ -8233,7 +8684,9 @@
         "jd-10.2"
       ],
       "used_by_axl": [],
-      "depends_on": [],
+      "depends_on": [
+        "PROPOSED-jd-11.5.2.6"
+      ],
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
@@ -8896,6 +9349,213 @@
     },
     {
       "schema_version": "jd-tree/0.3.0",
+      "node_id": "PROPOSED-jd-11.5.8.1",
+      "parent_id": "PROPOSED-jd-11.5.8",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "表面纹理条件引用",
+      "definition": "引用 A6 的目标 / 背景表面纹理复杂度；A11 只消费该条件形成控制场景 Profile。",
+      "node_kind": "variable",
+      "value_type": "reference",
+      "value_domain": [
+        {
+          "value": "PROPOSED-jd-6.2.2.6",
+          "label_zh": "引用 PROPOSED-jd-6.2.2.6",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "inferred_candidate",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "world",
+      "projection_targets": [
+        "world_config",
+        "harness"
+      ],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_input",
+        "grader",
+        "hidden_gt"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario",
+        "highway_inspection",
+        "campus_inspection"
+      ],
+      "related_global_jd": [
+        "jd-0.3",
+        "jd-0.9",
+        "jd-0.5"
+      ],
+      "related_jd": [
+        "PROPOSED-jd-6.2.2.6"
+      ],
+      "used_by_axl": [],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.3.0",
+      "node_id": "PROPOSED-jd-11.5.8.2",
+      "parent_id": "PROPOSED-jd-11.5.8",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "局部对比条件引用",
+      "definition": "引用 A6 的目标 / 开口—背景局部对比度；A11 不复制感知退化 taxonomy。",
+      "node_kind": "variable",
+      "value_type": "reference",
+      "value_domain": [
+        {
+          "value": "PROPOSED-jd-6.2.2.7",
+          "label_zh": "引用 PROPOSED-jd-6.2.2.7",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "inferred_candidate",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "world",
+      "projection_targets": [
+        "world_config",
+        "harness"
+      ],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_input",
+        "grader",
+        "hidden_gt"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario",
+        "highway_inspection",
+        "campus_inspection"
+      ],
+      "related_global_jd": [
+        "jd-0.3",
+        "jd-0.9",
+        "jd-0.5"
+      ],
+      "related_jd": [
+        "PROPOSED-jd-6.2.2.7"
+      ],
+      "used_by_axl": [],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.3.0",
+      "node_id": "PROPOSED-jd-11.5.8.3",
+      "parent_id": "PROPOSED-jd-11.5.8",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "光学基线与动态光线扰动引用",
+      "definition": "引用 jd-0.3 下的静态光照基线与动态光线扰动，并保持两者分别启用。",
+      "node_kind": "variable",
+      "value_type": "reference",
+      "value_domain": [
+        {
+          "value": "PROPOSED-jd-0.3.3",
+          "label_zh": "引用 PROPOSED-jd-0.3.3",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "inferred_candidate",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "world",
+      "projection_targets": [
+        "world_config",
+        "harness"
+      ],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_input",
+        "grader",
+        "hidden_gt"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario",
+        "highway_inspection",
+        "campus_inspection"
+      ],
+      "related_global_jd": [
+        "jd-0.3",
+        "jd-0.9",
+        "jd-0.5"
+      ],
+      "related_jd": [
+        "PROPOSED-jd-0.3.3"
+      ],
+      "used_by_axl": [],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.3.0",
       "node_id": "EXAMPLE-jd-11.5-white-wall-v0.6",
       "parent_id": "PROPOSED-jd-11.5",
       "canonical_slot": null,
@@ -8947,7 +9607,8 @@
         "PROPOSED-jd-11.5.4",
         "PROPOSED-jd-11.5.5",
         "PROPOSED-jd-11.5.6",
-        "PROPOSED-jd-11.5.7"
+        "PROPOSED-jd-11.5.7",
+        "PROPOSED-jd-11.5.8"
       ],
       "used_by_axl": [
         "A11×L3",
