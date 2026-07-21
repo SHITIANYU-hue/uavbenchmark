@@ -24,8 +24,8 @@ const currentJdById = new Map(
 );
 
 const generatedAt = "2026-07-22";
-const schemaVersion = "0.3.0";
-const nodeSchemaVersion = "jd-tree/0.3.0";
+const schemaVersion = "0.4.0";
+const nodeSchemaVersion = "jd-tree/0.4.0";
 const catalogRootId = "PROPOSED-jd-tree-version1";
 
 const renumberingV1ToV2 = Object.entries(
@@ -60,6 +60,8 @@ const jdPrefixMap = {
   "6b": "8",
   "7": "10",
   "8": "11",
+  "9a": "12",
+  "9b": "13",
 };
 const abilityMap = {
   A5: "A6",
@@ -67,6 +69,8 @@ const abilityMap = {
   A6b: "A8",
   A7: "A10",
   A8: "A11",
+  A9a: "A12",
+  A9b: "A13",
 };
 
 function migrateString(value) {
@@ -74,11 +78,11 @@ function migrateString(value) {
   return value
     .replaceAll("待团队确认", "待确认")
     .replace(
-      /jd-(6a|6b|5|7|8)(?=\.|\b)/g,
+      /jd-(6a|6b|9a|9b|5|7|8)(?=\.|\b)/g,
       (_, prefix) => `jd-${jdPrefixMap[prefix]}`,
     )
     .replace(
-      /A(6a|6b|5|7|8)(?=×|\b)/g,
+      /A(6a|6b|9a|9b|5|7|8)(?=×|\b)/g,
       (ability) => abilityMap[ability] || ability,
     );
 }
@@ -124,6 +128,12 @@ function derivationFromEvidence(status) {
   return "TBD";
 }
 
+function inferVariableRole(nodeKind) {
+  if (nodeKind === "variable") return "TBD";
+  if (nodeKind === "example_profile") return "example_profile";
+  return "structural_group";
+}
+
 function migrateExistingNode(oldNode) {
   const migrated = migrateDeep(oldNode);
   const oldNodeId = oldNode.node_id;
@@ -149,6 +159,8 @@ function migrateExistingNode(oldNode) {
   migrated.derivation_status = derivationFromEvidence(
     migrated.evidence_status,
   );
+  migrated.variable_role =
+    migrated.variable_role || inferVariableRole(migrated.node_kind);
   migrated.legacy_aliases = [
     ...new Set([
       ...(migrated.legacy_aliases || []),
@@ -929,7 +941,7 @@ const slotSpecs = [
 ];
 
 function baseNode(overrides) {
-  return {
+  const node = {
     schema_version: nodeSchemaVersion,
     node_id: null,
     parent_id: null,
@@ -938,6 +950,7 @@ function baseNode(overrides) {
     name: null,
     definition: null,
     node_kind: "variable",
+    variable_role: "TBD",
     value_type: "none",
     value_domain: null,
     unit: null,
@@ -963,6 +976,10 @@ function baseNode(overrides) {
     notes: null,
     ...overrides,
   };
+  if (!overrides.variable_role) {
+    node.variable_role = inferVariableRole(node.node_kind);
+  }
+  return node;
 }
 
 function canonicalSourceForOwner(owner) {
@@ -1541,6 +1558,29 @@ const migratedInspectionNodes = oldInspection.nodes
   .filter(Boolean)
   .map(normalizeCanonicalNode);
 
+const hiddenInspectionTruthIds = new Set([
+  "PROPOSED-jd-6.1.2.4",
+  "PROPOSED-jd-7.1.2.5",
+  "PROPOSED-jd-7.2.2.2",
+  "PROPOSED-jd-8.2.1.3",
+  "PROPOSED-jd-10.1.2.2",
+  "PROPOSED-jd-10.3.2.1",
+]);
+for (const node of migratedInspectionNodes) {
+  if (!hiddenInspectionTruthIds.has(node.node_id)) continue;
+  node.variable_role = "hidden_ground_truth";
+  node.configuration_side = "world";
+  node.projection_targets = ["world_config", "harness"];
+  node.visibility = ["fixture_only", "grader_only", "hidden_gt"];
+  node.observation_channel = ["fixture", "grader", "hidden_gt"];
+  node.notes = [
+    node.notes,
+    "本节点表示 Fixture 配置或 Grader 使用的实例真值，不作为 SUT 输入；SUT 只能从传感器、遥测或任务接口获得其可观测表现。",
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
 const correctionScenarios = [
   "cross_scenario",
   "highway_inspection",
@@ -1573,6 +1613,7 @@ migratedInspectionNodes.push(
     definition:
       "目标、障碍物或检查面相对背景的表面纹理复杂程度；用于配置可感知性条件，不等同于控制器能力或观测结果。",
     node_kind: "variable",
+    variable_role: "hidden_ground_truth",
     value_type: "enum_or_metric",
     value_domain: [
       correctionDomainItem(
@@ -1599,8 +1640,8 @@ migratedInspectionNodes.push(
     difficulty_direction: "context_dependent",
     configuration_side: "world",
     projection_targets: ["world_config", "harness"],
-    visibility: ["sut_visible", "grader_visible", "hidden_gt"],
-    observation_channel: ["sut_input", "grader", "hidden_gt"],
+    visibility: ["fixture_only", "grader_only", "hidden_gt"],
+    observation_channel: ["fixture", "grader", "hidden_gt"],
     applicable_scenarios: correctionScenarios,
     related_global_jd: ["jd-0.3"],
     related_jd: ["PROPOSED-jd-11.5.8.1"],
@@ -1621,6 +1662,7 @@ migratedInspectionNodes.push(
     definition:
       "目标、病害、开口或通行空间与其局部背景之间的可辨识对比条件；它是世界侧场景变量，观测后的低对比退化状态仍由 PROPOSED-jd-6.2.2.4 表达。",
     node_kind: "variable",
+    variable_role: "hidden_ground_truth",
     value_type: "enum_or_metric",
     value_domain: [
       correctionDomainItem(
@@ -1647,8 +1689,8 @@ migratedInspectionNodes.push(
     difficulty_direction: "decreasing",
     configuration_side: "world",
     projection_targets: ["world_config", "harness"],
-    visibility: ["sut_visible", "grader_visible", "hidden_gt"],
-    observation_channel: ["sut_input", "grader", "hidden_gt"],
+    visibility: ["fixture_only", "grader_only", "hidden_gt"],
+    observation_channel: ["fixture", "grader", "hidden_gt"],
     applicable_scenarios: correctionScenarios,
     related_global_jd: ["jd-0.3"],
     related_jd: [
@@ -1761,6 +1803,9 @@ function addA11Group({
   source = a11CanonicalSources,
   configurationSide = "shared",
   projectionTargets = ["user_config", "sut_input", "harness"],
+  variableRole = "structural_group",
+  visibility = ["sut_visible", "grader_visible"],
+  observationChannel = ["sut_input", "sut_trace", "grader"],
   scenarios = a11Scenarios,
   evidenceStatus = "source_supported",
   derivationStatus = "derived",
@@ -1776,6 +1821,7 @@ function addA11Group({
       name,
       definition,
       node_kind: "group",
+      variable_role: variableRole,
       related_global_jd: authoritativeA11Ability.global_jd,
       related_jd: relatedJd,
       used_by_axl: slot
@@ -1788,8 +1834,8 @@ function addA11Group({
       applicable_scenarios: scenarios,
       configuration_side: configurationSide,
       projection_targets: projectionTargets,
-      visibility: ["sut_visible", "grader_visible"],
-      observation_channel: ["sut_input", "sut_trace", "grader"],
+      visibility,
+      observation_channel: observationChannel,
       notes,
     }),
   );
@@ -1815,6 +1861,7 @@ function addA11Leaf({
   projectionTargets = ["user_config", "sut_input", "harness"],
   visibility = ["sut_visible", "grader_visible"],
   observationChannel = ["sut_input", "sut_trace", "grader"],
+  variableRole = "TBD",
   scenarios = a11Scenarios,
   evidenceStatus = null,
   derivationStatus = null,
@@ -1856,6 +1903,7 @@ function addA11Leaf({
       name,
       definition,
       node_kind: "variable",
+      variable_role: variableRole,
       value_type: valueType,
       value_domain: domain,
       unit,
@@ -2620,7 +2668,7 @@ addA11Leaf({
 addA11Group({
   id: "PROPOSED-jd-11.4",
   parent: "PROPOSED-jd-tree-A11",
-  name: "控制执行条件与动态包络",
+  name: "当前可执行控制包络",
   definition:
     "描述某个平台、载荷、控制接口和运行状态下可实际执行的控制边界；用于连接 jd-11.1 控制质量、jd-11.2 控制机制、jd-11.3 处置策略与具体场景 Profile。",
   relatedJd: [
@@ -3136,14 +3184,19 @@ for (const [id, name, definition] of profileGroups) {
 const profileLeaf = (spec) =>
   addA11Leaf({
     ...spec,
+    variableRole: spec.variableRole ?? "hidden_ground_truth",
     configurationSide: spec.configurationSide ?? "world",
     projectionTargets: spec.projectionTargets ?? [
       "world_config",
       "harness",
     ],
-    visibility: spec.visibility ?? ["sut_visible", "grader_visible"],
+    visibility: spec.visibility ?? [
+      "fixture_only",
+      "grader_only",
+      "hidden_gt",
+    ],
     observationChannel: spec.observationChannel ?? [
-      "sut_input",
+      "fixture",
       "grader",
       "hidden_gt",
     ],
@@ -3487,6 +3540,11 @@ profileLeaf({
   ],
   difficulty: "non_monotonic",
   relatedJd: ["jd-10.1", "jd-10.2"],
+  variableRole: "contract_schema",
+  configurationSide: "user",
+  projectionTargets: ["user_config", "sut_input", "harness"],
+  visibility: ["sut_visible", "grader_visible"],
+  observationChannel: ["sut_input", "grader"],
 });
 profileLeaf({
   id: "PROPOSED-jd-11.5.5.2",
@@ -3507,6 +3565,11 @@ profileLeaf({
   domain: [a11Tbd("目标实例 ID 与选择规则 TBD")],
   relatedJd: ["jd-10.1", "jd-10.2"],
   dependsOn: ["PROPOSED-jd-11.5.2.6"],
+  variableRole: "contract_schema",
+  configurationSide: "user",
+  projectionTargets: ["user_config", "sut_input", "harness"],
+  visibility: ["sut_visible", "grader_visible"],
+  observationChannel: ["sut_input", "grader"],
 });
 profileLeaf({
   id: "PROPOSED-jd-11.5.5.4",
@@ -3517,8 +3580,16 @@ profileLeaf({
   domain: [a11Tbd("载荷朝向、容差与启用阶段 TBD")],
   relatedJd: ["jd-8.1"],
   source: ["W-MOT-UAV-BRIDGE"],
+  variableRole: "contract_schema",
   configurationSide: "shared",
-  projectionTargets: ["user_config", "world_config", "harness"],
+  projectionTargets: [
+    "user_config",
+    "world_config",
+    "sut_input",
+    "harness",
+  ],
+  visibility: ["sut_visible", "grader_visible"],
+  observationChannel: ["sut_input", "sut_trace", "grader"],
 });
 
 profileLeaf({
@@ -3530,6 +3601,9 @@ profileLeaf({
   valueType: "derived_object",
   domain: [a11Tbd("有效净宽 / 净高公式与范围 TBD")],
   unit: "m",
+  variableRole: "derived_metric",
+  visibility: ["grader_only", "hidden_gt"],
+  observationChannel: ["grader", "hidden_gt"],
   difficulty: "decreasing",
   dependsOn: [
     "PROPOSED-jd-11.5.2.2",
@@ -3546,6 +3620,9 @@ profileLeaf({
   valueType: "derived_object",
   domain: [a11Tbd("平台包络、安全裕度、公式和阈值 TBD")],
   unit: "m",
+  variableRole: "derived_metric",
+  visibility: ["grader_only", "hidden_gt"],
+  observationChannel: ["grader", "hidden_gt"],
   difficulty: "decreasing",
   relatedJd: [
     "jd-2.2",
@@ -3564,6 +3641,9 @@ profileLeaf({
   valueType: "derived_object",
   domain: [a11Tbd("响应窗口公式、单位和阈值 TBD")],
   unit: "s",
+  variableRole: "derived_metric",
+  visibility: ["grader_only", "hidden_gt"],
+  observationChannel: ["grader", "hidden_gt"],
   difficulty: "decreasing",
   relatedJd: ["jd-8.1", "jd-11.1"],
   dependsOn: [
@@ -3623,6 +3703,7 @@ for (const binding of [
       ),
     ],
     relatedJd: [binding[2]],
+    variableRole: "contract_schema",
     configurationSide: "shared",
     projectionTargets: [
       "world_config",
@@ -3630,6 +3711,8 @@ for (const binding of [
       "sut_input",
       "harness",
     ],
+    visibility: ["sut_visible", "grader_visible"],
+    observationChannel: ["sut_input", "sut_trace", "grader"],
   });
 }
 
@@ -3700,7 +3783,7 @@ const whiteWallExampleBindings = oldA8.nodes
 
 a11Nodes.push(
   baseNode({
-    node_id: "EXAMPLE-jd-11.5-white-wall-v0.6",
+    node_id: "CASE-jd-11.5-white-wall-v0.6",
     parent_id: "PROPOSED-jd-11.5",
     canonical_slot: null,
     owner_a: "A11",
@@ -3708,6 +3791,7 @@ a11Nodes.push(
     definition:
       "需求草案 v0.6 的白墙、缝、布局、运动和平台基准原始内容；作为 PROPOSED-jd-11.5 的具体实例保留，不代表跨巡检场景的通用取值。",
     node_kind: "example_profile",
+    variable_role: "example_profile",
     value_type: "example_profile",
     value_domain: [
       a11DomainItem(
@@ -3720,8 +3804,8 @@ a11Nodes.push(
     ],
     configuration_side: "world",
     projection_targets: ["world_config", "harness"],
-    visibility: ["sut_visible", "grader_visible"],
-    observation_channel: ["sut_input", "grader", "hidden_gt"],
+    visibility: ["fixture_only", "grader_only", "hidden_gt"],
+    observation_channel: ["fixture", "grader", "hidden_gt"],
     applicable_scenarios: ["white_wall_narrow_gap"],
     related_global_jd: [],
     related_jd: [
@@ -3800,11 +3884,12 @@ const globalNodes = [
     definition:
       "展示跨多项能力共享、但不归任何单一 A 独占的 jd-0.1–jd-0.10 全局 JD 分支。",
     node_kind: "global_root",
+    variable_role: "structural_group",
     applicable_scenarios: globalScenarios,
     configuration_side: "shared",
     projection_targets: ["world_config", "user_config", "sut_input", "harness"],
-    visibility: ["sut_visible", "grader_visible", "hidden_gt"],
-    observation_channel: ["sut_input", "grader", "hidden_gt"],
+    visibility: ["sut_visible", "grader_visible"],
+    observation_channel: ["sut_input", "grader"],
     related_global_jd: globalCanonicalIds,
     source: ["L-GLOBAL-JD66-V3", "L-GLOBAL-AXL68-V3"],
     evidence_status: "authoritative_existing",
@@ -3826,11 +3911,12 @@ for (const variable of globalCanonicalVariables) {
       name: variable.name,
       definition: variable.description,
       node_kind: "group",
+      variable_role: "structural_group",
       applicable_scenarios: globalScenarios,
       configuration_side: configurationSide,
       projection_targets: defaultProjectionTargets(configurationSide),
-      visibility: ["sut_visible", "grader_visible", "hidden_gt"],
-      observation_channel: ["sut_input", "grader", "hidden_gt"],
+      visibility: ["sut_visible", "grader_visible"],
+      observation_channel: ["sut_input", "grader"],
       related_global_jd: [variable.id],
       related_jd: [],
       used_by_axl: axlRefsUsingGlobal(variable.id),
@@ -3857,12 +3943,14 @@ function addGlobalGroup(id, name, definition, options = {}) {
       name,
       definition,
       node_kind: "group",
+      variable_role: options.variableRole || "structural_group",
       applicable_scenarios: globalScenarios,
       configuration_side: configurationSide,
       projection_targets:
         options.projectionTargets || defaultProjectionTargets(configurationSide),
-      visibility: ["sut_visible", "grader_visible", "hidden_gt"],
-      observation_channel: ["sut_input", "grader", "hidden_gt"],
+      visibility: options.visibility || ["sut_visible", "grader_visible"],
+      observation_channel:
+        options.observationChannel || ["sut_input", "grader"],
       related_global_jd: [globalId],
       related_jd: options.relatedJd || [],
       used_by_axl: axlRefsUsingGlobal(globalId),
@@ -3893,8 +3981,9 @@ function addGlobalLeaf({
   source = ["L-A8-V06"],
   configurationSide = null,
   projectionTargets = null,
-  visibility = ["sut_visible", "grader_visible", "hidden_gt"],
-  observationChannel = ["sut_input", "grader", "hidden_gt"],
+  visibility = ["sut_visible", "grader_visible"],
+  observationChannel = ["sut_input", "grader"],
+  variableRole = "configuration_input",
   evidenceStatus = null,
   derivationStatus = null,
   notes = null,
@@ -3912,6 +4001,7 @@ function addGlobalLeaf({
       name,
       definition,
       node_kind: "variable",
+      variable_role: variableRole,
       value_type: valueType,
       value_domain: domain,
       unit,
@@ -4852,6 +4942,88 @@ addGlobalLeaf({
   derivationStatus: "proposed",
 });
 
+addGlobalLeaf({
+  id: "PROPOSED-jd-0.3.6",
+  parent: "jd-0.3",
+  name: "允许扰动范围声明",
+  definition:
+    "向 SUT 公开本任务允许出现的扰动维度、候选域或约束引用；不暴露当前实例实际采用的扰动类型、强度和发生窗口。",
+  valueType: "constraint_set_reference",
+  domain: [globalTbd("允许扰动范围合同的结构与取值边界 TBD")],
+  source: ["L-GLOBAL-JD66-V3", "L-A8-V06"],
+  configurationSide: "shared",
+  projectionTargets: ["user_config", "sut_input", "harness"],
+  visibility: ["sut_visible", "grader_visible"],
+  observationChannel: ["sut_input", "grader"],
+  variableRole: "contract_schema",
+  evidenceStatus: "inferred_candidate",
+  derivationStatus: "proposed",
+  notes:
+    "本节点只建立公开合同与实例真值的语义边界，不新增阈值、默认参数或 simulator 字段。",
+});
+
+addGlobalLeaf({
+  id: "PROPOSED-jd-0.3.7",
+  parent: "jd-0.3",
+  name: "本实例扰动注入真值",
+  definition:
+    "Fixture 在当前实例中实际注入的扰动 Profile 引用，包括启用类型、参数和发生窗口；作为 Grader / Hidden GT 使用，不直接提供给 SUT。",
+  valueType: "profile_instance_reference",
+  domain: [globalTbd("扰动实例引用结构与注入字段映射 TBD")],
+  source: ["L-GLOBAL-JD66-V3", "L-A8-V06"],
+  configurationSide: "world",
+  projectionTargets: ["world_config", "harness"],
+  visibility: ["fixture_only", "grader_only", "hidden_gt"],
+  observationChannel: ["fixture", "grader", "hidden_gt"],
+  variableRole: "hidden_ground_truth",
+  evidenceStatus: "inferred_candidate",
+  derivationStatus: "proposed",
+  notes:
+    "SUT 可观测的是扰动对传感器、定位、控制或链路产生的表现，不接收本节点的真实注入标签。",
+});
+
+for (const node of globalNodes) {
+  if (
+    node.canonical_slot !== "jd-0.3" ||
+    node.node_kind !== "variable" ||
+    node.node_id === "PROPOSED-jd-0.3.7"
+  ) {
+    continue;
+  }
+  node.variable_role = "contract_schema";
+  node.notes = [
+    node.notes,
+    "本节点定义扰动维度及其候选域；当前实例的实际注入取值由 PROPOSED-jd-0.3.7 单独保存为 Hidden GT。",
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+for (const node of globalNodes) {
+  if (
+    node.node_kind !== "variable" ||
+    !node.node_id.startsWith("PROPOSED-jd-0.3.5.")
+  ) {
+    continue;
+  }
+  node.variable_role =
+    node.node_id === "PROPOSED-jd-0.3.5.3"
+      ? "derived_metric"
+      : "hidden_ground_truth";
+  node.configuration_side = "world";
+  node.projection_targets =
+    node.variable_role === "derived_metric"
+      ? []
+      : ["world_config", "harness"];
+  node.visibility = ["fixture_only", "grader_only", "hidden_gt"];
+  node.observation_channel = ["fixture", "grader", "hidden_gt"];
+  node.notes = [
+    node.notes,
+    "本节点描述当前实例的实际启用、组合或发生窗口，属于 Fixture / Grader 真值；公开允许范围由 PROPOSED-jd-0.3.6 表达。",
+  ]
+    .filter(Boolean)
+    .join("\n");
+}
+
 const migratedNodes = [...migratedInspectionNodes];
 
 const migrateSource = (source) => ({
@@ -4871,6 +5043,7 @@ const schemaFields = [
   "name",
   "definition",
   "node_kind",
+  "variable_role",
   "value_type",
   "value_domain",
   "unit",
@@ -4897,6 +5070,16 @@ const schemaFields = [
 ];
 
 const controlledVocabularies = {
+  variable_role: [
+    "configuration_input",
+    "contract_schema",
+    "runtime_observation",
+    "derived_metric",
+    "hidden_ground_truth",
+    "structural_group",
+    "example_profile",
+    "TBD",
+  ],
   configuration_side: ["world", "user", "shared", "TBD"],
   projection_targets: {
     type: "array",
@@ -4958,6 +5141,9 @@ const commonMetadata = {
     "A×L 仅作责任引用，L1–L4 不进入 JD 取值域；L0 是 episode 覆盖哨兵。",
     "缺少依据的阈值、时限、业务判据、安全规则和 simulator 接口保持 TBD。",
     "configuration_side、projection_targets、visibility 和 observation_channel 分列。",
+    "variable_role 仅标注节点在数据流中的机器语义，不新增业务变量或改写 canonical 定义。",
+    "候选值逐值记录 source_refs 与 status；未逐值证明的候选不得由节点来源机械升级为 source_supported。",
+    "PROPOSED 子树可以不存在，但所有 related_jd、depends_on 和启用条件引用始终必须指向现存节点。",
     "derivation_status 与 evidence_status 分列。",
   ],
   decision_log: [
@@ -4986,6 +5172,24 @@ const commonMetadata = {
       decision_id: "schema-derivation-status",
       status: "confirmed_by_user",
       decision: "derivation_status 与 evidence_status 分列。",
+    },
+    {
+      decision_id: "schema-variable-role",
+      status: "confirmed_by_user",
+      decision:
+        "增加 variable_role 以区分可配置输入、合同/schema、运行时观察、派生指标、Hidden GT、结构节点与示例 Profile；该字段不是新增 JD 变量。",
+    },
+    {
+      decision_id: "value-level-evidence",
+      status: "confirmed_by_user",
+      decision:
+        "候选值必须独立声明 source_refs 与 status；缺少直接证据时保持 inferred_candidate 或 TBD。",
+    },
+    {
+      decision_id: "strict-proposed-references",
+      status: "confirmed_by_user",
+      decision:
+        "11.4/11.5 可选，但引用完整性不豁免；缺失 proposed 子树时不得保留指向它的悬空引用。",
     },
   ],
 };

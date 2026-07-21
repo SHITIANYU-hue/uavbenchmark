@@ -1,6 +1,6 @@
 {
   "schema": "uav-benchmark-jd-variable-tree",
-  "schema_version": "0.3.0",
+  "schema_version": "0.4.0",
   "generated_at": "2026-07-22",
   "generated_by": "scripts/generate_jd_variable_tree_version1.mjs",
   "ability_id_scheme": "ability-id-v3-2026-07-20",
@@ -83,6 +83,16 @@
     "jd_rule": "L0 不进入 JD 值域，也不写入 used_by_axl；episode 层另存 coverage_level=L0。"
   },
   "controlled_vocabularies": {
+    "variable_role": [
+      "configuration_input",
+      "contract_schema",
+      "runtime_observation",
+      "derived_metric",
+      "hidden_ground_truth",
+      "structural_group",
+      "example_profile",
+      "TBD"
+    ],
     "configuration_side": [
       "world",
       "user",
@@ -150,6 +160,7 @@
     "name",
     "definition",
     "node_kind",
+    "variable_role",
     "value_type",
     "value_domain",
     "unit",
@@ -180,6 +191,9 @@
     "A×L 仅作责任引用，L1–L4 不进入 JD 取值域；L0 是 episode 覆盖哨兵。",
     "缺少依据的阈值、时限、业务判据、安全规则和 simulator 接口保持 TBD。",
     "configuration_side、projection_targets、visibility 和 observation_channel 分列。",
+    "variable_role 仅标注节点在数据流中的机器语义，不新增业务变量或改写 canonical 定义。",
+    "候选值逐值记录 source_refs 与 status；未逐值证明的候选不得由节点来源机械升级为 source_supported。",
+    "PROPOSED 子树可以不存在，但所有 related_jd、depends_on 和启用条件引用始终必须指向现存节点。",
     "derivation_status 与 evidence_status 分列。"
   ],
   "decision_log": [
@@ -297,6 +311,21 @@
       "decision_id": "schema-derivation-status",
       "status": "confirmed_by_user",
       "decision": "derivation_status 与 evidence_status 分列。"
+    },
+    {
+      "decision_id": "schema-variable-role",
+      "status": "confirmed_by_user",
+      "decision": "增加 variable_role 以区分可配置输入、合同/schema、运行时观察、派生指标、Hidden GT、结构节点与示例 Profile；该字段不是新增 JD 变量。"
+    },
+    {
+      "decision_id": "value-level-evidence",
+      "status": "confirmed_by_user",
+      "decision": "候选值必须独立声明 source_refs 与 status；缺少直接证据时保持 inferred_candidate 或 TBD。"
+    },
+    {
+      "decision_id": "strict-proposed-references",
+      "status": "confirmed_by_user",
+      "decision": "11.4/11.5 可选，但引用完整性不豁免；缺失 proposed 子树时不得保留指向它的悬空引用。"
     }
   ],
   "catalog_id": "jd-variable-tree-a9-resource-management-version1-draft",
@@ -329,7 +358,7 @@
   ],
   "nodes": [
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-tree-A9",
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
@@ -337,6 +366,7 @@
       "name": "资源管理",
       "definition": "描述健康、能源与资源管理相关的 JD 业务变量；A×L 仅作为责任引用，不作为变量取值。",
       "node_kind": "capability_root",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -383,7 +413,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-9.1",
       "parent_id": "PROPOSED-jd-tree-A9",
       "canonical_slot": "jd-9.1",
@@ -391,6 +421,7 @@
       "name": "资源消耗包络",
       "definition": "JD 中电量、算力、带宽、载重等资源的典型消耗曲线。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -439,7 +470,7 @@
       "notes": "canonical 名称与定义取自 ability-id-v3 权威机读源；下级子维度为保守归纳，尚待审阅。"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-9.1.1",
       "parent_id": "jd-9.1",
       "canonical_slot": "jd-9.1",
@@ -447,6 +478,7 @@
       "name": "资源对象类型",
       "definition": "资源消耗包络所覆盖的资源对象；类别来自受审 JD 与 A9×L1–L3 责任原文。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -575,7 +607,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-9.1.2",
       "parent_id": "jd-9.1",
       "canonical_slot": "jd-9.1",
@@ -583,6 +615,7 @@
       "name": "消耗包络表示",
       "definition": "资源典型消耗曲线及其当前、趋势和预测表达；具体采样频率、窗口与模型保持 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -685,7 +718,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-9.1.3",
       "parent_id": "jd-9.1",
       "canonical_slot": "jd-9.1",
@@ -693,6 +726,7 @@
       "name": "任务阶段与时间参照",
       "definition": "资源包络对应的任务阶段、当前执行片段或任务时长参照；复用 jd-0.1，不在 A9 内重复定义任务时长。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference",
       "value_domain": [
         {
@@ -764,7 +798,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-9.1.4",
       "parent_id": "jd-9.1",
       "canonical_slot": "jd-9.1",
@@ -772,6 +806,7 @@
       "name": "资源状态质量",
       "definition": "资源状态或预测值的可用性、来源和可信状态；正式质量码与阈值尚无依据。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -863,7 +898,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-9.1.5",
       "parent_id": "jd-9.1",
       "canonical_slot": "jd-9.1",
@@ -871,6 +906,7 @@
       "name": "执行片段资源充足性",
       "definition": "按资源消耗包络判断资源是否足以完成当前执行片段；判定阈值不得从常识推断。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -962,7 +998,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-9.2",
       "parent_id": "PROPOSED-jd-tree-A9",
       "canonical_slot": "jd-9.2",
@@ -970,6 +1006,7 @@
       "name": "资源预警 / 预留策略",
       "definition": "JD 的“何时预警+必保返航余量”组合，包括健康预警阈值与返航预留比。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -1018,7 +1055,7 @@
       "notes": "canonical 名称与定义取自 ability-id-v3 权威机读源；下级子维度为保守归纳，尚待审阅。"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-9.2.1",
       "parent_id": "jd-9.2",
       "canonical_slot": "jd-9.2",
@@ -1026,6 +1063,7 @@
       "name": "预警风险类别",
       "definition": "需要由资源预警策略识别的风险类别；类别直接来自 A9×L3 责任原文。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -1130,7 +1168,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-9.2.2",
       "parent_id": "jd-9.2",
       "canonical_slot": "jd-9.2",
@@ -1138,6 +1176,7 @@
       "name": "预警触发表达",
       "definition": "描述何时预警的条件、趋势窗口和持续性；具体阈值、窗口与业务判据保持 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -1196,7 +1235,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-9.2.3",
       "parent_id": "jd-9.2",
       "canonical_slot": "jd-9.2",
@@ -1204,6 +1243,7 @@
       "name": "返航预留对象",
       "definition": "预留策略必须保护的返航资源或返航窗口；具体资源分解仍待确认。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -1285,7 +1325,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-9.2.4",
       "parent_id": "jd-9.2",
       "canonical_slot": "jd-9.2",
@@ -1293,6 +1333,7 @@
       "name": "预留量表示",
       "definition": "返航预留比、预留量及其单位和参照；资料未给出的数值范围全部保持 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -1362,7 +1403,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-9.2.5",
       "parent_id": "jd-9.2",
       "canonical_slot": "jd-9.2",
@@ -1370,6 +1411,7 @@
       "name": "人工确认与升级",
       "definition": "资源或健康风险何时按 jd-0.5 请求人工确认，以及无响应时如何升级；时限与规则保持 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -1439,7 +1481,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-9.3",
       "parent_id": "PROPOSED-jd-tree-A9",
       "canonical_slot": "jd-9.3",
@@ -1447,6 +1489,7 @@
       "name": "资源处置策略适用集",
       "definition": "该 JD 下 L4 可用且有效的资源处置策略子集，例如降载、切链路、关闭非关键载荷、降采样率、保留返航窗口、等待冷却或请求支援。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -1494,7 +1537,7 @@
       "notes": "canonical 名称与定义取自 ability-id-v3 权威机读源；下级子维度为保守归纳，尚待审阅。"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-9.3.1",
       "parent_id": "jd-9.3",
       "canonical_slot": "jd-9.3",
@@ -1502,6 +1545,7 @@
       "name": "处置启用条件",
       "definition": "允许从资源处置策略集中选择动作的资源或健康异常类型；阈值引用 jd-9.2，不在本槽位重复。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -1581,7 +1625,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-9.3.2",
       "parent_id": "jd-9.3",
       "canonical_slot": "jd-9.3",
@@ -1589,6 +1633,7 @@
       "name": "可用处置动作",
       "definition": "当前 JD 下 L4 可用且有效的资源处置策略子集；动作来自受审 JD 与 A9×L4 原文。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -1721,7 +1766,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-9.3.3",
       "parent_id": "jd-9.3",
       "canonical_slot": "jd-9.3",
@@ -1729,6 +1774,7 @@
       "name": "动作参数与执行约束",
       "definition": "处置动作所需的参数、允许范围、执行条件和约束；资料未提供具体数值或接口。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -1786,7 +1832,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-9.3.4",
       "parent_id": "jd-9.3",
       "canonical_slot": "jd-9.3",
@@ -1794,6 +1840,7 @@
       "name": "策略选择与冲突",
       "definition": "多个可用处置动作之间的适用性、优先级、组合与互斥关系；正式规则保持 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -1851,7 +1898,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-9.3.5",
       "parent_id": "jd-9.3",
       "canonical_slot": "jd-9.3",
@@ -1859,6 +1906,7 @@
       "name": "处置后状态验证",
       "definition": "执行资源处置后对新资源与健康状态进行验证；通过标准和升级规则保持 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {

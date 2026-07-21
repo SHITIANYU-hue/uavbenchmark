@@ -17,16 +17,11 @@ const axlCatalog = JSON.parse(
   ),
 );
 
-const generatedAt = "2026-07-22";
 const catalogRootId = "PROPOSED-jd-tree-version1";
-const scenarios = [
-  "cross_scenario",
-  "highway_inspection",
-  "campus_inspection",
-  "white_wall_narrow_gap",
-];
+const generatedAt = "2026-07-22";
+const crossScenario = ["cross_scenario"];
 
-const expansionSources = [
+const extensionSources = [
   {
     source_id: "L-FULL-JD66-V3",
     title: "JD业务变量字典_66槽位_机读版.md",
@@ -146,327 +141,236 @@ const expansionSources = [
   },
 ];
 
-const topicMap = {
-  "jd-1.1": [
-    "对象类型层级", "对象统一标识", "命名空间", "对象实例基数", "对象属性 schema",
-    "对象间关系", "对象生命周期状态", "对象集合与成员关系", "跨轮次对象引用", "别名冲突与消解状态",
-  ],
-  "jd-1.2": [
-    "输入通道集合", "显式 ID 指称", "地图与空间指示", "图像视频指示", "自然语言描述",
-    "结构化表单指称", "指示性与上下文指称", "关系型指称", "集合与范围指称",
-  ],
-  "jd-1.3": [
-    "规范词项标识规则", "同义词与别名", "缩写与代码", "动作动词", "状态形容词",
-    "量词与范围表达", "约束术语", "术语消歧说明", "词表版本与适用域",
-  ],
-  "jd-2.1": [
-    "参数 schema 版本", "参数语义分组映射", "值类型", "单位与量纲", "坐标与参考系",
-    "必填与可选状态", "缺省值来源", "参数依赖", "值来源优先级与确认状态",
-  ],
-  "jd-2.2": [
-    "平台档案标识", "机型与构型", "运动学边界", "能源与续航档案", "载荷能力",
-    "传感器能力", "计算与存储能力", "环境耐受与 ODD", "平台档案版本",
-  ],
-  "jd-2.3": [
-    "规则标识与版本", "规则启用上下文", "被推断参数映射", "推断证据输入", "规则优先级",
-    "规则冲突处理", "确认触发与豁免条件", "推断审计记录",
-  ],
-  "jd-3.1": [
-    "技能标识命名空间与版本", "动作语义", "输入参数 schema", "输出结果 schema", "前置条件表达式",
-    "后置条件", "技能依赖", "副作用", "失败状态", "幂等与重复执行语义",
-    "暂停取消能力", "资源需求", "适用任务阶段",
-  ],
-  "jd-3.2": [
-    "必需子单元集合", "完成逻辑表达式", "部分完成状态与剩余工作", "失败语义", "中止语义",
-    "取消语义", "异常例外", "证据要求", "质量门槛引用", "时间条件",
-    "覆盖条件", "验收角色", "完成状态迁移",
-  ],
-  "jd-4.1": [
-    "标准任务相位", "相位依赖图", "顺序约束", "并行关系", "分支条件", "循环与重复结构",
-  ],
-  "jd-4.2": [
-    "交接点位置", "交接触发", "交接角色", "交接信息包", "恢复执行条件",
-  ],
-  "jd-4.3": [
-    "任务目标变化", "世界状态变化", "资源不足", "合规安全冲突", "外部中断",
-  ],
-  "jd-4.4": [
-    "跳过与重试", "回滚与重做", "技能替代", "任务范围降级", "终止返航与恢复",
-  ],
-  "jd-4.5": [
-    "输出抽象层级选择规则", "目标系统与组件寻址", "指令序列化", "接收确认与完成确认", "Trace 关联标识",
-  ],
-  "jd-5.1": [
-    "交接类型组合", "优先级分级规则", "发起者与接收者", "响应状态", "交接通道",
-    "消息内容 schema", "延迟预算来源与阶段差异", "重试与升级", "交接后恢复条件",
-  ],
-  "jd-5.2": [
-    "偏好 taxonomy", "偏好来源可信度", "偏好优先级", "偏好冲突", "偏好有效期",
-    "偏好粒度", "对齐解释", "偏好确认状态",
-  ],
-  "jd-5.3": [
-    "通知事件 taxonomy", "严重度", "通知接收者", "通知载荷", "通知通道",
-    "聚合规则", "去重规则", "通知审计状态",
-  ],
-  "jd-6.1": [
-    "业务对象 taxonomy", "道路病害对象", "车辆违法与异常事件", "正常对象与背景", "相似干扰目标", "障碍与风险对象",
-  ],
-  "jd-6.2": [
-    "对象数量与密度", "空间分布", "动态性", "遮挡模式", "目标尺度与视角", "观测质量状态",
-  ],
-  "jd-6.3": [
-    "可用模态集合", "传感器实例映射", "视场与覆盖", "空间分辨能力", "时间采样与同步", "标定与融合拓扑",
-  ],
-  "jd-6.4": [
-    "感知异常 taxonomy", "可用策略集合", "策略启用条件", "重观测与换视角", "身份维护与去重", "恢复验证与升级",
-  ],
-  "jd-7.1": [
-    "绝对定位源集合", "惯性与航向源", "视觉激光定位源", "外部辅助定位源", "多源组合", "源可用性", "源更新与时延", "源参考系",
-  ],
-  "jd-7.2": [
-    "水平位置质量", "垂向位置质量", "姿态质量", "航向质量", "速度质量", "不确定度与协方差", "完整性状态", "新鲜度与连续性",
-  ],
-  "jd-7.3": [
-    "定位退化 taxonomy", "源切换", "融合重加权", "等待收敛", "重定位", "地标观测", "外部辅助", "恢复验证与保护",
-  ],
-  "jd-8.1": [
-    "相对参考对象", "相对坐标系", "距离", "方位", "横向偏差", "垂向偏差", "相对朝向", "观测角", "相对运动", "几何不确定度",
-  ],
-  "jd-8.2": [
-    "几何估计模态", "深度来源", "地图与结构先验", "时序跟踪", "对象关联", "遮挡状态", "更新频率", "估计时延", "质量状态",
-  ],
-  "jd-8.3": [
-    "相对定位异常 taxonomy", "换视角", "重观测", "扩展搜索", "重新关联", "多假设维护", "他机补观测", "等待可见", "恢复验证",
-  ],
-  "jd-9.1": [
-    "电池能量消耗", "推进系统消耗", "计算资源消耗", "内存占用", "存储占用", "通信带宽消耗", "载荷功耗", "热余量", "返航资源储备", "消耗曲线不确定度",
-  ],
-  "jd-9.2": [
-    "预警等级", "预测时间窗", "返航预留", "任务预留", "预留不确定度", "阈值来源", "分相位 schedule", "趋势触发", "确认要求",
-  ],
-  "jd-9.3": [
-    "资源异常 taxonomy", "可用处置集合", "降载与降速", "降采样", "关闭非关键载荷", "切换链路与计算路径", "等待冷却", "缩短任务", "处置验证与支援升级",
-  ],
-  "jd-10.1": [
-    "路段与园区区域拓扑", "航点与节点", "航段与边", "道路车道与匝道引用", "扫描覆盖模式", "盘旋等待结构", "转场返航备降段", "拓扑版本与有效性",
-  ],
-  "jd-10.2": [
-    "航点跟随", "轨迹跟踪", "走廊与道路跟随", "矢量场制导", "地图匹配", "反应式避障", "混合导航", "航路进度维护",
-  ],
-  "jd-10.3": [
-    "航段偏差", "轨迹不可行", "动态障碍冲突", "地理围栏与合规冲突", "定位质量退化", "天气风扰", "资源与任务变化",
-  ],
-  "jd-10.4": [
-    "可用航迹策略集合", "改高度", "横向偏置", "局部绕行", "等待与悬停", "降速", "增大裕度与返航备选",
-  ],
+const abilityDefaults = {
+  A12: { side: "shared", global: ["jd-0.9", "jd-0.5"] },
+  A13: { side: "shared", global: ["jd-0.7", "jd-0.9"] },
+  A14: { side: "world", global: ["jd-0.8", "jd-0.5"] },
+  A15: { side: "shared", global: ["jd-0.6", "jd-0.5"] },
+  A16: { side: "shared", global: ["jd-0.10", "jd-0.5"] },
+  A17: { side: "shared", global: ["jd-0.7", "jd-0.5"] },
+};
+
+const childDefinitions = {
   "jd-12.1": [
-    "载荷动作类别", "载荷实例寻址", "动作命令 schema", "动作参数 schema", "目标对象绑定", "结果状态模型",
-    "动作可取消性", "动作幂等性", "资源占用", "安全互锁引用", "能力发现", "动作版本",
+    { name: "动作类型集", type: "multi_enum", values: [["photo", "拍照"], ["broadcast", "喊话"], ["delivery", "投送"], ["sampling", "采样"], ["gimbal_positioning", "云台调位"]], sources: ["L-FULL-JD66-V3", "W-MAVLINK-PAYLOAD"] },
+    { name: "载荷实例与寻址", type: "reference_set", sources: ["W-MAVLINK-COMMAND", "W-MAVLINK-GIMBAL-V2"] },
+    { name: "动作参数结构", type: "schema_ref", sources: ["W-MAVLINK-COMMAND", "W-MAVLINK-PAYLOAD"] },
+    { name: "动作响应状态", type: "enum", values: [["accepted", "已接受"], ["in_progress", "执行中"], ["completed", "已完成"], ["failed", "失败"], ["cancelled", "已取消"]], sources: ["W-MAVLINK-COMMAND"] },
+    { name: "载荷能力与可用状态", type: "object", sources: ["W-MAVLINK-PAYLOAD", "W-MAVLINK-GIMBAL-V2"] },
   ],
   "jd-12.2": [
-    "动作依赖图", "动作前置条件", "稳定与等待条件", "触发方式", "时钟与时间基准", "多载荷同步",
-    "间隔与驻留", "命令接收确认", "动作完成事件", "互斥关系", "超时重试窗口", "适用任务阶段",
+    { name: "动作顺序关系", type: "dependency_graph", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
+    { name: "动作前置条件", type: "condition_set", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
+    { name: "动作完成判定", type: "condition_set", sources: ["W-MAVLINK-COMMAND", "L-FULL-AXL68-V3"] },
+    { name: "并发与互斥关系", type: "constraint_set", sources: ["L-FULL-JD66-V3", "W-MAVLINK-GIMBAL-V2"] },
+    { name: "时序异常类型", type: "multi_enum", values: [["omission", "漏执行"], ["duplicate", "重复"], ["order_mismatch", "时序错位"], ["payload_fault", "载荷异常"]], sources: ["L-FULL-AXL68-V3"] },
   ],
   "jd-12.3": [
-    "载荷异常 taxonomy", "可用处置集合", "处置触发", "处置前置条件", "策略优先级", "重试预算",
-    "参数调整边界", "载荷模式切换", "重新标定与复位", "恢复验证", "升级交接",
+    { name: "处置触发条件", type: "condition_set", sources: ["L-FULL-AXL68-V3"] },
+    { name: "允许处置动作", type: "multi_enum", values: [["retry", "重试"], ["change_viewpoint", "换角度"], ["adjust_parameters", "调参数"], ["switch_mode", "切模式"], ["pause", "暂停"], ["request_inspection", "请求检查"]], sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
+    { name: "处置适用前提", type: "condition_set", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
+    { name: "人工确认要求", type: "protocol_ref", sources: ["L-FULL-AXL68-V3"] },
+    { name: "处置后状态验证", type: "condition_set", sources: ["L-FULL-AXL68-V3", "W-MAVLINK-COMMAND"] },
   ],
   "jd-13.1": [
-    "成果类型", "文件与流格式", "成果对象标识", "时间戳", "空间参考", "关联业务对象",
-    "质量与置信字段", "来源与生成链", "版本", "分片与集合关系", "访问级别", "成果清单 manifest",
+    { name: "成果产物类型", type: "multi_enum", values: [["structured_report", "结构化报告"], ["image_sequence", "图序"], ["video_stream", "视频流"], ["sampling_record", "采样记录"], ["heatmap", "热图"]], sources: ["L-FULL-JD66-V3"] },
+    { name: "成果数据结构与版本", type: "schema_ref", sources: ["L-FULL-JD66-V3", "W-W3C-PROV-DM"] },
+    { name: "空间表达格式", type: "enum", values: [
+      { value: "geojson", label: "GeoJSON", source_refs: ["W-OGC-GEOJSON"], status: "source_supported" },
+      { value: "TBD", label: "其他空间表达格式待确认", source_refs: [], status: "TBD" },
+    ], sources: ["W-OGC-GEOJSON", "L-FULL-JD66-V3"], notes: "“非地理空间成果”不是空间格式，已从同层枚举移除；空间表达不适用时由上层成果合同表达，不在本节点伪造格式值。" },
+    { name: "成果与任务对象关联", type: "reference_set", sources: ["L-FULL-AXL68-V3", "W-W3C-PROV-DM"] },
+    { name: "成果状态与质量标记", type: "object", sources: ["L-FULL-AXL68-V3"] },
   ],
   "jd-13.2": [
-    "对象覆盖", "空间覆盖", "时间覆盖", "观察角覆盖", "模态覆盖", "证据完整度",
-    "元数据完整度", "连续性", "重复与去重", "缺口表达", "置信覆盖", "例外记账",
+    { name: "覆盖对象范围", type: "reference_set", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
+    { name: "覆盖单元定义", type: "schema_ref", sources: ["L-FULL-JD66-V3"] },
+    { name: "完整度判定逻辑", type: "condition_set", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"], notes: "这里只保存任务成果合同中的完成谓词，不保存评分阈值、Reason Code 或 Grader 实现。" },
+    { name: "质量有效性条件", type: "condition_set", sources: ["L-FULL-AXL68-V3"], notes: "这里只保存成果可接受条件的合同引用；具体评分门限和实现不属于 JD 值域。" },
+    { name: "覆盖缺口表示", type: "object", sources: ["L-FULL-AXL68-V3"], notes: "生产者待确认：可能是 SUT 成果的一部分，也可能由 Grader 根据覆盖合同派生；本版不强行指定。" },
   ],
   "jd-13.3": [
-    "成果异常 taxonomy", "可用处置集合", "重采与补扫", "换视角", "报告重生成", "格式转换",
-    "重新索引", "合并拆分", "降级交付", "人工复核", "新成果验证",
+    { name: "成果异常类型", type: "multi_enum", values: [["insufficient_coverage", "覆盖不足"], ["quality_degradation", "质量下降"], ["missing_output", "成果缺失"], ["low_confidence", "低置信"], ["report_omission", "报告缺项"]], sources: ["L-FULL-AXL68-V3"] },
+    { name: "允许处置动作", type: "multi_enum", values: [["recapture", "重拍"], ["supplementary_scan", "补扫"], ["change_viewpoint", "换角度"], ["regenerate_report", "重生成报告"], ["switch_format", "切换成果格式"], ["repeat_delivery", "重投"], ["repeat_sampling", "重采"]], sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
+    { name: "处置适用条件", type: "condition_set", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
+    { name: "人工复核要求", type: "protocol_ref", sources: ["L-FULL-AXL68-V3"] },
+    { name: "新成果验证", type: "condition_set", sources: ["L-FULL-AXL68-V3"] },
   ],
   "jd-14.1": [
-    "端到端时延", "抖动", "丢包", "吞吐量", "信号质量", "链路余量",
-    "可用性", "中断持续时间", "恢复时间", "C2 与遥测分离", "质量状态", "异常窗口",
+    { name: "链路质量指标集", type: "multi_enum", values: [["latency", "延迟"], ["packet_loss", "丢包"], ["bandwidth", "带宽"], ["telemetry_continuity", "遥测连续性"], ["c2_availability", "C2 可用性"]], sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
+    { name: "典型质量区间", type: "range_set", sources: ["L-FULL-JD66-V3"], tbd: "具体区间及单位待按链路类型和场景资料确认。" },
+    { name: "链路质量状态标签集", type: "enum", values: [["nominal", "正常"], ["degraded", "退化"], ["interrupted", "中断"], ["unavailable", "不可用"]], sources: ["L-FULL-AXL68-V3"] },
+    { name: "实例链路异常注入真值", type: "object", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"], tbd: "真实故障类型、实际链路参数、异常发生窗口和恢复状态的 Fixture 记录结构 TBD。" },
+    { name: "质量观测来源", type: "source_set", sources: ["L-FULL-AXL68-V3", "W-MAVLINK-MICROSERVICES"] },
   ],
   "jd-14.2": [
-    "地面站实例", "主备关系", "接力节点", "Mesh 关系", "蜂窝卫星链路", "机间链路",
-    "系统组件寻址", "路由路径", "切换关系", "覆盖区域", "控制权归属", "拓扑版本",
+    { name: "地面站节点类型", type: "multi_enum", values: [["primary", "主站"], ["backup", "备份站"], ["relay", "接力站"]], sources: ["L-FULL-JD66-V3"] },
+    { name: "节点实例与寻址", type: "reference_set", sources: ["W-MAVLINK-ROUTING"] },
+    { name: "节点连接关系", type: "graph", sources: ["L-FULL-JD66-V3", "W-MAVLINK-ROUTING"] },
+    { name: "主备与接力关系", type: "relation_set", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
+    { name: "地面站状态", type: "object", sources: ["L-FULL-AXL68-V3"] },
   ],
   "jd-14.3": [
-    "通信异常 taxonomy", "可用处置集合", "切换链路", "切换地面站", "降低遥测频率", "C2 优先级",
-    "本地缓存", "断点续传", "压缩与高时延模式", "丢链等待返航", "链路恢复验证",
+    { name: "处置触发条件", type: "condition_set", sources: ["L-FULL-AXL68-V3"] },
+    { name: "允许处置动作", type: "multi_enum", values: [["switch_link", "切换链路"], ["switch_ground_station", "切备用站"], ["reduce_telemetry_rate", "降低遥测频率"], ["buffer_data", "缓存数据"]], sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"], notes: "已合并语义重复的 switch_link / perform_handover；如后续资料能区分目标选择与切换协议，再由团队决定是否拆分。" },
+    { name: "处置适用条件", type: "condition_set", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
+    { name: "人工确认要求", type: "protocol_ref", sources: ["L-FULL-AXL68-V3"] },
+    { name: "切换后链路验证要求", type: "condition_set", sources: ["L-FULL-AXL68-V3"] },
   ],
   "jd-15.1": [
-    "空域分类体系", "空域边界来源", "垂直范围", "时间有效性", "运行条件", "主管机构", "版本", "类别冲突",
+    { name: "空域类别标识", type: "enum", values: [], sources: ["L-FULL-JD66-V3", "W-CAAC-UAS-RULE-761"], tbd: "权威字典举例含 ICAO A–G 类；中国运行场景的正式可选集需按适用法规另行确认。" },
+    { name: "空域类别来源", type: "source_ref", sources: ["W-CAAC-UAS-RULE-761"] },
+    { name: "适用空间范围", type: "geometry_ref", sources: ["L-FULL-AXL68-V3", "W-CAAC-UAS-RULE-761"] },
+    { name: "适用时间范围", type: "time_window_set", sources: ["W-CAAC-UAS-RULE-761"] },
+    { name: "运行约束引用", type: "constraint_ref", sources: ["W-CAAC-UAS-RULE-761"] },
   ],
   "jd-15.2": [
-    "围栏几何", "高度带", "包含与排除", "缓冲区", "来源与版本", "激活 schedule", "优先级", "重叠冲突",
+    { name: "围栏几何类型", type: "multi_enum", values: [
+      { value: "circle", label: "圆形", source_refs: ["W-PX4-GEOFENCE"], status: "source_supported" },
+      { value: "polygon", label: "多边形", source_refs: ["W-PX4-GEOFENCE"], status: "source_supported" },
+      { value: "altitude_band", label: "高度带", source_refs: [], status: "inferred_candidate" },
+    ], sources: ["W-PX4-GEOFENCE"], notes: "高度带作为候选保留，但当前来源不足以将其标为直接支持；待获得明确规范后再升级证据状态。" },
+    { name: "包含与排除属性", type: "enum", values: [["inclusion", "包含区"], ["exclusion", "排除区"]], sources: ["W-PX4-GEOFENCE"] },
+    { name: "围栏边界集合", type: "geometry_set", sources: ["L-FULL-JD66-V3", "W-PX4-GEOFENCE"] },
+    { name: "围栏来源与版本", type: "source_ref", sources: ["L-FULL-AXL68-V3", "W-CAAC-UAS-RULE-761"] },
+    { name: "围栏生效窗口", type: "time_window_set", sources: ["L-FULL-AXL68-V3"] },
   ],
   "jd-15.3": [
-    "交通信息源类型", "UTM 与 U-space 接入", "ADS-B 接入", "Remote ID 状态", "航空情报来源", "更新频率", "可用性", "数据质量",
+    { name: "交通信息源类型", type: "multi_enum", values: [["utm", "UTM"], ["u_space", "U-space"], ["ads_b", "ADS-B"]], sources: ["L-FULL-JD66-V3", "W-MAVLINK-TRAFFIC"] },
+    { name: "信息源实例与端点", type: "reference_set", sources: ["L-FULL-JD66-V3"] },
+    { name: "所需交通信息类别", type: "schema_ref", sources: ["W-MAVLINK-TRAFFIC"] },
+    { name: "信息新鲜度与可用状态", type: "object", sources: ["L-FULL-AXL68-V3"] },
+    { name: "多源一致性状态", type: "enum", values: [["consistent", "一致"], ["inconsistent", "不一致"], ["unknown", "未知"]], sources: ["L-FULL-AXL68-V3"], notes: "生产者待确认：可能由 SUT 自报，也可能由 Harness / Grader 对多源观测计算；本版不强行指定。" },
   ],
   "jd-15.4": [
-    "授权类型", "申请人与运行人", "授权空间范围", "授权任务范围", "生效时间", "到期时间", "续期撤销", "授权证据",
+    { name: "授权类型", type: "enum", values: [["long_term", "长期"], ["temporary", "临时"], ["instant", "即时"]], sources: ["L-FULL-JD66-V3"] },
+    { name: "授权标识与签发来源", type: "source_ref", sources: ["W-CAAC-UAS-RULE-761"] },
+    { name: "授权有效时间窗", type: "time_window", sources: ["L-FULL-AXL68-V3", "W-CAAC-UAS-RULE-761"] },
+    { name: "授权适用空间与任务范围", type: "constraint_set", sources: ["L-FULL-AXL68-V3", "W-CAAC-UAS-RULE-761"] },
+    { name: "授权状态", type: "enum", values: [["pending", "待生效"], ["active", "有效"], ["expiring", "临近失效"], ["expired", "已失效"], ["revoked", "已撤销"]], sources: ["L-FULL-AXL68-V3"] },
   ],
   "jd-15.5": [
-    "合规异常 taxonomy", "可用处置集合", "刷新授权", "更新围栏", "等待与复核", "退避与改航", "降落返航", "升级与验证",
+    { name: "合规异常类型", type: "multi_enum", values: [["authorization_expiry", "授权临近失效"], ["geofence_conflict", "围栏冲突"], ["traffic_service_fault", "交通信息服务异常"]], sources: ["L-FULL-AXL68-V3"] },
+    { name: "允许处置动作", type: "multi_enum", values: [["refresh_authorization", "刷新授权"], ["update_geofence", "更新围栏"], ["wait_for_service", "等待服务恢复"], ["review_traffic", "复核交通"], ["retreat", "退避"], ["return", "返航"]], sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
+    { name: "处置适用条件", type: "condition_set", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
+    { name: "人工合规确认要求", type: "protocol_ref", sources: ["L-FULL-AXL68-V3"] },
+    { name: "处置后合规验证", type: "condition_set", sources: ["L-FULL-AXL68-V3"] },
   ],
   "jd-16.1": [
-    "任务相位", "安全量类型", "阈值来源与版本", "单位与参考系", "预警级与动作级", "滞回",
-    "持续时间条件", "组合触发", "安全余量", "有效性", "覆盖与替代权限", "阈值不确定度",
+    { name: "任务相位", type: "multi_enum", values: [["takeoff", "起飞"], ["inspection", "巡检"], ["return", "返航"]], sources: ["L-FULL-JD66-V3"] },
+    { name: "安全阈值对象", type: "multi_enum", values: [["energy", "电量 / 能源"], ["workspace_boundary", "空间边界"], ["attitude", "姿态"], ["communication", "链路"], ["localization", "定位"]], sources: ["L-FULL-AXL68-V3"] },
+    { name: "相位阈值 schedule", type: "schedule", sources: ["L-FULL-JD66-V3"], tbd: "具体阈值与单位必须由场景安全依据给出。" },
+    { name: "阈值来源与版本", type: "source_ref", sources: ["L-FULL-JD66-V3"] },
+    { name: "阈值状态与接近度", type: "object", sources: ["L-FULL-AXL68-V3"], notes: "生产者待确认：阈值状态可能来自 SUT / 遥测，接近度也可能由 Grader 根据当前状态与阈值派生；确认前不拆分、不强行指定角色。" },
   ],
   "jd-16.2": [
-    "安全异常 taxonomy", "可用处置集合", "悬停", "返航", "就地降落", "备降",
-    "降级运行", "任务中止", "安全模式", "飞行终止", "人工接管", "处置验证",
+    { name: "安全异常类型", type: "multi_enum", values: [["low_energy", "低电 / 低能源"], ["boundary_breach", "越界"], ["attitude_fault", "姿态异常"], ["link_loss", "链路异常"], ["localization_fault", "定位异常"], ["odd_exit", "ODD 越界"]], sources: ["L-FULL-AXL68-V3"] },
+    { name: "允许安全处置动作", type: "multi_enum", values: [["return", "返航"], ["hold", "悬停 / 保持"], ["degrade", "降级"], ["alternate_land", "备降"], ["safe_mode", "安全模式"]], sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3", "W-PX4-SAFETY"] },
+    { name: "处置触发条件", type: "condition_set", sources: ["L-FULL-AXL68-V3", "W-PX4-SAFETY"] },
+    { name: "处置优先级与冲突", type: "constraint_set", sources: ["W-PX4-SAFETY"], tbd: "跨处置优先级必须由项目安全策略确认。" },
+    { name: "人工确认与接管状态", type: "object", sources: ["L-FULL-AXL68-V3"] },
   ],
   "jd-16.3": [
-    "安全态标识", "悬停安全态", "返航安全态", "着陆安全态", "备降点安全态", "降级安全态",
-    "控制权归属", "进入条件", "保持条件", "退出条件", "不可达时后备态",
+    { name: "可接受安全态类型", type: "multi_enum", values: [["hold", "悬停 / 保持"], ["return_point", "返航点"], ["alternate_landing", "备降点"], ["safe_mode", "安全模式"]], sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
+    { name: "安全态进入条件", type: "condition_set", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
+    { name: "安全态保持条件", type: "condition_set", sources: ["L-FULL-AXL68-V3"] },
+    { name: "安全态验证证据", type: "evidence_set", sources: ["L-FULL-AXL68-V3"] },
+    { name: "安全态退出与恢复条件", type: "condition_set", sources: ["L-FULL-AXL68-V3", "W-PX4-SAFETY"] },
   ],
   "jd-17.1": [
-    "意图与交互事件", "规划编排事件", "感知事件", "定位事件", "导航事件", "控制事件",
-    "载荷事件", "成果事件", "通信事件", "合规事件", "安全事件", "人工介入事件",
+    { name: "事件来源能力", type: "reference_set", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
+    { name: "事件类型", type: "taxonomy_ref", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
+    { name: "事件严重度", type: "enum", values: [], sources: ["L-FULL-AXL68-V3"], tbd: "严重度分级及语义尚无受审定义。" },
+    { name: "事件时间与顺序", type: "object", sources: ["L-FULL-AXL68-V3", "W-W3C-PROV-DM"] },
+    { name: "事件关联对象与执行片段", type: "reference_set", sources: ["L-FULL-AXL68-V3", "W-W3C-PROV-DM"] },
   ],
   "jd-17.2": [
-    "事件信封", "时间戳与时间基准", "责任主体", "关联实体", "动作与参数", "动作前状态",
-    "动作后状态", "数据来源", "完整性校验", "来源链", "回放关联", "脱敏与访问标记",
+    { name: "证据对象类型", type: "taxonomy_ref", sources: ["L-FULL-JD66-V3", "W-W3C-PROV-DM"] },
+    { name: "证据数据结构与版本", type: "schema_ref", sources: ["L-FULL-JD66-V3", "W-W3C-PROV-DM"] },
+    { name: "事件、动作与责任关联", type: "relation_set", sources: ["L-FULL-AXL68-V3", "W-W3C-PROV-DM"] },
+    { name: "时间戳与时钟来源", type: "object", sources: ["L-FULL-AXL68-V3", "W-MAVLINK-MICROSERVICES"] },
+    { name: "可回放与完整性状态", type: "object", sources: ["L-FULL-AXL68-V3"], notes: "生产者待确认：可能是系统自报状态，也可能是审计工具根据证据链派生；本版不强行指定。" },
   ],
   "jd-17.3": [
-    "留存类别", "留存时长", "法定与业务依据", "存储层级", "加密", "访问控制",
-    "不可变性", "删除与到期处理", "导出", "备份恢复", "事件保全",
+    { name: "留存对象范围", type: "reference_set", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
+    { name: "留存期限", type: "duration", sources: ["L-FULL-JD66-V3"], tbd: "期限数值必须由适用法规或项目 SOP 给出。" },
+    { name: "存储与归档状态", type: "enum", values: [
+      { value: "active", label: "在线留存", source_refs: ["L-FULL-JD66-V3"], status: "inferred_candidate" },
+      { value: "archived", label: "已归档", source_refs: ["L-FULL-JD66-V3"], status: "inferred_candidate" },
+      { value: "disposed", label: "已处置", source_refs: ["L-FULL-JD66-V3"], status: "inferred_candidate" },
+    ], sources: ["L-FULL-JD66-V3"], notes: "三个生命周期状态是对“留存策略”的合理归纳，不是 canonical 原文直接给出的正式枚举；待 SOP 或审计协议支持后再升级。" },
+    { name: "访问与审计权限", type: "constraint_set", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"], tbd: "权限角色、访问范围、授权规则和脱敏要求尚无受审依据。" },
+    { name: "完整性检查与缺口状态", type: "object", sources: ["L-FULL-AXL68-V3"] },
   ],
 };
 
-const globalTopicMap = {
-  "jd-0.1": ["任务相位时间预算", "截止时间", "允许时间窗口", "schedule 余量"],
-  "jd-0.2": ["场景类型", "坐标与参考系", "空间拓扑", "边界与可通行区域"],
-  "jd-0.3": ["扰动类型 taxonomy", "扰动强度", "扰动持续与窗口", "扰动组合与相关性"],
-  "jd-0.4": ["角色类型", "权限与职责", "空间位置", "在线与可达状态"],
-  "jd-0.5": ["确认类型", "发起者与响应者", "确认状态机", "无响应与冲突处置"],
-  "jd-0.6": ["适用法域", "规则与标准来源", "适用条件", "规则优先级与冲突"],
-  "jd-0.7": ["完成状态集合", "所需证据", "部分完成与例外", "验收责任主体"],
-  "jd-0.8": ["链路与网络类型", "覆盖范围", "基础容量", "单点故障与故障域"],
-  "jd-0.9": ["载荷类型", "能力声明", "可用状态", "平台与任务兼容性"],
-  "jd-0.10": ["安全边界类型", "分相位 schedule", "边界来源", "最低安全储备来源"],
-};
-
-const abilityDefaults = {
-  A1: { side: "user", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
-  A2: { side: "shared", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
-  A3: { side: "shared", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
-  A4: { side: "shared", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3", "W-MAVLINK-COMMAND"] },
-  A5: { side: "user", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
-  A6: { side: "world", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
-  A7: { side: "world", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
-  A8: { side: "world", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
-  A9: { side: "shared", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3", "W-PX4-SAFETY"] },
-  A10: { side: "shared", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
-  A11: { side: "shared", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
-  A12: { side: "shared", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3", "W-MAVLINK-COMMAND", "W-MAVLINK-PAYLOAD", "W-MAVLINK-GIMBAL-V2"] },
-  A13: { side: "shared", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3", "W-W3C-PROV-DM", "W-OGC-GEOJSON"] },
-  A14: { side: "world", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3", "W-MAVLINK-MICROSERVICES", "W-MAVLINK-ROUTING"] },
-  A15: { side: "shared", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3", "W-MAVLINK-TRAFFIC", "W-PX4-GEOFENCE", "W-CAAC-UAS-RULE-761"] },
-  A16: { side: "shared", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3", "W-PX4-SAFETY", "W-PX4-GEOFENCE"] },
-  A17: { side: "shared", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3", "W-W3C-PROV-DM"] },
-};
-
-const abilityById = new Map(
-  axlCatalog.abilities.map((ability) => [ability.a_id, ability]),
-);
-const localVariables = jdDictionary.variables.filter(
-  (variable) => variable.scope === "local",
-);
-const globalVariables = jdDictionary.variables.filter(
-  (variable) => variable.scope === "global",
-);
-
-const globalJdByAbility = Object.fromEntries(
-  axlCatalog.abilities.map((ability) => [ability.a_id, ability.global_jd || []]),
-);
-
-function usedByAxl(canonicalId) {
-  const cells = [];
-  for (const ability of axlCatalog.abilities) {
-    for (const [level, cell] of Object.entries(ability.levels || {})) {
-      if ((cell.jd_refs || []).includes(canonicalId)) {
-        cells.push(`${ability.a_id}×${level}`);
-      }
-    }
-  }
-  return cells;
+function unique(values) {
+  return [...new Set(values.filter(Boolean))];
 }
 
-function projectionTargets(side) {
-  if (side === "world") return ["world_config", "harness"];
-  if (side === "user") return ["user_config", "sut_input"];
-  if (side === "shared") {
-    return ["world_config", "user_config", "sut_input", "harness"];
-  }
-  return ["TBD"];
-}
-
-function observationChannels(side, hidden = false) {
-  const result = new Set(["grader"]);
-  if (side === "user" || side === "shared") result.add("sut_input");
-  if (side === "shared") result.add("sut_trace");
-  if (side === "world") result.add("fixture");
-  if (hidden) result.add("hidden_gt");
-  return [...result];
-}
-
-function visibility(side, hidden = false) {
-  const result = new Set(["grader_visible"]);
-  if (side === "world") result.add("fixture_only");
-  else result.add("sut_visible");
-  if (hidden) result.add("hidden_gt");
-  return [...result];
+function axlRefs(abilityId, canonicalId) {
+  const ability = axlCatalog.abilities.find((item) => item.a_id === abilityId);
+  if (!ability) return [];
+  return Object.entries(ability.levels)
+    .filter(([, level]) => level.jd_refs.includes(canonicalId))
+    .map(([levelId]) => `${abilityId}×${levelId}`);
 }
 
 function baseNode({
-  nodeId,
+  id,
   parentId,
-  canonicalSlot,
+  canonical,
   owner,
   name,
   definition,
-  nodeKind,
-  valueType = "none",
-  valueDomain = null,
+  kind,
   side,
   sources,
-  used = [],
+  evidence,
+  derivation,
+  review,
+  valueType = "none",
+  valueDomain = null,
   relatedGlobal = [],
-  relatedJd = [],
-  dependsOn = [],
-  hidden = false,
-  evidence = "inferred_candidate",
-  derivation = "proposed",
-  review = "proposed",
+  usedByAxl = [],
   notes = null,
+  variableRole = null,
+  projectionTargets = null,
+  visibility = ["sut_visible", "grader_visible"],
+  observationChannel = ["sut_input", "sut_trace", "grader"],
 }) {
   return {
-    schema_version: "jd-tree/0.3.0",
-    node_id: nodeId,
+    schema_version: "jd-tree/0.4.0",
+    node_id: id,
     parent_id: parentId,
-    canonical_slot: canonicalSlot,
+    canonical_slot: canonical,
     owner_a: owner,
     name,
     definition,
-    node_kind: nodeKind,
+    node_kind: kind,
+    variable_role:
+      variableRole || (kind === "variable" ? "TBD" : "structural_group"),
     value_type: valueType,
     value_domain: valueDomain,
     unit: null,
     activation_condition: null,
-    multiplicity: "one",
-    difficulty_direction: nodeKind === "variable" ? "context_dependent" : "TBD",
+    multiplicity: valueType.startsWith("multi_") || valueType.endsWith("_set") ? "many" : "one",
+    difficulty_direction: "context_dependent",
     configuration_side: side,
-    projection_targets: projectionTargets(side),
-    visibility: visibility(side, hidden),
-    observation_channel: observationChannels(side, hidden),
-    applicable_scenarios: scenarios,
+    projection_targets:
+      projectionTargets ||
+      (side === "world"
+        ? ["world_config", "harness"]
+        : side === "user"
+          ? ["user_config", "sut_input", "harness"]
+          : ["world_config", "user_config", "sut_input", "harness"]),
+    visibility,
+    observation_channel: observationChannel,
+    applicable_scenarios: crossScenario,
     related_global_jd: relatedGlobal,
-    related_jd: relatedJd,
-    used_by_axl: used,
-    depends_on: dependsOn,
+    related_jd: [],
+    used_by_axl: usedByAxl,
+    depends_on: [],
     mutual_exclusion_group: null,
     constraints: [],
     source: sources,
@@ -478,245 +382,303 @@ function baseNode({
   };
 }
 
-function tbdDomain(sources) {
-  return [
-    {
-      value: "TBD",
-      label_zh: "候选取值或范围待依据化",
-      source_refs: sources,
-      status: "TBD",
-      applicable_scenarios: scenarios,
-    },
-  ];
-}
-
-function slotArchetype(name) {
-  if (/策略|机制|模态|方式|目录|类目|格式|类别|拓扑|信息源|动作目录/.test(name)) {
-    return "set";
+function valueDomain(definition) {
+  if (definition.values?.length) {
+    return definition.values.map((candidate) => {
+      if (Array.isArray(candidate)) {
+        const [value, label] = candidate;
+        return {
+          value,
+          label_zh: label,
+          source_refs: [],
+          status: "inferred_candidate",
+          applicable_scenarios: crossScenario,
+        };
+      }
+      return {
+        value: candidate.value,
+        label_zh: candidate.label_zh || candidate.label,
+        source_refs: candidate.source_refs || [],
+        status: candidate.status || "inferred_candidate",
+        applicable_scenarios:
+          candidate.applicable_scenarios || crossScenario,
+      };
+    });
   }
-  if (/参数|先验|包络|阈值|质量/.test(name)) return "measure";
-  return "rule";
+  if (definition.tbd) {
+    return [{
+      value: "TBD",
+      label_zh: definition.tbd,
+      source_refs: definition.sources,
+      status: "TBD",
+      applicable_scenarios: crossScenario,
+    }];
+  }
+  return null;
 }
 
-function primaryValueType(archetype, topic) {
-  if (archetype === "set") return /数量|基数|时延|频率|距离|角度|质量|覆盖|尺度/.test(topic) ? "range" : "multi_enum";
-  if (archetype === "measure") return /来源|版本|状态|类型|taxonomy|参考系|单位/.test(topic) ? "enum" : "range";
-  return /状态|类型|角色|阶段|相位|通道|层级/.test(topic) ? "enum" : "object";
+function summarizeEvidence(definition, domain) {
+  const statuses = (domain || []).map((item) => item?.status).filter(Boolean);
+  if (!statuses.length) {
+    return definition.tbd
+      ? { evidence: "TBD", derivation: "TBD" }
+      : { evidence: "source_supported", derivation: "derived" };
+  }
+  if (statuses.every((status) => status === "TBD")) {
+    return { evidence: "TBD", derivation: "TBD" };
+  }
+  if (
+    statuses.some(
+      (status) => status === "inferred_candidate" || status === "TBD",
+    )
+  ) {
+    return { evidence: "inferred_candidate", derivation: "proposed" };
+  }
+  if (statuses.every((status) => status === "team_material_only")) {
+    return { evidence: "team_material_only", derivation: "given" };
+  }
+  if (statuses.every((status) => status === "authoritative_existing")) {
+    return { evidence: "authoritative_existing", derivation: "given" };
+  }
+  return { evidence: "source_supported", derivation: "derived" };
 }
 
-function addExpansion(nodes, canonical, topic, topicIndex, sources, side) {
-  const archetype = slotArchetype(canonical.name);
-  const groupId = `PROPOSED-${canonical.id}.EX${topicIndex}`;
-  const valueId = `${groupId}.1`;
-  const conditionId = `${groupId}.2`;
-  const used = usedByAxl(canonical.id);
-  const relatedGlobal = globalJdByAbility[canonical.owner_a] || [];
-  nodes.push(
-    baseNode({
-      nodeId: groupId,
-      parentId: canonical.id,
-      canonicalSlot: canonical.id,
-      owner: canonical.owner_a,
-      name: topic,
-      definition: `${canonical.name}中的“${topic}”细分维度；该节点只分组，不直接承载枚举值。`,
-      nodeKind: "group",
-      side,
-      sources,
-      used,
-      relatedGlobal,
-      notes: "研究扩展分组；不得把本分组名称直接当作已确认业务取值。",
-    }),
-    baseNode({
-      nodeId: valueId,
-      parentId: groupId,
-      canonicalSlot: canonical.id,
-      owner: canonical.owner_a,
-      name: `${topic} · 配置`,
-      definition: `记录“${topic}”在具体 JD/Seed 中的独立配置值、集合或范围。来源未给出具体阈值时必须保持 TBD。`,
-      nodeKind: "variable",
-      valueType: primaryValueType(archetype, topic),
-      valueDomain: tbdDomain(sources),
-      side,
-      sources,
-      used,
-      relatedGlobal,
-      hidden: side === "world",
-      notes: "候选取值域尚未逐场景完成证据化裁剪；不得按常识补数值。",
-    }),
-    baseNode({
-      nodeId: conditionId,
-      parentId: groupId,
-      canonicalSlot: canonical.id,
-      owner: canonical.owner_a,
-      name: `${topic} · 启用与判定`,
-      definition: `记录“${topic}”的 activation condition、依赖/互斥关系、信息来源及可验证状态。`,
-      nodeKind: "variable",
-      valueType: "condition_set",
-      valueDomain: tbdDomain(sources),
-      side,
-      sources,
-      used,
-      relatedGlobal,
-      dependsOn: [valueId],
-      hidden: side === "world",
-      notes: "启用条件和判定规则待业务场景资料与团队评审确认。",
-    }),
-  );
+const userContract = {
+  configurationSide: "user",
+  projectionTargets: ["user_config", "sut_input", "harness"],
+  visibility: ["sut_visible", "grader_visible"],
+  observationChannel: ["sut_input", "grader"],
+  variableRole: "contract_schema",
+};
+const sharedContract = {
+  configurationSide: "shared",
+  projectionTargets: [
+    "world_config",
+    "user_config",
+    "sut_input",
+    "harness",
+  ],
+  visibility: ["sut_visible", "grader_visible"],
+  observationChannel: ["sut_input", "grader"],
+  variableRole: "contract_schema",
+};
+const worldContract = {
+  configurationSide: "world",
+  projectionTargets: ["world_config", "sut_input", "harness"],
+  visibility: ["sut_visible", "grader_visible"],
+  observationChannel: ["sut_input", "grader"],
+  variableRole: "contract_schema",
+};
+const worldInput = {
+  configurationSide: "world",
+  projectionTargets: ["world_config", "sut_input", "harness"],
+  visibility: ["sut_visible", "grader_visible"],
+  observationChannel: ["sut_input", "grader"],
+  variableRole: "configuration_input",
+};
+const sharedInput = {
+  configurationSide: "shared",
+  projectionTargets: [
+    "world_config",
+    "user_config",
+    "sut_input",
+    "harness",
+  ],
+  visibility: ["sut_visible", "grader_visible"],
+  observationChannel: ["sut_input", "grader"],
+  variableRole: "configuration_input",
+};
+const runtimeObserved = {
+  configurationSide: "TBD",
+  projectionTargets: [],
+  visibility: ["sut_visible", "grader_visible"],
+  observationChannel: ["sut_trace", "grader"],
+  variableRole: "runtime_observation",
+};
+const derivedObserved = {
+  configurationSide: "TBD",
+  projectionTargets: [],
+  visibility: ["grader_only"],
+  observationChannel: ["grader"],
+  variableRole: "derived_metric",
+};
+const hiddenWorldTruth = {
+  configurationSide: "world",
+  projectionTargets: ["world_config", "harness"],
+  visibility: ["fixture_only", "grader_only", "hidden_gt"],
+  observationChannel: ["fixture", "grader", "hidden_gt"],
+  variableRole: "hidden_ground_truth",
+};
+const unresolvedProducer = {
+  configurationSide: "TBD",
+  projectionTargets: [],
+  visibility: ["grader_visible"],
+  observationChannel: ["TBD"],
+  variableRole: "TBD",
+};
+
+// 这里只标注既有叶子在数据流中的机器语义，不新增业务变量。
+const dataFlowProfiles = {
+  "jd-12.1": [userContract, worldInput, userContract, runtimeObserved, runtimeObserved],
+  "jd-12.2": [userContract, userContract, userContract, userContract, runtimeObserved],
+  "jd-12.3": [userContract, userContract, userContract, userContract, userContract],
+  "jd-13.1": [userContract, userContract, userContract, userContract, runtimeObserved],
+  "jd-13.2": [userContract, userContract, userContract, userContract, unresolvedProducer],
+  "jd-13.3": [runtimeObserved, userContract, userContract, userContract, userContract],
+  "jd-14.1": [worldContract, worldContract, worldContract, hiddenWorldTruth, worldContract],
+  "jd-14.2": [worldInput, worldInput, worldInput, worldInput, runtimeObserved],
+  "jd-14.3": [worldContract, worldContract, worldContract, sharedContract, worldContract],
+  "jd-15.1": [sharedContract, sharedContract, sharedInput, sharedInput, sharedContract],
+  "jd-15.2": [worldInput, worldInput, worldInput, worldInput, worldInput],
+  "jd-15.3": [sharedContract, sharedInput, sharedContract, runtimeObserved, unresolvedProducer],
+  "jd-15.4": [sharedContract, sharedInput, sharedInput, sharedInput, runtimeObserved],
+  "jd-15.5": [sharedContract, sharedContract, sharedContract, sharedContract, sharedContract],
+  "jd-16.1": [sharedContract, sharedContract, sharedContract, sharedContract, unresolvedProducer],
+  "jd-16.2": [sharedContract, sharedContract, sharedContract, sharedContract, runtimeObserved],
+  "jd-16.3": [sharedContract, sharedContract, sharedContract, runtimeObserved, sharedContract],
+  "jd-17.1": [sharedContract, sharedContract, sharedContract, runtimeObserved, runtimeObserved],
+  "jd-17.2": [sharedContract, sharedContract, sharedContract, runtimeObserved, unresolvedProducer],
+  "jd-17.3": [sharedContract, sharedContract, runtimeObserved, sharedContract, derivedObserved],
+};
+
+for (const source of extensionSources) {
+  if (!catalog.sources.some((item) => item.source_id === source.source_id)) {
+    catalog.sources.push(source);
+  }
 }
 
-const nodeById = new Map(catalog.nodes.map((node) => [node.node_id, node]));
-const nodes = [...catalog.nodes];
-const catalogRoot = nodeById.get(catalogRootId);
-if (catalogRoot) {
-  catalogRoot.name = "JD 业务变量树 version1（A1–A17 全量扩展）";
-  catalogRoot.definition =
-    "按 ability-id-v3-2026-07-20 汇总 A1–A17 全部能力分支，并单列跨能力共享的 JD-global；页面按单项能力或 global 分支切换。";
-  catalogRoot.notes =
-    "本分支为研究扩展草案；66 个 canonical JD 保持权威名称与定义，新增子节点均为 PROPOSED。";
-}
-
-for (const abilityId of abilityById.keys()) {
-  const rootId = `PROPOSED-jd-tree-${abilityId}`;
-  if (nodeById.has(rootId)) continue;
-  const ability = abilityById.get(abilityId);
+for (const abilityId of Object.keys(abilityDefaults)) {
+  const ability = axlCatalog.abilities.find((item) => item.a_id === abilityId);
   const defaults = abilityDefaults[abilityId];
-  const root = baseNode({
-    nodeId: rootId,
+  const rootId = `PROPOSED-jd-tree-${abilityId}`;
+  catalog.nodes.push(baseNode({
+    id: rootId,
     parentId: catalogRootId,
-    canonicalSlot: null,
+    canonical: null,
     owner: abilityId,
     name: ability.ability,
-    definition: `描述${ability.ability}对应的 JD 业务变量分支；A×L 只作为责任引用，不作为变量取值。`,
-    nodeKind: "capability_root",
+    definition: `汇总 ${abilityId} ${ability.ability}下的 canonical JD 及经来源支持的子维度。`,
+    kind: "capability_root",
     side: defaults.side,
-    sources: defaults.sources,
-    relatedGlobal: globalJdByAbility[abilityId] || [],
-    evidence: "authoritative_existing",
-    derivation: "given",
-  });
-  nodes.push(root);
-  nodeById.set(rootId, root);
-}
-
-for (const variable of localVariables) {
-  if (nodeById.has(variable.id)) continue;
-  const defaults = abilityDefaults[variable.owner_a];
-  const canonical = baseNode({
-    nodeId: variable.id,
-    parentId: `PROPOSED-jd-tree-${variable.owner_a}`,
-    canonicalSlot: variable.id,
-    owner: variable.owner_a,
-    name: variable.name,
-    definition: variable.description,
-    nodeKind: "group",
-    side: defaults.side,
-    sources: defaults.sources,
-    used: usedByAxl(variable.id),
-    relatedGlobal: globalJdByAbility[variable.owner_a] || [],
+    sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"],
     evidence: "authoritative_existing",
     derivation: "given",
     review: "reviewed",
-  });
-  nodes.push(canonical);
-  nodeById.set(variable.id, canonical);
-}
+    relatedGlobal: defaults.global,
+    usedByAxl: Object.keys(ability.levels).map((level) => `${abilityId}×${level}`),
+    notes: "本轮只保留可直接对应 canonical 定义或 A×L 责任原文的子维度；未确认细化项进入待确认文档。",
+  }));
 
-for (const canonical of localVariables) {
-  if (canonical.owner_a === "A11") continue;
-  const topics = topicMap[canonical.id];
-  if (!topics) throw new Error(`缺少 ${canonical.id} 的扩展主题。`);
-  const defaults = abilityDefaults[canonical.owner_a];
-  topics.forEach((topic, index) => {
-    addExpansion(
-      nodes,
-      canonical,
-      topic,
-      index + 1,
-      defaults.sources,
-      defaults.side,
-    );
-  });
-}
+  const canonicals = jdDictionary.variables.filter(
+    (item) => item.scope === "local" && item.owner_a === abilityId,
+  );
+  for (const canonical of canonicals) {
+    const refs = axlRefs(abilityId, canonical.id);
+    catalog.nodes.push(baseNode({
+      id: canonical.id,
+      parentId: rootId,
+      canonical: canonical.id,
+      owner: abilityId,
+      name: canonical.name,
+      definition: canonical.description,
+      kind: "group",
+      side: defaults.side,
+      sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"],
+      evidence: "authoritative_existing",
+      derivation: "given",
+      review: "reviewed",
+      relatedGlobal: defaults.global,
+      usedByAxl: refs,
+      notes: "canonical 名称与定义取自 ability-id-v3 权威机读源；子维度为来源约束下的研究草案。",
+    }));
 
-for (const canonical of globalVariables) {
-  const topics = globalTopicMap[canonical.id];
-  if (!topics) throw new Error(`缺少 ${canonical.id} 的 global 扩展主题。`);
-  const canonicalNode = nodeById.get(canonical.id);
-  const side = canonicalNode?.configuration_side || "shared";
-  const sources = ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"];
-  topics.forEach((topic, index) => {
-    const adapted = { ...canonical, owner_a: "MULTI" };
-    const before = nodes.length;
-    addExpansion(nodes, adapted, topic, index + 1, sources, side);
-    for (const node of nodes.slice(before)) {
-      node.related_global_jd = [];
-      node.used_by_axl = usedByAxl(canonical.id);
+    const children = childDefinitions[canonical.id] || [];
+    const flows = dataFlowProfiles[canonical.id] || [];
+    if (children.length !== flows.length) {
+      throw new Error(
+        `${canonical.id} 的子维度与数据流标注数量不一致：${children.length} / ${flows.length}`,
+      );
     }
-  });
+    children.forEach((child, index) => {
+      const flow = flows[index];
+      const domain = valueDomain(child);
+      const evidenceSummary = summarizeEvidence(child, domain);
+      catalog.nodes.push(baseNode({
+        id: `PROPOSED-${canonical.id}.${index + 1}`,
+        parentId: canonical.id,
+        canonical: canonical.id,
+        owner: abilityId,
+        name: child.name,
+        definition: `${canonical.name}中的“${child.name}”变量。${child.tbd || "其语义范围由所引资料限定。"}`,
+        kind: "variable",
+        side: flow.configurationSide,
+        sources: unique(child.sources),
+        evidence: evidenceSummary.evidence,
+        derivation: evidenceSummary.derivation,
+        review: "proposed",
+        valueType: child.type,
+        valueDomain: domain,
+        relatedGlobal: defaults.global,
+        usedByAxl: refs,
+        variableRole: flow.variableRole,
+        projectionTargets: flow.projectionTargets,
+        visibility: flow.visibility,
+        observationChannel: flow.observationChannel,
+        notes: [
+          child.tbd,
+          child.notes,
+          flow.variableRole === "hidden_ground_truth"
+            ? "本节点保存 Fixture / Grader 使用的实例真值，不投影为 SUT 输入。"
+            : null,
+          abilityId === "A15"
+            ? "A15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+            : null,
+          abilityId === "A16"
+            ? "候选安全动作与状态用于表达合同结构，不构成新的触发阈值、优先级或平台安全规则。"
+            : null,
+        ]
+          .filter(Boolean)
+          .join("\n") || null,
+      }));
+    });
+  }
 }
 
-const uniqueSources = new Map();
-for (const source of [...catalog.sources, ...expansionSources]) {
-  uniqueSources.set(source.source_id, source);
-}
-
-const countBy = (key) =>
-  nodes.reduce((counts, node) => {
-    const value = node[key] ?? "null";
-    counts[value] = (counts[value] ?? 0) + 1;
-    return counts;
-  }, {});
-
-const leafCountsByOwner = Object.fromEntries(
-  [...abilityById.keys(), "MULTI"].map((owner) => [
+catalog.scope = [...new Set([...catalog.scope, ...Object.keys(abilityDefaults)])];
+catalog.scope.sort((a, b) => Number(a.slice(1)) - Number(b.slice(1)));
+catalog.generated_at = generatedAt;
+catalog.generated_by = "scripts/generate_jd_variable_tree_version1.mjs + scripts/expand_jd_variable_tree_version1.mjs";
+catalog.catalog_version = "review-version1-ability-id-v3-a1-a17-global-curated-2026-07-22";
+catalog.source_count = catalog.sources.length;
+catalog.node_count = catalog.nodes.length;
+catalog.leaf_count = catalog.nodes.filter((node) => node.node_kind === "variable").length;
+catalog.counts_by_owner = Object.fromEntries(
+  [...new Set(catalog.nodes.map((node) => node.owner_a))].map((owner) => [
     owner,
-    nodes.filter(
-      (node) => node.owner_a === owner && node.node_kind === "variable",
-    ).length,
+    catalog.nodes.filter((node) => node.owner_a === owner).length,
   ]),
 );
-
-const expandedCatalog = {
-  ...catalog,
-  generated_at: generatedAt,
-  generated_by: "scripts/expand_jd_variable_tree_version1.mjs",
-  generated_from: [
-    "scripts/generate_jd_variable_tree_version1.mjs",
-    "scripts/expand_jd_variable_tree_version1.mjs",
-  ],
-  catalog_version:
-    "review-version1-ability-id-v3-a1-a17-global-expanded-2026-07-22",
-  scope: [...abilityById.keys()],
-  scenario_scope: scenarios,
-  source_count: uniqueSources.size,
-  node_count: nodes.length,
-  leaf_count: nodes.filter((node) => node.node_kind === "variable").length,
-  counts_by_owner: countBy("owner_a"),
-  counts_by_kind: countBy("node_kind"),
-  leaf_counts_by_owner: leafCountsByOwner,
-  sources: [...uniqueSources.values()],
-  nodes,
-  expansion_policy: {
-    status: "research_draft",
-    objective:
-      "使每个 A 域达到与 A11 相近的可配置、可实例化、可审计粒度；叶子数量是审计信号，不是权威配额。",
-    minimum_local_leaf_target: 60,
-    typical_local_leaf_band: [65, 85],
-    no_invention:
-      "未获得来源支持的枚举、阈值、时限、业务规则和 simulator 字段一律保持 TBD。",
-    node_rule:
-      "主题节点是变量分组；叶子分别承载配置值与启用/判定条件；枚举值保留在 value_domain，不作为树节点。",
-  },
-  full_expansion_audit_document:
-    "docs/jd-variable-tree/JD业务变量树_A1-A17_全量扩展审计.md",
-};
-
-fs.writeFileSync(catalogPath, `${JSON.stringify(expandedCatalog, null, 2)}\n`);
-console.log(
-  [
-    catalogPath,
-    `${expandedCatalog.node_count} nodes`,
-    `${expandedCatalog.leaf_count} leaves`,
-    JSON.stringify(leafCountsByOwner),
-  ].join("\n"),
+catalog.counts_by_kind = Object.fromEntries(
+  [...new Set(catalog.nodes.map((node) => node.node_kind))].map((kind) => [
+    kind,
+    catalog.nodes.filter((node) => node.node_kind === kind).length,
+  ]),
 );
+catalog.open_questions_document = "docs/jd-variable-tree/JD业务变量树_version1_待确认问题与暂定方案.md";
+catalog.curation_audit_document = "docs/jd-variable-tree/JD业务变量树_A1-A17_逐能力层级修订审计与待确认.md";
+catalog.generated_from = [
+  "scripts/generate_jd_variable_tree_version1.mjs",
+  "scripts/expand_jd_variable_tree_version1.mjs",
+];
+delete catalog.expansion_policy;
+delete catalog.leaf_counts_by_owner;
+delete catalog.full_expansion_audit_document;
+
+const exNodes = catalog.nodes.filter((node) => node.node_id.includes(".EX"));
+if (exNodes.length) {
+  throw new Error(`禁止生成 EX 节点：${exNodes.map((node) => node.node_id).join(", ")}`);
+}
+
+fs.writeFileSync(catalogPath, `${JSON.stringify(catalog, null, 2)}\n`);
+console.log(catalogPath);
+console.log(`${catalog.node_count} nodes; ${catalog.leaf_count} variable leaves; 0 EX nodes`);

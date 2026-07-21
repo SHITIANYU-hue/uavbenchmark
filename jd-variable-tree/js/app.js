@@ -40,6 +40,16 @@
     grader_only: "Grader 专用",
     hidden_gt: "Hidden GT",
   };
+  const variableRoleLabels = {
+    configuration_input: "可配置输入",
+    contract_schema: "合同 / Schema",
+    runtime_observation: "运行时观察",
+    derived_metric: "派生指标",
+    hidden_ground_truth: "Hidden Ground Truth",
+    structural_group: "结构分组",
+    example_profile: "示例 Profile",
+    TBD: "TBD",
+  };
   const difficultyLabels = {
     increasing: "递增",
     decreasing: "递减",
@@ -654,6 +664,7 @@
           ${detailField("旧编号 / 别名", tags(node.legacy_aliases))}
           ${detailField("父节点", `<code>${escapeHtml(node.parent_id || "—")}</code>`)}
           ${detailField("值类型", escapeHtml(node.value_type))}
+          ${detailField("数据流角色", escapeHtml(variableRoleLabels[node.variable_role] || node.variable_role || "—"))}
           ${detailField("配置归属", escapeHtml(configurationLabels[node.configuration_side] || node.configuration_side))}
           ${detailField("配置投影", tags(node.projection_targets, projectionLabels))}
           ${detailField("可见性", tags(node.visibility, visibilityLabels))}
