@@ -2,7 +2,7 @@
   "schema": "uav-benchmark-jd-variable-tree",
   "schema_version": "2.3",
   "catalog_id": "jd-variable-tree-v2",
-  "catalog_version": "2.3.2",
+  "catalog_version": "2.3.3",
   "generated_at": "2026-07-22",
   "ability_id_scheme": "ability-id-v3-2026-07-20",
   "pattern": "4-layer: ontology / method+envelope / quality / fallback",
@@ -1238,6 +1238,66 @@
       "derivation_status": "proposed"
     },
     {
+      "node_id": "jd-11.1.5",
+      "parent_id": "jd-11.1",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "平台物理属性",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-11.1.5.1",
+      "parent_id": "jd-11.1.5",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "机身等效直径",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "number",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-11.1.5.2",
+      "parent_id": "jd-11.1.5",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "平台质量",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "number",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
       "node_id": "jd-11.2",
       "parent_id": "A11",
       "canonical_slot": null,
@@ -1372,6 +1432,109 @@
         {
           "value": "其他",
           "label_zh": "其他"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-11.2.1.4",
+      "parent_id": "jd-11.2.1",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "所需状态估计引用",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "multi_reference",
+      "value_domain": [
+        {
+          "value": "绝对位置/速度",
+          "label_zh": "绝对位置/速度"
+        },
+        {
+          "value": "姿态/航向",
+          "label_zh": "姿态/航向"
+        },
+        {
+          "value": "相对几何",
+          "label_zh": "相对几何"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-11.2.1.5",
+      "parent_id": "jd-11.2.1",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "执行机构可用状态",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "可用",
+          "label_zh": "可用"
+        },
+        {
+          "value": "降级可用",
+          "label_zh": "降级可用"
+        },
+        {
+          "value": "不可用",
+          "label_zh": "不可用"
+        },
+        {
+          "value": "未知",
+          "label_zh": "未知"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-11.2.1.6",
+      "parent_id": "jd-11.2.1",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "控制接口类型",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "velocity-cmd",
+          "label_zh": "velocity-cmd"
+        },
+        {
+          "value": "waypoint-tracking",
+          "label_zh": "waypoint-tracking"
+        },
+        {
+          "value": "attitude-cmd",
+          "label_zh": "attitude-cmd"
         }
       ],
       "unit": "",
@@ -1790,169 +1953,6 @@
       "definition": "",
       "node_kind": "variable",
       "value_type": "object",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-11.2.4",
-      "parent_id": "jd-11.2",
-      "canonical_slot": null,
-      "owner_a": "A11",
-      "name": "所需状态估计",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-11.2.4.1",
-      "parent_id": "jd-11.2.4",
-      "canonical_slot": null,
-      "owner_a": "A11",
-      "name": "所需状态估计引用",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "multi_reference",
-      "value_domain": [
-        {
-          "value": "绝对位置/速度",
-          "label_zh": "绝对位置/速度"
-        },
-        {
-          "value": "姿态/航向",
-          "label_zh": "姿态/航向"
-        },
-        {
-          "value": "相对几何",
-          "label_zh": "相对几何"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-11.2.4.2",
-      "parent_id": "jd-11.2.4",
-      "canonical_slot": null,
-      "owner_a": "A11",
-      "name": "执行机构可用状态",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "可用",
-          "label_zh": "可用"
-        },
-        {
-          "value": "降级可用",
-          "label_zh": "降级可用"
-        },
-        {
-          "value": "不可用",
-          "label_zh": "不可用"
-        },
-        {
-          "value": "未知",
-          "label_zh": "未知"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-11.2.5",
-      "parent_id": "jd-11.2",
-      "canonical_slot": null,
-      "owner_a": "A11",
-      "name": "平台基准",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-11.2.5.1",
-      "parent_id": "jd-11.2.5",
-      "canonical_slot": null,
-      "owner_a": "A11",
-      "name": "控制接口类型",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "velocity-cmd",
-          "label_zh": "velocity-cmd"
-        },
-        {
-          "value": "waypoint-tracking",
-          "label_zh": "waypoint-tracking"
-        },
-        {
-          "value": "attitude-cmd",
-          "label_zh": "attitude-cmd"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-11.2.5.2",
-      "parent_id": "jd-11.2.5",
-      "canonical_slot": null,
-      "owner_a": "A11",
-      "name": "机身等效直径",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "number",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
