@@ -2,7 +2,7 @@
   "schema": "uav-benchmark-jd-variable-tree",
   "schema_version": "2.3",
   "catalog_id": "jd-variable-tree-v2",
-  "catalog_version": "2.3.0",
+  "catalog_version": "2.3.2",
   "generated_at": "2026-07-22",
   "ability_id_scheme": "ability-id-v3-2026-07-20",
   "pattern": "4-layer: ontology / method+envelope / quality / fallback",
@@ -1389,13 +1389,13 @@
       "parent_id": "jd-11.2",
       "canonical_slot": null,
       "owner_a": "A11",
-      "name": "无人机速度包络",
+      "name": "无人机包络",
       "definition": "",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
       "unit": "",
-      "configuration_side": "shared",
+      "configuration_side": "world",
       "difficulty_direction": "neutral",
       "applicable_scenarios": [
         "cross_scenario"
@@ -1409,13 +1409,53 @@
       "parent_id": "jd-11.2.2",
       "canonical_slot": null,
       "owner_a": "A11",
+      "name": "速度包络",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "world",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-11.2.2.1.1",
+      "parent_id": "jd-11.2.2.1",
+      "canonical_slot": null,
+      "owner_a": "A11",
       "name": "水平速度包络",
       "definition": "",
       "node_kind": "variable",
       "value_type": "number_or_range_or_axis",
       "value_domain": null,
       "unit": "",
-      "configuration_side": "shared",
+      "configuration_side": "world",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-11.2.2.1.2",
+      "parent_id": "jd-11.2.2.1",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "垂向速度包络",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "number_or_range_or_axis",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "world",
       "difficulty_direction": "neutral",
       "applicable_scenarios": [
         "cross_scenario"
@@ -1429,33 +1469,13 @@
       "parent_id": "jd-11.2.2",
       "canonical_slot": null,
       "owner_a": "A11",
-      "name": "垂向速度包络",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "number_or_range_or_axis",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-11.2.3",
-      "parent_id": "jd-11.2",
-      "canonical_slot": null,
-      "owner_a": "A11",
-      "name": "无人机姿态包络",
+      "name": "姿态包络",
       "definition": "",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
       "unit": "",
-      "configuration_side": "shared",
+      "configuration_side": "world",
       "difficulty_direction": "neutral",
       "applicable_scenarios": [
         "cross_scenario"
@@ -1465,8 +1485,8 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-11.2.3.1",
-      "parent_id": "jd-11.2.3",
+      "node_id": "jd-11.2.2.2.1",
+      "parent_id": "jd-11.2.2.2",
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "加速度/减速度包络",
@@ -1475,7 +1495,7 @@
       "value_type": "number_or_range_or_axis",
       "value_domain": null,
       "unit": "",
-      "configuration_side": "shared",
+      "configuration_side": "world",
       "difficulty_direction": "neutral",
       "applicable_scenarios": [
         "cross_scenario"
@@ -1485,8 +1505,8 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-11.2.3.2",
-      "parent_id": "jd-11.2.3",
+      "node_id": "jd-11.2.2.2.2",
+      "parent_id": "jd-11.2.2.2",
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "姿态角包络",
@@ -1495,7 +1515,7 @@
       "value_type": "number_or_range_or_axis",
       "value_domain": null,
       "unit": "",
-      "configuration_side": "shared",
+      "configuration_side": "world",
       "difficulty_direction": "neutral",
       "applicable_scenarios": [
         "cross_scenario"
@@ -1505,8 +1525,8 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-11.2.3.3",
-      "parent_id": "jd-11.2.3",
+      "node_id": "jd-11.2.2.2.3",
+      "parent_id": "jd-11.2.2.2",
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "角速度包络",
@@ -1515,7 +1535,7 @@
       "value_type": "number_or_range_or_axis",
       "value_domain": null,
       "unit": "",
-      "configuration_side": "shared",
+      "configuration_side": "world",
       "difficulty_direction": "neutral",
       "applicable_scenarios": [
         "cross_scenario"
@@ -1525,8 +1545,8 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-11.2.4",
-      "parent_id": "jd-11.2",
+      "node_id": "jd-11.2.2.3",
+      "parent_id": "jd-11.2.2",
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "执行机构约束",
@@ -1535,7 +1555,7 @@
       "value_type": "",
       "value_domain": null,
       "unit": "",
-      "configuration_side": "shared",
+      "configuration_side": "world",
       "difficulty_direction": "neutral",
       "applicable_scenarios": [
         "cross_scenario"
@@ -1545,8 +1565,8 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-11.2.4.1",
-      "parent_id": "jd-11.2.4",
+      "node_id": "jd-11.2.2.3.1",
+      "parent_id": "jd-11.2.2.3",
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "控制轴可用性",
@@ -1572,7 +1592,7 @@
         }
       ],
       "unit": "",
-      "configuration_side": "shared",
+      "configuration_side": "world",
       "difficulty_direction": "neutral",
       "applicable_scenarios": [
         "cross_scenario"
@@ -1582,8 +1602,8 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-11.2.4.2",
-      "parent_id": "jd-11.2.4",
+      "node_id": "jd-11.2.2.3.2",
+      "parent_id": "jd-11.2.2.3",
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "执行机构输出与速率限制",
@@ -1592,7 +1612,7 @@
       "value_type": "object",
       "value_domain": null,
       "unit": "",
-      "configuration_side": "shared",
+      "configuration_side": "world",
       "difficulty_direction": "neutral",
       "applicable_scenarios": [
         "cross_scenario"
@@ -1602,8 +1622,8 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-11.2.4.3",
-      "parent_id": "jd-11.2.4",
+      "node_id": "jd-11.2.2.3.3",
+      "parent_id": "jd-11.2.2.3",
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "执行余量下限",
@@ -1612,7 +1632,7 @@
       "value_type": "number_range_or_axis",
       "value_domain": null,
       "unit": "",
-      "configuration_side": "shared",
+      "configuration_side": "world",
       "difficulty_direction": "neutral",
       "applicable_scenarios": [
         "cross_scenario"
@@ -1622,7 +1642,87 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-11.2.5",
+      "node_id": "jd-11.2.2.4",
+      "parent_id": "jd-11.2.2",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "包络修正",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "world",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-11.2.2.4.1",
+      "parent_id": "jd-11.2.2.4",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "环境扰动修正",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "world",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-11.2.2.4.2",
+      "parent_id": "jd-11.2.2.4",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "载荷配置修正",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "world",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-11.2.2.4.3",
+      "parent_id": "jd-11.2.2.4",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "控制模式修正",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "world",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-11.2.3",
       "parent_id": "jd-11.2",
       "canonical_slot": null,
       "owner_a": "A11",
@@ -1642,8 +1742,8 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-11.2.5.1",
-      "parent_id": "jd-11.2.5",
+      "node_id": "jd-11.2.3.1",
+      "parent_id": "jd-11.2.3",
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "指令更新频率范围",
@@ -1662,8 +1762,8 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-11.2.5.2",
-      "parent_id": "jd-11.2.5",
+      "node_id": "jd-11.2.3.2",
+      "parent_id": "jd-11.2.3",
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "指令时延与超时边界",
@@ -1682,8 +1782,8 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-11.2.5.3",
-      "parent_id": "jd-11.2.5",
+      "node_id": "jd-11.2.3.3",
+      "parent_id": "jd-11.2.3",
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "指令连续性要求",
@@ -1702,7 +1802,7 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-11.2.6",
+      "node_id": "jd-11.2.4",
       "parent_id": "jd-11.2",
       "canonical_slot": null,
       "owner_a": "A11",
@@ -1722,8 +1822,8 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-11.2.6.1",
-      "parent_id": "jd-11.2.6",
+      "node_id": "jd-11.2.4.1",
+      "parent_id": "jd-11.2.4",
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "所需状态估计引用",
@@ -1755,8 +1855,8 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-11.2.6.2",
-      "parent_id": "jd-11.2.6",
+      "node_id": "jd-11.2.4.2",
+      "parent_id": "jd-11.2.4",
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "执行机构可用状态",
@@ -1792,87 +1892,7 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-11.2.7",
-      "parent_id": "jd-11.2",
-      "canonical_slot": null,
-      "owner_a": "A11",
-      "name": "包络修正",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-11.2.7.1",
-      "parent_id": "jd-11.2.7",
-      "canonical_slot": null,
-      "owner_a": "A11",
-      "name": "环境扰动修正",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "object",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-11.2.7.2",
-      "parent_id": "jd-11.2.7",
-      "canonical_slot": null,
-      "owner_a": "A11",
-      "name": "载荷配置修正",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "object",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-11.2.7.3",
-      "parent_id": "jd-11.2.7",
-      "canonical_slot": null,
-      "owner_a": "A11",
-      "name": "控制模式修正",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "object",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-11.2.8",
+      "node_id": "jd-11.2.5",
       "parent_id": "jd-11.2",
       "canonical_slot": null,
       "owner_a": "A11",
@@ -1892,8 +1912,8 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-11.2.8.1",
-      "parent_id": "jd-11.2.8",
+      "node_id": "jd-11.2.5.1",
+      "parent_id": "jd-11.2.5",
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "控制接口类型",
@@ -1925,8 +1945,8 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-11.2.8.2",
-      "parent_id": "jd-11.2.8",
+      "node_id": "jd-11.2.5.2",
+      "parent_id": "jd-11.2.5",
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "机身等效直径",
