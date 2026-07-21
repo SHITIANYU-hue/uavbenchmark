@@ -446,9 +446,27 @@ main {
   background: var(--team-soft);
 }
 
-.mind-node.variable {
-  width: 264px;
-}
+  .mind-node.variable {
+    width: 264px;
+  }
+
+  .case-badge {
+    margin-top: 5px;
+    padding: 3px 7px;
+    border-radius: 5px;
+    border-left: 3px solid #356d9b;
+    background: #e8f1f8;
+    color: #2a5878;
+    font-size: 9px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+    grid-column: 1 / -1;
+  }
+  .case-badge .case-label {
+    font-weight: 700;
+    margin-right: 4px;
+    color: #356d9b;
+  }
 
 .detail-dialog {
   width: min(940px, calc(100vw - 32px));
@@ -977,6 +995,13 @@ pre {
       <span>A1 · A2 · A3 · A4 · A5 · A6 · A7 · A8 · A9 · A10 · A11 · A12 · A13 · A14 · A15 · A16 · A17</span>
     </div>
     <div class="header-actions">
+      <select id="caseSelector" class="review-action" style="min-width:140px">
+        <option value="">无案例</option>
+        <option value="knowledge/case_white_wall_narrow_gap.json">白墙窄缝穿梭</option>
+      </select>
+      <label class="review-action" style="display:flex;align-items:center;gap:6px;cursor:pointer">
+        <input type="checkbox" id="caseToggle" style="margin:0"> 显示实例值
+      </label>
       <button class="review-action" id="importCommentsButton" type="button">导入建议</button>
       <button class="review-action" id="exportCommentsButton" type="button">
         导出建议 <span id="totalCommentCount">0</span>
@@ -1121,6 +1146,8 @@ pre {
     activeNodeId: null,
     comments: [],
     storageAvailable: true,
+    caseData: null,
+    caseVisible: false,
   };
 
   const elements = {
@@ -1275,11 +1302,31 @@ pre {
     return "variable";
   }
 
+  function formatCaseValue(val) {
+    if (val === null || val === undefined) return "—";
+    if (typeof val === "string") return escapeHtml(val);
+    if (typeof val === "number") return String(val);
+    if (Array.isArray(val)) return val.map(formatCaseValue).join(", ");
+    if (typeof val === "object") {
+      return Object.entries(val).map(([k,v]) => escapeHtml(k) + ": " + formatCaseValue(v)).join("; ");
+    }
+    return escapeHtml(String(val));
+  }
+
+  function caseBadgeHtml(node) {
+    if (!state.caseVisible || !state.caseData || !state.caseData.values) return "";
+    const val = state.caseData.values[node.node_id];
+    if (val === undefined) return "";
+    const caseName = state.caseData.case_name || "案例";
+    return `<div class="case-badge"><span class="case-label">${escapeHtml(caseName)}:</span>${formatCaseValue(val)}</div>`;
+  }
+
   function renderBranch(node) {
     const children = state.childrenByParent.get(node.node_id) || [];
     const hasChildren = children.length > 0;
     const highlighted = state.highlightedNodeId === node.node_id;
     const commentCount = commentsForNode(node.node_id).length;
+    const badge = caseBadgeHtml(node);
     return `<div class="mind-branch${hasChildren ? " has-children" : ""}">
       <button class="mind-node ${nodeClass(node)}${highlighted ? " is-highlighted" : ""}"
         type="button" data-node-id="${escapeHtml(node.node_id)}"
@@ -1291,6 +1338,7 @@ pre {
             ? `<b class="comment-count" aria-label="${commentCount} 条修改建议">${commentCount}</b>`
             : ""
         }
+        ${badge}
       </button>
       ${
         hasChildren
@@ -1638,7 +1686,12 @@ pre {
         ${renderDomain(node)}
       </section>
 
-      ${renderExampleBindings(node)}
+      ${
+        state.caseData && state.caseData.values && state.caseData.values[node.node_id] !== undefined
+          ? `<section class="detail-section"><h3>${escapeHtml(state.caseData.case_name || "案例")} 实例值</h3>
+             <div class="case-badge" style="font-size:11px;padding:10px">${formatCaseValue(state.caseData.values[node.node_id])}</div></section>`
+          : ""
+      }
 
       ${renderConditions(node)}
 
@@ -1820,6 +1873,33 @@ pre {
       layoutConnectorSpines();
       centerMapRoot();
     });
+
+    const caseSelector = document.getElementById("caseSelector");
+    if (caseSelector) {
+      caseSelector.addEventListener("change", async () => {
+        const url = caseSelector.value;
+        if (!url) { state.caseData = null; state.caseVisible = false; renderTabs(); renderMap(); return; }
+        try {
+          const r = await fetch(url, {cache: "no-store"});
+          if (!r.ok) throw new Error("案例加载失败");
+          state.caseData = await r.json();
+          state.caseVisible = true;
+          if (state.caseData.ability) {
+            state.selectedAbility = state.caseData.ability;
+          }
+          document.getElementById("caseToggle").checked = true;
+          renderTabs();
+          renderMap();
+        } catch(e) { window.alert(e.message); }
+      });
+    }
+    const caseToggle = document.getElementById("caseToggle");
+    if (caseToggle) {
+      caseToggle.addEventListener("change", () => {
+        state.caseVisible = caseToggle.checked;
+        renderMap();
+      });
+    }
   }
 
   async function init() {
