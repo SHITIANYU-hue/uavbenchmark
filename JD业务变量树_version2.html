@@ -1557,6 +1557,7 @@ pre {
     A15: "审计日志",
     A16: "合规申报",
     A17: "安全包络",
+    MULTI: "JD-global",
   };
   const abilityVisualGroup = {
     A1: "human", A2: "human", A3: "human", A4: "human", A5: "human",
@@ -1565,6 +1566,10 @@ pre {
     A12: "payload", A13: "payload",
     A14: "comms", A15: "comms",
     A16: "safety", A17: "safety",
+    MULTI: "human",
+  };
+  const rootIdByAbility = {
+    MULTI: "PROPOSED-jd-tree-global",
   };
   const scenarioLabels = {
     cross_scenario: "跨业务场景",
@@ -1599,6 +1604,16 @@ pre {
     grader_visible: "Grader 可见",
     grader_only: "Grader 专用",
     hidden_gt: "Hidden GT",
+  };
+  const variableRoleLabels = {
+    configuration_input: "配置输入",
+    contract_schema: "合同 / Schema",
+    runtime_observation: "运行时观测",
+    derived_metric: "派生指标",
+    hidden_ground_truth: "Hidden Ground Truth",
+    structural_group: "结构分组",
+    example_profile: "案例 Profile",
+    TBD: "TBD（待确认）",
   };
   const difficultyLabels = {
     increasing: "递增",
@@ -1790,7 +1805,7 @@ pre {
   }
 
   function nodeClass(node) {
-    if (node.node_kind === "capability_root") return "root";
+    if (node.node_kind === "capability_root" || node.node_kind === "global_root") return "root";
     if (node.review_status === "reviewed") return "canonical";
     if (node.node_kind === "example_profile") return "example";
     if (node.node_kind === "group") return "group";
@@ -2110,7 +2125,7 @@ pre {
 
   function renderMap() {
     const root = state.nodeById.get(
-      state.selectedAbility,
+      rootIdByAbility[state.selectedAbility] || state.selectedAbility,
     );
     const count = state.nodes.filter(
       (node) => node.owner_a === state.selectedAbility,
@@ -2429,6 +2444,7 @@ pre {
           ${detailField("旧编号 / 别名", tags(node.legacy_aliases))}
           ${detailField("父节点", `<code>${escapeHtml(node.parent_id || "—")}</code>`)}
           ${detailField("值类型", escapeHtml(node.value_type))}
+          ${detailField("数据流角色", escapeHtml(variableRoleLabels[node.variable_role] || node.variable_role || "—"))}
           ${detailField("配置归属", escapeHtml(configurationLabels[node.configuration_side] || node.configuration_side))}
           ${detailField("配置投影", tags(node.projection_targets, projectionLabels))}
           ${detailField("可见性", tags(node.visibility, visibilityLabels))}
@@ -2436,9 +2452,11 @@ pre {
           ${detailField("难度方向", escapeHtml(difficultyLabels[node.difficulty_direction] || node.difficulty_direction))}
           ${detailField("适用场景", tags(node.applicable_scenarios, scenarioLabels))}
           ${detailField("相关 JD", tags(related))}
+          ${detailField("Canonical JD 引用", tags(node.canonical_jd_refs))}
           ${detailField("多重性", escapeHtml(node.multiplicity))}
           ${detailField("证据状态", escapeHtml(node.evidence_status))}
           ${detailField("推导状态", escapeHtml(node.derivation_status))}
+          ${detailField("合并来源", escapeHtml(node.merge_origin || "—"))}
         </dl>
       </section>
 

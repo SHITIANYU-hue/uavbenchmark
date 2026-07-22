@@ -3,24 +3,34 @@
   "metric_set_name": "A11 默认 metric",
   "kind": "metric_set",
   "ability": "A11",
-  "scope": ["jd-11.3", "jd-11.4"],
+  "scope": [
+    "jd-11.3",
+    "jd-11.4"
+  ],
   "description": "A11 核心 metric → 树节点实例。节点=槽位；本文件=grader 判据。无树叶子的 metric 列在 unmapped，不硬挂。",
   "case_scoring_gates": {
     "collision": {
       "maps_to": "scoring.CR",
-      "used_by_axl": ["A11×L2", "A11×L3"],
+      "used_by_axl": [
+        "A11×L2",
+        "A11×L3"
+      ],
       "note": "案例层 Gate，不是 jd-11.3/11.4 叶子"
     }
   },
   "unmapped_metrics": [
     {
       "metric_id": "control_command_validity",
-      "used_by_axl": ["A11×L1"],
+      "used_by_axl": [
+        "A11×L1"
+      ],
       "reason": "树上无对应叶子；待补槽或并入执行余量"
     },
     {
       "metric_id": "target_state_prediction_accuracy",
-      "used_by_axl": ["A11×L1"],
+      "used_by_axl": [
+        "A11×L1"
+      ],
       "reason": "树上无对应叶子；待补槽"
     }
   ],
@@ -33,40 +43,48 @@
       "max": 0.3,
       "unit": "m",
       "direction": "↓",
-      "used_by_axl": ["A11×L2"],
+      "used_by_axl": [
+        "A11×L2"
+      ],
       "label": "位置误差容忍"
     },
     "jd-11.3.1.2": {
       "metric_id": "tracking_error",
       "axis": "velocity",
       "mode": "range",
-      "min": 0.0,
+      "min": 0,
       "max": 0.5,
       "unit": "m/s",
       "direction": "↓",
-      "used_by_axl": ["A11×L2"],
+      "used_by_axl": [
+        "A11×L2"
+      ],
       "label": "速度误差容忍"
     },
     "jd-11.3.1.3": {
       "metric_id": "tracking_error",
       "axis": "attitude",
       "mode": "range",
-      "min": 0.0,
-      "max": 10.0,
+      "min": 0,
+      "max": 10,
       "unit": "deg",
       "direction": "↓",
-      "used_by_axl": ["A11×L2"],
+      "used_by_axl": [
+        "A11×L2"
+      ],
       "label": "姿态误差容忍"
     },
     "jd-11.3.1.4": {
       "metric_id": "tracking_error",
       "axis": "yaw",
       "mode": "range",
-      "min": 0.0,
-      "max": 10.0,
+      "min": 0,
+      "max": 10,
       "unit": "deg",
       "direction": "↓",
-      "used_by_axl": ["A11×L2"],
+      "used_by_axl": [
+        "A11×L2"
+      ],
       "label": "航向误差容忍"
     },
     "jd-11.3.2.1": {
@@ -74,7 +92,9 @@
       "mode": "fixed",
       "value": "均方根误差",
       "direction": "↓",
-      "used_by_axl": ["A11×L2"],
+      "used_by_axl": [
+        "A11×L2"
+      ],
       "label": "误差评价方式",
       "note": "白墙常用 RMS；决定 tracking_error / ise 的聚合口径"
     },
@@ -82,31 +102,37 @@
       "metric_id": "control_stability",
       "aspect": "overshoot",
       "mode": "range",
-      "min": 0.0,
+      "min": 0,
       "max": 0.2,
       "direction": "↓",
-      "used_by_axl": ["A11×L2"],
+      "used_by_axl": [
+        "A11×L2"
+      ],
       "label": "超调容忍"
     },
     "jd-11.3.2.3": {
       "metric_id": "control_stability",
       "aspect": "settling_time",
       "mode": "range",
-      "min": 0.0,
-      "max": 2.0,
+      "min": 0,
+      "max": 2,
       "unit": "s",
       "direction": "↓",
-      "used_by_axl": ["A11×L2"],
+      "used_by_axl": [
+        "A11×L2"
+      ],
       "label": "调节时间"
     },
     "jd-11.3.2.4": {
       "metric_id": "control_stability",
       "aspect": "oscillation",
       "mode": "range",
-      "min": 0.0,
+      "min": 0,
       "max": 0.1,
       "direction": "↓",
-      "used_by_axl": ["A11×L2"],
+      "used_by_axl": [
+        "A11×L2"
+      ],
       "label": "振荡容忍"
     },
     "jd-11.3.3.1": {
@@ -114,16 +140,20 @@
       "mode": "fixed",
       "value": "未饱和",
       "direction": "↓",
-      "used_by_axl": ["A11×L2"],
+      "used_by_axl": [
+        "A11×L2"
+      ],
       "label": "执行机构饱和状态阈值"
     },
     "jd-11.3.3.2": {
       "metric_id": "control_constraint_satisfaction",
       "mode": "range",
       "min": 0.2,
-      "max": 1.0,
+      "max": 1,
       "direction": "↑",
-      "used_by_axl": ["A11×L1"],
+      "used_by_axl": [
+        "A11×L1"
+      ],
       "label": "剩余控制权威下限"
     },
     "jd-11.4.1.1": {
@@ -136,9 +166,14 @@
         "姿态异常",
         "风扰控制退化"
       ],
-      "value": ["振荡", "执行机构饱和"],
+      "value": [
+        "振荡",
+        "执行机构饱和"
+      ],
       "direction": "↑",
-      "used_by_axl": ["A11×L3"],
+      "used_by_axl": [
+        "A11×L3"
+      ],
       "label": "控制异常类别"
     },
     "jd-11.4.2.1": {
@@ -155,39 +190,62 @@
         "悬停保持",
         "安全降落"
       ],
-      "value": ["限幅", "切稳定模式"],
+      "value": [
+        "限幅",
+        "切稳定模式"
+      ],
       "direction": "↑",
-      "used_by_axl": ["A11×L3", "A11×L4"],
+      "used_by_axl": [
+        "A11×L3",
+        "A11×L4"
+      ],
       "label": "局部控制处置动作集"
     },
     "jd-11.4.4.1": {
       "metric_id": "protection_latency",
       "mode": "range",
-      "min": 0.0,
+      "min": 0,
       "max": 0.5,
       "unit": "s",
       "direction": "↓",
-      "used_by_axl": ["A11×L3"],
+      "used_by_axl": [
+        "A11×L3"
+      ],
       "label": "模式切换保护（时延上限）"
     },
     "jd-11.4.5.1": {
       "metric_id": "post_recovery_tracking_error",
       "mode": "range",
-      "min": 0.0,
+      "min": 0,
       "max": 0.3,
       "unit": "m",
       "direction": "↓",
-      "used_by_axl": ["A11×L4"],
+      "used_by_axl": [
+        "A11×L4"
+      ],
       "label": "处置后控制状态（跟踪误差）"
     },
     "jd-11.4.5.2": {
       "metric_id": "safe_degradation_success",
       "mode": "enum",
-      "options": ["A5", "A10", "A17"],
-      "value": ["A5"],
+      "options": [
+        "A5",
+        "A10",
+        "A17"
+      ],
+      "value": [
+        "A5"
+      ],
       "direction": "↑",
-      "used_by_axl": ["A11×L4"],
+      "used_by_axl": [
+        "A11×L4"
+      ],
       "label": "跨能力升级目标"
     }
-  }
+  },
+  "authority_status": "unreviewed_demo_candidate",
+  "review_status": "proposed",
+  "applies_by_default": false,
+  "threshold_authority": "TBD",
+  "notes": "现有数值来自团队演示草案，尚无受审业务、安全或法规依据；不得作为默认阈值，使用前必须人工确认并记录来源。"
 }

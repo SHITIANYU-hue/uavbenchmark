@@ -64,15 +64,15 @@
       "to": "A14"
     },
     {
-      "from": "A13",
+      "from": "A15",
       "to": "A15"
     },
     {
-      "from": "A12",
+      "from": "A13",
       "to": "A16"
     },
     {
-      "from": "A15",
+      "from": "A12",
       "to": "A17"
     }
   ],
@@ -284,15 +284,15 @@
           "to": "A14"
         },
         {
-          "from": "A13",
+          "from": "A15",
           "to": "A15"
         },
         {
-          "from": "A14",
+          "from": "A13",
           "to": "A16"
         },
         {
-          "from": "A15",
+          "from": "A14",
           "to": "A17"
         }
       ]
@@ -843,7 +843,7 @@
       "related_jd": [],
       "used_by_axl": [
         "A2×L3",
-        "A15×L2"
+        "A16×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -1072,7 +1072,7 @@
       "related_jd": [],
       "used_by_axl": [
         "A2×L3",
-        "A16×L1"
+        "A17×L1"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -3465,7 +3465,7 @@
       "related_jd": [],
       "used_by_axl": [
         "A2×L3",
-        "A15×L2"
+        "A16×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -3537,7 +3537,7 @@
       "related_jd": [],
       "used_by_axl": [
         "A2×L3",
-        "A15×L2"
+        "A16×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -3609,7 +3609,7 @@
       "related_jd": [],
       "used_by_axl": [
         "A2×L3",
-        "A15×L2"
+        "A16×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -3681,7 +3681,7 @@
       "related_jd": [],
       "used_by_axl": [
         "A2×L3",
-        "A15×L2"
+        "A16×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -3755,7 +3755,7 @@
       ],
       "used_by_axl": [
         "A2×L3",
-        "A15×L2"
+        "A16×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -3827,7 +3827,7 @@
       "related_jd": [],
       "used_by_axl": [
         "A2×L3",
-        "A15×L2"
+        "A16×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -5715,7 +5715,7 @@
       "related_jd": [],
       "used_by_axl": [
         "A2×L3",
-        "A16×L1"
+        "A17×L1"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -5787,7 +5787,7 @@
       "related_jd": [],
       "used_by_axl": [
         "A2×L3",
-        "A16×L1"
+        "A17×L1"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -5859,7 +5859,7 @@
       "related_jd": [],
       "used_by_axl": [
         "A2×L3",
-        "A16×L1"
+        "A17×L1"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -5936,7 +5936,7 @@
       ],
       "used_by_axl": [
         "A2×L3",
-        "A16×L1"
+        "A17×L1"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -6011,7 +6011,7 @@
       ],
       "used_by_axl": [
         "A2×L3",
-        "A16×L1"
+        "A17×L1"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -6083,7 +6083,7 @@
       "related_jd": [],
       "used_by_axl": [
         "A2×L3",
-        "A16×L1"
+        "A17×L1"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -6106,14 +6106,14 @@
       "canonical_slot": "jd-0.10",
       "owner_a": "MULTI",
       "name": "违反状态与处置引用",
-      "definition": "安全边界正常、接近、违反或未知的状态，以及对 A16 处置责任的引用。",
+      "definition": "安全边界正常、接近、违反或未知的状态，以及对 A17 处置责任的引用。",
       "node_kind": "variable",
       "variable_role": "configuration_input",
       "value_type": "state_and_action_reference",
       "value_domain": [
         {
           "value": "TBD",
-          "label_zh": "状态阈值、迟滞和 A16 处置映射 TBD",
+          "label_zh": "状态阈值、迟滞和 A17 处置映射 TBD",
           "source_refs": [],
           "status": "TBD",
           "applicable_scenarios": [
@@ -6153,12 +6153,12 @@
         "jd-0.10"
       ],
       "related_jd": [
-        "jd-16.1",
-        "jd-16.2"
+        "jd-17.1",
+        "jd-17.2"
       ],
       "used_by_axl": [
         "A2×L3",
-        "A16×L1"
+        "A17×L1"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,

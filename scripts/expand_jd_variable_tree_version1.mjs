@@ -146,8 +146,8 @@ const abilityDefaults = {
   A13: { side: "shared", global: ["jd-0.7", "jd-0.9"] },
   A14: { side: "world", global: ["jd-0.8", "jd-0.5"] },
   A15: { side: "shared", global: ["jd-0.6", "jd-0.5"] },
-  A16: { side: "shared", global: ["jd-0.10", "jd-0.5"] },
-  A17: { side: "shared", global: ["jd-0.7", "jd-0.5"] },
+  A16: { side: "shared", global: ["jd-0.6", "jd-0.5"] },
+  A17: { side: "shared", global: ["jd-0.10", "jd-0.5"] },
 };
 
 const childDefinitions = {
@@ -217,14 +217,14 @@ const childDefinitions = {
     { name: "人工确认要求", type: "protocol_ref", sources: ["L-FULL-AXL68-V3"] },
     { name: "切换后链路验证要求", type: "condition_set", sources: ["L-FULL-AXL68-V3"] },
   ],
-  "jd-15.1": [
+  "jd-16.1": [
     { name: "空域类别标识", type: "enum", values: [], sources: ["L-FULL-JD66-V3", "W-CAAC-UAS-RULE-761"], tbd: "权威字典举例含 ICAO A–G 类；中国运行场景的正式可选集需按适用法规另行确认。" },
     { name: "空域类别来源", type: "source_ref", sources: ["W-CAAC-UAS-RULE-761"] },
     { name: "适用空间范围", type: "geometry_ref", sources: ["L-FULL-AXL68-V3", "W-CAAC-UAS-RULE-761"] },
     { name: "适用时间范围", type: "time_window_set", sources: ["W-CAAC-UAS-RULE-761"] },
     { name: "运行约束引用", type: "constraint_ref", sources: ["W-CAAC-UAS-RULE-761"] },
   ],
-  "jd-15.2": [
+  "jd-16.2": [
     { name: "围栏几何类型", type: "multi_enum", values: [
       { value: "circle", label: "圆形", source_refs: ["W-PX4-GEOFENCE"], status: "source_supported" },
       { value: "polygon", label: "多边形", source_refs: ["W-PX4-GEOFENCE"], status: "source_supported" },
@@ -235,63 +235,63 @@ const childDefinitions = {
     { name: "围栏来源与版本", type: "source_ref", sources: ["L-FULL-AXL68-V3", "W-CAAC-UAS-RULE-761"] },
     { name: "围栏生效窗口", type: "time_window_set", sources: ["L-FULL-AXL68-V3"] },
   ],
-  "jd-15.3": [
+  "jd-16.3": [
     { name: "交通信息源类型", type: "multi_enum", values: [["utm", "UTM"], ["u_space", "U-space"], ["ads_b", "ADS-B"]], sources: ["L-FULL-JD66-V3", "W-MAVLINK-TRAFFIC"] },
     { name: "信息源实例与端点", type: "reference_set", sources: ["L-FULL-JD66-V3"] },
     { name: "所需交通信息类别", type: "schema_ref", sources: ["W-MAVLINK-TRAFFIC"] },
     { name: "信息新鲜度与可用状态", type: "object", sources: ["L-FULL-AXL68-V3"] },
     { name: "多源一致性状态", type: "enum", values: [["consistent", "一致"], ["inconsistent", "不一致"], ["unknown", "未知"]], sources: ["L-FULL-AXL68-V3"], notes: "生产者待确认：可能由 SUT 自报，也可能由 Harness / Grader 对多源观测计算；本版不强行指定。" },
   ],
-  "jd-15.4": [
+  "jd-16.4": [
     { name: "授权类型", type: "enum", values: [["long_term", "长期"], ["temporary", "临时"], ["instant", "即时"]], sources: ["L-FULL-JD66-V3"] },
     { name: "授权标识与签发来源", type: "source_ref", sources: ["W-CAAC-UAS-RULE-761"] },
     { name: "授权有效时间窗", type: "time_window", sources: ["L-FULL-AXL68-V3", "W-CAAC-UAS-RULE-761"] },
     { name: "授权适用空间与任务范围", type: "constraint_set", sources: ["L-FULL-AXL68-V3", "W-CAAC-UAS-RULE-761"] },
     { name: "授权状态", type: "enum", values: [["pending", "待生效"], ["active", "有效"], ["expiring", "临近失效"], ["expired", "已失效"], ["revoked", "已撤销"]], sources: ["L-FULL-AXL68-V3"] },
   ],
-  "jd-15.5": [
+  "jd-16.5": [
     { name: "合规异常类型", type: "multi_enum", values: [["authorization_expiry", "授权临近失效"], ["geofence_conflict", "围栏冲突"], ["traffic_service_fault", "交通信息服务异常"]], sources: ["L-FULL-AXL68-V3"] },
     { name: "允许处置动作", type: "multi_enum", values: [["refresh_authorization", "刷新授权"], ["update_geofence", "更新围栏"], ["wait_for_service", "等待服务恢复"], ["review_traffic", "复核交通"], ["retreat", "退避"], ["return", "返航"]], sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
     { name: "处置适用条件", type: "condition_set", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
     { name: "人工合规确认要求", type: "protocol_ref", sources: ["L-FULL-AXL68-V3"] },
     { name: "处置后合规验证", type: "condition_set", sources: ["L-FULL-AXL68-V3"] },
   ],
-  "jd-16.1": [
+  "jd-17.1": [
     { name: "任务相位", type: "multi_enum", values: [["takeoff", "起飞"], ["inspection", "巡检"], ["return", "返航"]], sources: ["L-FULL-JD66-V3"] },
     { name: "安全阈值对象", type: "multi_enum", values: [["energy", "电量 / 能源"], ["workspace_boundary", "空间边界"], ["attitude", "姿态"], ["communication", "链路"], ["localization", "定位"]], sources: ["L-FULL-AXL68-V3"] },
     { name: "相位阈值 schedule", type: "schedule", sources: ["L-FULL-JD66-V3"], tbd: "具体阈值与单位必须由场景安全依据给出。" },
     { name: "阈值来源与版本", type: "source_ref", sources: ["L-FULL-JD66-V3"] },
     { name: "阈值状态与接近度", type: "object", sources: ["L-FULL-AXL68-V3"], notes: "生产者待确认：阈值状态可能来自 SUT / 遥测，接近度也可能由 Grader 根据当前状态与阈值派生；确认前不拆分、不强行指定角色。" },
   ],
-  "jd-16.2": [
+  "jd-17.2": [
     { name: "安全异常类型", type: "multi_enum", values: [["low_energy", "低电 / 低能源"], ["boundary_breach", "越界"], ["attitude_fault", "姿态异常"], ["link_loss", "链路异常"], ["localization_fault", "定位异常"], ["odd_exit", "ODD 越界"]], sources: ["L-FULL-AXL68-V3"] },
     { name: "允许安全处置动作", type: "multi_enum", values: [["return", "返航"], ["hold", "悬停 / 保持"], ["degrade", "降级"], ["alternate_land", "备降"], ["safe_mode", "安全模式"]], sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3", "W-PX4-SAFETY"] },
     { name: "处置触发条件", type: "condition_set", sources: ["L-FULL-AXL68-V3", "W-PX4-SAFETY"] },
     { name: "处置优先级与冲突", type: "constraint_set", sources: ["W-PX4-SAFETY"], tbd: "跨处置优先级必须由项目安全策略确认。" },
     { name: "人工确认与接管状态", type: "object", sources: ["L-FULL-AXL68-V3"] },
   ],
-  "jd-16.3": [
+  "jd-17.3": [
     { name: "可接受安全态类型", type: "multi_enum", values: [["hold", "悬停 / 保持"], ["return_point", "返航点"], ["alternate_landing", "备降点"], ["safe_mode", "安全模式"]], sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
     { name: "安全态进入条件", type: "condition_set", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
     { name: "安全态保持条件", type: "condition_set", sources: ["L-FULL-AXL68-V3"] },
     { name: "安全态验证证据", type: "evidence_set", sources: ["L-FULL-AXL68-V3"] },
     { name: "安全态退出与恢复条件", type: "condition_set", sources: ["L-FULL-AXL68-V3", "W-PX4-SAFETY"] },
   ],
-  "jd-17.1": [
+  "jd-15.1": [
     { name: "事件来源能力", type: "reference_set", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
     { name: "事件类型", type: "taxonomy_ref", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
     { name: "事件严重度", type: "enum", values: [], sources: ["L-FULL-AXL68-V3"], tbd: "严重度分级及语义尚无受审定义。" },
     { name: "事件时间与顺序", type: "object", sources: ["L-FULL-AXL68-V3", "W-W3C-PROV-DM"] },
     { name: "事件关联对象与执行片段", type: "reference_set", sources: ["L-FULL-AXL68-V3", "W-W3C-PROV-DM"] },
   ],
-  "jd-17.2": [
+  "jd-15.2": [
     { name: "证据对象类型", type: "taxonomy_ref", sources: ["L-FULL-JD66-V3", "W-W3C-PROV-DM"] },
     { name: "证据数据结构与版本", type: "schema_ref", sources: ["L-FULL-JD66-V3", "W-W3C-PROV-DM"] },
     { name: "事件、动作与责任关联", type: "relation_set", sources: ["L-FULL-AXL68-V3", "W-W3C-PROV-DM"] },
     { name: "时间戳与时钟来源", type: "object", sources: ["L-FULL-AXL68-V3", "W-MAVLINK-MICROSERVICES"] },
     { name: "可回放与完整性状态", type: "object", sources: ["L-FULL-AXL68-V3"], notes: "生产者待确认：可能是系统自报状态，也可能是审计工具根据证据链派生；本版不强行指定。" },
   ],
-  "jd-17.3": [
+  "jd-15.3": [
     { name: "留存对象范围", type: "reference_set", sources: ["L-FULL-JD66-V3", "L-FULL-AXL68-V3"] },
     { name: "留存期限", type: "duration", sources: ["L-FULL-JD66-V3"], tbd: "期限数值必须由适用法规或项目 SOP 给出。" },
     { name: "存储与归档状态", type: "enum", values: [
@@ -528,17 +528,17 @@ const dataFlowProfiles = {
   "jd-14.1": [worldContract, worldContract, worldContract, hiddenWorldTruth, worldContract],
   "jd-14.2": [worldInput, worldInput, worldInput, worldInput, runtimeObserved],
   "jd-14.3": [worldContract, worldContract, worldContract, sharedContract, worldContract],
-  "jd-15.1": [sharedContract, sharedContract, sharedInput, sharedInput, sharedContract],
-  "jd-15.2": [worldInput, worldInput, worldInput, worldInput, worldInput],
-  "jd-15.3": [sharedContract, sharedInput, sharedContract, runtimeObserved, unresolvedProducer],
-  "jd-15.4": [sharedContract, sharedInput, sharedInput, sharedInput, runtimeObserved],
-  "jd-15.5": [sharedContract, sharedContract, sharedContract, sharedContract, sharedContract],
-  "jd-16.1": [sharedContract, sharedContract, sharedContract, sharedContract, unresolvedProducer],
-  "jd-16.2": [sharedContract, sharedContract, sharedContract, sharedContract, runtimeObserved],
-  "jd-16.3": [sharedContract, sharedContract, sharedContract, runtimeObserved, sharedContract],
-  "jd-17.1": [sharedContract, sharedContract, sharedContract, runtimeObserved, runtimeObserved],
-  "jd-17.2": [sharedContract, sharedContract, sharedContract, runtimeObserved, unresolvedProducer],
-  "jd-17.3": [sharedContract, sharedContract, runtimeObserved, sharedContract, derivedObserved],
+  "jd-16.1": [sharedContract, sharedContract, sharedInput, sharedInput, sharedContract],
+  "jd-16.2": [worldInput, worldInput, worldInput, worldInput, worldInput],
+  "jd-16.3": [sharedContract, sharedInput, sharedContract, runtimeObserved, unresolvedProducer],
+  "jd-16.4": [sharedContract, sharedInput, sharedInput, sharedInput, runtimeObserved],
+  "jd-16.5": [sharedContract, sharedContract, sharedContract, sharedContract, sharedContract],
+  "jd-17.1": [sharedContract, sharedContract, sharedContract, sharedContract, unresolvedProducer],
+  "jd-17.2": [sharedContract, sharedContract, sharedContract, sharedContract, runtimeObserved],
+  "jd-17.3": [sharedContract, sharedContract, sharedContract, runtimeObserved, sharedContract],
+  "jd-15.1": [sharedContract, sharedContract, sharedContract, runtimeObserved, runtimeObserved],
+  "jd-15.2": [sharedContract, sharedContract, sharedContract, runtimeObserved, unresolvedProducer],
+  "jd-15.3": [sharedContract, sharedContract, runtimeObserved, sharedContract, derivedObserved],
 };
 
 for (const source of extensionSources) {
@@ -630,10 +630,10 @@ for (const abilityId of Object.keys(abilityDefaults)) {
           flow.variableRole === "hidden_ground_truth"
             ? "本节点保存 Fixture / Grader 使用的实例真值，不投影为 SUT 输入。"
             : null,
-          abilityId === "A15"
-            ? "A15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
-            : null,
           abilityId === "A16"
+            ? "A16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+            : null,
+          abilityId === "A17"
             ? "候选安全动作与状态用于表达合同结构，不构成新的触发阈值、优先级或平台安全规则。"
             : null,
         ]

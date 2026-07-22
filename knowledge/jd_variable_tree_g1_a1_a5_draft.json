@@ -64,15 +64,15 @@
       "to": "A14"
     },
     {
-      "from": "A13",
+      "from": "A15",
       "to": "A15"
     },
     {
-      "from": "A12",
+      "from": "A13",
       "to": "A16"
     },
     {
-      "from": "A15",
+      "from": "A12",
       "to": "A17"
     }
   ],
@@ -284,15 +284,15 @@
           "to": "A14"
         },
         {
-          "from": "A13",
+          "from": "A15",
           "to": "A15"
         },
         {
-          "from": "A14",
+          "from": "A13",
           "to": "A16"
         },
         {
-          "from": "A15",
+          "from": "A14",
           "to": "A17"
         }
       ]
@@ -5996,7 +5996,7 @@
       "canonical_slot": "jd-4.4",
       "owner_a": "A4",
       "name": "任务级重规划策略",
-      "definition": "JD 典型的多步重规划与恢复模式，区别于 A16 的反射级兜底动作。",
+      "definition": "JD 典型的多步重规划与恢复模式，区别于 A17 的反射级兜底动作。",
       "node_kind": "group",
       "variable_role": "structural_group",
       "value_type": "none",

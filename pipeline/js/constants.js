@@ -25,7 +25,7 @@ const SCENARIO_FALLBACK_ID = "other_inspection";
 const DEFAULT_TARGET_LEVELS = {
   A1: "L2", A2: "L2", A3: "L2", A4: "L2", A5: "L2",
   A6: "L2", A7: "L2", A10: "L2",
-  A12: "L2", A13: "L2", A16: "L2", A17: "L2",
+  A12: "L2", A13: "L2", A17: "L2", A15: "L2",
 };
 
 function defaultTargetLevels() { return Object.assign({}, DEFAULT_TARGET_LEVELS); }
@@ -55,6 +55,6 @@ const WORLD_SIDE_JD = new Set([
   "jd-7.1", "jd-7.2", "jd-8.1", "jd-8.2",
   "jd-10.2", "jd-11.1", "jd-11.2",
   "jd-14.1", "jd-14.2", "jd-9.1",
-  "jd-15.1", "jd-15.2", "jd-15.3",
-  "jd-17.1",
+  "jd-16.1", "jd-16.2", "jd-16.3",
+  "jd-15.1",
 ]);

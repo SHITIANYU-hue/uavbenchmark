@@ -64,15 +64,15 @@
       "to": "A14"
     },
     {
-      "from": "A13",
+      "from": "A15",
       "to": "A15"
     },
     {
-      "from": "A12",
+      "from": "A13",
       "to": "A16"
     },
     {
-      "from": "A15",
+      "from": "A12",
       "to": "A17"
     }
   ],
@@ -284,15 +284,15 @@
           "to": "A14"
         },
         {
-          "from": "A13",
+          "from": "A15",
           "to": "A15"
         },
         {
-          "from": "A14",
+          "from": "A13",
           "to": "A16"
         },
         {
-          "from": "A15",
+          "from": "A14",
           "to": "A17"
         }
       ]
@@ -363,7 +363,7 @@
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
       "owner_a": "A9",
-      "name": "资源管理",
+      "name": "健康 / 能源 / 资源管理",
       "definition": "描述健康、能源与资源管理相关的 JD 业务变量；A×L 仅作为责任引用，不作为变量取值。",
       "node_kind": "capability_root",
       "variable_role": "structural_group",

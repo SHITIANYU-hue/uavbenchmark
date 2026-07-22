@@ -64,15 +64,15 @@
       "to": "A14"
     },
     {
-      "from": "A13",
+      "from": "A15",
       "to": "A15"
     },
     {
-      "from": "A12",
+      "from": "A13",
       "to": "A16"
     },
     {
-      "from": "A15",
+      "from": "A12",
       "to": "A17"
     }
   ],
@@ -284,15 +284,15 @@
           "to": "A14"
         },
         {
-          "from": "A13",
+          "from": "A15",
           "to": "A15"
         },
         {
-          "from": "A14",
+          "from": "A13",
           "to": "A16"
         },
         {
-          "from": "A15",
+          "from": "A14",
           "to": "A17"
         }
       ]
@@ -393,8 +393,8 @@
     "A12": 19,
     "A13": 19,
     "A14": 19,
-    "A15": 31,
-    "A16": 19,
+    "A15": 19,
+    "A16": 31,
     "A17": 19
   },
   "counts_by_kind": {
@@ -6538,7 +6538,7 @@
       "canonical_slot": "jd-4.4",
       "owner_a": "A4",
       "name": "任务级重规划策略",
-      "definition": "JD 典型的多步重规划与恢复模式，区别于 A16 的反射级兜底动作。",
+      "definition": "JD 典型的多步重规划与恢复模式，区别于 A17 的反射级兜底动作。",
       "node_kind": "group",
       "variable_role": "structural_group",
       "value_type": "none",
@@ -21194,7 +21194,7 @@
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
       "owner_a": "A9",
-      "name": "资源管理",
+      "name": "健康 / 能源 / 资源管理",
       "definition": "描述健康、能源与资源管理相关的 JD 业务变量；A×L 仅作为责任引用，不作为变量取值。",
       "node_kind": "capability_root",
       "variable_role": "structural_group",
@@ -22844,7 +22844,7 @@
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
       "owner_a": "A11",
-      "name": "控制飞行",
+      "name": "飞行控制 / 执行机构",
       "definition": "描述飞行控制、执行机构、控制质量、控制工作机制与局部控制恢复相关的 JD 业务变量；近障与受限空间条件通过非 canonical 场景 Profile 绑定到正式槽位。",
       "node_kind": "capability_root",
       "variable_role": "structural_group",
@@ -25884,7 +25884,7 @@
       ],
       "related_jd": [
         "jd-10.4",
-        "jd-16.2"
+        "jd-17.2"
       ],
       "used_by_axl": [
         "A11×L4"
@@ -26016,7 +26016,7 @@
       ],
       "related_jd": [
         "jd-10.4",
-        "jd-16.2"
+        "jd-17.2"
       ],
       "used_by_axl": [
         "A11×L4"
@@ -26032,7 +26032,7 @@
       "derivation_status": "derived",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "改变任务速度 Profile、航路或高度属于 A10；返航、迫降或进入 safe state 属于 A16。"
+      "notes": "改变任务速度 Profile、航路或高度属于 A10；返航、迫降或进入 safe state 属于 A17。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
@@ -26486,7 +26486,7 @@
         "jd-7.2",
         "jd-9.3",
         "jd-10.4",
-        "jd-16.2",
+        "jd-17.2",
         "jd-0.5"
       ],
       "used_by_axl": [
@@ -26679,8 +26679,8 @@
           ]
         },
         {
-          "value": "A16",
-          "label_zh": "A16 安全包络 / 运行保证",
+          "value": "A17",
+          "label_zh": "A17 安全包络 / 运行保证",
           "source_refs": [
             "L-A11-AXL68-V3"
           ],
@@ -26738,7 +26738,7 @@
         "jd-7.2",
         "jd-9.3",
         "jd-10.4",
-        "jd-16.2",
+        "jd-17.2",
         "jd-0.5"
       ],
       "used_by_axl": [
@@ -26806,7 +26806,7 @@
         "jd-11.1",
         "jd-11.2",
         "jd-11.3",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -27010,7 +27010,7 @@
       ],
       "related_jd": [
         "jd-2.2",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -27495,7 +27495,7 @@
         "jd-0.3",
         "jd-0.9",
         "jd-11.2",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -27570,7 +27570,7 @@
         "jd-2.2",
         "jd-11.1",
         "jd-11.2",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -27645,7 +27645,7 @@
         "jd-2.2",
         "jd-11.1",
         "jd-11.2",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -27720,7 +27720,7 @@
         "jd-2.2",
         "jd-11.1",
         "jd-11.2",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -27795,7 +27795,7 @@
         "jd-2.2",
         "jd-11.1",
         "jd-11.2",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -27870,7 +27870,7 @@
         "jd-2.2",
         "jd-11.1",
         "jd-11.2",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -28136,7 +28136,7 @@
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "执行余量下限",
-      "definition": "允许继续执行当前控制片段所需的最低剩余执行能力；阈值及其安全含义必须与 A16 联合确认。",
+      "definition": "允许继续执行当前控制片段所需的最低剩余执行能力；阈值及其安全含义必须与 A17 联合确认。",
       "node_kind": "variable",
       "variable_role": "TBD",
       "value_type": "number_range_or_axis_object",
@@ -28186,7 +28186,7 @@
       "related_jd": [
         "jd-11.1",
         "jd-11.3",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -28249,7 +28249,7 @@
         "jd-0.9",
         "jd-11.2",
         "jd-11.3",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -28335,7 +28335,7 @@
       "related_jd": [
         "jd-0.3",
         "jd-11.1",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -28650,7 +28650,7 @@
         "jd-11.2",
         "jd-11.3",
         "PROPOSED-jd-11.4",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -29003,7 +29003,7 @@
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "A11 控制要求绑定",
-      "definition": "将场景 Profile 投影到 jd-11.1、jd-11.2、jd-11.3、PROPOSED-jd-11.4，并引用 A16 安全边界。",
+      "definition": "将场景 Profile 投影到 jd-11.1、jd-11.2、jd-11.3、PROPOSED-jd-11.4，并引用 A17 安全边界。",
       "node_kind": "group",
       "variable_role": "structural_group",
       "value_type": "none",
@@ -29041,7 +29041,7 @@
         "jd-11.2",
         "jd-11.3",
         "PROPOSED-jd-11.4",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -31444,7 +31444,7 @@
         "jd-2.2",
         "jd-0.9",
         "PROPOSED-jd-11.4",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [
@@ -31769,14 +31769,14 @@
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "安全包络引用",
-      "definition": "引用 A16 分相位安全阈值；A11 不在本分支重复定义安全态。",
+      "definition": "引用 A17 分相位安全阈值；A11 不在本分支重复定义安全态。",
       "node_kind": "variable",
       "variable_role": "contract_schema",
       "value_type": "reference",
       "value_domain": [
         {
-          "value": "jd-16.1",
-          "label_zh": "引用 jd-16.1",
+          "value": "jd-17.1",
+          "label_zh": "引用 jd-17.1",
           "source_refs": [],
           "status": "inferred_candidate",
           "applicable_scenarios": [
@@ -31817,7 +31817,7 @@
         "jd-0.5"
       ],
       "related_jd": [
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -33729,7 +33729,7 @@
       "related_jd": [],
       "used_by_axl": [
         "A2×L3",
-        "A15×L2"
+        "A16×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -33958,7 +33958,7 @@
       "related_jd": [],
       "used_by_axl": [
         "A2×L3",
-        "A16×L1"
+        "A17×L1"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -36351,7 +36351,7 @@
       "related_jd": [],
       "used_by_axl": [
         "A2×L3",
-        "A15×L2"
+        "A16×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -36423,7 +36423,7 @@
       "related_jd": [],
       "used_by_axl": [
         "A2×L3",
-        "A15×L2"
+        "A16×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -36495,7 +36495,7 @@
       "related_jd": [],
       "used_by_axl": [
         "A2×L3",
-        "A15×L2"
+        "A16×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -36567,7 +36567,7 @@
       "related_jd": [],
       "used_by_axl": [
         "A2×L3",
-        "A15×L2"
+        "A16×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -36641,7 +36641,7 @@
       ],
       "used_by_axl": [
         "A2×L3",
-        "A15×L2"
+        "A16×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -36713,7 +36713,7 @@
       "related_jd": [],
       "used_by_axl": [
         "A2×L3",
-        "A15×L2"
+        "A16×L2"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -38601,7 +38601,7 @@
       "related_jd": [],
       "used_by_axl": [
         "A2×L3",
-        "A16×L1"
+        "A17×L1"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -38673,7 +38673,7 @@
       "related_jd": [],
       "used_by_axl": [
         "A2×L3",
-        "A16×L1"
+        "A17×L1"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -38745,7 +38745,7 @@
       "related_jd": [],
       "used_by_axl": [
         "A2×L3",
-        "A16×L1"
+        "A17×L1"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -38822,7 +38822,7 @@
       ],
       "used_by_axl": [
         "A2×L3",
-        "A16×L1"
+        "A17×L1"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -38897,7 +38897,7 @@
       ],
       "used_by_axl": [
         "A2×L3",
-        "A16×L1"
+        "A17×L1"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -38969,7 +38969,7 @@
       "related_jd": [],
       "used_by_axl": [
         "A2×L3",
-        "A16×L1"
+        "A17×L1"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -38992,14 +38992,14 @@
       "canonical_slot": "jd-0.10",
       "owner_a": "MULTI",
       "name": "违反状态与处置引用",
-      "definition": "安全边界正常、接近、违反或未知的状态，以及对 A16 处置责任的引用。",
+      "definition": "安全边界正常、接近、违反或未知的状态，以及对 A17 处置责任的引用。",
       "node_kind": "variable",
       "variable_role": "configuration_input",
       "value_type": "state_and_action_reference",
       "value_domain": [
         {
           "value": "TBD",
-          "label_zh": "状态阈值、迟滞和 A16 处置映射 TBD",
+          "label_zh": "状态阈值、迟滞和 A17 处置映射 TBD",
           "source_refs": [],
           "status": "TBD",
           "applicable_scenarios": [
@@ -39039,12 +39039,12 @@
         "jd-0.10"
       ],
       "related_jd": [
-        "jd-16.1",
-        "jd-16.2"
+        "jd-17.1",
+        "jd-17.2"
       ],
       "used_by_axl": [
         "A2×L3",
-        "A16×L1"
+        "A17×L1"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -41284,8 +41284,8 @@
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
       "owner_a": "A12",
-      "name": "载荷执行",
-      "definition": "汇总 A12 载荷执行下的 canonical JD 及经来源支持的子维度。",
+      "name": "载荷动作执行",
+      "definition": "汇总 A12 载荷动作执行下的 canonical JD 及经来源支持的子维度。",
       "node_kind": "capability_root",
       "variable_role": "structural_group",
       "value_type": "none",
@@ -42501,8 +42501,8 @@
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
       "owner_a": "A13",
-      "name": "成果呈现",
-      "definition": "汇总 A13 成果呈现下的 canonical JD 及经来源支持的子维度。",
+      "name": "载荷成果生成 / 远端呈现",
+      "definition": "汇总 A13 载荷成果生成 / 远端呈现下的 canonical JD 及经来源支持的子维度。",
       "node_kind": "capability_root",
       "variable_role": "structural_group",
       "value_type": "none",
@@ -43699,8 +43699,8 @@
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
       "owner_a": "A14",
-      "name": "通信链路",
-      "definition": "汇总 A14 通信链路下的 canonical JD 及经来源支持的子维度。",
+      "name": "通信 / C2 / 遥测",
+      "definition": "汇总 A14 通信 / C2 / 遥测下的 canonical JD 及经来源支持的子维度。",
       "node_kind": "capability_root",
       "variable_role": "structural_group",
       "value_type": "none",
@@ -44903,8 +44903,8 @@
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
       "owner_a": "A15",
-      "name": "合规申报",
-      "definition": "汇总 A15 合规申报下的 canonical JD 及经来源支持的子维度。",
+      "name": "日志 / 审计 / 保证证据",
+      "definition": "汇总 A15 日志 / 审计 / 保证证据下的 canonical JD 及经来源支持的子维度。",
       "node_kind": "capability_root",
       "variable_role": "structural_group",
       "value_type": "none",
@@ -44962,6 +44962,1108 @@
       "parent_id": "PROPOSED-jd-tree-A15",
       "canonical_slot": "jd-15.1",
       "owner_a": "A15",
+      "name": "事件类目",
+      "definition": "该 JD 要记录的跨 A 事件类目；meta-A 用于列举其他 A 产生的关键事件。",
+      "node_kind": "group",
+      "variable_role": "structural_group",
+      "value_type": "none",
+      "value_domain": null,
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "shared",
+      "projection_targets": [
+        "world_config",
+        "user_config",
+        "sut_input",
+        "harness"
+      ],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_input",
+        "sut_trace",
+        "grader"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "related_global_jd": [
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [
+        "A15×L1",
+        "A15×L2"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-FULL-JD66-V3",
+        "L-FULL-AXL68-V3"
+      ],
+      "evidence_status": "authoritative_existing",
+      "derivation_status": "given",
+      "review_status": "reviewed",
+      "legacy_aliases": [],
+      "notes": "canonical 名称与定义取自 ability-id-v3 权威机读源；子维度为来源约束下的研究草案。"
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-15.1.1",
+      "parent_id": "jd-15.1",
+      "canonical_slot": "jd-15.1",
+      "owner_a": "A15",
+      "name": "事件来源能力",
+      "definition": "事件类目中的“事件来源能力”变量。其语义范围由所引资料限定。",
+      "node_kind": "variable",
+      "variable_role": "contract_schema",
+      "value_type": "reference_set",
+      "value_domain": null,
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "many",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "shared",
+      "projection_targets": [
+        "world_config",
+        "user_config",
+        "sut_input",
+        "harness"
+      ],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_input",
+        "grader"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "related_global_jd": [
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [
+        "A15×L1",
+        "A15×L2"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-FULL-JD66-V3",
+        "L-FULL-AXL68-V3"
+      ],
+      "evidence_status": "source_supported",
+      "derivation_status": "derived",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-15.1.2",
+      "parent_id": "jd-15.1",
+      "canonical_slot": "jd-15.1",
+      "owner_a": "A15",
+      "name": "事件类型",
+      "definition": "事件类目中的“事件类型”变量。其语义范围由所引资料限定。",
+      "node_kind": "variable",
+      "variable_role": "contract_schema",
+      "value_type": "taxonomy_ref",
+      "value_domain": null,
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "shared",
+      "projection_targets": [
+        "world_config",
+        "user_config",
+        "sut_input",
+        "harness"
+      ],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_input",
+        "grader"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "related_global_jd": [
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [
+        "A15×L1",
+        "A15×L2"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-FULL-JD66-V3",
+        "L-FULL-AXL68-V3"
+      ],
+      "evidence_status": "source_supported",
+      "derivation_status": "derived",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-15.1.3",
+      "parent_id": "jd-15.1",
+      "canonical_slot": "jd-15.1",
+      "owner_a": "A15",
+      "name": "事件严重度",
+      "definition": "事件类目中的“事件严重度”变量。严重度分级及语义尚无受审定义。",
+      "node_kind": "variable",
+      "variable_role": "contract_schema",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "TBD",
+          "label_zh": "严重度分级及语义尚无受审定义。",
+          "source_refs": [
+            "L-FULL-AXL68-V3"
+          ],
+          "status": "TBD",
+          "applicable_scenarios": [
+            "cross_scenario"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "shared",
+      "projection_targets": [
+        "world_config",
+        "user_config",
+        "sut_input",
+        "harness"
+      ],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_input",
+        "grader"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "related_global_jd": [
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [
+        "A15×L1",
+        "A15×L2"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-FULL-AXL68-V3"
+      ],
+      "evidence_status": "TBD",
+      "derivation_status": "TBD",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": "严重度分级及语义尚无受审定义。"
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-15.1.4",
+      "parent_id": "jd-15.1",
+      "canonical_slot": "jd-15.1",
+      "owner_a": "A15",
+      "name": "事件时间与顺序",
+      "definition": "事件类目中的“事件时间与顺序”变量。其语义范围由所引资料限定。",
+      "node_kind": "variable",
+      "variable_role": "runtime_observation",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "TBD",
+      "projection_targets": [],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_trace",
+        "grader"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "related_global_jd": [
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [
+        "A15×L1",
+        "A15×L2"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-FULL-AXL68-V3",
+        "W-W3C-PROV-DM"
+      ],
+      "evidence_status": "source_supported",
+      "derivation_status": "derived",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-15.1.5",
+      "parent_id": "jd-15.1",
+      "canonical_slot": "jd-15.1",
+      "owner_a": "A15",
+      "name": "事件关联对象与执行片段",
+      "definition": "事件类目中的“事件关联对象与执行片段”变量。其语义范围由所引资料限定。",
+      "node_kind": "variable",
+      "variable_role": "runtime_observation",
+      "value_type": "reference_set",
+      "value_domain": null,
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "many",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "TBD",
+      "projection_targets": [],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_trace",
+        "grader"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "related_global_jd": [
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [
+        "A15×L1",
+        "A15×L2"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-FULL-AXL68-V3",
+        "W-W3C-PROV-DM"
+      ],
+      "evidence_status": "source_supported",
+      "derivation_status": "derived",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "jd-15.2",
+      "parent_id": "PROPOSED-jd-tree-A15",
+      "canonical_slot": "jd-15.2",
+      "owner_a": "A15",
+      "name": "证据格式规格",
+      "definition": "JD 的证据格式与审计协议，吸收原 audit protocol。",
+      "node_kind": "group",
+      "variable_role": "structural_group",
+      "value_type": "none",
+      "value_domain": null,
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "shared",
+      "projection_targets": [
+        "world_config",
+        "user_config",
+        "sut_input",
+        "harness"
+      ],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_input",
+        "sut_trace",
+        "grader"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "related_global_jd": [
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [
+        "A15×L2",
+        "A15×L3",
+        "A15×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-FULL-JD66-V3",
+        "L-FULL-AXL68-V3"
+      ],
+      "evidence_status": "authoritative_existing",
+      "derivation_status": "given",
+      "review_status": "reviewed",
+      "legacy_aliases": [],
+      "notes": "canonical 名称与定义取自 ability-id-v3 权威机读源；子维度为来源约束下的研究草案。"
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-15.2.1",
+      "parent_id": "jd-15.2",
+      "canonical_slot": "jd-15.2",
+      "owner_a": "A15",
+      "name": "证据对象类型",
+      "definition": "证据格式规格中的“证据对象类型”变量。其语义范围由所引资料限定。",
+      "node_kind": "variable",
+      "variable_role": "contract_schema",
+      "value_type": "taxonomy_ref",
+      "value_domain": null,
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "shared",
+      "projection_targets": [
+        "world_config",
+        "user_config",
+        "sut_input",
+        "harness"
+      ],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_input",
+        "grader"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "related_global_jd": [
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [
+        "A15×L2",
+        "A15×L3",
+        "A15×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-FULL-JD66-V3",
+        "W-W3C-PROV-DM"
+      ],
+      "evidence_status": "source_supported",
+      "derivation_status": "derived",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-15.2.2",
+      "parent_id": "jd-15.2",
+      "canonical_slot": "jd-15.2",
+      "owner_a": "A15",
+      "name": "证据数据结构与版本",
+      "definition": "证据格式规格中的“证据数据结构与版本”变量。其语义范围由所引资料限定。",
+      "node_kind": "variable",
+      "variable_role": "contract_schema",
+      "value_type": "schema_ref",
+      "value_domain": null,
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "shared",
+      "projection_targets": [
+        "world_config",
+        "user_config",
+        "sut_input",
+        "harness"
+      ],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_input",
+        "grader"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "related_global_jd": [
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [
+        "A15×L2",
+        "A15×L3",
+        "A15×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-FULL-JD66-V3",
+        "W-W3C-PROV-DM"
+      ],
+      "evidence_status": "source_supported",
+      "derivation_status": "derived",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-15.2.3",
+      "parent_id": "jd-15.2",
+      "canonical_slot": "jd-15.2",
+      "owner_a": "A15",
+      "name": "事件、动作与责任关联",
+      "definition": "证据格式规格中的“事件、动作与责任关联”变量。其语义范围由所引资料限定。",
+      "node_kind": "variable",
+      "variable_role": "contract_schema",
+      "value_type": "relation_set",
+      "value_domain": null,
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "many",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "shared",
+      "projection_targets": [
+        "world_config",
+        "user_config",
+        "sut_input",
+        "harness"
+      ],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_input",
+        "grader"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "related_global_jd": [
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [
+        "A15×L2",
+        "A15×L3",
+        "A15×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-FULL-AXL68-V3",
+        "W-W3C-PROV-DM"
+      ],
+      "evidence_status": "source_supported",
+      "derivation_status": "derived",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-15.2.4",
+      "parent_id": "jd-15.2",
+      "canonical_slot": "jd-15.2",
+      "owner_a": "A15",
+      "name": "时间戳与时钟来源",
+      "definition": "证据格式规格中的“时间戳与时钟来源”变量。其语义范围由所引资料限定。",
+      "node_kind": "variable",
+      "variable_role": "runtime_observation",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "TBD",
+      "projection_targets": [],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_trace",
+        "grader"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "related_global_jd": [
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [
+        "A15×L2",
+        "A15×L3",
+        "A15×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-FULL-AXL68-V3",
+        "W-MAVLINK-MICROSERVICES"
+      ],
+      "evidence_status": "source_supported",
+      "derivation_status": "derived",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-15.2.5",
+      "parent_id": "jd-15.2",
+      "canonical_slot": "jd-15.2",
+      "owner_a": "A15",
+      "name": "可回放与完整性状态",
+      "definition": "证据格式规格中的“可回放与完整性状态”变量。其语义范围由所引资料限定。",
+      "node_kind": "variable",
+      "variable_role": "TBD",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "TBD",
+      "projection_targets": [],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "TBD"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "related_global_jd": [
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [
+        "A15×L2",
+        "A15×L3",
+        "A15×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-FULL-AXL68-V3"
+      ],
+      "evidence_status": "source_supported",
+      "derivation_status": "derived",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": "生产者待确认：可能是系统自报状态，也可能是审计工具根据证据链派生；本版不强行指定。"
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "jd-15.3",
+      "parent_id": "PROPOSED-jd-tree-A15",
+      "canonical_slot": "jd-15.3",
+      "owner_a": "A15",
+      "name": "留存策略",
+      "definition": "日志与证据留存策略，是 JD-SOP 对法定 minimum 的进一步细化。",
+      "node_kind": "group",
+      "variable_role": "structural_group",
+      "value_type": "none",
+      "value_domain": null,
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "shared",
+      "projection_targets": [
+        "world_config",
+        "user_config",
+        "sut_input",
+        "harness"
+      ],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_input",
+        "sut_trace",
+        "grader"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "related_global_jd": [
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [
+        "A15×L3"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-FULL-JD66-V3",
+        "L-FULL-AXL68-V3"
+      ],
+      "evidence_status": "authoritative_existing",
+      "derivation_status": "given",
+      "review_status": "reviewed",
+      "legacy_aliases": [],
+      "notes": "canonical 名称与定义取自 ability-id-v3 权威机读源；子维度为来源约束下的研究草案。"
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-15.3.1",
+      "parent_id": "jd-15.3",
+      "canonical_slot": "jd-15.3",
+      "owner_a": "A15",
+      "name": "留存对象范围",
+      "definition": "留存策略中的“留存对象范围”变量。其语义范围由所引资料限定。",
+      "node_kind": "variable",
+      "variable_role": "contract_schema",
+      "value_type": "reference_set",
+      "value_domain": null,
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "many",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "shared",
+      "projection_targets": [
+        "world_config",
+        "user_config",
+        "sut_input",
+        "harness"
+      ],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_input",
+        "grader"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "related_global_jd": [
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [
+        "A15×L3"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-FULL-JD66-V3",
+        "L-FULL-AXL68-V3"
+      ],
+      "evidence_status": "source_supported",
+      "derivation_status": "derived",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-15.3.2",
+      "parent_id": "jd-15.3",
+      "canonical_slot": "jd-15.3",
+      "owner_a": "A15",
+      "name": "留存期限",
+      "definition": "留存策略中的“留存期限”变量。期限数值必须由适用法规或项目 SOP 给出。",
+      "node_kind": "variable",
+      "variable_role": "contract_schema",
+      "value_type": "duration",
+      "value_domain": [
+        {
+          "value": "TBD",
+          "label_zh": "期限数值必须由适用法规或项目 SOP 给出。",
+          "source_refs": [
+            "L-FULL-JD66-V3"
+          ],
+          "status": "TBD",
+          "applicable_scenarios": [
+            "cross_scenario"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "shared",
+      "projection_targets": [
+        "world_config",
+        "user_config",
+        "sut_input",
+        "harness"
+      ],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_input",
+        "grader"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "related_global_jd": [
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [
+        "A15×L3"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-FULL-JD66-V3"
+      ],
+      "evidence_status": "TBD",
+      "derivation_status": "TBD",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": "期限数值必须由适用法规或项目 SOP 给出。"
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-15.3.3",
+      "parent_id": "jd-15.3",
+      "canonical_slot": "jd-15.3",
+      "owner_a": "A15",
+      "name": "存储与归档状态",
+      "definition": "留存策略中的“存储与归档状态”变量。其语义范围由所引资料限定。",
+      "node_kind": "variable",
+      "variable_role": "runtime_observation",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "active",
+          "label_zh": "在线留存",
+          "source_refs": [
+            "L-FULL-JD66-V3"
+          ],
+          "status": "inferred_candidate",
+          "applicable_scenarios": [
+            "cross_scenario"
+          ]
+        },
+        {
+          "value": "archived",
+          "label_zh": "已归档",
+          "source_refs": [
+            "L-FULL-JD66-V3"
+          ],
+          "status": "inferred_candidate",
+          "applicable_scenarios": [
+            "cross_scenario"
+          ]
+        },
+        {
+          "value": "disposed",
+          "label_zh": "已处置",
+          "source_refs": [
+            "L-FULL-JD66-V3"
+          ],
+          "status": "inferred_candidate",
+          "applicable_scenarios": [
+            "cross_scenario"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "TBD",
+      "projection_targets": [],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_trace",
+        "grader"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "related_global_jd": [
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [
+        "A15×L3"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-FULL-JD66-V3"
+      ],
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": "三个生命周期状态是对“留存策略”的合理归纳，不是 canonical 原文直接给出的正式枚举；待 SOP 或审计协议支持后再升级。"
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-15.3.4",
+      "parent_id": "jd-15.3",
+      "canonical_slot": "jd-15.3",
+      "owner_a": "A15",
+      "name": "访问与审计权限",
+      "definition": "留存策略中的“访问与审计权限”变量。权限角色、访问范围、授权规则和脱敏要求尚无受审依据。",
+      "node_kind": "variable",
+      "variable_role": "contract_schema",
+      "value_type": "constraint_set",
+      "value_domain": [
+        {
+          "value": "TBD",
+          "label_zh": "权限角色、访问范围、授权规则和脱敏要求尚无受审依据。",
+          "source_refs": [
+            "L-FULL-JD66-V3",
+            "L-FULL-AXL68-V3"
+          ],
+          "status": "TBD",
+          "applicable_scenarios": [
+            "cross_scenario"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "many",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "shared",
+      "projection_targets": [
+        "world_config",
+        "user_config",
+        "sut_input",
+        "harness"
+      ],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_input",
+        "grader"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "related_global_jd": [
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [
+        "A15×L3"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-FULL-JD66-V3",
+        "L-FULL-AXL68-V3"
+      ],
+      "evidence_status": "TBD",
+      "derivation_status": "TBD",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": "权限角色、访问范围、授权规则和脱敏要求尚无受审依据。"
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-15.3.5",
+      "parent_id": "jd-15.3",
+      "canonical_slot": "jd-15.3",
+      "owner_a": "A15",
+      "name": "完整性检查与缺口状态",
+      "definition": "留存策略中的“完整性检查与缺口状态”变量。其语义范围由所引资料限定。",
+      "node_kind": "variable",
+      "variable_role": "derived_metric",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "TBD",
+      "projection_targets": [],
+      "visibility": [
+        "grader_only"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "related_global_jd": [
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [
+        "A15×L3"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-FULL-AXL68-V3"
+      ],
+      "evidence_status": "source_supported",
+      "derivation_status": "derived",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-tree-A16",
+      "parent_id": "PROPOSED-jd-tree-version1",
+      "canonical_slot": null,
+      "owner_a": "A16",
+      "name": "空域 / 交通 / 合规接入",
+      "definition": "汇总 A16 空域 / 交通 / 合规接入下的 canonical JD 及经来源支持的子维度。",
+      "node_kind": "capability_root",
+      "variable_role": "structural_group",
+      "value_type": "none",
+      "value_domain": null,
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "shared",
+      "projection_targets": [
+        "world_config",
+        "user_config",
+        "sut_input",
+        "harness"
+      ],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_input",
+        "sut_trace",
+        "grader"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "related_global_jd": [
+        "jd-0.6",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [
+        "A16×L1",
+        "A16×L2",
+        "A16×L3",
+        "A16×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-FULL-JD66-V3",
+        "L-FULL-AXL68-V3"
+      ],
+      "evidence_status": "authoritative_existing",
+      "derivation_status": "given",
+      "review_status": "reviewed",
+      "legacy_aliases": [],
+      "notes": "本轮只保留可直接对应 canonical 定义或 A×L 责任原文的子维度；未确认细化项进入待确认文档。"
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "jd-16.1",
+      "parent_id": "PROPOSED-jd-tree-A16",
+      "canonical_slot": "jd-16.1",
+      "owner_a": "A16",
       "name": "空域类别",
       "definition": "该 JD 涉及的空域类别，例如 ICAO G/E/D/C/B/A 等。",
       "node_kind": "group",
@@ -44997,7 +46099,7 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L1"
+        "A16×L1"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -45014,10 +46116,10 @@
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.1.1",
-      "parent_id": "jd-15.1",
-      "canonical_slot": "jd-15.1",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.1.1",
+      "parent_id": "jd-16.1",
+      "canonical_slot": "jd-16.1",
+      "owner_a": "A16",
       "name": "空域类别标识",
       "definition": "空域类别中的“空域类别标识”变量。权威字典举例含 ICAO A–G 类；中国运行场景的正式可选集需按适用法规另行确认。",
       "node_kind": "variable",
@@ -45065,7 +46167,7 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L1"
+        "A16×L1"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -45078,14 +46180,14 @@
       "derivation_status": "TBD",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "权威字典举例含 ICAO A–G 类；中国运行场景的正式可选集需按适用法规另行确认。\nA15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "权威字典举例含 ICAO A–G 类；中国运行场景的正式可选集需按适用法规另行确认。\nA16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.1.2",
-      "parent_id": "jd-15.1",
-      "canonical_slot": "jd-15.1",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.1.2",
+      "parent_id": "jd-16.1",
+      "canonical_slot": "jd-16.1",
+      "owner_a": "A16",
       "name": "空域类别来源",
       "definition": "空域类别中的“空域类别来源”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -45120,7 +46222,7 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L1"
+        "A16×L1"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -45132,14 +46234,14 @@
       "derivation_status": "derived",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "A15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "A16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.1.3",
-      "parent_id": "jd-15.1",
-      "canonical_slot": "jd-15.1",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.1.3",
+      "parent_id": "jd-16.1",
+      "canonical_slot": "jd-16.1",
+      "owner_a": "A16",
       "name": "适用空间范围",
       "definition": "空域类别中的“适用空间范围”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -45174,7 +46276,7 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L1"
+        "A16×L1"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -45187,14 +46289,14 @@
       "derivation_status": "derived",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "A15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "A16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.1.4",
-      "parent_id": "jd-15.1",
-      "canonical_slot": "jd-15.1",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.1.4",
+      "parent_id": "jd-16.1",
+      "canonical_slot": "jd-16.1",
+      "owner_a": "A16",
       "name": "适用时间范围",
       "definition": "空域类别中的“适用时间范围”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -45229,7 +46331,7 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L1"
+        "A16×L1"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -45241,14 +46343,14 @@
       "derivation_status": "derived",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "A15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "A16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.1.5",
-      "parent_id": "jd-15.1",
-      "canonical_slot": "jd-15.1",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.1.5",
+      "parent_id": "jd-16.1",
+      "canonical_slot": "jd-16.1",
+      "owner_a": "A16",
       "name": "运行约束引用",
       "definition": "空域类别中的“运行约束引用”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -45283,7 +46385,7 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L1"
+        "A16×L1"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -45295,14 +46397,14 @@
       "derivation_status": "derived",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "A15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "A16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "jd-15.2",
-      "parent_id": "PROPOSED-jd-tree-A15",
-      "canonical_slot": "jd-15.2",
-      "owner_a": "A15",
+      "node_id": "jd-16.2",
+      "parent_id": "PROPOSED-jd-tree-A16",
+      "canonical_slot": "jd-16.2",
+      "owner_a": "A16",
       "name": "地理围栏集",
       "definition": "JD 的地理围栏集合，包含具体边界。",
       "node_kind": "group",
@@ -45338,9 +46440,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L1",
-        "A15×L2",
-        "A15×L3"
+        "A16×L1",
+        "A16×L2",
+        "A16×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -45357,10 +46459,10 @@
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.2.1",
-      "parent_id": "jd-15.2",
-      "canonical_slot": "jd-15.2",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.2.1",
+      "parent_id": "jd-16.2",
+      "canonical_slot": "jd-16.2",
+      "owner_a": "A16",
       "name": "围栏几何类型",
       "definition": "地理围栏集中的“围栏几何类型”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -45426,9 +46528,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L1",
-        "A15×L2",
-        "A15×L3"
+        "A16×L1",
+        "A16×L2",
+        "A16×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -45440,14 +46542,14 @@
       "derivation_status": "proposed",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "高度带作为候选保留，但当前来源不足以将其标为直接支持；待获得明确规范后再升级证据状态。\nA15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "高度带作为候选保留，但当前来源不足以将其标为直接支持；待获得明确规范后再升级证据状态。\nA16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.2.2",
-      "parent_id": "jd-15.2",
-      "canonical_slot": "jd-15.2",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.2.2",
+      "parent_id": "jd-16.2",
+      "canonical_slot": "jd-16.2",
+      "owner_a": "A16",
       "name": "包含与排除属性",
       "definition": "地理围栏集中的“包含与排除属性”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -45500,9 +46602,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L1",
-        "A15×L2",
-        "A15×L3"
+        "A16×L1",
+        "A16×L2",
+        "A16×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -45514,14 +46616,14 @@
       "derivation_status": "proposed",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "A15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "A16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.2.3",
-      "parent_id": "jd-15.2",
-      "canonical_slot": "jd-15.2",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.2.3",
+      "parent_id": "jd-16.2",
+      "canonical_slot": "jd-16.2",
+      "owner_a": "A16",
       "name": "围栏边界集合",
       "definition": "地理围栏集中的“围栏边界集合”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -45555,9 +46657,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L1",
-        "A15×L2",
-        "A15×L3"
+        "A16×L1",
+        "A16×L2",
+        "A16×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -45570,14 +46672,14 @@
       "derivation_status": "derived",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "A15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "A16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.2.4",
-      "parent_id": "jd-15.2",
-      "canonical_slot": "jd-15.2",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.2.4",
+      "parent_id": "jd-16.2",
+      "canonical_slot": "jd-16.2",
+      "owner_a": "A16",
       "name": "围栏来源与版本",
       "definition": "地理围栏集中的“围栏来源与版本”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -45611,9 +46713,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L1",
-        "A15×L2",
-        "A15×L3"
+        "A16×L1",
+        "A16×L2",
+        "A16×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -45626,14 +46728,14 @@
       "derivation_status": "derived",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "A15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "A16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.2.5",
-      "parent_id": "jd-15.2",
-      "canonical_slot": "jd-15.2",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.2.5",
+      "parent_id": "jd-16.2",
+      "canonical_slot": "jd-16.2",
+      "owner_a": "A16",
       "name": "围栏生效窗口",
       "definition": "地理围栏集中的“围栏生效窗口”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -45667,9 +46769,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L1",
-        "A15×L2",
-        "A15×L3"
+        "A16×L1",
+        "A16×L2",
+        "A16×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -45681,14 +46783,14 @@
       "derivation_status": "derived",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "A15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "A16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "jd-15.3",
-      "parent_id": "PROPOSED-jd-tree-A15",
-      "canonical_slot": "jd-15.3",
-      "owner_a": "A15",
+      "node_id": "jd-16.3",
+      "parent_id": "PROPOSED-jd-tree-A16",
+      "canonical_slot": "jd-16.3",
+      "owner_a": "A16",
       "name": "交通信息源需求",
       "definition": "JD 要求平台接入的交通信息源集，例如 UTM、U-space 与 ADS-B。",
       "node_kind": "group",
@@ -45724,9 +46826,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L1",
-        "A15×L2",
-        "A15×L3"
+        "A16×L1",
+        "A16×L2",
+        "A16×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -45743,10 +46845,10 @@
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.3.1",
-      "parent_id": "jd-15.3",
-      "canonical_slot": "jd-15.3",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.3.1",
+      "parent_id": "jd-16.3",
+      "canonical_slot": "jd-16.3",
+      "owner_a": "A16",
       "name": "交通信息源类型",
       "definition": "交通信息源需求中的“交通信息源类型”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -45809,9 +46911,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L1",
-        "A15×L2",
-        "A15×L3"
+        "A16×L1",
+        "A16×L2",
+        "A16×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -45824,14 +46926,14 @@
       "derivation_status": "proposed",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "A15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "A16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.3.2",
-      "parent_id": "jd-15.3",
-      "canonical_slot": "jd-15.3",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.3.2",
+      "parent_id": "jd-16.3",
+      "canonical_slot": "jd-16.3",
+      "owner_a": "A16",
       "name": "信息源实例与端点",
       "definition": "交通信息源需求中的“信息源实例与端点”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -45866,9 +46968,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L1",
-        "A15×L2",
-        "A15×L3"
+        "A16×L1",
+        "A16×L2",
+        "A16×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -45880,14 +46982,14 @@
       "derivation_status": "derived",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "A15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "A16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.3.3",
-      "parent_id": "jd-15.3",
-      "canonical_slot": "jd-15.3",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.3.3",
+      "parent_id": "jd-16.3",
+      "canonical_slot": "jd-16.3",
+      "owner_a": "A16",
       "name": "所需交通信息类别",
       "definition": "交通信息源需求中的“所需交通信息类别”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -45922,9 +47024,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L1",
-        "A15×L2",
-        "A15×L3"
+        "A16×L1",
+        "A16×L2",
+        "A16×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -45936,14 +47038,14 @@
       "derivation_status": "derived",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "A15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "A16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.3.4",
-      "parent_id": "jd-15.3",
-      "canonical_slot": "jd-15.3",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.3.4",
+      "parent_id": "jd-16.3",
+      "canonical_slot": "jd-16.3",
+      "owner_a": "A16",
       "name": "信息新鲜度与可用状态",
       "definition": "交通信息源需求中的“信息新鲜度与可用状态”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -45973,9 +47075,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L1",
-        "A15×L2",
-        "A15×L3"
+        "A16×L1",
+        "A16×L2",
+        "A16×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -45987,14 +47089,14 @@
       "derivation_status": "derived",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "A15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "A16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.3.5",
-      "parent_id": "jd-15.3",
-      "canonical_slot": "jd-15.3",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.3.5",
+      "parent_id": "jd-16.3",
+      "canonical_slot": "jd-16.3",
+      "owner_a": "A16",
       "name": "多源一致性状态",
       "definition": "交通信息源需求中的“多源一致性状态”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -46050,9 +47152,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L1",
-        "A15×L2",
-        "A15×L3"
+        "A16×L1",
+        "A16×L2",
+        "A16×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -46064,14 +47166,14 @@
       "derivation_status": "proposed",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "生产者待确认：可能由 SUT 自报，也可能由 Harness / Grader 对多源观测计算；本版不强行指定。\nA15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "生产者待确认：可能由 SUT 自报，也可能由 Harness / Grader 对多源观测计算；本版不强行指定。\nA16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "jd-15.4",
-      "parent_id": "PROPOSED-jd-tree-A15",
-      "canonical_slot": "jd-15.4",
-      "owner_a": "A15",
+      "node_id": "jd-16.4",
+      "parent_id": "PROPOSED-jd-tree-A16",
+      "canonical_slot": "jd-16.4",
+      "owner_a": "A16",
       "name": "授权生命周期",
       "definition": "授权的生命周期管理，例如长期、临时与即时授权。",
       "node_kind": "group",
@@ -46107,9 +47209,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L1",
-        "A15×L2",
-        "A15×L3"
+        "A16×L1",
+        "A16×L2",
+        "A16×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -46126,10 +47228,10 @@
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.4.1",
-      "parent_id": "jd-15.4",
-      "canonical_slot": "jd-15.4",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.4.1",
+      "parent_id": "jd-16.4",
+      "canonical_slot": "jd-16.4",
+      "owner_a": "A16",
       "name": "授权类型",
       "definition": "授权生命周期中的“授权类型”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -46192,9 +47294,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L1",
-        "A15×L2",
-        "A15×L3"
+        "A16×L1",
+        "A16×L2",
+        "A16×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -46206,14 +47308,14 @@
       "derivation_status": "proposed",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "A15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "A16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.4.2",
-      "parent_id": "jd-15.4",
-      "canonical_slot": "jd-15.4",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.4.2",
+      "parent_id": "jd-16.4",
+      "canonical_slot": "jd-16.4",
+      "owner_a": "A16",
       "name": "授权标识与签发来源",
       "definition": "授权生命周期中的“授权标识与签发来源”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -46248,9 +47350,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L1",
-        "A15×L2",
-        "A15×L3"
+        "A16×L1",
+        "A16×L2",
+        "A16×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -46262,14 +47364,14 @@
       "derivation_status": "derived",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "A15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "A16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.4.3",
-      "parent_id": "jd-15.4",
-      "canonical_slot": "jd-15.4",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.4.3",
+      "parent_id": "jd-16.4",
+      "canonical_slot": "jd-16.4",
+      "owner_a": "A16",
       "name": "授权有效时间窗",
       "definition": "授权生命周期中的“授权有效时间窗”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -46304,9 +47406,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L1",
-        "A15×L2",
-        "A15×L3"
+        "A16×L1",
+        "A16×L2",
+        "A16×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -46319,14 +47421,14 @@
       "derivation_status": "derived",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "A15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "A16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.4.4",
-      "parent_id": "jd-15.4",
-      "canonical_slot": "jd-15.4",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.4.4",
+      "parent_id": "jd-16.4",
+      "canonical_slot": "jd-16.4",
+      "owner_a": "A16",
       "name": "授权适用空间与任务范围",
       "definition": "授权生命周期中的“授权适用空间与任务范围”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -46361,9 +47463,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L1",
-        "A15×L2",
-        "A15×L3"
+        "A16×L1",
+        "A16×L2",
+        "A16×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -46376,14 +47478,14 @@
       "derivation_status": "derived",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "A15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "A16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.4.5",
-      "parent_id": "jd-15.4",
-      "canonical_slot": "jd-15.4",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.4.5",
+      "parent_id": "jd-16.4",
+      "canonical_slot": "jd-16.4",
+      "owner_a": "A16",
       "name": "授权状态",
       "definition": "授权生命周期中的“授权状态”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -46459,9 +47561,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L1",
-        "A15×L2",
-        "A15×L3"
+        "A16×L1",
+        "A16×L2",
+        "A16×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -46473,14 +47575,14 @@
       "derivation_status": "proposed",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "A15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "A16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "jd-15.5",
-      "parent_id": "PROPOSED-jd-tree-A15",
-      "canonical_slot": "jd-15.5",
-      "owner_a": "A15",
+      "node_id": "jd-16.5",
+      "parent_id": "PROPOSED-jd-tree-A16",
+      "canonical_slot": "jd-16.5",
+      "owner_a": "A16",
       "name": "合规处置策略适用集",
       "definition": "该 JD 下 L4 可用且有效的合规处置策略子集，例如刷新授权、更新围栏、等待恢复、复核交通、退避与返航。",
       "node_kind": "group",
@@ -46516,7 +47618,7 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L4"
+        "A16×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -46533,10 +47635,10 @@
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.5.1",
-      "parent_id": "jd-15.5",
-      "canonical_slot": "jd-15.5",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.5.1",
+      "parent_id": "jd-16.5",
+      "canonical_slot": "jd-16.5",
+      "owner_a": "A16",
       "name": "合规异常类型",
       "definition": "合规处置策略适用集中的“合规异常类型”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -46599,7 +47701,7 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L4"
+        "A16×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -46611,14 +47713,14 @@
       "derivation_status": "proposed",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "A15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "A16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.5.2",
-      "parent_id": "jd-15.5",
-      "canonical_slot": "jd-15.5",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.5.2",
+      "parent_id": "jd-16.5",
+      "canonical_slot": "jd-16.5",
+      "owner_a": "A16",
       "name": "允许处置动作",
       "definition": "合规处置策略适用集中的“允许处置动作”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -46708,7 +47810,7 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L4"
+        "A16×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -46721,14 +47823,14 @@
       "derivation_status": "proposed",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "A15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "A16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.5.3",
-      "parent_id": "jd-15.5",
-      "canonical_slot": "jd-15.5",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.5.3",
+      "parent_id": "jd-16.5",
+      "canonical_slot": "jd-16.5",
+      "owner_a": "A16",
       "name": "处置适用条件",
       "definition": "合规处置策略适用集中的“处置适用条件”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -46763,7 +47865,7 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L4"
+        "A16×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -46776,14 +47878,14 @@
       "derivation_status": "derived",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "A15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "A16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.5.4",
-      "parent_id": "jd-15.5",
-      "canonical_slot": "jd-15.5",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.5.4",
+      "parent_id": "jd-16.5",
+      "canonical_slot": "jd-16.5",
+      "owner_a": "A16",
       "name": "人工合规确认要求",
       "definition": "合规处置策略适用集中的“人工合规确认要求”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -46818,7 +47920,7 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L4"
+        "A16×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -46830,14 +47932,14 @@
       "derivation_status": "derived",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "A15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "A16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-15.5.5",
-      "parent_id": "jd-15.5",
-      "canonical_slot": "jd-15.5",
-      "owner_a": "A15",
+      "node_id": "PROPOSED-jd-16.5.5",
+      "parent_id": "jd-16.5",
+      "canonical_slot": "jd-16.5",
+      "owner_a": "A16",
       "name": "处置后合规验证",
       "definition": "合规处置策略适用集中的“处置后合规验证”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -46872,7 +47974,7 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A15×L4"
+        "A16×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -46884,16 +47986,16 @@
       "derivation_status": "derived",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "A15 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
+      "notes": "A16 只保存适用法规 / SOP、空域、围栏、授权或交通服务的运行绑定与状态，不在变量树内重新创造法规内容。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-tree-A16",
+      "node_id": "PROPOSED-jd-tree-A17",
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
-      "owner_a": "A16",
-      "name": "安全包络",
-      "definition": "汇总 A16 安全包络下的 canonical JD 及经来源支持的子维度。",
+      "owner_a": "A17",
+      "name": "安全包络 / 运行保证 / 处置建议",
+      "definition": "汇总 A17 安全包络 / 运行保证 / 处置建议下的 canonical JD 及经来源支持的子维度。",
       "node_kind": "capability_root",
       "variable_role": "structural_group",
       "value_type": "none",
@@ -46927,10 +48029,10 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A16×L1",
-        "A16×L2",
-        "A16×L3",
-        "A16×L4"
+        "A17×L1",
+        "A17×L2",
+        "A17×L3",
+        "A17×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -46947,10 +48049,10 @@
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "jd-16.1",
-      "parent_id": "PROPOSED-jd-tree-A16",
-      "canonical_slot": "jd-16.1",
-      "owner_a": "A16",
+      "node_id": "jd-17.1",
+      "parent_id": "PROPOSED-jd-tree-A17",
+      "canonical_slot": "jd-17.1",
+      "owner_a": "A17",
       "name": "分相位安全阈值",
       "definition": "“任务相位×安全阈值”的 schedule；起飞、巡检与返航可采用不同阈值。",
       "node_kind": "group",
@@ -46986,9 +48088,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A16×L1",
-        "A16×L2",
-        "A16×L3"
+        "A17×L1",
+        "A17×L2",
+        "A17×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -47005,10 +48107,10 @@
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-16.1.1",
-      "parent_id": "jd-16.1",
-      "canonical_slot": "jd-16.1",
-      "owner_a": "A16",
+      "node_id": "PROPOSED-jd-17.1.1",
+      "parent_id": "jd-17.1",
+      "canonical_slot": "jd-17.1",
+      "owner_a": "A17",
       "name": "任务相位",
       "definition": "分相位安全阈值中的“任务相位”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -47071,9 +48173,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A16×L1",
-        "A16×L2",
-        "A16×L3"
+        "A17×L1",
+        "A17×L2",
+        "A17×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -47089,10 +48191,10 @@
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-16.1.2",
-      "parent_id": "jd-16.1",
-      "canonical_slot": "jd-16.1",
-      "owner_a": "A16",
+      "node_id": "PROPOSED-jd-17.1.2",
+      "parent_id": "jd-17.1",
+      "canonical_slot": "jd-17.1",
+      "owner_a": "A17",
       "name": "安全阈值对象",
       "definition": "分相位安全阈值中的“安全阈值对象”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -47173,9 +48275,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A16×L1",
-        "A16×L2",
-        "A16×L3"
+        "A17×L1",
+        "A17×L2",
+        "A17×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -47191,10 +48293,10 @@
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-16.1.3",
-      "parent_id": "jd-16.1",
-      "canonical_slot": "jd-16.1",
-      "owner_a": "A16",
+      "node_id": "PROPOSED-jd-17.1.3",
+      "parent_id": "jd-17.1",
+      "canonical_slot": "jd-17.1",
+      "owner_a": "A17",
       "name": "相位阈值 schedule",
       "definition": "分相位安全阈值中的“相位阈值 schedule”变量。具体阈值与单位必须由场景安全依据给出。",
       "node_kind": "variable",
@@ -47241,9 +48343,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A16×L1",
-        "A16×L2",
-        "A16×L3"
+        "A17×L1",
+        "A17×L2",
+        "A17×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -47259,10 +48361,10 @@
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-16.1.4",
-      "parent_id": "jd-16.1",
-      "canonical_slot": "jd-16.1",
-      "owner_a": "A16",
+      "node_id": "PROPOSED-jd-17.1.4",
+      "parent_id": "jd-17.1",
+      "canonical_slot": "jd-17.1",
+      "owner_a": "A17",
       "name": "阈值来源与版本",
       "definition": "分相位安全阈值中的“阈值来源与版本”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -47297,9 +48399,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A16×L1",
-        "A16×L2",
-        "A16×L3"
+        "A17×L1",
+        "A17×L2",
+        "A17×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -47315,10 +48417,10 @@
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-16.1.5",
-      "parent_id": "jd-16.1",
-      "canonical_slot": "jd-16.1",
-      "owner_a": "A16",
+      "node_id": "PROPOSED-jd-17.1.5",
+      "parent_id": "jd-17.1",
+      "canonical_slot": "jd-17.1",
+      "owner_a": "A17",
       "name": "阈值状态与接近度",
       "definition": "分相位安全阈值中的“阈值状态与接近度”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -47346,9 +48448,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A16×L1",
-        "A16×L2",
-        "A16×L3"
+        "A17×L1",
+        "A17×L2",
+        "A17×L3"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -47364,10 +48466,10 @@
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "jd-16.2",
-      "parent_id": "PROPOSED-jd-tree-A16",
-      "canonical_slot": "jd-16.2",
-      "owner_a": "A16",
+      "node_id": "jd-17.2",
+      "parent_id": "PROPOSED-jd-tree-A17",
+      "canonical_slot": "jd-17.2",
+      "owner_a": "A17",
       "name": "安全处置策略适用集",
       "definition": "L4 兜底动作子集及触发条件，包括 ODD 越界响应、返航、悬停、降级、备降与安全模式。",
       "node_kind": "group",
@@ -47403,9 +48505,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A16×L2",
-        "A16×L3",
-        "A16×L4"
+        "A17×L2",
+        "A17×L3",
+        "A17×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -47422,10 +48524,10 @@
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-16.2.1",
-      "parent_id": "jd-16.2",
-      "canonical_slot": "jd-16.2",
-      "owner_a": "A16",
+      "node_id": "PROPOSED-jd-17.2.1",
+      "parent_id": "jd-17.2",
+      "canonical_slot": "jd-17.2",
+      "owner_a": "A17",
       "name": "安全异常类型",
       "definition": "安全处置策略适用集中的“安全异常类型”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -47515,9 +48617,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A16×L2",
-        "A16×L3",
-        "A16×L4"
+        "A17×L2",
+        "A17×L3",
+        "A17×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -47533,10 +48635,10 @@
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-16.2.2",
-      "parent_id": "jd-16.2",
-      "canonical_slot": "jd-16.2",
-      "owner_a": "A16",
+      "node_id": "PROPOSED-jd-17.2.2",
+      "parent_id": "jd-17.2",
+      "canonical_slot": "jd-17.2",
+      "owner_a": "A17",
       "name": "允许安全处置动作",
       "definition": "安全处置策略适用集中的“允许安全处置动作”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -47617,9 +48719,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A16×L2",
-        "A16×L3",
-        "A16×L4"
+        "A17×L2",
+        "A17×L3",
+        "A17×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -47637,10 +48739,10 @@
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-16.2.3",
-      "parent_id": "jd-16.2",
-      "canonical_slot": "jd-16.2",
-      "owner_a": "A16",
+      "node_id": "PROPOSED-jd-17.2.3",
+      "parent_id": "jd-17.2",
+      "canonical_slot": "jd-17.2",
+      "owner_a": "A17",
       "name": "处置触发条件",
       "definition": "安全处置策略适用集中的“处置触发条件”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -47675,9 +48777,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A16×L2",
-        "A16×L3",
-        "A16×L4"
+        "A17×L2",
+        "A17×L3",
+        "A17×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -47694,10 +48796,10 @@
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-16.2.4",
-      "parent_id": "jd-16.2",
-      "canonical_slot": "jd-16.2",
-      "owner_a": "A16",
+      "node_id": "PROPOSED-jd-17.2.4",
+      "parent_id": "jd-17.2",
+      "canonical_slot": "jd-17.2",
+      "owner_a": "A17",
       "name": "处置优先级与冲突",
       "definition": "安全处置策略适用集中的“处置优先级与冲突”变量。跨处置优先级必须由项目安全策略确认。",
       "node_kind": "variable",
@@ -47744,9 +48846,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A16×L2",
-        "A16×L3",
-        "A16×L4"
+        "A17×L2",
+        "A17×L3",
+        "A17×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -47762,10 +48864,10 @@
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-16.2.5",
-      "parent_id": "jd-16.2",
-      "canonical_slot": "jd-16.2",
-      "owner_a": "A16",
+      "node_id": "PROPOSED-jd-17.2.5",
+      "parent_id": "jd-17.2",
+      "canonical_slot": "jd-17.2",
+      "owner_a": "A17",
       "name": "人工确认与接管状态",
       "definition": "安全处置策略适用集中的“人工确认与接管状态”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -47795,9 +48897,9 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A16×L2",
-        "A16×L3",
-        "A16×L4"
+        "A17×L2",
+        "A17×L3",
+        "A17×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -47813,10 +48915,10 @@
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "jd-16.3",
-      "parent_id": "PROPOSED-jd-tree-A16",
-      "canonical_slot": "jd-16.3",
-      "owner_a": "A16",
+      "node_id": "jd-17.3",
+      "parent_id": "PROPOSED-jd-tree-A17",
+      "canonical_slot": "jd-17.3",
+      "owner_a": "A17",
       "name": "安全态定义",
       "definition": "该 JD 接受的 safe state 集合，以及悬停、返航点、备降点和安全模式各自的进入条件。",
       "node_kind": "group",
@@ -47852,7 +48954,7 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A16×L4"
+        "A17×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -47869,10 +48971,10 @@
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-16.3.1",
-      "parent_id": "jd-16.3",
-      "canonical_slot": "jd-16.3",
-      "owner_a": "A16",
+      "node_id": "PROPOSED-jd-17.3.1",
+      "parent_id": "jd-17.3",
+      "canonical_slot": "jd-17.3",
+      "owner_a": "A17",
       "name": "可接受安全态类型",
       "definition": "安全态定义中的“可接受安全态类型”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -47944,7 +49046,7 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A16×L4"
+        "A17×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -47961,10 +49063,10 @@
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-16.3.2",
-      "parent_id": "jd-16.3",
-      "canonical_slot": "jd-16.3",
-      "owner_a": "A16",
+      "node_id": "PROPOSED-jd-17.3.2",
+      "parent_id": "jd-17.3",
+      "canonical_slot": "jd-17.3",
+      "owner_a": "A17",
       "name": "安全态进入条件",
       "definition": "安全态定义中的“安全态进入条件”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -47999,7 +49101,7 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A16×L4"
+        "A17×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -48016,10 +49118,10 @@
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-16.3.3",
-      "parent_id": "jd-16.3",
-      "canonical_slot": "jd-16.3",
-      "owner_a": "A16",
+      "node_id": "PROPOSED-jd-17.3.3",
+      "parent_id": "jd-17.3",
+      "canonical_slot": "jd-17.3",
+      "owner_a": "A17",
       "name": "安全态保持条件",
       "definition": "安全态定义中的“安全态保持条件”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -48054,7 +49156,7 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A16×L4"
+        "A17×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -48070,10 +49172,10 @@
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-16.3.4",
-      "parent_id": "jd-16.3",
-      "canonical_slot": "jd-16.3",
-      "owner_a": "A16",
+      "node_id": "PROPOSED-jd-17.3.4",
+      "parent_id": "jd-17.3",
+      "canonical_slot": "jd-17.3",
+      "owner_a": "A17",
       "name": "安全态验证证据",
       "definition": "安全态定义中的“安全态验证证据”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -48103,7 +49205,7 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A16×L4"
+        "A17×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -48119,10 +49221,10 @@
     },
     {
       "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-16.3.5",
-      "parent_id": "jd-16.3",
-      "canonical_slot": "jd-16.3",
-      "owner_a": "A16",
+      "node_id": "PROPOSED-jd-17.3.5",
+      "parent_id": "jd-17.3",
+      "canonical_slot": "jd-17.3",
+      "owner_a": "A17",
       "name": "安全态退出与恢复条件",
       "definition": "安全态定义中的“安全态退出与恢复条件”变量。其语义范围由所引资料限定。",
       "node_kind": "variable",
@@ -48157,7 +49259,7 @@
       ],
       "related_jd": [],
       "used_by_axl": [
-        "A16×L4"
+        "A17×L4"
       ],
       "depends_on": [],
       "mutual_exclusion_group": null,
@@ -48171,1108 +49273,6 @@
       "review_status": "proposed",
       "legacy_aliases": [],
       "notes": "候选安全动作与状态用于表达合同结构，不构成新的触发阈值、优先级或平台安全规则。"
-    },
-    {
-      "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-tree-A17",
-      "parent_id": "PROPOSED-jd-tree-version1",
-      "canonical_slot": null,
-      "owner_a": "A17",
-      "name": "审计日志",
-      "definition": "汇总 A17 审计日志下的 canonical JD 及经来源支持的子维度。",
-      "node_kind": "capability_root",
-      "variable_role": "structural_group",
-      "value_type": "none",
-      "value_domain": null,
-      "unit": null,
-      "activation_condition": null,
-      "multiplicity": "one",
-      "difficulty_direction": "context_dependent",
-      "configuration_side": "shared",
-      "projection_targets": [
-        "world_config",
-        "user_config",
-        "sut_input",
-        "harness"
-      ],
-      "visibility": [
-        "sut_visible",
-        "grader_visible"
-      ],
-      "observation_channel": [
-        "sut_input",
-        "sut_trace",
-        "grader"
-      ],
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "related_global_jd": [
-        "jd-0.7",
-        "jd-0.5"
-      ],
-      "related_jd": [],
-      "used_by_axl": [
-        "A17×L1",
-        "A17×L2",
-        "A17×L3",
-        "A17×L4"
-      ],
-      "depends_on": [],
-      "mutual_exclusion_group": null,
-      "constraints": [],
-      "source": [
-        "L-FULL-JD66-V3",
-        "L-FULL-AXL68-V3"
-      ],
-      "evidence_status": "authoritative_existing",
-      "derivation_status": "given",
-      "review_status": "reviewed",
-      "legacy_aliases": [],
-      "notes": "本轮只保留可直接对应 canonical 定义或 A×L 责任原文的子维度；未确认细化项进入待确认文档。"
-    },
-    {
-      "schema_version": "jd-tree/0.4.0",
-      "node_id": "jd-17.1",
-      "parent_id": "PROPOSED-jd-tree-A17",
-      "canonical_slot": "jd-17.1",
-      "owner_a": "A17",
-      "name": "事件类目",
-      "definition": "该 JD 要记录的跨 A 事件类目；meta-A 用于列举其他 A 产生的关键事件。",
-      "node_kind": "group",
-      "variable_role": "structural_group",
-      "value_type": "none",
-      "value_domain": null,
-      "unit": null,
-      "activation_condition": null,
-      "multiplicity": "one",
-      "difficulty_direction": "context_dependent",
-      "configuration_side": "shared",
-      "projection_targets": [
-        "world_config",
-        "user_config",
-        "sut_input",
-        "harness"
-      ],
-      "visibility": [
-        "sut_visible",
-        "grader_visible"
-      ],
-      "observation_channel": [
-        "sut_input",
-        "sut_trace",
-        "grader"
-      ],
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "related_global_jd": [
-        "jd-0.7",
-        "jd-0.5"
-      ],
-      "related_jd": [],
-      "used_by_axl": [
-        "A17×L1",
-        "A17×L2"
-      ],
-      "depends_on": [],
-      "mutual_exclusion_group": null,
-      "constraints": [],
-      "source": [
-        "L-FULL-JD66-V3",
-        "L-FULL-AXL68-V3"
-      ],
-      "evidence_status": "authoritative_existing",
-      "derivation_status": "given",
-      "review_status": "reviewed",
-      "legacy_aliases": [],
-      "notes": "canonical 名称与定义取自 ability-id-v3 权威机读源；子维度为来源约束下的研究草案。"
-    },
-    {
-      "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-17.1.1",
-      "parent_id": "jd-17.1",
-      "canonical_slot": "jd-17.1",
-      "owner_a": "A17",
-      "name": "事件来源能力",
-      "definition": "事件类目中的“事件来源能力”变量。其语义范围由所引资料限定。",
-      "node_kind": "variable",
-      "variable_role": "contract_schema",
-      "value_type": "reference_set",
-      "value_domain": null,
-      "unit": null,
-      "activation_condition": null,
-      "multiplicity": "many",
-      "difficulty_direction": "context_dependent",
-      "configuration_side": "shared",
-      "projection_targets": [
-        "world_config",
-        "user_config",
-        "sut_input",
-        "harness"
-      ],
-      "visibility": [
-        "sut_visible",
-        "grader_visible"
-      ],
-      "observation_channel": [
-        "sut_input",
-        "grader"
-      ],
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "related_global_jd": [
-        "jd-0.7",
-        "jd-0.5"
-      ],
-      "related_jd": [],
-      "used_by_axl": [
-        "A17×L1",
-        "A17×L2"
-      ],
-      "depends_on": [],
-      "mutual_exclusion_group": null,
-      "constraints": [],
-      "source": [
-        "L-FULL-JD66-V3",
-        "L-FULL-AXL68-V3"
-      ],
-      "evidence_status": "source_supported",
-      "derivation_status": "derived",
-      "review_status": "proposed",
-      "legacy_aliases": [],
-      "notes": null
-    },
-    {
-      "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-17.1.2",
-      "parent_id": "jd-17.1",
-      "canonical_slot": "jd-17.1",
-      "owner_a": "A17",
-      "name": "事件类型",
-      "definition": "事件类目中的“事件类型”变量。其语义范围由所引资料限定。",
-      "node_kind": "variable",
-      "variable_role": "contract_schema",
-      "value_type": "taxonomy_ref",
-      "value_domain": null,
-      "unit": null,
-      "activation_condition": null,
-      "multiplicity": "one",
-      "difficulty_direction": "context_dependent",
-      "configuration_side": "shared",
-      "projection_targets": [
-        "world_config",
-        "user_config",
-        "sut_input",
-        "harness"
-      ],
-      "visibility": [
-        "sut_visible",
-        "grader_visible"
-      ],
-      "observation_channel": [
-        "sut_input",
-        "grader"
-      ],
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "related_global_jd": [
-        "jd-0.7",
-        "jd-0.5"
-      ],
-      "related_jd": [],
-      "used_by_axl": [
-        "A17×L1",
-        "A17×L2"
-      ],
-      "depends_on": [],
-      "mutual_exclusion_group": null,
-      "constraints": [],
-      "source": [
-        "L-FULL-JD66-V3",
-        "L-FULL-AXL68-V3"
-      ],
-      "evidence_status": "source_supported",
-      "derivation_status": "derived",
-      "review_status": "proposed",
-      "legacy_aliases": [],
-      "notes": null
-    },
-    {
-      "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-17.1.3",
-      "parent_id": "jd-17.1",
-      "canonical_slot": "jd-17.1",
-      "owner_a": "A17",
-      "name": "事件严重度",
-      "definition": "事件类目中的“事件严重度”变量。严重度分级及语义尚无受审定义。",
-      "node_kind": "variable",
-      "variable_role": "contract_schema",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "TBD",
-          "label_zh": "严重度分级及语义尚无受审定义。",
-          "source_refs": [
-            "L-FULL-AXL68-V3"
-          ],
-          "status": "TBD",
-          "applicable_scenarios": [
-            "cross_scenario"
-          ]
-        }
-      ],
-      "unit": null,
-      "activation_condition": null,
-      "multiplicity": "one",
-      "difficulty_direction": "context_dependent",
-      "configuration_side": "shared",
-      "projection_targets": [
-        "world_config",
-        "user_config",
-        "sut_input",
-        "harness"
-      ],
-      "visibility": [
-        "sut_visible",
-        "grader_visible"
-      ],
-      "observation_channel": [
-        "sut_input",
-        "grader"
-      ],
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "related_global_jd": [
-        "jd-0.7",
-        "jd-0.5"
-      ],
-      "related_jd": [],
-      "used_by_axl": [
-        "A17×L1",
-        "A17×L2"
-      ],
-      "depends_on": [],
-      "mutual_exclusion_group": null,
-      "constraints": [],
-      "source": [
-        "L-FULL-AXL68-V3"
-      ],
-      "evidence_status": "TBD",
-      "derivation_status": "TBD",
-      "review_status": "proposed",
-      "legacy_aliases": [],
-      "notes": "严重度分级及语义尚无受审定义。"
-    },
-    {
-      "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-17.1.4",
-      "parent_id": "jd-17.1",
-      "canonical_slot": "jd-17.1",
-      "owner_a": "A17",
-      "name": "事件时间与顺序",
-      "definition": "事件类目中的“事件时间与顺序”变量。其语义范围由所引资料限定。",
-      "node_kind": "variable",
-      "variable_role": "runtime_observation",
-      "value_type": "object",
-      "value_domain": null,
-      "unit": null,
-      "activation_condition": null,
-      "multiplicity": "one",
-      "difficulty_direction": "context_dependent",
-      "configuration_side": "TBD",
-      "projection_targets": [],
-      "visibility": [
-        "sut_visible",
-        "grader_visible"
-      ],
-      "observation_channel": [
-        "sut_trace",
-        "grader"
-      ],
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "related_global_jd": [
-        "jd-0.7",
-        "jd-0.5"
-      ],
-      "related_jd": [],
-      "used_by_axl": [
-        "A17×L1",
-        "A17×L2"
-      ],
-      "depends_on": [],
-      "mutual_exclusion_group": null,
-      "constraints": [],
-      "source": [
-        "L-FULL-AXL68-V3",
-        "W-W3C-PROV-DM"
-      ],
-      "evidence_status": "source_supported",
-      "derivation_status": "derived",
-      "review_status": "proposed",
-      "legacy_aliases": [],
-      "notes": null
-    },
-    {
-      "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-17.1.5",
-      "parent_id": "jd-17.1",
-      "canonical_slot": "jd-17.1",
-      "owner_a": "A17",
-      "name": "事件关联对象与执行片段",
-      "definition": "事件类目中的“事件关联对象与执行片段”变量。其语义范围由所引资料限定。",
-      "node_kind": "variable",
-      "variable_role": "runtime_observation",
-      "value_type": "reference_set",
-      "value_domain": null,
-      "unit": null,
-      "activation_condition": null,
-      "multiplicity": "many",
-      "difficulty_direction": "context_dependent",
-      "configuration_side": "TBD",
-      "projection_targets": [],
-      "visibility": [
-        "sut_visible",
-        "grader_visible"
-      ],
-      "observation_channel": [
-        "sut_trace",
-        "grader"
-      ],
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "related_global_jd": [
-        "jd-0.7",
-        "jd-0.5"
-      ],
-      "related_jd": [],
-      "used_by_axl": [
-        "A17×L1",
-        "A17×L2"
-      ],
-      "depends_on": [],
-      "mutual_exclusion_group": null,
-      "constraints": [],
-      "source": [
-        "L-FULL-AXL68-V3",
-        "W-W3C-PROV-DM"
-      ],
-      "evidence_status": "source_supported",
-      "derivation_status": "derived",
-      "review_status": "proposed",
-      "legacy_aliases": [],
-      "notes": null
-    },
-    {
-      "schema_version": "jd-tree/0.4.0",
-      "node_id": "jd-17.2",
-      "parent_id": "PROPOSED-jd-tree-A17",
-      "canonical_slot": "jd-17.2",
-      "owner_a": "A17",
-      "name": "证据格式规格",
-      "definition": "JD 的证据格式与审计协议，吸收原 audit protocol。",
-      "node_kind": "group",
-      "variable_role": "structural_group",
-      "value_type": "none",
-      "value_domain": null,
-      "unit": null,
-      "activation_condition": null,
-      "multiplicity": "one",
-      "difficulty_direction": "context_dependent",
-      "configuration_side": "shared",
-      "projection_targets": [
-        "world_config",
-        "user_config",
-        "sut_input",
-        "harness"
-      ],
-      "visibility": [
-        "sut_visible",
-        "grader_visible"
-      ],
-      "observation_channel": [
-        "sut_input",
-        "sut_trace",
-        "grader"
-      ],
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "related_global_jd": [
-        "jd-0.7",
-        "jd-0.5"
-      ],
-      "related_jd": [],
-      "used_by_axl": [
-        "A17×L2",
-        "A17×L3",
-        "A17×L4"
-      ],
-      "depends_on": [],
-      "mutual_exclusion_group": null,
-      "constraints": [],
-      "source": [
-        "L-FULL-JD66-V3",
-        "L-FULL-AXL68-V3"
-      ],
-      "evidence_status": "authoritative_existing",
-      "derivation_status": "given",
-      "review_status": "reviewed",
-      "legacy_aliases": [],
-      "notes": "canonical 名称与定义取自 ability-id-v3 权威机读源；子维度为来源约束下的研究草案。"
-    },
-    {
-      "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-17.2.1",
-      "parent_id": "jd-17.2",
-      "canonical_slot": "jd-17.2",
-      "owner_a": "A17",
-      "name": "证据对象类型",
-      "definition": "证据格式规格中的“证据对象类型”变量。其语义范围由所引资料限定。",
-      "node_kind": "variable",
-      "variable_role": "contract_schema",
-      "value_type": "taxonomy_ref",
-      "value_domain": null,
-      "unit": null,
-      "activation_condition": null,
-      "multiplicity": "one",
-      "difficulty_direction": "context_dependent",
-      "configuration_side": "shared",
-      "projection_targets": [
-        "world_config",
-        "user_config",
-        "sut_input",
-        "harness"
-      ],
-      "visibility": [
-        "sut_visible",
-        "grader_visible"
-      ],
-      "observation_channel": [
-        "sut_input",
-        "grader"
-      ],
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "related_global_jd": [
-        "jd-0.7",
-        "jd-0.5"
-      ],
-      "related_jd": [],
-      "used_by_axl": [
-        "A17×L2",
-        "A17×L3",
-        "A17×L4"
-      ],
-      "depends_on": [],
-      "mutual_exclusion_group": null,
-      "constraints": [],
-      "source": [
-        "L-FULL-JD66-V3",
-        "W-W3C-PROV-DM"
-      ],
-      "evidence_status": "source_supported",
-      "derivation_status": "derived",
-      "review_status": "proposed",
-      "legacy_aliases": [],
-      "notes": null
-    },
-    {
-      "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-17.2.2",
-      "parent_id": "jd-17.2",
-      "canonical_slot": "jd-17.2",
-      "owner_a": "A17",
-      "name": "证据数据结构与版本",
-      "definition": "证据格式规格中的“证据数据结构与版本”变量。其语义范围由所引资料限定。",
-      "node_kind": "variable",
-      "variable_role": "contract_schema",
-      "value_type": "schema_ref",
-      "value_domain": null,
-      "unit": null,
-      "activation_condition": null,
-      "multiplicity": "one",
-      "difficulty_direction": "context_dependent",
-      "configuration_side": "shared",
-      "projection_targets": [
-        "world_config",
-        "user_config",
-        "sut_input",
-        "harness"
-      ],
-      "visibility": [
-        "sut_visible",
-        "grader_visible"
-      ],
-      "observation_channel": [
-        "sut_input",
-        "grader"
-      ],
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "related_global_jd": [
-        "jd-0.7",
-        "jd-0.5"
-      ],
-      "related_jd": [],
-      "used_by_axl": [
-        "A17×L2",
-        "A17×L3",
-        "A17×L4"
-      ],
-      "depends_on": [],
-      "mutual_exclusion_group": null,
-      "constraints": [],
-      "source": [
-        "L-FULL-JD66-V3",
-        "W-W3C-PROV-DM"
-      ],
-      "evidence_status": "source_supported",
-      "derivation_status": "derived",
-      "review_status": "proposed",
-      "legacy_aliases": [],
-      "notes": null
-    },
-    {
-      "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-17.2.3",
-      "parent_id": "jd-17.2",
-      "canonical_slot": "jd-17.2",
-      "owner_a": "A17",
-      "name": "事件、动作与责任关联",
-      "definition": "证据格式规格中的“事件、动作与责任关联”变量。其语义范围由所引资料限定。",
-      "node_kind": "variable",
-      "variable_role": "contract_schema",
-      "value_type": "relation_set",
-      "value_domain": null,
-      "unit": null,
-      "activation_condition": null,
-      "multiplicity": "many",
-      "difficulty_direction": "context_dependent",
-      "configuration_side": "shared",
-      "projection_targets": [
-        "world_config",
-        "user_config",
-        "sut_input",
-        "harness"
-      ],
-      "visibility": [
-        "sut_visible",
-        "grader_visible"
-      ],
-      "observation_channel": [
-        "sut_input",
-        "grader"
-      ],
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "related_global_jd": [
-        "jd-0.7",
-        "jd-0.5"
-      ],
-      "related_jd": [],
-      "used_by_axl": [
-        "A17×L2",
-        "A17×L3",
-        "A17×L4"
-      ],
-      "depends_on": [],
-      "mutual_exclusion_group": null,
-      "constraints": [],
-      "source": [
-        "L-FULL-AXL68-V3",
-        "W-W3C-PROV-DM"
-      ],
-      "evidence_status": "source_supported",
-      "derivation_status": "derived",
-      "review_status": "proposed",
-      "legacy_aliases": [],
-      "notes": null
-    },
-    {
-      "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-17.2.4",
-      "parent_id": "jd-17.2",
-      "canonical_slot": "jd-17.2",
-      "owner_a": "A17",
-      "name": "时间戳与时钟来源",
-      "definition": "证据格式规格中的“时间戳与时钟来源”变量。其语义范围由所引资料限定。",
-      "node_kind": "variable",
-      "variable_role": "runtime_observation",
-      "value_type": "object",
-      "value_domain": null,
-      "unit": null,
-      "activation_condition": null,
-      "multiplicity": "one",
-      "difficulty_direction": "context_dependent",
-      "configuration_side": "TBD",
-      "projection_targets": [],
-      "visibility": [
-        "sut_visible",
-        "grader_visible"
-      ],
-      "observation_channel": [
-        "sut_trace",
-        "grader"
-      ],
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "related_global_jd": [
-        "jd-0.7",
-        "jd-0.5"
-      ],
-      "related_jd": [],
-      "used_by_axl": [
-        "A17×L2",
-        "A17×L3",
-        "A17×L4"
-      ],
-      "depends_on": [],
-      "mutual_exclusion_group": null,
-      "constraints": [],
-      "source": [
-        "L-FULL-AXL68-V3",
-        "W-MAVLINK-MICROSERVICES"
-      ],
-      "evidence_status": "source_supported",
-      "derivation_status": "derived",
-      "review_status": "proposed",
-      "legacy_aliases": [],
-      "notes": null
-    },
-    {
-      "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-17.2.5",
-      "parent_id": "jd-17.2",
-      "canonical_slot": "jd-17.2",
-      "owner_a": "A17",
-      "name": "可回放与完整性状态",
-      "definition": "证据格式规格中的“可回放与完整性状态”变量。其语义范围由所引资料限定。",
-      "node_kind": "variable",
-      "variable_role": "TBD",
-      "value_type": "object",
-      "value_domain": null,
-      "unit": null,
-      "activation_condition": null,
-      "multiplicity": "one",
-      "difficulty_direction": "context_dependent",
-      "configuration_side": "TBD",
-      "projection_targets": [],
-      "visibility": [
-        "grader_visible"
-      ],
-      "observation_channel": [
-        "TBD"
-      ],
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "related_global_jd": [
-        "jd-0.7",
-        "jd-0.5"
-      ],
-      "related_jd": [],
-      "used_by_axl": [
-        "A17×L2",
-        "A17×L3",
-        "A17×L4"
-      ],
-      "depends_on": [],
-      "mutual_exclusion_group": null,
-      "constraints": [],
-      "source": [
-        "L-FULL-AXL68-V3"
-      ],
-      "evidence_status": "source_supported",
-      "derivation_status": "derived",
-      "review_status": "proposed",
-      "legacy_aliases": [],
-      "notes": "生产者待确认：可能是系统自报状态，也可能是审计工具根据证据链派生；本版不强行指定。"
-    },
-    {
-      "schema_version": "jd-tree/0.4.0",
-      "node_id": "jd-17.3",
-      "parent_id": "PROPOSED-jd-tree-A17",
-      "canonical_slot": "jd-17.3",
-      "owner_a": "A17",
-      "name": "留存策略",
-      "definition": "日志与证据留存策略，是 JD-SOP 对法定 minimum 的进一步细化。",
-      "node_kind": "group",
-      "variable_role": "structural_group",
-      "value_type": "none",
-      "value_domain": null,
-      "unit": null,
-      "activation_condition": null,
-      "multiplicity": "one",
-      "difficulty_direction": "context_dependent",
-      "configuration_side": "shared",
-      "projection_targets": [
-        "world_config",
-        "user_config",
-        "sut_input",
-        "harness"
-      ],
-      "visibility": [
-        "sut_visible",
-        "grader_visible"
-      ],
-      "observation_channel": [
-        "sut_input",
-        "sut_trace",
-        "grader"
-      ],
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "related_global_jd": [
-        "jd-0.7",
-        "jd-0.5"
-      ],
-      "related_jd": [],
-      "used_by_axl": [
-        "A17×L3"
-      ],
-      "depends_on": [],
-      "mutual_exclusion_group": null,
-      "constraints": [],
-      "source": [
-        "L-FULL-JD66-V3",
-        "L-FULL-AXL68-V3"
-      ],
-      "evidence_status": "authoritative_existing",
-      "derivation_status": "given",
-      "review_status": "reviewed",
-      "legacy_aliases": [],
-      "notes": "canonical 名称与定义取自 ability-id-v3 权威机读源；子维度为来源约束下的研究草案。"
-    },
-    {
-      "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-17.3.1",
-      "parent_id": "jd-17.3",
-      "canonical_slot": "jd-17.3",
-      "owner_a": "A17",
-      "name": "留存对象范围",
-      "definition": "留存策略中的“留存对象范围”变量。其语义范围由所引资料限定。",
-      "node_kind": "variable",
-      "variable_role": "contract_schema",
-      "value_type": "reference_set",
-      "value_domain": null,
-      "unit": null,
-      "activation_condition": null,
-      "multiplicity": "many",
-      "difficulty_direction": "context_dependent",
-      "configuration_side": "shared",
-      "projection_targets": [
-        "world_config",
-        "user_config",
-        "sut_input",
-        "harness"
-      ],
-      "visibility": [
-        "sut_visible",
-        "grader_visible"
-      ],
-      "observation_channel": [
-        "sut_input",
-        "grader"
-      ],
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "related_global_jd": [
-        "jd-0.7",
-        "jd-0.5"
-      ],
-      "related_jd": [],
-      "used_by_axl": [
-        "A17×L3"
-      ],
-      "depends_on": [],
-      "mutual_exclusion_group": null,
-      "constraints": [],
-      "source": [
-        "L-FULL-JD66-V3",
-        "L-FULL-AXL68-V3"
-      ],
-      "evidence_status": "source_supported",
-      "derivation_status": "derived",
-      "review_status": "proposed",
-      "legacy_aliases": [],
-      "notes": null
-    },
-    {
-      "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-17.3.2",
-      "parent_id": "jd-17.3",
-      "canonical_slot": "jd-17.3",
-      "owner_a": "A17",
-      "name": "留存期限",
-      "definition": "留存策略中的“留存期限”变量。期限数值必须由适用法规或项目 SOP 给出。",
-      "node_kind": "variable",
-      "variable_role": "contract_schema",
-      "value_type": "duration",
-      "value_domain": [
-        {
-          "value": "TBD",
-          "label_zh": "期限数值必须由适用法规或项目 SOP 给出。",
-          "source_refs": [
-            "L-FULL-JD66-V3"
-          ],
-          "status": "TBD",
-          "applicable_scenarios": [
-            "cross_scenario"
-          ]
-        }
-      ],
-      "unit": null,
-      "activation_condition": null,
-      "multiplicity": "one",
-      "difficulty_direction": "context_dependent",
-      "configuration_side": "shared",
-      "projection_targets": [
-        "world_config",
-        "user_config",
-        "sut_input",
-        "harness"
-      ],
-      "visibility": [
-        "sut_visible",
-        "grader_visible"
-      ],
-      "observation_channel": [
-        "sut_input",
-        "grader"
-      ],
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "related_global_jd": [
-        "jd-0.7",
-        "jd-0.5"
-      ],
-      "related_jd": [],
-      "used_by_axl": [
-        "A17×L3"
-      ],
-      "depends_on": [],
-      "mutual_exclusion_group": null,
-      "constraints": [],
-      "source": [
-        "L-FULL-JD66-V3"
-      ],
-      "evidence_status": "TBD",
-      "derivation_status": "TBD",
-      "review_status": "proposed",
-      "legacy_aliases": [],
-      "notes": "期限数值必须由适用法规或项目 SOP 给出。"
-    },
-    {
-      "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-17.3.3",
-      "parent_id": "jd-17.3",
-      "canonical_slot": "jd-17.3",
-      "owner_a": "A17",
-      "name": "存储与归档状态",
-      "definition": "留存策略中的“存储与归档状态”变量。其语义范围由所引资料限定。",
-      "node_kind": "variable",
-      "variable_role": "runtime_observation",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "active",
-          "label_zh": "在线留存",
-          "source_refs": [
-            "L-FULL-JD66-V3"
-          ],
-          "status": "inferred_candidate",
-          "applicable_scenarios": [
-            "cross_scenario"
-          ]
-        },
-        {
-          "value": "archived",
-          "label_zh": "已归档",
-          "source_refs": [
-            "L-FULL-JD66-V3"
-          ],
-          "status": "inferred_candidate",
-          "applicable_scenarios": [
-            "cross_scenario"
-          ]
-        },
-        {
-          "value": "disposed",
-          "label_zh": "已处置",
-          "source_refs": [
-            "L-FULL-JD66-V3"
-          ],
-          "status": "inferred_candidate",
-          "applicable_scenarios": [
-            "cross_scenario"
-          ]
-        }
-      ],
-      "unit": null,
-      "activation_condition": null,
-      "multiplicity": "one",
-      "difficulty_direction": "context_dependent",
-      "configuration_side": "TBD",
-      "projection_targets": [],
-      "visibility": [
-        "sut_visible",
-        "grader_visible"
-      ],
-      "observation_channel": [
-        "sut_trace",
-        "grader"
-      ],
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "related_global_jd": [
-        "jd-0.7",
-        "jd-0.5"
-      ],
-      "related_jd": [],
-      "used_by_axl": [
-        "A17×L3"
-      ],
-      "depends_on": [],
-      "mutual_exclusion_group": null,
-      "constraints": [],
-      "source": [
-        "L-FULL-JD66-V3"
-      ],
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed",
-      "review_status": "proposed",
-      "legacy_aliases": [],
-      "notes": "三个生命周期状态是对“留存策略”的合理归纳，不是 canonical 原文直接给出的正式枚举；待 SOP 或审计协议支持后再升级。"
-    },
-    {
-      "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-17.3.4",
-      "parent_id": "jd-17.3",
-      "canonical_slot": "jd-17.3",
-      "owner_a": "A17",
-      "name": "访问与审计权限",
-      "definition": "留存策略中的“访问与审计权限”变量。权限角色、访问范围、授权规则和脱敏要求尚无受审依据。",
-      "node_kind": "variable",
-      "variable_role": "contract_schema",
-      "value_type": "constraint_set",
-      "value_domain": [
-        {
-          "value": "TBD",
-          "label_zh": "权限角色、访问范围、授权规则和脱敏要求尚无受审依据。",
-          "source_refs": [
-            "L-FULL-JD66-V3",
-            "L-FULL-AXL68-V3"
-          ],
-          "status": "TBD",
-          "applicable_scenarios": [
-            "cross_scenario"
-          ]
-        }
-      ],
-      "unit": null,
-      "activation_condition": null,
-      "multiplicity": "many",
-      "difficulty_direction": "context_dependent",
-      "configuration_side": "shared",
-      "projection_targets": [
-        "world_config",
-        "user_config",
-        "sut_input",
-        "harness"
-      ],
-      "visibility": [
-        "sut_visible",
-        "grader_visible"
-      ],
-      "observation_channel": [
-        "sut_input",
-        "grader"
-      ],
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "related_global_jd": [
-        "jd-0.7",
-        "jd-0.5"
-      ],
-      "related_jd": [],
-      "used_by_axl": [
-        "A17×L3"
-      ],
-      "depends_on": [],
-      "mutual_exclusion_group": null,
-      "constraints": [],
-      "source": [
-        "L-FULL-JD66-V3",
-        "L-FULL-AXL68-V3"
-      ],
-      "evidence_status": "TBD",
-      "derivation_status": "TBD",
-      "review_status": "proposed",
-      "legacy_aliases": [],
-      "notes": "权限角色、访问范围、授权规则和脱敏要求尚无受审依据。"
-    },
-    {
-      "schema_version": "jd-tree/0.4.0",
-      "node_id": "PROPOSED-jd-17.3.5",
-      "parent_id": "jd-17.3",
-      "canonical_slot": "jd-17.3",
-      "owner_a": "A17",
-      "name": "完整性检查与缺口状态",
-      "definition": "留存策略中的“完整性检查与缺口状态”变量。其语义范围由所引资料限定。",
-      "node_kind": "variable",
-      "variable_role": "derived_metric",
-      "value_type": "object",
-      "value_domain": null,
-      "unit": null,
-      "activation_condition": null,
-      "multiplicity": "one",
-      "difficulty_direction": "context_dependent",
-      "configuration_side": "TBD",
-      "projection_targets": [],
-      "visibility": [
-        "grader_only"
-      ],
-      "observation_channel": [
-        "grader"
-      ],
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "related_global_jd": [
-        "jd-0.7",
-        "jd-0.5"
-      ],
-      "related_jd": [],
-      "used_by_axl": [
-        "A17×L3"
-      ],
-      "depends_on": [],
-      "mutual_exclusion_group": null,
-      "constraints": [],
-      "source": [
-        "L-FULL-AXL68-V3"
-      ],
-      "evidence_status": "source_supported",
-      "derivation_status": "derived",
-      "review_status": "proposed",
-      "legacy_aliases": [],
-      "notes": null
     }
   ],
   "open_questions_document": "docs/jd-variable-tree/JD业务变量树_version1_待确认问题与暂定方案.md",

@@ -157,9 +157,9 @@ class AgentContractChecks(unittest.TestCase):
                 "A11a": "A12",
                 "A11b": "A13",
                 "A12": "A14",
-                "A13": "A15",
-                "A14": "A16",
-                "A15": "A17",
+                "A15": "A15",
+                "A13": "A16",
+                "A14": "A17",
             },
         )
         self.assertEqual(
@@ -173,9 +173,9 @@ class AgentContractChecks(unittest.TestCase):
                 "jd-11a": "jd-12",
                 "jd-11b": "jd-13",
                 "jd-12": "jd-14",
-                "jd-13": "jd-15",
-                "jd-14": "jd-16",
-                "jd-15": "jd-17",
+                "jd-15": "jd-15",
+                "jd-13": "jd-16",
+                "jd-14": "jd-17",
             },
         )
         self.assertEqual(len({item["cell"] for item in catalog["gal_cells"]}), 68)
@@ -429,13 +429,13 @@ class AgentContractChecks(unittest.TestCase):
         summary = [
             {"cell": "A4×L2", "required_jd_ids": ["jd-4.1", "jd-4.2", "jd-4.3", "jd-4.4", "jd-4.5"]},
             {"cell": "A6×L2", "required_jd_ids": ["jd-6.1", "jd-6.2", "jd-6.3", "jd-6.4"]},
-            {"cell": "A15×L2", "required_jd_ids": ["jd-15.1", "jd-15.2", "jd-15.3", "jd-15.4", "jd-15.5"]},
+            {"cell": "A16×L2", "required_jd_ids": ["jd-16.1", "jd-16.2", "jd-16.3", "jd-16.4", "jd-16.5"]},
         ]
         chunks = _chunk_coverage_for_extraction(summary, ["jd-0.2", "jd-0.7"], max_slots_per_chunk=10)
         self.assertGreater(len(chunks), 1)
         # every cell appears exactly once across all chunks
         flat = [entry["cell"] for chunk in chunks for entry in chunk]
-        self.assertEqual(sorted(flat), ["A15×L2", "A4×L2", "A6×L2"])
+        self.assertEqual(sorted(flat), ["A16×L2", "A4×L2", "A6×L2"])
 
     def test_chunking_single_cell_is_one_chunk(self) -> None:
         summary = [{"cell": "A6×L2", "required_jd_ids": ["jd-6.1", "jd-6.2"]}]

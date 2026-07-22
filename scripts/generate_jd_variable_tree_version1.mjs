@@ -49,9 +49,9 @@ const renumbering = [
   ["A9a", "A12"],
   ["A9b", "A13"],
   ["A10", "A14"],
-  ["A13", "A15"],
-  ["A12", "A16"],
-  ["A15", "A17"],
+  ["A15", "A15"],
+  ["A13", "A16"],
+  ["A12", "A17"],
 ].map(([from, to]) => ({ from, to }));
 
 const jdPrefixMap = {
@@ -2507,7 +2507,7 @@ addA11Group({
   name: "可用局部处置动作",
   definition:
     "当前 JD 下允许由 A11 选择、且不直接改变任务级航路或进入安全态的局部控制动作。",
-  relatedJd: ["jd-10.4", "jd-16.2"],
+  relatedJd: ["jd-10.4", "jd-17.2"],
 });
 addA11Leaf({
   id: "PROPOSED-jd-11.3.2.1",
@@ -2540,9 +2540,9 @@ addA11Leaf({
     ]),
   ],
   difficulty: "non_monotonic",
-  relatedJd: ["jd-10.4", "jd-16.2"],
+  relatedJd: ["jd-10.4", "jd-17.2"],
   notes:
-    "改变任务速度 Profile、航路或高度属于 A10；返航、迫降或进入 safe state 属于 A16。",
+    "改变任务速度 Profile、航路或高度属于 A10；返航、迫降或进入 safe state 属于 A17。",
 });
 
 addA11Group({
@@ -2620,7 +2620,7 @@ addA11Group({
   name: "处置后验证与升级",
   definition:
     "验证控制状态是否恢复可信，并在无法局部恢复时升级给其他能力或人工。",
-  relatedJd: ["jd-7.2", "jd-9.3", "jd-10.4", "jd-16.2", "jd-0.5"],
+  relatedJd: ["jd-7.2", "jd-9.3", "jd-10.4", "jd-17.2", "jd-0.5"],
 });
 addA11Leaf({
   id: "PROPOSED-jd-11.3.5.1",
@@ -2656,13 +2656,13 @@ addA11Leaf({
     a11DomainItem("A10", "A10 导航 / 航迹 / 轨迹管理", [
       "L-A11-AXL68-V3",
     ]),
-    a11DomainItem("A16", "A16 安全包络 / 运行保证", [
+    a11DomainItem("A17", "A17 安全包络 / 运行保证", [
       "L-A11-AXL68-V3",
     ]),
     a11DomainItem("jd-0.5", "人机确认协议", ["L-A11-AXL68-V3"]),
   ],
   difficulty: "non_monotonic",
-  relatedJd: ["jd-7.2", "jd-9.3", "jd-10.4", "jd-16.2", "jd-0.5"],
+  relatedJd: ["jd-7.2", "jd-9.3", "jd-10.4", "jd-17.2", "jd-0.5"],
 });
 
 addA11Group({
@@ -2678,7 +2678,7 @@ addA11Group({
     "jd-11.1",
     "jd-11.2",
     "jd-11.3",
-    "jd-16.1",
+    "jd-17.1",
   ],
   source: [
     "L-A8-V06",
@@ -2744,7 +2744,7 @@ addA11Leaf({
   valueType: "reference_or_geometry_profile",
   domain: [a11Tbd("机体有效占用空间的引用方式与几何表示 TBD")],
   unit: "m",
-  relatedJd: ["jd-2.2", "jd-16.1"],
+  relatedJd: ["jd-2.2", "jd-17.1"],
   source: ["L-A8-V06", "W-MOT-UAV-BRIDGE"],
   configurationSide: "world",
   projectionTargets: ["world_config", "harness"],
@@ -2845,7 +2845,7 @@ addA11Group({
   name: "运动与姿态动态包络",
   definition:
     "描述在当前平台、载荷、模式和环境下允许执行的速度、加速度、姿态与角速度范围。",
-  relatedJd: ["jd-2.2", "jd-0.3", "jd-0.9", "jd-11.2", "jd-16.1"],
+  relatedJd: ["jd-2.2", "jd-0.3", "jd-0.9", "jd-11.2", "jd-17.1"],
   source: ["L-A8-V06", "W-MAVLINK-COMMON", "W-PX4-CONTROL-ARCH"],
   configurationSide: "shared",
   projectionTargets: [
@@ -2898,7 +2898,7 @@ for (const envelopeLeaf of [
     domain: [a11Tbd(`${envelopeLeaf[1]}的单位、范围和适用条件 TBD`)],
     unit: envelopeLeaf[3],
     difficulty: "context_dependent",
-    relatedJd: ["jd-2.2", "jd-11.1", "jd-11.2", "jd-16.1"],
+    relatedJd: ["jd-2.2", "jd-11.1", "jd-11.2", "jd-17.1"],
     source: ["L-A8-V06", "W-MAVLINK-COMMON", "W-PX4-CONTROL-ARCH"],
     configurationSide: "shared",
     projectionTargets: [
@@ -2965,11 +2965,11 @@ addA11Leaf({
   parent: "PROPOSED-jd-11.4.4",
   name: "执行余量下限",
   definition:
-    "允许继续执行当前控制片段所需的最低剩余执行能力；阈值及其安全含义必须与 A16 联合确认。",
+    "允许继续执行当前控制片段所需的最低剩余执行能力；阈值及其安全含义必须与 A17 联合确认。",
   valueType: "number_range_or_axis_object",
   domain: [a11Tbd("剩余执行能力的表示、下限与判定规则 TBD")],
   difficulty: "decreasing",
-  relatedJd: ["jd-11.1", "jd-11.3", "jd-16.1"],
+  relatedJd: ["jd-11.1", "jd-11.3", "jd-17.1"],
   source: ["W-PX4-CONTROL-ALLOCATOR", "L-A11-AXL68-V3"],
   configurationSide: "shared",
   projectionTargets: [
@@ -2986,7 +2986,7 @@ addA11Group({
   name: "包络修正与适用条件",
   definition:
     "描述环境、载荷、控制模式和任务阶段对基础执行包络的降额、收缩或失效条件。",
-  relatedJd: ["jd-0.3", "jd-0.9", "jd-11.2", "jd-11.3", "jd-16.1"],
+  relatedJd: ["jd-0.3", "jd-0.9", "jd-11.2", "jd-11.3", "jd-17.1"],
   source: ["W-PX4-CONTROL-TUNING", "W-MOT-UAV-BRIDGE"],
   configurationSide: "shared",
   projectionTargets: [
@@ -3015,7 +3015,7 @@ addA11Leaf({
     a11Tbd("扰动到包络修正的规则与阈值 TBD"),
   ],
   difficulty: "context_dependent",
-  relatedJd: ["jd-0.3", "jd-11.1", "jd-16.1"],
+  relatedJd: ["jd-0.3", "jd-11.1", "jd-17.1"],
   source: ["L-A11-JD66-V3", "W-PX4-CONTROL-TUNING"],
   configurationSide: "shared",
   projectionTargets: [
@@ -3104,7 +3104,7 @@ addA11Group({
     "jd-11.2",
     "jd-11.3",
     "PROPOSED-jd-11.4",
-    "jd-16.1",
+    "jd-17.1",
   ],
   source: ["L-A8-V06", "W-MOT-UAV-BRIDGE"],
   configurationSide: "world",
@@ -3149,7 +3149,7 @@ const profileGroups = [
   [
     "PROPOSED-jd-11.5.7",
     "A11 控制要求绑定",
-    "将场景 Profile 投影到 jd-11.1、jd-11.2、jd-11.3、PROPOSED-jd-11.4，并引用 A16 安全边界。",
+    "将场景 Profile 投影到 jd-11.1、jd-11.2、jd-11.3、PROPOSED-jd-11.4，并引用 A17 安全边界。",
   ],
   [
     "PROPOSED-jd-11.5.8",
@@ -3170,7 +3170,7 @@ for (const [id, name, definition] of profileGroups) {
             "jd-11.2",
             "jd-11.3",
             "PROPOSED-jd-11.4",
-            "jd-16.1",
+            "jd-17.1",
           ]
         : [],
     source: ["L-A8-V06", "W-MOT-UAV-BRIDGE"],
@@ -3628,7 +3628,7 @@ profileLeaf({
     "jd-2.2",
     "jd-0.9",
     "PROPOSED-jd-11.4",
-    "jd-16.1",
+    "jd-17.1",
   ],
   dependsOn: ["PROPOSED-jd-11.5.6.1"],
 });
@@ -3674,8 +3674,8 @@ for (const binding of [
   [
     "PROPOSED-jd-11.5.7.4",
     "安全包络引用",
-    "jd-16.1",
-    "引用 A16 分相位安全阈值；A11 不在本分支重复定义安全态。",
+    "jd-17.1",
+    "引用 A17 分相位安全阈值；A11 不在本分支重复定义安全态。",
   ],
   [
     "PROPOSED-jd-11.5.7.5",
@@ -4632,10 +4632,10 @@ const globalSimpleLeafSpecs = [
     globalId: "jd-0.10",
     id: "PROPOSED-jd-0.10.7",
     name: "违反状态与处置引用",
-    definition: "安全边界正常、接近、违反或未知的状态，以及对 A16 处置责任的引用。",
+    definition: "安全边界正常、接近、违反或未知的状态，以及对 A17 处置责任的引用。",
     valueType: "state_and_action_reference",
-    domain: [globalTbd("状态阈值、迟滞和 A16 处置映射 TBD")],
-    relatedJd: ["jd-16.1", "jd-16.2"],
+    domain: [globalTbd("状态阈值、迟滞和 A17 处置映射 TBD")],
+    relatedJd: ["jd-17.1", "jd-17.2"],
   },
 ];
 

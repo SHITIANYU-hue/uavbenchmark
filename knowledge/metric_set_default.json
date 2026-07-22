@@ -8,21 +8,21 @@
     "jd-1.3.1": {
       "mode": "range",
       "min": 0.85,
-      "max": 1.0,
+      "max": 1,
       "label": "指称消解准确率",
       "direction": "↑"
     },
     "jd-1.3.2": {
       "mode": "range",
       "min": 0.85,
-      "max": 1.0,
+      "max": 1,
       "label": "歧义检测召回率",
       "direction": "↑"
     },
     "jd-2.3.1": {
       "mode": "range",
       "min": 0.85,
-      "max": 1.0,
+      "max": 1,
       "label": "必填参数覆盖率",
       "direction": "↑"
     },
@@ -34,7 +34,7 @@
     "jd-3.3.1": {
       "mode": "range",
       "min": 0.85,
-      "max": 1.0,
+      "max": 1,
       "label": "步骤完整性",
       "direction": "↑"
     },
@@ -51,7 +51,7 @@
     "jd-4.3.1": {
       "mode": "range",
       "min": 0.85,
-      "max": 1.0,
+      "max": 1,
       "label": "阶段完成度",
       "direction": "↑"
     },
@@ -63,14 +63,14 @@
     "jd-5.3.1": {
       "mode": "range",
       "min": 0.85,
-      "max": 1.0,
+      "max": 1,
       "label": "交接成功率",
       "direction": "↑"
     },
     "jd-5.3.2": {
       "mode": "range",
       "min": 0,
-      "max": 2.0,
+      "max": 2,
       "unit": "s",
       "label": "响应时效",
       "direction": "↓"
@@ -78,13 +78,13 @@
     "jd-6.3.1": {
       "mode": "range",
       "min": 0.85,
-      "max": 1.0,
+      "max": 1,
       "label": "检出率",
       "direction": "↑"
     },
     "jd-6.3.2": {
       "mode": "range",
-      "min": 0.0,
+      "min": 0,
       "max": 0.05,
       "label": "误报率",
       "direction": "↓"
@@ -92,13 +92,13 @@
     "jd-6.3.3": {
       "mode": "range",
       "min": 0.85,
-      "max": 1.0,
+      "max": 1,
       "label": "分类精度",
       "direction": "↑"
     },
     "jd-7.3.1": {
       "mode": "range",
-      "min": 0.0,
+      "min": 0,
       "max": 0.3,
       "unit": "m",
       "label": "位置误差容忍",
@@ -106,7 +106,7 @@
     },
     "jd-7.3.2": {
       "mode": "range",
-      "min": 0.0,
+      "min": 0,
       "max": 0.3,
       "unit": "deg",
       "label": "姿态误差容忍",
@@ -115,55 +115,55 @@
     "jd-7.3.3": {
       "mode": "range",
       "min": 0.85,
-      "max": 1.0,
+      "max": 1,
       "label": "可用性标准",
       "direction": "↑"
     },
     "jd-8.3.1": {
       "mode": "range",
       "min": 0.85,
-      "max": 1.0,
+      "max": 1,
       "label": "距离估计精度",
       "direction": "↑"
     },
     "jd-8.3.2": {
       "mode": "range",
       "min": 0.85,
-      "max": 1.0,
+      "max": 1,
       "label": "方位估计精度",
       "direction": "↑"
     },
     "jd-8.3.3": {
       "mode": "range",
       "min": 0.85,
-      "max": 1.0,
+      "max": 1,
       "label": "关联正确率",
       "direction": "↑"
     },
     "jd-9.3.1": {
       "mode": "range",
       "min": 0.85,
-      "max": 1.0,
+      "max": 1,
       "label": "预警阈值",
       "direction": "↑"
     },
     "jd-9.3.2": {
       "mode": "range",
       "min": 0.85,
-      "max": 1.0,
+      "max": 1,
       "label": "返航储备要求",
       "direction": "↑"
     },
     "jd-9.3.3": {
       "mode": "range",
       "min": 0.85,
-      "max": 1.0,
+      "max": 1,
       "label": "消耗预测精度",
       "direction": "↑"
     },
     "jd-10.3.1": {
       "mode": "range",
-      "min": 0.0,
+      "min": 0,
       "max": 0.3,
       "unit": "m",
       "label": "横向偏差",
@@ -171,7 +171,7 @@
     },
     "jd-10.3.2": {
       "mode": "range",
-      "min": 0.0,
+      "min": 0,
       "max": 0.3,
       "unit": "m",
       "label": "高度偏差",
@@ -180,14 +180,14 @@
     "jd-10.3.3": {
       "mode": "range",
       "min": 0.85,
-      "max": 1.0,
+      "max": 1,
       "label": "到达精度",
       "direction": "↑"
     },
     "jd-12.3.1": {
       "mode": "range",
       "min": 0,
-      "max": 2.0,
+      "max": 2,
       "unit": "s",
       "label": "动作时序精度",
       "direction": "↑"
@@ -195,7 +195,7 @@
     "jd-12.3.2": {
       "mode": "range",
       "min": 0.85,
-      "max": 1.0,
+      "max": 1,
       "label": "动作成功率",
       "direction": "↑"
     },
@@ -207,7 +207,7 @@
     "jd-13.3.1": {
       "mode": "range",
       "min": 0.85,
-      "max": 1.0,
+      "max": 1,
       "label": "覆盖完整度",
       "direction": "↑"
     },
@@ -224,7 +224,7 @@
     "jd-14.3.1": {
       "mode": "range",
       "min": 0,
-      "max": 1.0,
+      "max": 1,
       "unit": "s",
       "label": "延迟标准",
       "direction": "↓"
@@ -232,14 +232,14 @@
     "jd-14.3.2": {
       "mode": "range",
       "min": 0.85,
-      "max": 1.0,
+      "max": 1,
       "label": "可靠性",
       "direction": "↑"
     },
     "jd-14.3.3": {
       "mode": "range",
       "min": 0.85,
-      "max": 1.0,
+      "max": 1,
       "label": "吞吐量",
       "direction": "↑"
     },
@@ -251,14 +251,14 @@
     "jd-15.3.2": {
       "mode": "range",
       "min": 0.85,
-      "max": 1.0,
+      "max": 1,
       "label": "完整性",
       "direction": "↑"
     },
     "jd-15.3.3": {
       "mode": "range",
       "min": 0,
-      "max": 2.0,
+      "max": 2,
       "unit": "s",
       "label": "时间戳精度",
       "direction": "↑"
@@ -271,7 +271,7 @@
     "jd-16.3.2": {
       "mode": "range",
       "min": 0,
-      "max": 2.0,
+      "max": 2,
       "unit": "s",
       "label": "申报时效",
       "direction": "↓"
@@ -292,11 +292,16 @@
     "jd-17.3.3": {
       "mode": "range",
       "min": 0,
-      "max": 2.0,
+      "max": 2,
       "unit": "s",
       "label": "安全响应时效",
       "direction": "↓"
     }
   },
-  "note_a11": "Load knowledge/metric_set_a11_default.json for A11."
+  "note_a11": "Load knowledge/metric_set_a11_default.json for A11.",
+  "authority_status": "unreviewed_demo_candidate",
+  "review_status": "proposed",
+  "applies_by_default": false,
+  "threshold_authority": "TBD",
+  "notes": "现有数值来自团队演示草案，尚无受审业务、安全或法规依据；不得作为默认阈值，使用前必须人工确认并记录来源。"
 }

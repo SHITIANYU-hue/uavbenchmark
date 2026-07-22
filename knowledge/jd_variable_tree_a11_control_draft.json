@@ -64,15 +64,15 @@
       "to": "A14"
     },
     {
-      "from": "A13",
+      "from": "A15",
       "to": "A15"
     },
     {
-      "from": "A12",
+      "from": "A13",
       "to": "A16"
     },
     {
-      "from": "A15",
+      "from": "A12",
       "to": "A17"
     }
   ],
@@ -284,15 +284,15 @@
           "to": "A14"
         },
         {
-          "from": "A13",
+          "from": "A15",
           "to": "A15"
         },
         {
-          "from": "A14",
+          "from": "A13",
           "to": "A16"
         },
         {
-          "from": "A15",
+          "from": "A14",
           "to": "A17"
         }
       ]
@@ -447,7 +447,7 @@
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
       "owner_a": "A11",
-      "name": "控制飞行",
+      "name": "飞行控制 / 执行机构",
       "definition": "描述飞行控制、执行机构、控制质量、控制工作机制与局部控制恢复相关的 JD 业务变量；近障与受限空间条件通过非 canonical 场景 Profile 绑定到正式槽位。",
       "node_kind": "capability_root",
       "variable_role": "structural_group",
@@ -3487,7 +3487,7 @@
       ],
       "related_jd": [
         "jd-10.4",
-        "jd-16.2"
+        "jd-17.2"
       ],
       "used_by_axl": [
         "A11×L4"
@@ -3619,7 +3619,7 @@
       ],
       "related_jd": [
         "jd-10.4",
-        "jd-16.2"
+        "jd-17.2"
       ],
       "used_by_axl": [
         "A11×L4"
@@ -3635,7 +3635,7 @@
       "derivation_status": "derived",
       "review_status": "proposed",
       "legacy_aliases": [],
-      "notes": "改变任务速度 Profile、航路或高度属于 A10；返航、迫降或进入 safe state 属于 A16。"
+      "notes": "改变任务速度 Profile、航路或高度属于 A10；返航、迫降或进入 safe state 属于 A17。"
     },
     {
       "schema_version": "jd-tree/0.4.0",
@@ -4089,7 +4089,7 @@
         "jd-7.2",
         "jd-9.3",
         "jd-10.4",
-        "jd-16.2",
+        "jd-17.2",
         "jd-0.5"
       ],
       "used_by_axl": [
@@ -4282,8 +4282,8 @@
           ]
         },
         {
-          "value": "A16",
-          "label_zh": "A16 安全包络 / 运行保证",
+          "value": "A17",
+          "label_zh": "A17 安全包络 / 运行保证",
           "source_refs": [
             "L-A11-AXL68-V3"
           ],
@@ -4341,7 +4341,7 @@
         "jd-7.2",
         "jd-9.3",
         "jd-10.4",
-        "jd-16.2",
+        "jd-17.2",
         "jd-0.5"
       ],
       "used_by_axl": [
@@ -4409,7 +4409,7 @@
         "jd-11.1",
         "jd-11.2",
         "jd-11.3",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -4613,7 +4613,7 @@
       ],
       "related_jd": [
         "jd-2.2",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -5098,7 +5098,7 @@
         "jd-0.3",
         "jd-0.9",
         "jd-11.2",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -5173,7 +5173,7 @@
         "jd-2.2",
         "jd-11.1",
         "jd-11.2",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -5248,7 +5248,7 @@
         "jd-2.2",
         "jd-11.1",
         "jd-11.2",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -5323,7 +5323,7 @@
         "jd-2.2",
         "jd-11.1",
         "jd-11.2",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -5398,7 +5398,7 @@
         "jd-2.2",
         "jd-11.1",
         "jd-11.2",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -5473,7 +5473,7 @@
         "jd-2.2",
         "jd-11.1",
         "jd-11.2",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -5739,7 +5739,7 @@
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "执行余量下限",
-      "definition": "允许继续执行当前控制片段所需的最低剩余执行能力；阈值及其安全含义必须与 A16 联合确认。",
+      "definition": "允许继续执行当前控制片段所需的最低剩余执行能力；阈值及其安全含义必须与 A17 联合确认。",
       "node_kind": "variable",
       "variable_role": "TBD",
       "value_type": "number_range_or_axis_object",
@@ -5789,7 +5789,7 @@
       "related_jd": [
         "jd-11.1",
         "jd-11.3",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -5852,7 +5852,7 @@
         "jd-0.9",
         "jd-11.2",
         "jd-11.3",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -5938,7 +5938,7 @@
       "related_jd": [
         "jd-0.3",
         "jd-11.1",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -6253,7 +6253,7 @@
         "jd-11.2",
         "jd-11.3",
         "PROPOSED-jd-11.4",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -6606,7 +6606,7 @@
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "A11 控制要求绑定",
-      "definition": "将场景 Profile 投影到 jd-11.1、jd-11.2、jd-11.3、PROPOSED-jd-11.4，并引用 A16 安全边界。",
+      "definition": "将场景 Profile 投影到 jd-11.1、jd-11.2、jd-11.3、PROPOSED-jd-11.4，并引用 A17 安全边界。",
       "node_kind": "group",
       "variable_role": "structural_group",
       "value_type": "none",
@@ -6644,7 +6644,7 @@
         "jd-11.2",
         "jd-11.3",
         "PROPOSED-jd-11.4",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],
@@ -9047,7 +9047,7 @@
         "jd-2.2",
         "jd-0.9",
         "PROPOSED-jd-11.4",
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [
@@ -9372,14 +9372,14 @@
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "安全包络引用",
-      "definition": "引用 A16 分相位安全阈值；A11 不在本分支重复定义安全态。",
+      "definition": "引用 A17 分相位安全阈值；A11 不在本分支重复定义安全态。",
       "node_kind": "variable",
       "variable_role": "contract_schema",
       "value_type": "reference",
       "value_domain": [
         {
-          "value": "jd-16.1",
-          "label_zh": "引用 jd-16.1",
+          "value": "jd-17.1",
+          "label_zh": "引用 jd-17.1",
           "source_refs": [],
           "status": "inferred_candidate",
           "applicable_scenarios": [
@@ -9420,7 +9420,7 @@
         "jd-0.5"
       ],
       "related_jd": [
-        "jd-16.1"
+        "jd-17.1"
       ],
       "used_by_axl": [],
       "depends_on": [],

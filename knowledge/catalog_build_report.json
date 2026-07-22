@@ -24,9 +24,9 @@
     "A11a": "A12",
     "A11b": "A13",
     "A12": "A14",
-    "A13": "A15",
-    "A14": "A16",
-    "A15": "A17"
+    "A15": "A15",
+    "A13": "A16",
+    "A14": "A17"
   },
   "jd_local_prefix_migration": {
     "jd-14": "jd-5",
@@ -50,17 +50,17 @@
     "jd-11a": "jd-12",
     "jd-11b": "jd-13",
     "jd-12": "jd-14",
-    "jd-13": "jd-15",
-    "jd-14": "jd-16",
-    "jd-15": "jd-17"
+    "jd-15": "jd-15",
+    "jd-13": "jd-16",
+    "jd-14": "jd-17"
   },
   "source_versions": {
     "axl": "axl-17A-ability-id-v3-2026-07-20",
     "jd": "jd-66-slots-ability-id-v3-2026-07-20"
   },
   "source_sha256": {
-    "AxL责任定义字典_17A_68单元_机读版.md": "4dcd728dc9c4e22af93aec4108a5d0e7dfb2b131377143295b4515a0ac8009b6",
-    "JD业务变量字典_66槽位_机读版.md": "b832c94df23d187540014208cc17a654cb8e7b761111f2ed09fdb848351d6efb"
+    "AxL责任定义字典_17A_68单元_机读版.md": "9c6e26d900b9d7c1c392c80891edc551ae20cffc8eea336067cd1f341eb5281d",
+    "JD业务变量字典_66槽位_机读版.md": "f1271a647f710a818a333f4cbcd0d42baa4c64cf6c16afd696e6b1df658f2e3f"
   },
   "validated_counts": {
     "g_groups": 6,

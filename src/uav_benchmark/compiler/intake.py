@@ -16,8 +16,8 @@ ABILITY_TO_GROUP = {
     "A6": "G2", "A7": "G2", "A8": "G2", "A9": "G2",
     "A10": "G3", "A11": "G3",
     "A12": "G4", "A13": "G4",
-    "A14": "G5", "A15": "G5",
-    "A16": "G6", "A17": "G6",
+    "A14": "G5", "A15": "G6",
+    "A16": "G5", "A17": "G6",
 }
 
 EVIDENCE_STATUSES = {"verified", "proposed", "TBD"}

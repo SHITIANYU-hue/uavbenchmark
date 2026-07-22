@@ -491,9 +491,9 @@ if (
 }
 for (const nodeId of [
   "PROPOSED-jd-13.2.5",
-  "PROPOSED-jd-15.3.5",
-  "PROPOSED-jd-16.1.5",
-  "PROPOSED-jd-17.2.5",
+  "PROPOSED-jd-15.2.5",
+  "PROPOSED-jd-16.3.5",
+  "PROPOSED-jd-17.1.5",
 ]) {
   if (nodeById.get(nodeId)?.variable_role !== "TBD") {
     errors.push(`${nodeId} 的生产者未确认，variable_role 必须保持 TBD。`);

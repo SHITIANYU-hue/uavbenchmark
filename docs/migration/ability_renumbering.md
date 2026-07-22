@@ -1,6 +1,6 @@
 # Ability & JD Renumbering Migration Notice
 
-**Date**: 2026-07-16  
+**Date**: 2026-07-16；2026-07-22 尾部编号修订
 **Commit**: `4dde43f` — Migrate ability IDs to continuous A1-A17  
 **Scope**: All A (ability) IDs and JD (variable) slot IDs
 
@@ -30,19 +30,19 @@ The original numbering used non-sequential IDs with letter suffixes (`A6a`, `A6b
 | **A9a** | **A12** | 载荷动作执行 | G4 |
 | **A9b** | **A13** | 载荷成果生成 / 远端呈现 | G4 |
 | **A10** | **A14** | 通信 / C2 / 遥测 | G5 |
-| **A13** | **A15** | 空域 / 交通 / 合规接入 | G5 |
-| **A12** | **A16** | 安全包络 / 运行保证 / 处置建议 | G6 |
-| **A15** | **A17** | 日志 / 审计 / 保证证据 | G6 |
+| **A15** | **A15** | 日志 / 审计 / 保证证据 | G6 |
+| **A13** | **A16** | 空域 / 交通 / 合规接入 | G5 |
+| **A12** | **A17** | 安全包络 / 运行保证 / 处置建议 | G6 |
 
-**Rule**: New number = position within the group sequence (G1→A1-A5, G2→A6-A9, G3→A10-A11, G4→A12-A13, G5→A14-A15, G6→A16-A17).
+**Rule**: A 编号保持连续 A1–A17，但 2026-07-22 尾部修订后不再用连续区间推断 G 组。A15 属 G6，A16 属 G5，A17 属 G6；代码必须读取显式 `g_group`。
 
 ---
 
 ## JD Slot ID Mapping
 
-JD slot IDs follow `jd-{owner_A_number}.{index}`. When the owner A number changes, the JD prefix changes too. **43 of 66 JD slots changed IDs.**
+JD slot IDs follow `jd-{owner_A_number}.{index}`. When the owner A number changes, the JD prefix changes too. **40 of 66 JD slots changed IDs.**
 
-### Changed (43 slots)
+### Changed (40 slots)
 
 | Old JD | New JD | Name | Owner Change |
 |--------|--------|------|--------------|
@@ -75,24 +75,21 @@ JD slot IDs follow `jd-{owner_A_number}.{index}`. When the owner A number change
 | jd-11.1 | jd-9.1 | 资源消耗包络 | A11→A9 |
 | jd-11.2 | jd-9.2 | 资源预警 / 预留策略 | A11→A9 |
 | jd-11.3 | jd-9.3 | 资源处置策略适用集 | A11→A9 |
-| jd-12.1 | jd-16.1 | 分相位安全阈值 | A12→A16 |
-| jd-12.2 | jd-16.2 | 安全处置策略适用集 | A12→A16 |
-| jd-12.3 | jd-16.3 | 安全态定义 | A12→A16 |
-| jd-13.1 | jd-15.1 | 空域类别 | A13→A15 |
-| jd-13.2 | jd-15.2 | 地理围栏集 | A13→A15 |
-| jd-13.3 | jd-15.3 | 交通信息源需求 | A13→A15 |
-| jd-13.4 | jd-15.4 | 授权生命周期 | A13→A15 |
-| jd-13.5 | jd-15.5 | 合规处置策略适用集 | A13→A15 |
+| jd-12.1 | jd-17.1 | 分相位安全阈值 | A12→A17 |
+| jd-12.2 | jd-17.2 | 安全处置策略适用集 | A12→A17 |
+| jd-12.3 | jd-17.3 | 安全态定义 | A12→A17 |
+| jd-13.1 | jd-16.1 | 空域类别 | A13→A16 |
+| jd-13.2 | jd-16.2 | 地理围栏集 | A13→A16 |
+| jd-13.3 | jd-16.3 | 交通信息源需求 | A13→A16 |
+| jd-13.4 | jd-16.4 | 授权生命周期 | A13→A16 |
+| jd-13.5 | jd-16.5 | 合规处置策略适用集 | A13→A16 |
 | jd-14.1 | jd-5.1 | 交接协议表 | A14→A5 |
 | jd-14.2 | jd-5.2 | 偏好对齐协议 | A14→A5 |
 | jd-14.3 | jd-5.3 | 高层通知规则 | A14→A5 |
-| jd-15.1 | jd-17.1 | 事件类目 | A15→A17 |
-| jd-15.2 | jd-17.2 | 证据格式规格 | A15→A17 |
-| jd-15.3 | jd-17.3 | 留存策略 | A15→A17 |
 
-### Unchanged (23 slots)
+### Unchanged (26 slots)
 
-JD slots owned by A1-A4 (which kept their numbers) were not affected: `jd-0.x` (global), `jd-1.x`, `jd-2.x`, `jd-3.x`, `jd-4.x`.
+JD slots owned by A1-A4 and A15 (audit) were not affected: `jd-0.x` (global), `jd-1.x`, `jd-2.x`, `jd-3.x`, `jd-4.x`, `jd-15.x`.
 
 ---
 
