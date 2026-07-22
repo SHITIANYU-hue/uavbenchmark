@@ -105,6 +105,8 @@ pre {
 }
 
 .app-header {
+  position: relative;
+  z-index: 50;
   min-height: 82px;
   padding: 14px clamp(18px, 3vw, 44px);
   display: flex;
@@ -716,6 +718,164 @@ main {
   .case-badge-text {
     min-width: 0;
   }
+  .metric-id-tag {
+    display: inline;
+    margin-right: 3px;
+    padding: 0 3px;
+    border-radius: 3px;
+    background: color-mix(in srgb, currentColor 12%, transparent);
+    font-size: 9px;
+    font-weight: 700;
+  }
+  .case-badge.metric-set {
+    border-left-color: #2f7a62;
+    background: #e7f5f0;
+    color: #1f5a48;
+  }
+  .case-badge.metric-set .case-label {
+    color: #2f7a62;
+  }
+  .case-badge.metric-set.mode-range,
+  .case-badge.metric-set.mode-enum {
+    border-left-color: #2f7a62;
+    background: #e7f5f0;
+    color: #1f5a48;
+  }
+  .case-badge.metric-set.mode-range .case-label,
+  .case-badge.metric-set.mode-enum .case-label {
+    color: #2f7a62;
+  }
+  .instance-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .metric-set-picker {
+    position: relative;
+  }
+  .metric-set-picker > summary {
+    list-style: none;
+    cursor: pointer;
+    min-width: 148px;
+    padding: 6px 28px 6px 9px;
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    background:
+      var(--surface)
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' stroke='%23687689' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+      right 8px center / 12px no-repeat;
+    color: var(--foreground);
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+  .metric-set-picker > summary::-webkit-details-marker { display: none; }
+  .metric-set-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    z-index: 40;
+    min-width: 220px;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .metric-set-menu label {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: start;
+    gap: 2px 8px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--foreground);
+  }
+  .metric-set-menu label input {
+    grid-row: 1 / span 2;
+    margin-top: 2px;
+  }
+  .metric-set-menu label span {
+    grid-column: 2;
+    color: var(--muted);
+    font-weight: 500;
+    font-size: 10px;
+  }
+
+.metric-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-top: 4px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  grid-column: 1 / -1;
+  width: fit-content;
+}
+
+.metric-chip.layer-node {
+  background: #e8f1f8;
+  color: #2a5878;
+  border: 1px solid #b7cfe0;
+}
+
+.metric-chip.layer-case {
+  background: #f8efdf;
+  color: #7a521d;
+  border: 1px solid #e2c79a;
+}
+
+.metric-chip.layer-mixed {
+  background: #eeeaf5;
+  color: #5c4a7a;
+  border: 1px solid #c9bddc;
+}
+
+.metric-chip.layer-process {
+  background: #eaf4e9;
+  color: #2f6b32;
+  border: 1px solid #b7d4b5;
+}
+
+.metric-list {
+  display: grid;
+  gap: 8px;
+}
+
+.metric-item {
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-soft);
+}
+
+.metric-item strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 11px;
+}
+
+.metric-item code {
+  margin-right: 4px;
+  font-size: 10px;
+}
+
+.metric-item p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.45;
+}
 
 .detail-dialog {
   width: min(940px, calc(100vw - 32px));
@@ -1265,6 +1425,34 @@ pre {
     </div>
     <div class="header-actions">
       <div class="case-toolbar" id="caseToolbar" data-active="false">
+        <label class="case-field" for="metricSetSummary">
+          <span class="case-field-icon" aria-hidden="true">
+            <svg viewBox="0 0 16 16" fill="none">
+              <path d="M3 3.5h10M3 8h10M3 12.5h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              <circle cx="12.2" cy="12.5" r="1.4" fill="currentColor"/>
+            </svg>
+          </span>
+          <span class="case-field-body">
+            <span>Metric set</span>
+            <details class="metric-set-picker" id="metricSetPicker">
+              <summary id="metricSetSummary">未加载</summary>
+              <div class="metric-set-menu" id="metricSetMenu">
+                <label>
+                  <input type="checkbox" data-metric-set="knowledge/metric_set_a11_default.json" />
+                  A11 默认 metric <span>metric→jd-11.3/4 节点</span>
+                </label>
+                <label>
+                  <input type="checkbox" data-metric-set="knowledge/metric_set_a11_strict.json" />
+                  A11 严标准 <span>同槽更严 · 可叠加载</span>
+                </label>
+                <label>
+                  <input type="checkbox" data-metric-set="knowledge/metric_set_default.json" />
+                  其他 A 默认阈值 <span>metric_set_default · 不含 A11</span>
+                </label>
+              </div>
+            </details>
+          </span>
+        </label>
         <label class="case-field" for="caseSelector">
           <span class="case-field-icon" aria-hidden="true">
             <svg viewBox="0 0 16 16" fill="none">
@@ -1293,14 +1481,14 @@ pre {
             </select>
           </span>
         </label>
-        <label class="case-toggle" for="caseToggle" title="在变量节点上显示案例实例值">
+        <label class="case-toggle" for="caseToggle" title="在变量节点上显示 metric set / 案例实例值">
           <input type="checkbox" id="caseToggle" disabled>
           <span class="case-toggle-ui" aria-hidden="true"></span>
           <span>实例值</span>
         </label>
         <div class="case-status" id="caseStatus" aria-live="polite">
-          <span class="case-status-ability" id="caseStatusAbility">A11</span>
-          <span class="case-status-name" id="caseStatusName">白墙窄缝穿梭</span>
+          <span class="case-status-ability" id="caseStatusAbility"></span>
+          <span class="case-status-name" id="caseStatusName"></span>
           <span class="case-status-meta" id="caseStatusMeta"></span>
         </div>
       </div>
@@ -1456,6 +1644,8 @@ pre {
     caseData: null,
     caseVisible: false,
     dLevel: "",
+    /** @type {{url:string, data:object}[]} */
+    metricSets: [],
   };
 
   const elements = {
@@ -1627,13 +1817,8 @@ pre {
       '<svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 3h7M2.5 6h7M2.5 9h4.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="9.2" cy="9" r="1.3" fill="currentColor"/></svg>',
   };
 
-  function caseBadgeHtml(node) {
-    if (!state.caseVisible || !state.caseData || !state.caseData.values) return "";
-    const entry = state.caseData.values[node.node_id];
-    if (entry === undefined) return "";
-    const caseName = state.caseData.case_name || "案例";
+  function formatBindingEntry(entry) {
     const mode = entry.mode || "fixed";
-
     let modeClass = "";
     let displayVal;
     if (mode === "fixed") {
@@ -1654,11 +1839,73 @@ pre {
     } else {
       displayVal = formatCaseValue(entry.value || entry);
     }
-
-    const modeIcon = CASE_MODE_ICONS[mode] || CASE_MODE_ICONS.fixed;
-    return `<div class="case-badge ${modeClass}"><span class="mode-icon">${modeIcon}</span><span class="case-badge-text"><span class="case-label">${escapeHtml(caseName)}</span>${displayVal}</span></div>`;
+    return { mode, modeClass, displayVal };
   }
 
+  function metricIdsOf(entry) {
+    if (!entry || typeof entry !== "object") return [];
+    if (Array.isArray(entry.metric_ids)) return entry.metric_ids;
+    if (entry.metric_id) return [entry.metric_id];
+    return [];
+  }
+
+  function bindingBadgeHtml(label, entry, extraClass = "") {
+    const { mode, modeClass, displayVal } = formatBindingEntry(entry);
+    const modeIcon = CASE_MODE_ICONS[mode] || CASE_MODE_ICONS.fixed;
+    const mids = metricIdsOf(entry);
+    const midHtml = mids.length
+      ? `<code class="metric-id-tag">${mids.map((m) => escapeHtml(m)).join(" · ")}</code> `
+      : "";
+    return `<div class="case-badge ${modeClass} ${extraClass}"><span class="mode-icon">${modeIcon}</span><span class="case-badge-text"><span class="case-label">${escapeHtml(label)}</span>${midHtml}${displayVal}</span></div>`;
+  }
+
+  function instanceBadgesHtml(node) {
+    if (!state.caseVisible) return "";
+    const parts = [];
+    for (const set of state.metricSets) {
+      const entry = set.data?.values?.[node.node_id];
+      if (entry === undefined) continue;
+      const label =
+        set.data.metric_set_name || set.data.metric_set_id || "metric_set";
+      parts.push(bindingBadgeHtml(label, entry, "metric-set"));
+    }
+    if (state.caseData?.values) {
+      const entry = state.caseData.values[node.node_id];
+      if (entry !== undefined) {
+        const label = state.caseData.case_name || "案例";
+        parts.push(bindingBadgeHtml(label, entry));
+      }
+    }
+    if (!parts.length) return "";
+    return `<div class="instance-badges">${parts.join("")}</div>`;
+  }
+
+  function syncMetricSetSummary() {
+    const summary = document.getElementById("metricSetSummary");
+    if (!summary) return;
+    const n = state.metricSets.length;
+    if (!n) {
+      summary.textContent = "未加载";
+      return;
+    }
+    const names = state.metricSets.map(
+      (s) => s.data.metric_set_name || s.data.metric_set_id || "set",
+    );
+    summary.textContent =
+      n === 1 ? names[0] : `${n} 套：${names.join(" + ")}`;
+  }
+
+  async function setMetricSetLoaded(url, enabled) {
+    if (!enabled) {
+      state.metricSets = state.metricSets.filter((s) => s.url !== url);
+      return;
+    }
+    if (state.metricSets.some((s) => s.url === url)) return;
+    const r = await fetch(url, { cache: "no-store" });
+    if (!r.ok) throw new Error(`Metric set 加载失败：${url}`);
+    const data = await r.json();
+    state.metricSets.push({ url, data });
+  }
 
   function syncCaseToolbar() {
     const toolbar = document.getElementById("caseToolbar");
@@ -1669,10 +1916,13 @@ pre {
     const statusMeta = document.getElementById("caseStatusMeta");
     if (!toolbar || !toggle) return;
 
-    const active = Boolean(state.caseData);
+    const hasMetric = state.metricSets.length > 0;
+    const hasCase = Boolean(state.caseData);
+    const active = hasMetric || hasCase;
     toolbar.dataset.active = active ? "true" : "false";
     toggle.disabled = !active;
     toggle.checked = active && state.caseVisible;
+    syncMetricSetSummary();
 
     const hasDAxis = Boolean(state.caseData?.axes?.D?.levels?.length);
     if (dLevelField) {
@@ -1689,16 +1939,139 @@ pre {
         statusAbility.textContent = "";
         statusName.textContent = "";
         statusMeta.textContent = "";
-      } else {
+      } else if (hasCase) {
         const ability = state.caseData.ability || "—";
         const boundCount = state.caseData.values
           ? Object.keys(state.caseData.values).length
           : 0;
         statusAbility.textContent = ability;
         statusName.textContent = state.caseData.case_name || "未命名案例";
-        statusMeta.textContent = boundCount ? `${boundCount} 绑定` : "";
+        const setN = state.metricSets.length;
+        statusMeta.textContent = [
+          boundCount ? `${boundCount} 案例绑定` : "",
+          setN ? `${setN} metric set` : "",
+        ]
+          .filter(Boolean)
+          .join(" · ");
+      } else {
+        statusAbility.textContent = "metric";
+        statusName.textContent = state.metricSets
+          .map((s) => s.data.metric_set_name || s.data.metric_set_id)
+          .join(" + ");
+        const bound = state.metricSets.reduce(
+          (n, s) => n + Object.keys(s.data.values || {}).length,
+          0,
+        );
+        statusMeta.textContent = `${state.metricSets.length} 套 · ${bound} 绑定`;
       }
     }
+  }
+
+  function metricLayerChip(node) {
+    const layer = node.metric_layer;
+    if (!layer) return "";
+    const labels = {
+      node: "树·节点质量 · .3",
+      process: "树·过程协议 · .4",
+      case: "案例 · scoring",
+      mixed: "节点+案例",
+    };
+    return `<span class="metric-chip layer-${escapeHtml(layer)}">${escapeHtml(
+      labels[layer] || layer,
+    )}</span>`;
+  }
+
+  function treeLayerOf(nodeId) {
+    if (!nodeId || !nodeId.startsWith("jd-")) return null;
+    const segs = nodeId.slice(3).split(".");
+    return segs.length >= 2 ? segs[1] : null;
+  }
+
+  function directionGlyph(node, entry) {
+    if (entry?.direction) return entry.direction;
+    const d = node.difficulty_direction;
+    if (d === "higher_harder") return "↑ 越大越难 / 阈值按 metric set";
+    if (d === "lower_harder") return "↓ 越小越难 / 阈值按 metric set";
+    return "—";
+  }
+
+  /** 本节点 = metric 槽位；metric set 实例 = grader 判据（同一件事） */
+  function renderMetricGrader(node) {
+    const layer = treeLayerOf(node.node_id);
+    const isMetricSlot =
+      node.node_kind === "variable" && (layer === "3" || layer === "4");
+    const setBindings = state.metricSets.filter(
+      (s) => s.data?.values?.[node.node_id] !== undefined,
+    );
+    const caseEntry = state.caseData?.values?.[node.node_id];
+    if (!isMetricSlot && !setBindings.length && caseEntry === undefined) {
+      return "";
+    }
+
+    const layerLabel =
+      layer === "3"
+        ? "质量标准 · jd-x.3"
+        : layer === "4"
+          ? "过程协议 · jd-x.4"
+          : "树节点";
+
+    const instanceBlocks = setBindings
+      .map((set) => {
+        const entry = set.data.values[node.node_id];
+        const label =
+          set.data.metric_set_name || set.data.metric_set_id || "metric_set";
+        const mids = metricIdsOf(entry);
+        const axl = (entry.used_by_axl || [])
+          .map((c) => `<code>${escapeHtml(c)}</code>`)
+          .join(" ");
+        return `<article class="metric-item">
+          <strong>实例 · ${escapeHtml(label)}</strong>
+          <p>metric ${
+            mids.length
+              ? mids.map((m) => `<code>${escapeHtml(m)}</code>`).join(" ")
+              : "（本节点）"
+          }${axl ? ` · ${axl}` : ""}</p>
+          <p>grader 读此实例判本节点是否合格</p>
+          ${bindingBadgeHtml(label, entry, "metric-set")}
+        </article>`;
+      })
+      .join("");
+
+    const caseBlock =
+      caseEntry !== undefined
+        ? `<article class="metric-item">
+            <strong>案例覆盖 · ${escapeHtml(state.caseData.case_name || "案例")}</strong>
+            <p>案例可覆盖同节点实例（仍是 grader 判据，不是另一套指标）</p>
+            ${bindingBadgeHtml(state.caseData.case_name || "案例", caseEntry)}
+          </article>`
+        : "";
+
+    const emptyHint =
+      !instanceBlocks && !caseBlock
+        ? `<p class="detail-definition">尚未加载 metric set。加载后，本节点的实例值即为 grader 判据。</p>`
+        : "";
+
+    return `<section class="detail-section">
+      <h3>Metric / Grader</h3>
+      <p class="detail-definition">节点即指标；metric set 实例即 grader 读数。二者不是两套东西。</p>
+      <dl class="detail-grid">
+        ${detailField("指标", escapeHtml(node.name))}
+        ${detailField("槽位", `<code>${escapeHtml(node.node_id)}</code>`)}
+        ${detailField("层级", escapeHtml(layerLabel))}
+        ${detailField("值类型", escapeHtml(node.value_type || "—"))}
+        ${detailField(
+          "方向",
+          escapeHtml(
+            directionGlyph(
+              node,
+              setBindings[0]?.data?.values?.[node.node_id],
+            ),
+          ),
+        )}
+      </dl>
+      <div class="metric-list">${instanceBlocks}${caseBlock}</div>
+      ${emptyHint}
+    </section>`;
   }
 
   function renderBranch(node) {
@@ -1706,9 +2079,11 @@ pre {
     const hasChildren = children.length > 0;
     const highlighted = state.highlightedNodeId === node.node_id;
     const commentCount = commentsForNode(node.node_id).length;
-    const badge = caseBadgeHtml(node);
+    const badge = instanceBadgesHtml(node);
     return `<div class="mind-branch${hasChildren ? " has-children" : ""}">
-      <button class="mind-node ${nodeClass(node)}${highlighted ? " is-highlighted" : ""}"
+      <button class="mind-node ${nodeClass(node)}${highlighted ? " is-highlighted" : ""}${
+        node.metric_layer ? ` metric-${node.metric_layer}` : ""
+      }"
         type="button" data-node-id="${escapeHtml(node.node_id)}"
         aria-label="${escapeHtml(`${shortId(node.node_id)} ${node.name}，打开详情`)}">
         <code>${escapeHtml(shortId(node.node_id))}</code>
@@ -1830,6 +2205,13 @@ pre {
   function renderDomain(node) {
     const domain = node.value_domain;
     if (domain === null || domain === undefined) {
+      if (node.node_kind === "variable") {
+        const layer = treeLayerOf(node.node_id);
+        if (layer === "3" || layer === "4") {
+          return '<span class="tag">取值由 metric set / 案例实例化（见 Metric / Grader）</span>';
+        }
+        return '<span class="tag">取值域未在树上枚举（可由实例填写）</span>';
+      }
       return '<span class="tag">该节点是结构分组，无取值域</span>';
     }
     if (!Array.isArray(domain)) {
@@ -2053,7 +2435,6 @@ pre {
           ${detailField("观察通道", tags(node.observation_channel, observationLabels))}
           ${detailField("难度方向", escapeHtml(difficultyLabels[node.difficulty_direction] || node.difficulty_direction))}
           ${detailField("适用场景", tags(node.applicable_scenarios, scenarioLabels))}
-          ${detailField("A×L 使用关系", tags(node.used_by_axl))}
           ${detailField("相关 JD", tags(related))}
           ${detailField("多重性", escapeHtml(node.multiplicity))}
           ${detailField("证据状态", escapeHtml(node.evidence_status))}
@@ -2061,17 +2442,12 @@ pre {
         </dl>
       </section>
 
+      ${renderMetricGrader(node)}
+
       <section class="detail-section">
         <h3>候选取值 / 取值范围</h3>
         ${renderDomain(node)}
       </section>
-
-      ${
-        state.caseData && state.caseData.values && state.caseData.values[node.node_id] !== undefined
-          ? `<section class="detail-section"><h3>${escapeHtml(state.caseData.case_name || "案例")} 实例值</h3>
-             <div class="case-badge" style="font-size:11px;padding:10px">${formatCaseValue(state.caseData.values[node.node_id])}</div></section>`
-          : ""
-      }
 
       ${renderConditions(node)}
 
@@ -2432,14 +2808,42 @@ pre {
     });
 
     const caseToolbar = document.getElementById("caseToolbar");
+    const metricSetMenu = document.getElementById("metricSetMenu");
+    if (metricSetMenu) {
+      metricSetMenu.addEventListener("change", async (event) => {
+        const input = event.target;
+        if (!(input instanceof HTMLInputElement) || !input.dataset.metricSet) {
+          return;
+        }
+        const url = input.dataset.metricSet;
+        caseToolbar?.classList.add("is-loading");
+        try {
+          await setMetricSetLoaded(url, input.checked);
+          if (state.metricSets.length || state.caseData) {
+            state.caseVisible = true;
+          } else {
+            state.caseVisible = false;
+          }
+          syncCaseToolbar();
+          renderMap();
+        } catch (e) {
+          input.checked = false;
+          state.metricSets = state.metricSets.filter((s) => s.url !== url);
+          syncCaseToolbar();
+          window.alert(e.message);
+        } finally {
+          caseToolbar?.classList.remove("is-loading");
+        }
+      });
+    }
     const caseSelector = document.getElementById("caseSelector");
     if (caseSelector) {
       caseSelector.addEventListener("change", async () => {
         const url = caseSelector.value;
         if (!url) {
           state.caseData = null;
-          state.caseVisible = false;
           state.dLevel = "";
+          if (!state.metricSets.length) state.caseVisible = false;
           syncCaseToolbar();
           renderTabs();
           renderMap();
@@ -2460,7 +2864,7 @@ pre {
           renderMap();
         } catch (e) {
           state.caseData = null;
-          state.caseVisible = false;
+          if (!state.metricSets.length) state.caseVisible = false;
           caseSelector.value = "";
           syncCaseToolbar();
           window.alert(e.message);

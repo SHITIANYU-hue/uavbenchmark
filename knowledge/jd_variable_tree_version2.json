@@ -2,7 +2,7 @@
   "schema": "uav-benchmark-jd-variable-tree",
   "schema_version": "2.3",
   "catalog_id": "jd-variable-tree-v2",
-  "catalog_version": "2.3.3",
+  "catalog_version": "2.3.5",
   "generated_at": "2026-07-22",
   "ability_id_scheme": "ability-id-v3-2026-07-20",
   "pattern": "4-layer: ontology / method+envelope / quality / fallback",
@@ -20,7 +20,7 @@
       "canonical_slot": null,
       "owner_a": "A1",
       "name": "意图入口",
-      "definition": "",
+      "definition": "树上：jd-1.3=节点质量，jd-1.4=过程协议；案例层 outcome 写在 case.scoring（勿挂成树叶子）。",
       "node_kind": "capability_root",
       "value_type": "",
       "value_domain": null,
@@ -40,7 +40,7 @@
       "canonical_slot": null,
       "owner_a": "A10",
       "name": "导航飞行",
-      "definition": "",
+      "definition": "树上：jd-10.3=节点质量，jd-10.4=过程协议；案例层 outcome 写在 case.scoring（勿挂成树叶子）。",
       "node_kind": "capability_root",
       "value_type": "",
       "value_domain": null,
@@ -52,7 +52,22 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "case",
+      "case_metrics": [
+        {
+          "metric_id": "navigation_success",
+          "layer": "case",
+          "definition_zh": "整局导航是否成功到达（对照 jd-10.3 读数，但本身记在 scoring）",
+          "example_cases": []
+        },
+        {
+          "metric_id": "SPL",
+          "layer": "case",
+          "definition_zh": "成功加权路径效率 S×l/max(p,l)",
+          "example_cases": []
+        }
+      ]
     },
     {
       "node_id": "A11",
@@ -60,7 +75,7 @@
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "控制飞行",
-      "definition": "",
+      "definition": "树上：jd-11.3=节点质量，jd-11.4=过程协议；案例层 outcome 写在 case.scoring（勿挂成树叶子）。",
       "node_kind": "capability_root",
       "value_type": "",
       "value_domain": null,
@@ -72,7 +87,34 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "case",
+      "case_metrics": [
+        {
+          "metric_id": "SR",
+          "layer": "case",
+          "definition_zh": "成功率 = 到达终点 + 无碰撞 + 未越界 + 时限内",
+          "example_cases": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "metric_id": "CR",
+          "layer": "case",
+          "definition_zh": "碰撞率 = 发生≥1次碰撞的 episode 占比（案例 Gate，非 jd-11.3 叶子）",
+          "example_cases": [
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "metric_id": "SPL",
+          "layer": "case",
+          "definition_zh": "路径效率 = S×l/max(p,l)",
+          "example_cases": [
+            "white_wall_narrow_gap"
+          ]
+        }
+      ]
     },
     {
       "node_id": "A12",
@@ -80,7 +122,7 @@
       "canonical_slot": null,
       "owner_a": "A12",
       "name": "载荷执行",
-      "definition": "",
+      "definition": "树上：jd-12.3=节点质量，jd-12.4=过程协议；案例层 outcome 写在 case.scoring（勿挂成树叶子）。",
       "node_kind": "capability_root",
       "value_type": "",
       "value_domain": null,
@@ -100,7 +142,7 @@
       "canonical_slot": null,
       "owner_a": "A13",
       "name": "成果呈现",
-      "definition": "",
+      "definition": "树上：jd-13.3=节点质量，jd-13.4=过程协议；案例层 outcome 写在 case.scoring（勿挂成树叶子）。",
       "node_kind": "capability_root",
       "value_type": "",
       "value_domain": null,
@@ -120,7 +162,7 @@
       "canonical_slot": null,
       "owner_a": "A14",
       "name": "通信链路",
-      "definition": "",
+      "definition": "树上：jd-14.3=节点质量，jd-14.4=过程协议；案例层 outcome 写在 case.scoring（勿挂成树叶子）。",
       "node_kind": "capability_root",
       "value_type": "",
       "value_domain": null,
@@ -140,7 +182,7 @@
       "canonical_slot": null,
       "owner_a": "A15",
       "name": "审计日志",
-      "definition": "",
+      "definition": "树上：jd-15.3=节点质量，jd-15.4=过程协议；案例层 outcome 写在 case.scoring（勿挂成树叶子）。",
       "node_kind": "capability_root",
       "value_type": "",
       "value_domain": null,
@@ -160,7 +202,7 @@
       "canonical_slot": null,
       "owner_a": "A16",
       "name": "合规申报",
-      "definition": "",
+      "definition": "树上：jd-16.3=节点质量，jd-16.4=过程协议；案例层 outcome 写在 case.scoring（勿挂成树叶子）。",
       "node_kind": "capability_root",
       "value_type": "",
       "value_domain": null,
@@ -180,7 +222,7 @@
       "canonical_slot": null,
       "owner_a": "A17",
       "name": "安全包络",
-      "definition": "",
+      "definition": "树上：jd-17.3=节点质量，jd-17.4=过程协议；案例层 outcome 写在 case.scoring（勿挂成树叶子）。",
       "node_kind": "capability_root",
       "value_type": "",
       "value_domain": null,
@@ -200,7 +242,7 @@
       "canonical_slot": null,
       "owner_a": "A2",
       "name": "实况填参",
-      "definition": "",
+      "definition": "树上：jd-2.3=节点质量，jd-2.4=过程协议；案例层 outcome 写在 case.scoring（勿挂成树叶子）。",
       "node_kind": "capability_root",
       "value_type": "",
       "value_domain": null,
@@ -220,7 +262,7 @@
       "canonical_slot": null,
       "owner_a": "A3",
       "name": "分步推理",
-      "definition": "",
+      "definition": "树上：jd-3.3=节点质量，jd-3.4=过程协议；案例层 outcome 写在 case.scoring（勿挂成树叶子）。",
       "node_kind": "capability_root",
       "value_type": "",
       "value_domain": null,
@@ -240,7 +282,7 @@
       "canonical_slot": null,
       "owner_a": "A4",
       "name": "编排执行",
-      "definition": "",
+      "definition": "树上：jd-4.3=节点质量，jd-4.4=过程协议；案例层 outcome 写在 case.scoring（勿挂成树叶子）。",
       "node_kind": "capability_root",
       "value_type": "",
       "value_domain": null,
@@ -260,7 +302,7 @@
       "canonical_slot": null,
       "owner_a": "A5",
       "name": "请求交接",
-      "definition": "",
+      "definition": "树上：jd-5.3=节点质量，jd-5.4=过程协议；案例层 outcome 写在 case.scoring（勿挂成树叶子）。",
       "node_kind": "capability_root",
       "value_type": "",
       "value_domain": null,
@@ -280,7 +322,7 @@
       "canonical_slot": null,
       "owner_a": "A6",
       "name": "环境感知",
-      "definition": "",
+      "definition": "树上：jd-6.3=节点质量，jd-6.4=过程协议；案例层 outcome 写在 case.scoring（勿挂成树叶子）。",
       "node_kind": "capability_root",
       "value_type": "",
       "value_domain": null,
@@ -300,7 +342,7 @@
       "canonical_slot": null,
       "owner_a": "A7",
       "name": "自身定位",
-      "definition": "",
+      "definition": "树上：jd-7.3=节点质量，jd-7.4=过程协议；案例层 outcome 写在 case.scoring（勿挂成树叶子）。",
       "node_kind": "capability_root",
       "value_type": "",
       "value_domain": null,
@@ -320,7 +362,7 @@
       "canonical_slot": null,
       "owner_a": "A8",
       "name": "相对定位",
-      "definition": "",
+      "definition": "树上：jd-8.3=节点质量，jd-8.4=过程协议；案例层 outcome 写在 case.scoring（勿挂成树叶子）。",
       "node_kind": "capability_root",
       "value_type": "",
       "value_domain": null,
@@ -340,7 +382,7 @@
       "canonical_slot": null,
       "owner_a": "A9",
       "name": "资源管理",
-      "definition": "",
+      "definition": "树上：jd-9.3=节点质量，jd-9.4=过程协议；案例层 outcome 写在 case.scoring（勿挂成树叶子）。",
       "node_kind": "capability_root",
       "value_type": "",
       "value_domain": null,
@@ -558,8 +600,8 @@
       "parent_id": "A1",
       "canonical_slot": null,
       "owner_a": "A1",
-      "name": "质量标准",
-      "definition": "",
+      "name": "理解准确度标准",
+      "definition": "树·节点质量层（四层 .3）：定义该能力「什么算合格」。阈值由案例 values 绑定到本层叶子；整局 SR/CR/SPL 写在案例 scoring；异常处置/求助/重规划等过程挂 .4，不挂本层。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -571,7 +613,75 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "used_by_axl": [
+        "A1×L1",
+        "A1×L2",
+        "A1×L3"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor_group",
+      "runtime_metrics": {
+        "layer": "node",
+        "tree_slot": "jd-x.3",
+        "source": "metric.md",
+        "note": "过程协议见同能力 jd-x.4；案例 outcome 见 case.scoring。",
+        "axl": [
+          {
+            "cell": "A1×L1",
+            "layer": "node",
+            "metrics": [
+              "intent_macro_f1",
+              "slot_f1",
+              "semantic_frame_accuracy"
+            ],
+            "anchors": [
+              "jd-1.3.1"
+            ],
+            "direction_zh": "意图/槽/语义帧正确 ↑",
+            "evidence": "intent/slot/frame GT；Agent 结构化理解结果",
+            "sources": "对话理解通用协议；PX4 Drone Agent",
+            "maturity": "成熟"
+          },
+          {
+            "cell": "A1×L2",
+            "layer": "node",
+            "metrics": [
+              "referent_accuracy",
+              "slot_referent_joint_accuracy",
+              "no_target_rejection_f1"
+            ],
+            "anchors": [
+              "jd-1.3.1"
+            ],
+            "direction_zh": "指称与联合绑定正确 ↑；无目标拒绝 ↑",
+            "evidence": "oracle object catalog；bbox/mask 或实体 ID",
+            "sources": "RefDrone；GeoText-1652；AVDN",
+            "maturity": "可迁移"
+          },
+          {
+            "cell": "A1×L3",
+            "layer": "node",
+            "metrics": [
+              "ambiguity_detection_f1",
+              "post_confirmation_accuracy"
+            ],
+            "anchors": [
+              "jd-1.3.2"
+            ],
+            "direction_zh": "歧义检出与确认后解释 ↑；ask/wait → A5 过程",
+            "evidence": "ambiguity GT；interpretation artifact",
+            "sources": "AVDN；KnowNo",
+            "maturity": "可迁移"
+          }
+        ]
+      }
     },
     {
       "node_id": "jd-1.3.1",
@@ -579,19 +689,54 @@
       "canonical_slot": null,
       "owner_a": "A1",
       "name": "指称消解准确率",
-      "definition": "",
+      "definition": "指称消解准确率阈值/目标；grader 对照本节点判指称是否合格。",
       "node_kind": "variable",
       "value_type": "range",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A1×L1",
+        "A1×L2"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "referent_accuracy",
+          "direction": "↑",
+          "used_by_axl": [
+            "A1×L2"
+          ]
+        },
+        {
+          "metric_id": "slot_referent_joint_accuracy",
+          "direction": "↑",
+          "used_by_axl": [
+            "A1×L2"
+          ]
+        },
+        {
+          "metric_id": "intent_macro_f1",
+          "direction": "↑",
+          "used_by_axl": [
+            "A1×L1"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-1.3.2",
@@ -599,27 +744,47 @@
       "canonical_slot": null,
       "owner_a": "A1",
       "name": "歧义检测召回率",
-      "definition": "",
+      "definition": "歧义检测召回率阈值/目标；grader 对照本节点判歧义是否被识别。",
       "node_kind": "variable",
       "value_type": "range",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A1×L3"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "ambiguity_detection_f1",
+          "direction": "↑",
+          "used_by_axl": [
+            "A1×L3"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-1.4",
       "parent_id": "A1",
       "canonical_slot": null,
       "owner_a": "A1",
-      "name": "兜底协议",
-      "definition": "",
+      "name": "歧义消解协议",
+      "definition": "树·过程协议层（四层 .4）：出问题怎么处置、升级、验证。对应 A×L 的监督/主导自主过程读数；案例可绑定异常类型与处置动作；合格阈值在 .3，整局 outcome 在 case.scoring。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -631,7 +796,45 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol_group",
+      "runtime_metrics": {
+        "layer": "process",
+        "tree_slot": "jd-x.4",
+        "source": "metric.md",
+        "note": "节点质量阈值见同能力 jd-x.3；案例 outcome 见 case.scoring。",
+        "axl": [
+          {
+            "cell": "A1×L4",
+            "layer": "process",
+            "metrics": [
+              "evidence_pointer_accuracy",
+              "selective_risk_coverage",
+              "ece",
+              "cross_turn_consistency"
+            ],
+            "anchors": [
+              "jd-1.4.1",
+              "jd-1.4.2",
+              "jd-1.4.3"
+            ],
+            "direction_zh": "证据锚点/选择性风险 ↑，ECE ↓，跨轮自洽 ↑",
+            "evidence": "provenance；置信；跨轮 state",
+            "sources": "KnowNo；S-ATLAS",
+            "maturity": "项目校准"
+          }
+        ]
+      },
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "used_by_axl": [
+        "A1×L4"
+      ]
     },
     {
       "node_id": "jd-1.4.1",
@@ -639,7 +842,7 @@
       "canonical_slot": null,
       "owner_a": "A1",
       "name": "歧义类型",
-      "definition": "",
+      "definition": "歧义类型目录；过程层触发侧。",
       "node_kind": "variable",
       "value_type": "enum",
       "value_domain": [
@@ -662,13 +865,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "ambiguity_detection_f1",
+          "direction": "↑",
+          "used_by_axl": [
+            "A1×L3"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A1×L3"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-1.4.2",
@@ -676,7 +899,7 @@
       "canonical_slot": null,
       "owner_a": "A1",
       "name": "消解动作",
-      "definition": "",
+      "definition": "消解动作集；过程层处置。",
       "node_kind": "variable",
       "value_type": "enum",
       "value_domain": [
@@ -699,13 +922,35 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "post_confirmation_accuracy",
+          "direction": "↑",
+          "used_by_axl": [
+            "A1×L3",
+            "A1×L4"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A1×L3",
+        "A1×L4"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-1.4.3",
@@ -713,7 +958,7 @@
       "canonical_slot": null,
       "owner_a": "A1",
       "name": "升级目标",
-      "definition": "",
+      "definition": "升级目标（常 →A5）。",
       "node_kind": "variable",
       "value_type": "ref",
       "value_domain": [
@@ -724,13 +969,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "selective_risk_coverage",
+          "direction": "↑",
+          "used_by_axl": [
+            "A1×L4"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A1×L4"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-10.1",
@@ -919,8 +1184,8 @@
       "parent_id": "A10",
       "canonical_slot": null,
       "owner_a": "A10",
-      "name": "质量标准",
-      "definition": "",
+      "name": "航迹精度标准",
+      "definition": "树·节点质量层（四层 .3）：定义该能力「什么算合格」。阈值由案例 values 绑定到本层叶子；整局 SR/CR/SPL 写在案例 scoring；异常处置/求助/重规划等过程挂 .4，不挂本层。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -932,7 +1197,64 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "used_by_axl": [
+        "A10×L1",
+        "A10×L2"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor_group",
+      "runtime_metrics": {
+        "layer": "node",
+        "tree_slot": "jd-x.3",
+        "source": "metric.md",
+        "note": "过程协议见同能力 jd-x.4；案例 outcome 见 case.scoring。",
+        "axl": [
+          {
+            "cell": "A10×L1",
+            "layer": "node",
+            "metrics": [
+              "path_validity_rate",
+              "constraint_satisfaction",
+              "path_length_ratio"
+            ],
+            "anchors": [
+              "jd-10.3.1",
+              "jd-10.3.2",
+              "jd-10.3.3"
+            ],
+            "direction_zh": "路径可行与约束 ↑；长度比近 1",
+            "evidence": "map；geofence；reference path",
+            "sources": "UAV-ON；OpenFly；FlightBench",
+            "maturity": "可迁移"
+          },
+          {
+            "cell": "A10×L2",
+            "layer": "mixed",
+            "metrics": [
+              "navigation_success",
+              "spl",
+              "sdtw",
+              "route_completion"
+            ],
+            "anchors": [
+              "jd-10.3.1",
+              "jd-10.3.2",
+              "jd-10.3.3"
+            ],
+            "direction_zh": "节点读数对照 jd-10.3；SPL/成功率为案例层",
+            "evidence": "executed trajectory；success radius",
+            "sources": "UAV-ON；UAVBench；OpenFly；FlightBench",
+            "maturity": "成熟"
+          }
+        ]
+      }
     },
     {
       "node_id": "jd-10.3.1",
@@ -940,19 +1262,39 @@
       "canonical_slot": null,
       "owner_a": "A10",
       "name": "横向偏差",
-      "definition": "",
+      "definition": "横向偏差标准（航迹偏离）。",
       "node_kind": "variable",
       "value_type": "range",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A10×L2"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "sdtw",
+          "direction": "↑",
+          "used_by_axl": [
+            "A10×L2"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-10.3.2",
@@ -960,19 +1302,39 @@
       "canonical_slot": null,
       "owner_a": "A10",
       "name": "高度偏差",
-      "definition": "",
+      "definition": "高度偏差标准。",
       "node_kind": "variable",
       "value_type": "range",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A10×L1"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "path_validity_rate",
+          "direction": "↑",
+          "used_by_axl": [
+            "A10×L1"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-10.3.3",
@@ -980,27 +1342,47 @@
       "canonical_slot": null,
       "owner_a": "A10",
       "name": "到达精度",
-      "definition": "",
+      "definition": "到达精度标准（航点位置误差）。",
       "node_kind": "variable",
       "value_type": "range",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A10×L2"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "route_completion",
+          "direction": "↑",
+          "used_by_axl": [
+            "A10×L2"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-10.4",
       "parent_id": "A10",
       "canonical_slot": null,
       "owner_a": "A10",
-      "name": "兜底协议",
-      "definition": "",
+      "name": "航迹处置协议",
+      "definition": "树·过程协议层（四层 .4）：出问题怎么处置、升级、验证。对应 A×L 的监督/主导自主过程读数；案例可绑定异常类型与处置动作；合格阈值在 .3，整局 outcome 在 case.scoring。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -1012,7 +1394,64 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol_group",
+      "runtime_metrics": {
+        "layer": "process",
+        "tree_slot": "jd-x.4",
+        "source": "metric.md",
+        "note": "节点质量阈值见同能力 jd-x.3；案例 outcome 见 case.scoring。",
+        "axl": [
+          {
+            "cell": "A10×L3",
+            "layer": "process",
+            "metrics": [
+              "route_blockage_detection_f1",
+              "time_to_protect",
+              "infraction_rate",
+              "unsafe_continuation"
+            ],
+            "anchors": [
+              "jd-10.4.1",
+              "jd-10.4.2",
+              "jd-10.4.3"
+            ],
+            "direction_zh": "阻塞检出 ↑；违规与危险继续 ↓",
+            "evidence": "blockage injection",
+            "sources": "FlightBench",
+            "maturity": "可迁移"
+          },
+          {
+            "cell": "A10×L4",
+            "layer": "process",
+            "metrics": [
+              "replanning_trigger_f1",
+              "replanning_latency",
+              "new_path_feasibility",
+              "post_replan_success"
+            ],
+            "anchors": [
+              "jd-10.4.1",
+              "jd-10.4.2"
+            ],
+            "direction_zh": "重规划触发与新路径可行 ↑；延迟 ↓",
+            "evidence": "old/new route；validator",
+            "sources": "动态导航协议",
+            "maturity": "可迁移"
+          }
+        ]
+      },
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "used_by_axl": [
+        "A10×L3",
+        "A10×L4"
+      ]
     },
     {
       "node_id": "jd-10.4.1",
@@ -1047,13 +1486,41 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "route_blockage_detection_f1",
+          "direction": "↑",
+          "used_by_axl": [
+            "A10×L3"
+          ]
+        },
+        {
+          "metric_id": "replanning_trigger_f1",
+          "direction": "↑",
+          "used_by_axl": [
+            "A10×L4"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A10×L3",
+        "A10×L4"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-10.4.2",
@@ -1088,13 +1555,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "new_path_feasibility",
+          "direction": "↑",
+          "used_by_axl": [
+            "A10×L4"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A10×L4"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-10.4.3",
@@ -1117,13 +1604,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "post_replan_success",
+          "direction": "↑",
+          "used_by_axl": [
+            "A10×L4"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A10×L4"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-11.1",
@@ -3060,8 +3567,8 @@
       "parent_id": "A11",
       "canonical_slot": null,
       "owner_a": "A11",
-      "name": "质量标准",
-      "definition": "",
+      "name": "控制质量标准",
+      "definition": "树·节点质量层（四层 .3）：定义该能力「什么算合格」。阈值由案例 values 绑定到本层叶子；整局 SR/CR/SPL 写在案例 scoring；异常处置/求助/重规划等过程挂 .4，不挂本层。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -3073,7 +3580,70 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "used_by_axl": [
+        "A11×L1",
+        "A11×L2"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor_group",
+      "runtime_metrics": {
+        "layer": "node",
+        "tree_slot": "jd-x.3",
+        "source": "metric.md",
+        "note": "过程协议见同能力 jd-x.4；案例 outcome 见 case.scoring。",
+        "axl": [
+          {
+            "cell": "A11×L1",
+            "layer": "node",
+            "metrics": [
+              "control_command_validity",
+              "target_state_prediction_accuracy",
+              "control_constraint_satisfaction"
+            ],
+            "anchors": [
+              "jd-11.3.1.1",
+              "jd-11.3.1.2",
+              "jd-11.3.1.3",
+              "jd-11.3.1.4"
+            ],
+            "direction_zh": "指令可执行与约束满足 ↑",
+            "evidence": "current/target state；action dictionary；controller limits",
+            "sources": "BEDI；AeroVerse；UAV-ON",
+            "maturity": "可迁移"
+          },
+          {
+            "cell": "A11×L2",
+            "layer": "mixed",
+            "metrics": [
+              "tracking_error",
+              "ise",
+              "constraint_violation_duration",
+              "control_stability",
+              "collision"
+            ],
+            "anchors": [
+              "jd-11.3.1.1",
+              "jd-11.3.1.2",
+              "jd-11.3.1.3",
+              "jd-11.3.2.1",
+              "jd-11.3.2.2",
+              "jd-11.3.2.3",
+              "jd-11.3.2.4"
+            ],
+            "direction_zh": "跟踪/越界 ↓，稳定 ↑；collision 为案例 Gate（白墙 CR）",
+            "evidence": "high-rate state/control/reference；collision stream",
+            "sources": "AirSim；Flightmare；UAVBench；UAV-ON",
+            "maturity": "成熟"
+          }
+        ]
+      }
     },
     {
       "node_id": "jd-11.3.1",
@@ -3101,19 +3671,39 @@
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "位置误差容忍范围",
-      "definition": "",
+      "definition": "位置跟踪误差容忍；白墙案例可 🔀 绑定 [0.1,0.3] m。",
       "node_kind": "variable",
       "value_type": "object",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "decreasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A11×L2"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "tracking_error",
+          "direction": "↓",
+          "used_by_axl": [
+            "A11×L2"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-11.3.1.2",
@@ -3121,19 +3711,39 @@
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "速度误差容忍范围",
-      "definition": "",
+      "definition": "速度跟踪误差容忍范围。",
       "node_kind": "variable",
       "value_type": "object",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "decreasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A11×L2"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "tracking_error",
+          "direction": "↓",
+          "used_by_axl": [
+            "A11×L2"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-11.3.1.3",
@@ -3141,19 +3751,39 @@
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "姿态误差容忍范围",
-      "definition": "",
+      "definition": "姿态跟踪误差容忍范围。",
       "node_kind": "variable",
       "value_type": "object",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "decreasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A11×L2"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "tracking_error",
+          "direction": "↓",
+          "used_by_axl": [
+            "A11×L2"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-11.3.1.4",
@@ -3161,19 +3791,39 @@
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "航向误差容忍范围",
-      "definition": "",
+      "definition": "航向跟踪误差容忍范围。",
       "node_kind": "variable",
       "value_type": "number_or_range",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "decreasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A11×L2"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "tracking_error",
+          "direction": "↓",
+          "used_by_axl": [
+            "A11×L2"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-11.3.2",
@@ -3201,7 +3851,7 @@
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "误差评价方式",
-      "definition": "",
+      "definition": "误差评价方式（如 RMS）；白墙案例 🔒 RMS。",
       "node_kind": "variable",
       "value_type": "enum",
       "value_domain": [
@@ -3224,13 +3874,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "decreasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A11×L2"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "ise",
+          "direction": "↓",
+          "used_by_axl": [
+            "A11×L2"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-11.3.2.2",
@@ -3238,19 +3908,39 @@
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "超调容忍范围",
-      "definition": "",
+      "definition": "超调容忍范围。",
       "node_kind": "variable",
       "value_type": "number_or_range",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A11×L2"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "control_stability",
+          "direction": "↑",
+          "used_by_axl": [
+            "A11×L2"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-11.3.2.3",
@@ -3258,19 +3948,39 @@
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "稳定/调节时间要求",
-      "definition": "",
+      "definition": "稳定/调节时间要求。",
       "node_kind": "variable",
       "value_type": "duration_or_range",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A11×L2"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "control_stability",
+          "direction": "↑",
+          "used_by_axl": [
+            "A11×L2"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-11.3.2.4",
@@ -3278,19 +3988,39 @@
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "振荡与抖动容忍范围",
-      "definition": "",
+      "definition": "振荡与抖动容忍范围。",
       "node_kind": "variable",
       "value_type": "object",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A11×L2"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "control_stability",
+          "direction": "↑",
+          "used_by_axl": [
+            "A11×L2"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-11.3.3",
@@ -3318,7 +4048,7 @@
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "执行机构饱和状态阈值",
-      "definition": "",
+      "definition": "执行机构饱和状态阈值。",
       "node_kind": "variable",
       "value_type": "enum",
       "value_domain": [
@@ -3341,13 +4071,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "decreasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A11×L2"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "constraint_violation_duration",
+          "direction": "↓",
+          "used_by_axl": [
+            "A11×L2"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-11.3.3.2",
@@ -3355,19 +4105,39 @@
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "剩余控制权威下限",
-      "definition": "",
+      "definition": "剩余控制权威下限。",
       "node_kind": "variable",
       "value_type": "object",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A11×L1"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "control_constraint_satisfaction",
+          "direction": "↑",
+          "used_by_axl": [
+            "A11×L1"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-11.3.4",
@@ -3395,7 +4165,7 @@
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "控制质量激活阶段",
-      "definition": "",
+      "definition": "控制质量激活阶段（何时开始按 .3 计分）。",
       "node_kind": "variable",
       "value_type": "multi_enum",
       "value_domain": [
@@ -3428,15 +4198,23 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor"
     },
     {
       "node_id": "jd-11.4",
       "parent_id": "A11",
       "canonical_slot": null,
       "owner_a": "A11",
-      "name": "兜底协议",
-      "definition": "",
+      "name": "控制处置协议",
+      "definition": "树·过程协议层（四层 .4）：出问题怎么处置、升级、验证。对应 A×L 的监督/主导自主过程读数；案例可绑定异常类型与处置动作；合格阈值在 .3，整局 outcome 在 case.scoring。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -3448,7 +4226,64 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol_group",
+      "runtime_metrics": {
+        "layer": "process",
+        "tree_slot": "jd-x.4",
+        "source": "metric.md",
+        "note": "节点质量阈值见同能力 jd-x.3；案例 outcome 见 case.scoring。",
+        "axl": [
+          {
+            "cell": "A11×L3",
+            "layer": "process",
+            "metrics": [
+              "instability_detection_f1",
+              "protection_latency",
+              "safe_protection_rate"
+            ],
+            "anchors": [
+              "jd-11.4.1.1",
+              "jd-11.4.2.1",
+              "jd-11.4.4.1"
+            ],
+            "direction_zh": "不稳定检出与保护 ↑；延迟 ↓；碰撞仍在案例 scoring",
+            "evidence": "fault timeline；protect action",
+            "sources": "Flightmare",
+            "maturity": "可迁移"
+          },
+          {
+            "cell": "A11×L4",
+            "layer": "process",
+            "metrics": [
+              "stable_recovery_rate",
+              "recovery_time",
+              "post_recovery_tracking_error",
+              "safe_degradation_success"
+            ],
+            "anchors": [
+              "jd-11.4.2.1",
+              "jd-11.4.5.1",
+              "jd-11.4.5.2"
+            ],
+            "direction_zh": "恢复/降级成功 ↑；耗时与误差 ↓",
+            "evidence": "recovery trace",
+            "sources": "AeroVerse",
+            "maturity": "项目校准"
+          }
+        ]
+      },
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "used_by_axl": [
+        "A11×L3",
+        "A11×L4"
+      ]
     },
     {
       "node_id": "jd-11.4.1",
@@ -3476,7 +4311,7 @@
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "控制异常类别",
-      "definition": "",
+      "definition": "控制异常类别；白墙可绑定关注异常。",
       "node_kind": "variable",
       "value_type": "multi_enum",
       "value_domain": [
@@ -3503,13 +4338,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "instability_detection_f1",
+          "direction": "↑",
+          "used_by_axl": [
+            "A11×L3"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A11×L3"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-11.4.2",
@@ -3537,7 +4392,7 @@
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "局部控制处置动作集",
-      "definition": "",
+      "definition": "局部控制处置动作集。",
       "node_kind": "variable",
       "value_type": "multi_enum",
       "value_domain": [
@@ -3564,13 +4419,41 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "safe_protection_rate",
+          "direction": "↑",
+          "used_by_axl": [
+            "A11×L3"
+          ]
+        },
+        {
+          "metric_id": "stable_recovery_rate",
+          "direction": "↑",
+          "used_by_axl": [
+            "A11×L4"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A11×L3",
+        "A11×L4"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-11.4.3",
@@ -3610,7 +4493,15 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-11.4.3.2",
@@ -3630,7 +4521,15 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-11.4.3.3",
@@ -3650,7 +4549,15 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-11.4.4",
@@ -3684,13 +4591,33 @@
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "decreasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "protection_latency",
+          "direction": "↓",
+          "used_by_axl": [
+            "A11×L3"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A11×L3"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-11.4.5",
@@ -3718,7 +4645,7 @@
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "处置后控制状态",
-      "definition": "",
+      "definition": "处置后控制状态验证。",
       "node_kind": "variable",
       "value_type": "enum",
       "value_domain": [
@@ -3741,13 +4668,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "decreasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "post_recovery_tracking_error",
+          "direction": "↓",
+          "used_by_axl": [
+            "A11×L4"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A11×L4"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-11.4.5.2",
@@ -3755,7 +4702,7 @@
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "跨能力升级目标",
-      "definition": "",
+      "definition": "跨能力升级目标。",
       "node_kind": "variable",
       "value_type": "multi_reference",
       "value_domain": [
@@ -3778,13 +4725,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "safe_degradation_success",
+          "direction": "↑",
+          "used_by_axl": [
+            "A11×L4"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A11×L4"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-12.1",
@@ -3981,8 +4948,8 @@
       "parent_id": "A12",
       "canonical_slot": null,
       "owner_a": "A12",
-      "name": "质量标准",
-      "definition": "",
+      "name": "动作质量标准",
+      "definition": "树·节点质量层（四层 .3）：定义该能力「什么算合格」。阈值由案例 values 绑定到本层叶子；整局 SR/CR/SPL 写在案例 scoring；异常处置/求助/重规划等过程挂 .4，不挂本层。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -3994,7 +4961,22 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor_group",
+      "runtime_metrics": {
+        "layer": "node",
+        "tree_slot": "jd-x.3",
+        "source": "metric.md",
+        "note": "过程协议见同能力 jd-x.4；案例 outcome 见 case.scoring。",
+        "axl": []
+      }
     },
     {
       "node_id": "jd-12.3.1",
@@ -4008,13 +4990,28 @@
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "decreasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "action_timing_error",
+          "direction": "↓",
+          "used_by_axl": []
+        }
+      ]
     },
     {
       "node_id": "jd-12.3.2",
@@ -4028,13 +5025,28 @@
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "action_success_rate",
+          "direction": "↑",
+          "used_by_axl": []
+        }
+      ]
     },
     {
       "node_id": "jd-12.3.3",
@@ -4061,21 +5073,36 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "payload_data_quality",
+          "direction": "↑",
+          "used_by_axl": []
+        }
+      ]
     },
     {
       "node_id": "jd-12.4",
       "parent_id": "A12",
       "canonical_slot": null,
       "owner_a": "A12",
-      "name": "兜底协议",
-      "definition": "",
+      "name": "载荷处置协议",
+      "definition": "树·过程协议层（四层 .4）：出问题怎么处置、升级、验证。对应 A×L 的监督/主导自主过程读数；案例可绑定异常类型与处置动作；合格阈值在 .3，整局 outcome 在 case.scoring。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -4087,7 +5114,22 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol_group",
+      "runtime_metrics": {
+        "layer": "process",
+        "tree_slot": "jd-x.4",
+        "source": "metric.md",
+        "note": "节点质量阈值见同能力 jd-x.3；案例 outcome 见 case.scoring。",
+        "axl": []
+      },
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-12.4.1",
@@ -4128,7 +5170,15 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-12.4.2",
@@ -4173,7 +5223,15 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-12.4.3",
@@ -4202,7 +5260,15 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-13.1",
@@ -4379,8 +5445,8 @@
       "parent_id": "A13",
       "canonical_slot": null,
       "owner_a": "A13",
-      "name": "质量标准",
-      "definition": "",
+      "name": "成果质量标准",
+      "definition": "树·节点质量层（四层 .3）：定义该能力「什么算合格」。阈值由案例 values 绑定到本层叶子；整局 SR/CR/SPL 写在案例 scoring；异常处置/求助/重规划等过程挂 .4，不挂本层。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -4392,7 +5458,22 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor_group",
+      "runtime_metrics": {
+        "layer": "node",
+        "tree_slot": "jd-x.3",
+        "source": "metric.md",
+        "note": "过程协议见同能力 jd-x.4；案例 outcome 见 case.scoring。",
+        "axl": []
+      }
     },
     {
       "node_id": "jd-13.3.1",
@@ -4406,13 +5487,28 @@
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "coverage_completeness",
+          "direction": "↑",
+          "used_by_axl": []
+        }
+      ]
     },
     {
       "node_id": "jd-13.3.2",
@@ -4439,13 +5535,28 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "format_compliance",
+          "direction": "↑",
+          "used_by_axl": []
+        }
+      ]
     },
     {
       "node_id": "jd-13.3.3",
@@ -4472,21 +5583,36 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "content_quality",
+          "direction": "↑",
+          "used_by_axl": []
+        }
+      ]
     },
     {
       "node_id": "jd-13.4",
       "parent_id": "A13",
       "canonical_slot": null,
       "owner_a": "A13",
-      "name": "兜底协议",
-      "definition": "",
+      "name": "成果处置协议",
+      "definition": "树·过程协议层（四层 .4）：出问题怎么处置、升级、验证。对应 A×L 的监督/主导自主过程读数；案例可绑定异常类型与处置动作；合格阈值在 .3，整局 outcome 在 case.scoring。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -4498,7 +5624,22 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol_group",
+      "runtime_metrics": {
+        "layer": "process",
+        "tree_slot": "jd-x.4",
+        "source": "metric.md",
+        "note": "节点质量阈值见同能力 jd-x.3；案例 outcome 见 case.scoring。",
+        "axl": []
+      },
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-13.4.1",
@@ -4539,7 +5680,15 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-13.4.2",
@@ -4584,7 +5733,15 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-13.4.3",
@@ -4613,7 +5770,15 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-14.1",
@@ -4782,8 +5947,8 @@
       "parent_id": "A14",
       "canonical_slot": null,
       "owner_a": "A14",
-      "name": "质量标准",
-      "definition": "",
+      "name": "链路质量标准",
+      "definition": "树·节点质量层（四层 .3）：定义该能力「什么算合格」。阈值由案例 values 绑定到本层叶子；整局 SR/CR/SPL 写在案例 scoring；异常处置/求助/重规划等过程挂 .4，不挂本层。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -4795,7 +5960,22 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor_group",
+      "runtime_metrics": {
+        "layer": "node",
+        "tree_slot": "jd-x.3",
+        "source": "metric.md",
+        "note": "过程协议见同能力 jd-x.4；案例 outcome 见 case.scoring。",
+        "axl": []
+      }
     },
     {
       "node_id": "jd-14.3.1",
@@ -4809,13 +5989,28 @@
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "decreasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "link_latency",
+          "direction": "↓",
+          "used_by_axl": []
+        }
+      ]
     },
     {
       "node_id": "jd-14.3.2",
@@ -4829,13 +6024,28 @@
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "link_reliability",
+          "direction": "↑",
+          "used_by_axl": []
+        }
+      ]
     },
     {
       "node_id": "jd-14.3.3",
@@ -4849,21 +6059,36 @@
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "link_throughput",
+          "direction": "↑",
+          "used_by_axl": []
+        }
+      ]
     },
     {
       "node_id": "jd-14.4",
       "parent_id": "A14",
       "canonical_slot": null,
       "owner_a": "A14",
-      "name": "兜底协议",
-      "definition": "",
+      "name": "通信处置协议",
+      "definition": "树·过程协议层（四层 .4）：出问题怎么处置、升级、验证。对应 A×L 的监督/主导自主过程读数；案例可绑定异常类型与处置动作；合格阈值在 .3，整局 outcome 在 case.scoring。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -4875,7 +6100,22 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol_group",
+      "runtime_metrics": {
+        "layer": "process",
+        "tree_slot": "jd-x.4",
+        "source": "metric.md",
+        "note": "节点质量阈值见同能力 jd-x.3；案例 outcome 见 case.scoring。",
+        "axl": []
+      },
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-14.4.1",
@@ -4916,7 +6156,15 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-14.4.2",
@@ -4957,7 +6205,15 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-14.4.3",
@@ -4986,7 +6242,15 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-15.1",
@@ -5159,8 +6423,8 @@
       "parent_id": "A15",
       "canonical_slot": null,
       "owner_a": "A15",
-      "name": "质量标准",
-      "definition": "",
+      "name": "证据质量标准",
+      "definition": "树·节点质量层（四层 .3）：定义该能力「什么算合格」。阈值由案例 values 绑定到本层叶子；整局 SR/CR/SPL 写在案例 scoring；异常处置/求助/重规划等过程挂 .4，不挂本层。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -5172,7 +6436,22 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor_group",
+      "runtime_metrics": {
+        "layer": "node",
+        "tree_slot": "jd-x.3",
+        "source": "metric.md",
+        "note": "过程协议见同能力 jd-x.4；案例 outcome 见 case.scoring。",
+        "axl": []
+      }
     },
     {
       "node_id": "jd-15.3.1",
@@ -5203,13 +6482,28 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "evidence_format_compliance",
+          "direction": "↑",
+          "used_by_axl": []
+        }
+      ]
     },
     {
       "node_id": "jd-15.3.2",
@@ -5223,13 +6517,28 @@
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "audit_completeness",
+          "direction": "↑",
+          "used_by_axl": []
+        }
+      ]
     },
     {
       "node_id": "jd-15.3.3",
@@ -5243,21 +6552,36 @@
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "decreasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "timestamp_precision",
+          "direction": "↓",
+          "used_by_axl": []
+        }
+      ]
     },
     {
       "node_id": "jd-15.4",
       "parent_id": "A15",
       "canonical_slot": null,
       "owner_a": "A15",
-      "name": "兜底协议",
-      "definition": "",
+      "name": "审计处置协议",
+      "definition": "树·过程协议层（四层 .4）：出问题怎么处置、升级、验证。对应 A×L 的监督/主导自主过程读数；案例可绑定异常类型与处置动作；合格阈值在 .3，整局 outcome 在 case.scoring。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -5269,7 +6593,22 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol_group",
+      "runtime_metrics": {
+        "layer": "process",
+        "tree_slot": "jd-x.4",
+        "source": "metric.md",
+        "note": "节点质量阈值见同能力 jd-x.3；案例 outcome 见 case.scoring。",
+        "axl": []
+      },
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-15.4.1",
@@ -5310,7 +6649,15 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-15.4.2",
@@ -5351,7 +6698,15 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-15.4.3",
@@ -5371,7 +6726,15 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-16.1",
@@ -5536,8 +6899,8 @@
       "parent_id": "A16",
       "canonical_slot": null,
       "owner_a": "A16",
-      "name": "质量标准",
-      "definition": "",
+      "name": "合规性标准",
+      "definition": "树·节点质量层（四层 .3）：定义该能力「什么算合格」。阈值由案例 values 绑定到本层叶子；整局 SR/CR/SPL 写在案例 scoring；异常处置/求助/重规划等过程挂 .4，不挂本层。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -5549,7 +6912,22 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor_group",
+      "runtime_metrics": {
+        "layer": "node",
+        "tree_slot": "jd-x.3",
+        "source": "metric.md",
+        "note": "过程协议见同能力 jd-x.4；案例 outcome 见 case.scoring。",
+        "axl": []
+      }
     },
     {
       "node_id": "jd-16.3.1",
@@ -5576,13 +6954,28 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "authorization_completeness",
+          "direction": "↑",
+          "used_by_axl": []
+        }
+      ]
     },
     {
       "node_id": "jd-16.3.2",
@@ -5596,21 +6989,36 @@
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "decreasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "declaration_latency",
+          "direction": "↓",
+          "used_by_axl": []
+        }
+      ]
     },
     {
       "node_id": "jd-16.4",
       "parent_id": "A16",
       "canonical_slot": null,
       "owner_a": "A16",
-      "name": "兜底协议",
-      "definition": "",
+      "name": "合规处置协议",
+      "definition": "树·过程协议层（四层 .4）：出问题怎么处置、升级、验证。对应 A×L 的监督/主导自主过程读数；案例可绑定异常类型与处置动作；合格阈值在 .3，整局 outcome 在 case.scoring。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -5622,7 +7030,22 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol_group",
+      "runtime_metrics": {
+        "layer": "process",
+        "tree_slot": "jd-x.4",
+        "source": "metric.md",
+        "note": "节点质量阈值见同能力 jd-x.3；案例 outcome 见 case.scoring。",
+        "axl": []
+      },
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-16.4.1",
@@ -5663,7 +7086,15 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-16.4.2",
@@ -5704,7 +7135,15 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-16.4.3",
@@ -5733,7 +7172,15 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-17.1",
@@ -5894,8 +7341,8 @@
       "parent_id": "A17",
       "canonical_slot": null,
       "owner_a": "A17",
-      "name": "质量标准",
-      "definition": "",
+      "name": "安全态标准",
+      "definition": "树·节点质量层（四层 .3）：定义该能力「什么算合格」。阈值由案例 values 绑定到本层叶子；整局 SR/CR/SPL 写在案例 scoring；异常处置/求助/重规划等过程挂 .4，不挂本层。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -5907,7 +7354,22 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor_group",
+      "runtime_metrics": {
+        "layer": "node",
+        "tree_slot": "jd-x.3",
+        "source": "metric.md",
+        "note": "过程协议见同能力 jd-x.4；案例 outcome 见 case.scoring。",
+        "axl": []
+      }
     },
     {
       "node_id": "jd-17.3.1",
@@ -5921,13 +7383,28 @@
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "phase_safety_threshold_hit",
+          "direction": "↑",
+          "used_by_axl": []
+        }
+      ]
     },
     {
       "node_id": "jd-17.3.2",
@@ -5958,13 +7435,28 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "safe_state_accuracy",
+          "direction": "↑",
+          "used_by_axl": []
+        }
+      ]
     },
     {
       "node_id": "jd-17.3.3",
@@ -5978,21 +7470,36 @@
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "decreasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "safety_response_latency",
+          "direction": "↓",
+          "used_by_axl": []
+        }
+      ]
     },
     {
       "node_id": "jd-17.4",
       "parent_id": "A17",
       "canonical_slot": null,
       "owner_a": "A17",
-      "name": "兜底协议",
-      "definition": "",
+      "name": "安全处置协议",
+      "definition": "树·过程协议层（四层 .4）：出问题怎么处置、升级、验证。对应 A×L 的监督/主导自主过程读数；案例可绑定异常类型与处置动作；合格阈值在 .3，整局 outcome 在 case.scoring。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -6004,7 +7511,22 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol_group",
+      "runtime_metrics": {
+        "layer": "process",
+        "tree_slot": "jd-x.4",
+        "source": "metric.md",
+        "note": "节点质量阈值见同能力 jd-x.3；案例 outcome 见 case.scoring。",
+        "axl": []
+      },
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-17.4.1",
@@ -6041,7 +7563,15 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-17.4.2",
@@ -6082,7 +7612,15 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-17.4.3",
@@ -6111,7 +7649,15 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-2.1",
@@ -6283,8 +7829,8 @@
       "parent_id": "A2",
       "canonical_slot": null,
       "owner_a": "A2",
-      "name": "质量标准",
-      "definition": "",
+      "name": "参数完整性标准",
+      "definition": "树·节点质量层（四层 .3）：定义该能力「什么算合格」。阈值由案例 values 绑定到本层叶子；整局 SR/CR/SPL 写在案例 scoring；异常处置/求助/重规划等过程挂 .4，不挂本层。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -6296,7 +7842,77 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "used_by_axl": [
+        "A2×L1",
+        "A2×L2",
+        "A2×L3"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor_group",
+      "runtime_metrics": {
+        "layer": "node",
+        "tree_slot": "jd-x.3",
+        "source": "metric.md",
+        "note": "过程协议见同能力 jd-x.4；案例 outcome 见 case.scoring。",
+        "axl": [
+          {
+            "cell": "A2×L1",
+            "layer": "node",
+            "metrics": [
+              "parameter_exact_match",
+              "unit_normalization_accuracy",
+              "parse_validity"
+            ],
+            "anchors": [
+              "jd-2.3.2"
+            ],
+            "direction_zh": "值/单位/结构合法 ↑",
+            "evidence": "field-level GT；单位表；schema",
+            "sources": "语义解析 / task-oriented dialogue 协议",
+            "maturity": "成熟"
+          },
+          {
+            "cell": "A2×L2",
+            "layer": "node",
+            "metrics": [
+              "required_field_recall",
+              "whole_schema_exact_match",
+              "executable_configuration_rate"
+            ],
+            "anchors": [
+              "jd-2.3.1"
+            ],
+            "direction_zh": "必填覆盖与可执行配置 ↑",
+            "evidence": "Config schema；required/default GT；dry-run",
+            "sources": "ALFRED/ALFWorld；项目 Config v2",
+            "maturity": "可迁移"
+          },
+          {
+            "cell": "A2×L3",
+            "layer": "node",
+            "metrics": [
+              "constraint_satisfaction",
+              "conflict_detection_f1",
+              "unsafe_omission_rate"
+            ],
+            "anchors": [
+              "jd-2.3.1",
+              "jd-2.3.2"
+            ],
+            "direction_zh": "约束满足与冲突识别 ↑；安全漏填 ↓（Gate）",
+            "evidence": "rule set；安全字段 GT",
+            "sources": "HiL-Bench；项目规则引擎",
+            "maturity": "项目校准"
+          }
+        ]
+      }
     },
     {
       "node_id": "jd-2.3.1",
@@ -6304,19 +7920,41 @@
       "canonical_slot": null,
       "owner_a": "A2",
       "name": "必填参数覆盖率",
-      "definition": "",
+      "definition": "必填参数覆盖率标准；案例可绑定目标覆盖率。",
       "node_kind": "variable",
       "value_type": "range",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A2×L2",
+        "A2×L3"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "required_field_recall",
+          "direction": "↑",
+          "used_by_axl": [
+            "A2×L2",
+            "A2×L3"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-2.3.2",
@@ -6324,7 +7962,7 @@
       "canonical_slot": null,
       "owner_a": "A2",
       "name": "参数合法性",
-      "definition": "",
+      "definition": "参数合法性标准（合法/越界/缺失）。",
       "node_kind": "variable",
       "value_type": "enum",
       "value_domain": [
@@ -6343,21 +7981,56 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A2×L1",
+        "A2×L3"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "parameter_exact_match",
+          "direction": "↑",
+          "used_by_axl": [
+            "A2×L1"
+          ]
+        },
+        {
+          "metric_id": "parse_validity",
+          "direction": "↑",
+          "used_by_axl": [
+            "A2×L1"
+          ]
+        },
+        {
+          "metric_id": "constraint_satisfaction",
+          "direction": "↑",
+          "used_by_axl": [
+            "A2×L3"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-2.4",
       "parent_id": "A2",
       "canonical_slot": null,
       "owner_a": "A2",
-      "name": "兜底协议",
-      "definition": "",
+      "name": "缺省处置协议",
+      "definition": "树·过程协议层（四层 .4）：出问题怎么处置、升级、验证。对应 A×L 的监督/主导自主过程读数；案例可绑定异常类型与处置动作；合格阈值在 .3，整局 outcome 在 case.scoring。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -6369,7 +8042,43 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol_group",
+      "runtime_metrics": {
+        "layer": "process",
+        "tree_slot": "jd-x.4",
+        "source": "metric.md",
+        "note": "节点质量阈值见同能力 jd-x.3；案例 outcome 见 case.scoring。",
+        "axl": [
+          {
+            "cell": "A2×L4",
+            "layer": "process",
+            "metrics": [
+              "field_provenance_accuracy",
+              "executable_and_safe_spec_rate",
+              "human_correction_edit_cost"
+            ],
+            "anchors": [
+              "jd-2.4.1",
+              "jd-2.4.2"
+            ],
+            "direction_zh": "来源标注与可执行安全率 ↑；编辑成本 ↓",
+            "evidence": "provenance 标签；diff",
+            "sources": "项目扩展",
+            "maturity": "项目校准"
+          }
+        ]
+      },
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "used_by_axl": [
+        "A2×L4"
+      ]
     },
     {
       "node_id": "jd-2.4.1",
@@ -6400,13 +8109,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "decreasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "unsafe_omission_rate",
+          "direction": "↓",
+          "used_by_axl": [
+            "A2×L3"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A2×L3"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-2.4.2",
@@ -6437,13 +8166,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "decreasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "human_correction_edit_cost",
+          "direction": "↓",
+          "used_by_axl": [
+            "A2×L4"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A2×L4"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-3.1",
@@ -6636,8 +8385,8 @@
       "parent_id": "A3",
       "canonical_slot": null,
       "owner_a": "A3",
-      "name": "质量标准",
-      "definition": "",
+      "name": "分解正确性标准",
+      "definition": "树·节点质量层（四层 .3）：定义该能力「什么算合格」。阈值由案例 values 绑定到本层叶子；整局 SR/CR/SPL 写在案例 scoring；异常处置/求助/重规划等过程挂 .4，不挂本层。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -6649,7 +8398,61 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "used_by_axl": [
+        "A3×L1",
+        "A3×L2"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor_group",
+      "runtime_metrics": {
+        "layer": "node",
+        "tree_slot": "jd-x.3",
+        "source": "metric.md",
+        "note": "过程协议见同能力 jd-x.4；案例 outcome 见 case.scoring。",
+        "axl": [
+          {
+            "cell": "A3×L1",
+            "layer": "node",
+            "metrics": [
+              "skill_selection_accuracy",
+              "declared_precondition_validity",
+              "declared_effect_predicate_f1"
+            ],
+            "anchors": [
+              "jd-3.3.1"
+            ],
+            "direction_zh": "技能/前提/效果声明正确 ↑",
+            "evidence": "显式计划；skill catalog；precondition/effect GT",
+            "sources": "ALFRED；ALFWorld",
+            "maturity": "成熟"
+          },
+          {
+            "cell": "A3×L2",
+            "layer": "node",
+            "metrics": [
+              "required_subgoal_recall",
+              "dependency_edge_f1",
+              "validator_accepted_plan_rate",
+              "normalized_plan_edit_distance"
+            ],
+            "anchors": [
+              "jd-3.3.1",
+              "jd-3.3.2"
+            ],
+            "direction_zh": "子目标与依赖 ↑；编辑距离 ↓",
+            "evidence": "subgoal DAG；合法计划族",
+            "sources": "ALFRED；LoTa-Bench；DriveLM",
+            "maturity": "可迁移"
+          }
+        ]
+      }
     },
     {
       "node_id": "jd-3.3.1",
@@ -6657,19 +8460,47 @@
       "canonical_slot": null,
       "owner_a": "A3",
       "name": "步骤完整性",
-      "definition": "",
+      "definition": "步骤完整性标准；必要步骤覆盖比例。",
       "node_kind": "variable",
       "value_type": "range",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A3×L1",
+        "A3×L2"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "required_subgoal_recall",
+          "direction": "↑",
+          "used_by_axl": [
+            "A3×L2"
+          ]
+        },
+        {
+          "metric_id": "skill_selection_accuracy",
+          "direction": "↑",
+          "used_by_axl": [
+            "A3×L1"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-3.3.2",
@@ -6677,7 +8508,7 @@
       "canonical_slot": null,
       "owner_a": "A3",
       "name": "依赖一致性",
-      "definition": "",
+      "definition": "依赖一致性标准（无冲突/有环/断裂）。",
       "node_kind": "variable",
       "value_type": "enum",
       "value_domain": [
@@ -6696,13 +8527,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A3×L2"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "dependency_edge_f1",
+          "direction": "↑",
+          "used_by_axl": [
+            "A3×L2"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-3.3.3",
@@ -6710,7 +8561,7 @@
       "canonical_slot": null,
       "owner_a": "A3",
       "name": "完成语义正确性",
-      "definition": "",
+      "definition": "完成语义正确性标准。",
       "node_kind": "variable",
       "value_type": "enum",
       "value_domain": [
@@ -6729,21 +8580,41 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A3×L4"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "completion_update_accuracy",
+          "direction": "↑",
+          "used_by_axl": [
+            "A3×L4"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-3.4",
       "parent_id": "A3",
       "canonical_slot": null,
       "owner_a": "A3",
-      "name": "兜底协议",
-      "definition": "",
+      "name": "推理失败处置",
+      "definition": "树·过程协议层（四层 .4）：出问题怎么处置、升级、验证。对应 A×L 的监督/主导自主过程读数；案例可绑定异常类型与处置动作；合格阈值在 .3，整局 outcome 在 case.scoring。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -6755,7 +8626,62 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol_group",
+      "runtime_metrics": {
+        "layer": "process",
+        "tree_slot": "jd-x.4",
+        "source": "metric.md",
+        "note": "节点质量阈值见同能力 jd-x.3；案例 outcome 见 case.scoring。",
+        "axl": [
+          {
+            "cell": "A3×L3",
+            "layer": "process",
+            "metrics": [
+              "blocker_detection_f1",
+              "missing_condition_recall",
+              "explicit_plan_revision_accuracy"
+            ],
+            "anchors": [
+              "jd-3.4.1",
+              "jd-3.4.2",
+              "jd-3.4.3"
+            ],
+            "direction_zh": "阻塞声明与计划修订 ↑；求助时机 → A5",
+            "evidence": "blocker GT；版本化计划",
+            "sources": "HiL-Bench；KnowNo",
+            "maturity": "可迁移"
+          },
+          {
+            "cell": "A3×L4",
+            "layer": "process",
+            "metrics": [
+              "retained_constraint_accuracy",
+              "stale_assumption_rate",
+              "completion_update_accuracy"
+            ],
+            "anchors": [
+              "jd-3.4.2",
+              "jd-3.4.3"
+            ],
+            "direction_zh": "保留约束/更新完成条件 ↑；过期假设 ↓",
+            "evidence": "constraint graph",
+            "sources": "项目扩展",
+            "maturity": "项目校准"
+          }
+        ]
+      },
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "used_by_axl": [
+        "A3×L3",
+        "A3×L4"
+      ]
     },
     {
       "node_id": "jd-3.4.1",
@@ -6786,13 +8712,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "blocker_detection_f1",
+          "direction": "↑",
+          "used_by_axl": [
+            "A3×L3"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A3×L3"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-3.4.2",
@@ -6823,13 +8769,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "explicit_plan_revision_accuracy",
+          "direction": "↑",
+          "used_by_axl": [
+            "A3×L3"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A3×L3"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-3.4.3",
@@ -6852,13 +8818,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "missing_condition_recall",
+          "direction": "↑",
+          "used_by_axl": [
+            "A3×L3"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A3×L3"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-4.1",
@@ -7137,8 +9123,8 @@
       "parent_id": "A4",
       "canonical_slot": null,
       "owner_a": "A4",
-      "name": "质量标准",
-      "definition": "",
+      "name": "编排完成度标准",
+      "definition": "树·节点质量层（四层 .3）：定义该能力「什么算合格」。阈值由案例 values 绑定到本层叶子；整局 SR/CR/SPL 写在案例 scoring；异常处置/求助/重规划等过程挂 .4，不挂本层。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -7150,7 +9136,61 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "used_by_axl": [
+        "A4×L1",
+        "A4×L2"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor_group",
+      "runtime_metrics": {
+        "layer": "node",
+        "tree_slot": "jd-x.3",
+        "source": "metric.md",
+        "note": "过程协议见同能力 jd-x.4；案例 outcome 见 case.scoring。",
+        "axl": [
+          {
+            "cell": "A4×L1",
+            "layer": "node",
+            "metrics": [
+              "next_step_accuracy",
+              "dispatch_schema_validity",
+              "transition_predicate_f1"
+            ],
+            "anchors": [
+              "jd-4.3.1"
+            ],
+            "direction_zh": "下一步与迁移正确 ↑（不评物理结果）",
+            "evidence": "tool-call；workflow state；transition GT",
+            "sources": "ALFRED/ALFWorld action protocol",
+            "maturity": "成熟"
+          },
+          {
+            "cell": "A4×L2",
+            "layer": "node",
+            "metrics": [
+              "workflow_validity_rate",
+              "weighted_stage_recall",
+              "precedence_violation_rate",
+              "termination_correctness"
+            ],
+            "anchors": [
+              "jd-4.3.1",
+              "jd-4.3.2"
+            ],
+            "direction_zh": "阶段覆盖 ↑；顺序违规 ↓；结束正确 ↑",
+            "evidence": "GT state machine；阶段权重",
+            "sources": "LoTa-Bench；DriveLM；HUGE-Bench",
+            "maturity": "可迁移"
+          }
+        ]
+      }
     },
     {
       "node_id": "jd-4.3.1",
@@ -7158,19 +9198,47 @@
       "canonical_slot": null,
       "owner_a": "A4",
       "name": "阶段完成度",
-      "definition": "",
+      "definition": "阶段完成度标准。",
       "node_kind": "variable",
       "value_type": "range",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A4×L1",
+        "A4×L2"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "weighted_stage_recall",
+          "direction": "↑",
+          "used_by_axl": [
+            "A4×L2"
+          ]
+        },
+        {
+          "metric_id": "next_step_accuracy",
+          "direction": "↑",
+          "used_by_axl": [
+            "A4×L1"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-4.3.2",
@@ -7178,7 +9246,7 @@
       "canonical_slot": null,
       "owner_a": "A4",
       "name": "交接完整性",
-      "definition": "",
+      "definition": "交接完整性标准。",
       "node_kind": "variable",
       "value_type": "enum",
       "value_domain": [
@@ -7197,21 +9265,41 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A4×L2"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "workflow_validity_rate",
+          "direction": "↑",
+          "used_by_axl": [
+            "A4×L2"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-4.4",
       "parent_id": "A4",
       "canonical_slot": null,
       "owner_a": "A4",
-      "name": "兜底协议",
-      "definition": "",
+      "name": "重编排与交接协议",
+      "definition": "树·过程协议层（四层 .4）：出问题怎么处置、升级、验证。对应 A×L 的监督/主导自主过程读数；案例可绑定异常类型与处置动作；合格阈值在 .3，整局 outcome 在 case.scoring。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -7223,7 +9311,63 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol_group",
+      "runtime_metrics": {
+        "layer": "process",
+        "tree_slot": "jd-x.4",
+        "source": "metric.md",
+        "note": "节点质量阈值见同能力 jd-x.3；案例 outcome 见 case.scoring。",
+        "axl": [
+          {
+            "cell": "A4×L3",
+            "layer": "process",
+            "metrics": [
+              "interruption_detection_f1",
+              "trigger_timing_error",
+              "unsafe_continuation",
+              "resume_state_accuracy"
+            ],
+            "anchors": [
+              "jd-4.4.1",
+              "jd-4.4.3"
+            ],
+            "direction_zh": "中断识别与恢复阶段 ↑；交接 → A5",
+            "evidence": "interruption timeline",
+            "sources": "HiL-Bench",
+            "maturity": "项目校准"
+          },
+          {
+            "cell": "A4×L4",
+            "layer": "process",
+            "metrics": [
+              "replanning_trigger_f1",
+              "repaired_workflow_validity",
+              "valid_stage_retention",
+              "workflow_oscillation_rate"
+            ],
+            "anchors": [
+              "jd-4.4.1",
+              "jd-4.4.2"
+            ],
+            "direction_zh": "重编排触发/修复 ↑；振荡 ↓；计划修订 → A3",
+            "evidence": "pre/post workflow；validator",
+            "sources": "动态重编排协议",
+            "maturity": "可迁移"
+          }
+        ]
+      },
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "used_by_axl": [
+        "A4×L3",
+        "A4×L4"
+      ]
     },
     {
       "node_id": "jd-4.4.1",
@@ -7231,7 +9375,7 @@
       "canonical_slot": null,
       "owner_a": "A4",
       "name": "重编排触发",
-      "definition": "",
+      "definition": "重编排/中断触发条件。",
       "node_kind": "variable",
       "value_type": "enum",
       "value_domain": [
@@ -7258,13 +9402,41 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "replanning_trigger_f1",
+          "direction": "↑",
+          "used_by_axl": [
+            "A4×L4"
+          ]
+        },
+        {
+          "metric_id": "interruption_detection_f1",
+          "direction": "↑",
+          "used_by_axl": [
+            "A4×L3"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A4×L3",
+        "A4×L4"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-4.4.2",
@@ -7272,7 +9444,7 @@
       "canonical_slot": null,
       "owner_a": "A4",
       "name": "重编排策略",
-      "definition": "",
+      "definition": "重编排策略。",
       "node_kind": "variable",
       "value_type": "enum",
       "value_domain": [
@@ -7295,13 +9467,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "repaired_workflow_validity",
+          "direction": "↑",
+          "used_by_axl": [
+            "A4×L4"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A4×L4"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-4.4.3",
@@ -7309,19 +9501,39 @@
       "canonical_slot": null,
       "owner_a": "A4",
       "name": "人机交接点",
-      "definition": "",
+      "definition": "人机交接点（过程对齐 A5）。",
       "node_kind": "variable",
       "value_type": "object",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "resume_state_accuracy",
+          "direction": "↑",
+          "used_by_axl": [
+            "A4×L3"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A4×L3"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-5.1",
@@ -7535,8 +9747,8 @@
       "parent_id": "A5",
       "canonical_slot": null,
       "owner_a": "A5",
-      "name": "质量标准",
-      "definition": "",
+      "name": "交接质量标准",
+      "definition": "树·节点质量层（四层 .3）：定义该能力「什么算合格」。阈值由案例 values 绑定到本层叶子；整局 SR/CR/SPL 写在案例 scoring；异常处置/求助/重规划等过程挂 .4，不挂本层。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -7548,7 +9760,62 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "used_by_axl": [
+        "A5×L1",
+        "A5×L2"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor_group",
+      "runtime_metrics": {
+        "layer": "node",
+        "tree_slot": "jd-x.3",
+        "source": "metric.md",
+        "note": "过程协议见同能力 jd-x.4；案例 outcome 见 case.scoring。",
+        "axl": [
+          {
+            "cell": "A5×L1",
+            "layer": "node",
+            "metrics": [
+              "status_accuracy",
+              "required_field_completeness",
+              "report_latency",
+              "unsupported_claim_rate"
+            ],
+            "anchors": [
+              "jd-5.3.1",
+              "jd-5.3.2"
+            ],
+            "direction_zh": "状态与必填 ↑；延迟与无证据声明 ↓",
+            "evidence": "report schema；world state；timestamp",
+            "sources": "声明协议；项目状态报告 schema",
+            "maturity": "可迁移"
+          },
+          {
+            "cell": "A5×L2",
+            "layer": "node",
+            "metrics": [
+              "failure_notification_f1",
+              "payload_completeness",
+              "acknowledgement_detection",
+              "protocol_violation_rate"
+            ],
+            "anchors": [
+              "jd-5.3.1"
+            ],
+            "direction_zh": "通知/载荷/ACK ↑；协议违规 ↓",
+            "evidence": "failure event；recipient/ack GT",
+            "sources": "人机协作通知协议",
+            "maturity": "可迁移"
+          }
+        ]
+      }
     },
     {
       "node_id": "jd-5.3.1",
@@ -7556,19 +9823,47 @@
       "canonical_slot": null,
       "owner_a": "A5",
       "name": "交接成功率",
-      "definition": "",
+      "definition": "交接成功率标准。",
       "node_kind": "variable",
       "value_type": "range",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A5×L1",
+        "A5×L2"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "status_accuracy",
+          "direction": "↑",
+          "used_by_axl": [
+            "A5×L1"
+          ]
+        },
+        {
+          "metric_id": "failure_notification_f1",
+          "direction": "↑",
+          "used_by_axl": [
+            "A5×L2"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-5.3.2",
@@ -7576,27 +9871,47 @@
       "canonical_slot": null,
       "owner_a": "A5",
       "name": "响应时效",
-      "definition": "",
+      "definition": "响应时效标准（发起→确认）。",
       "node_kind": "variable",
       "value_type": "duration",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "decreasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A5×L1"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "report_latency",
+          "direction": "↓",
+          "used_by_axl": [
+            "A5×L1"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-5.4",
       "parent_id": "A5",
       "canonical_slot": null,
       "owner_a": "A5",
-      "name": "兜底协议",
-      "definition": "",
+      "name": "升级与通知协议",
+      "definition": "树·过程协议层（四层 .4）：出问题怎么处置、升级、验证。对应 A×L 的监督/主导自主过程读数；案例可绑定异常类型与处置动作；合格阈值在 .3，整局 outcome 在 case.scoring。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -7608,7 +9923,66 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol_group",
+      "runtime_metrics": {
+        "layer": "process",
+        "tree_slot": "jd-x.4",
+        "source": "metric.md",
+        "note": "节点质量阈值见同能力 jd-x.3；案例 outcome 见 case.scoring。",
+        "axl": [
+          {
+            "cell": "A5×L3",
+            "layer": "process",
+            "metrics": [
+              "ask_precision",
+              "blocker_recall",
+              "ask_f1",
+              "late_request_rate",
+              "wait_compliance"
+            ],
+            "anchors": [
+              "jd-5.4.1",
+              "jd-5.4.2",
+              "jd-5.4.3"
+            ],
+            "direction_zh": "求助精度与等待合规 ↑；迟问 ↓",
+            "evidence": "ask/action timeline",
+            "sources": "HiL-Bench；KnowNo",
+            "maturity": "阈值待校准"
+          },
+          {
+            "cell": "A5×L4",
+            "layer": "process",
+            "metrics": [
+              "authority_routing_accuracy",
+              "handoff_completeness",
+              "readback_accuracy",
+              "authority_violation"
+            ],
+            "anchors": [
+              "jd-5.4.1",
+              "jd-5.4.2",
+              "jd-5.4.3"
+            ],
+            "direction_zh": "权限路由与交接完整 ↑；越权 = 0",
+            "evidence": "authority matrix；handoff",
+            "sources": "handoff 研究",
+            "maturity": "项目校准"
+          }
+        ]
+      },
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "used_by_axl": [
+        "A5×L3",
+        "A5×L4"
+      ]
     },
     {
       "node_id": "jd-5.4.1",
@@ -7616,7 +9990,7 @@
       "canonical_slot": null,
       "owner_a": "A5",
       "name": "升级触发",
-      "definition": "",
+      "definition": "升级/求助触发。",
       "node_kind": "variable",
       "value_type": "enum",
       "value_domain": [
@@ -7639,13 +10013,41 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "ask_f1",
+          "direction": "↑",
+          "used_by_axl": [
+            "A5×L3"
+          ]
+        },
+        {
+          "metric_id": "authority_routing_accuracy",
+          "direction": "↑",
+          "used_by_axl": [
+            "A5×L4"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A5×L3",
+        "A5×L4"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-5.4.2",
@@ -7653,7 +10055,7 @@
       "canonical_slot": null,
       "owner_a": "A5",
       "name": "升级动作",
-      "definition": "",
+      "definition": "升级动作与交接动作。",
       "node_kind": "variable",
       "value_type": "enum",
       "value_domain": [
@@ -7680,13 +10082,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "handoff_completeness",
+          "direction": "↑",
+          "used_by_axl": [
+            "A5×L4"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A5×L4"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-5.4.3",
@@ -7694,19 +10116,39 @@
       "canonical_slot": null,
       "owner_a": "A5",
       "name": "高层通知规则",
-      "definition": "",
+      "definition": "高层通知规则。",
       "node_kind": "variable",
       "value_type": "rules",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "wait_compliance",
+          "direction": "↑",
+          "used_by_axl": [
+            "A5×L3"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A5×L3"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-6.1",
@@ -7936,8 +10378,8 @@
       "parent_id": "A6",
       "canonical_slot": null,
       "owner_a": "A6",
-      "name": "质量标准",
-      "definition": "",
+      "name": "检测质量标准",
+      "definition": "树·节点质量层（四层 .3）：定义该能力「什么算合格」。阈值由案例 values 绑定到本层叶子；整局 SR/CR/SPL 写在案例 scoring；异常处置/求助/重规划等过程挂 .4，不挂本层。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -7949,7 +10391,64 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "used_by_axl": [
+        "A6×L1",
+        "A6×L2"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor_group",
+      "runtime_metrics": {
+        "layer": "node",
+        "tree_slot": "jd-x.3",
+        "source": "metric.md",
+        "note": "过程协议见同能力 jd-x.4；案例 outcome 见 case.scoring。",
+        "axl": [
+          {
+            "cell": "A6×L1",
+            "layer": "node",
+            "metrics": [
+              "class_f1",
+              "map",
+              "localization_iou",
+              "false_alarm_rate"
+            ],
+            "anchors": [
+              "jd-6.3.1",
+              "jd-6.3.2",
+              "jd-6.3.3"
+            ],
+            "direction_zh": "检出/定位 ↑，误报 ↓",
+            "evidence": "object class；bbox/mask",
+            "sources": "VisDrone；COCO；MM-UAVBench",
+            "maturity": "成熟"
+          },
+          {
+            "cell": "A6×L2",
+            "layer": "node",
+            "metrics": [
+              "hota",
+              "idf1",
+              "duplicate_rate",
+              "track_completeness"
+            ],
+            "anchors": [
+              "jd-6.3.1",
+              "jd-6.3.3"
+            ],
+            "direction_zh": "跨帧关联与完整度 ↑；重复 ↓",
+            "evidence": "frame-level object/track GT",
+            "sources": "HOTA；VisDrone tracking；UrbanVideo-Bench",
+            "maturity": "成熟"
+          }
+        ]
+      }
     },
     {
       "node_id": "jd-6.3.1",
@@ -7957,19 +10456,47 @@
       "canonical_slot": null,
       "owner_a": "A6",
       "name": "检出率",
-      "definition": "",
+      "definition": "检出率标准。",
       "node_kind": "variable",
       "value_type": "range",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A6×L1",
+        "A6×L2"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "class_f1",
+          "direction": "↑",
+          "used_by_axl": [
+            "A6×L1"
+          ]
+        },
+        {
+          "metric_id": "hota",
+          "direction": "↑",
+          "used_by_axl": [
+            "A6×L2"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-6.3.2",
@@ -7977,19 +10504,39 @@
       "canonical_slot": null,
       "owner_a": "A6",
       "name": "误报率",
-      "definition": "",
+      "definition": "误报率标准。",
       "node_kind": "variable",
       "value_type": "range",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "decreasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A6×L1"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "false_alarm_rate",
+          "direction": "↓",
+          "used_by_axl": [
+            "A6×L1"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-6.3.3",
@@ -7997,27 +10544,55 @@
       "canonical_slot": null,
       "owner_a": "A6",
       "name": "分类精度",
-      "definition": "",
+      "definition": "分类精度标准。",
       "node_kind": "variable",
       "value_type": "range",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A6×L1",
+        "A6×L2"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "map",
+          "direction": "↑",
+          "used_by_axl": [
+            "A6×L1"
+          ]
+        },
+        {
+          "metric_id": "idf1",
+          "direction": "↑",
+          "used_by_axl": [
+            "A6×L2"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-6.4",
       "parent_id": "A6",
       "canonical_slot": null,
       "owner_a": "A6",
-      "name": "兜底协议",
-      "definition": "",
+      "name": "感知处置协议",
+      "definition": "树·过程协议层（四层 .4）：出问题怎么处置、升级、验证。对应 A×L 的监督/主导自主过程读数；案例可绑定异常类型与处置动作；合格阈值在 .3，整局 outcome 在 case.scoring。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -8029,7 +10604,63 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol_group",
+      "runtime_metrics": {
+        "layer": "process",
+        "tree_slot": "jd-x.4",
+        "source": "metric.md",
+        "note": "节点质量阈值见同能力 jd-x.3；案例 outcome 见 case.scoring。",
+        "axl": [
+          {
+            "cell": "A6×L3",
+            "layer": "process",
+            "metrics": [
+              "degradation_detection_auroc",
+              "fpr95",
+              "time_to_alert",
+              "unsafe_continuation"
+            ],
+            "anchors": [
+              "jd-6.4.1",
+              "jd-6.4.2",
+              "jd-6.4.3"
+            ],
+            "direction_zh": "退化识别 ↑；误警/延迟/危险继续 ↓",
+            "evidence": "degradation timeline",
+            "sources": "BEDI；OOD",
+            "maturity": "可迁移"
+          },
+          {
+            "cell": "A6×L4",
+            "layer": "process",
+            "metrics": [
+              "reobservation_success",
+              "post_recovery_perception_score",
+              "recovery_verification_accuracy"
+            ],
+            "anchors": [
+              "jd-6.4.2",
+              "jd-6.4.3"
+            ],
+            "direction_zh": "复核与恢复后感知 ↑",
+            "evidence": "recovery action；pre/post GT",
+            "sources": "AeroVerse",
+            "maturity": "项目校准"
+          }
+        ]
+      },
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "used_by_axl": [
+        "A6×L3",
+        "A6×L4"
+      ]
     },
     {
       "node_id": "jd-6.4.1",
@@ -8064,13 +10695,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "degradation_detection_auroc",
+          "direction": "↑",
+          "used_by_axl": [
+            "A6×L3"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A6×L3"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-6.4.2",
@@ -8105,13 +10756,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "reobservation_success",
+          "direction": "↑",
+          "used_by_axl": [
+            "A6×L4"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A6×L4"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-6.4.3",
@@ -8134,13 +10805,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "recovery_verification_accuracy",
+          "direction": "↑",
+          "used_by_axl": [
+            "A6×L4"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A6×L4"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-7.1",
@@ -8337,8 +11028,8 @@
       "parent_id": "A7",
       "canonical_slot": null,
       "owner_a": "A7",
-      "name": "质量标准",
-      "definition": "",
+      "name": "位姿精度标准",
+      "definition": "树·节点质量层（四层 .3）：定义该能力「什么算合格」。阈值由案例 values 绑定到本层叶子；整局 SR/CR/SPL 写在案例 scoring；异常处置/求助/重规划等过程挂 .4，不挂本层。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -8350,7 +11041,62 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "used_by_axl": [
+        "A7×L1",
+        "A7×L2"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor_group",
+      "runtime_metrics": {
+        "layer": "node",
+        "tree_slot": "jd-x.3",
+        "source": "metric.md",
+        "note": "过程协议见同能力 jd-x.4；案例 outcome 见 case.scoring。",
+        "axl": [
+          {
+            "cell": "A7×L1",
+            "layer": "node",
+            "metrics": [
+              "position_rmse",
+              "orientation_error",
+              "pose_quality_accuracy"
+            ],
+            "anchors": [
+              "jd-7.3.1",
+              "jd-7.3.2"
+            ],
+            "direction_zh": "位姿误差 ↓；质量分级 ↑",
+            "evidence": "timestamped pose GT；quality label",
+            "sources": "TartanAir；EuRoC MAV；TUM RGB-D",
+            "maturity": "成熟"
+          },
+          {
+            "cell": "A7×L2",
+            "layer": "node",
+            "metrics": [
+              "ate",
+              "rpe",
+              "drift_rate",
+              "localization_availability"
+            ],
+            "anchors": [
+              "jd-7.3.1",
+              "jd-7.3.3"
+            ],
+            "direction_zh": "轨迹/漂移 ↓；可用率 ↑",
+            "evidence": "synchronized trajectory GT；validity mask",
+            "sources": "TartanAir；EuRoC；UZH-FPV",
+            "maturity": "成熟"
+          }
+        ]
+      }
     },
     {
       "node_id": "jd-7.3.1",
@@ -8358,19 +11104,47 @@
       "canonical_slot": null,
       "owner_a": "A7",
       "name": "位置误差容忍",
-      "definition": "",
+      "definition": "位置误差容忍（阈值，单位 m）。",
       "node_kind": "variable",
       "value_type": "range",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "decreasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A7×L1",
+        "A7×L2"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "position_rmse",
+          "direction": "↓",
+          "used_by_axl": [
+            "A7×L1"
+          ]
+        },
+        {
+          "metric_id": "ate",
+          "direction": "↓",
+          "used_by_axl": [
+            "A7×L2"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-7.3.2",
@@ -8378,19 +11152,39 @@
       "canonical_slot": null,
       "owner_a": "A7",
       "name": "姿态误差容忍",
-      "definition": "",
+      "definition": "姿态误差容忍（阈值，单位 °）。",
       "node_kind": "variable",
       "value_type": "range",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "decreasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A7×L1"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "orientation_error",
+          "direction": "↓",
+          "used_by_axl": [
+            "A7×L1"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-7.3.3",
@@ -8398,27 +11192,47 @@
       "canonical_slot": null,
       "owner_a": "A7",
       "name": "可用性标准",
-      "definition": "",
+      "definition": "定位可用性标准（可信时间比例）。",
       "node_kind": "variable",
       "value_type": "range",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A7×L2"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "localization_availability",
+          "direction": "↑",
+          "used_by_axl": [
+            "A7×L2"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-7.4",
       "parent_id": "A7",
       "canonical_slot": null,
       "owner_a": "A7",
-      "name": "兜底协议",
-      "definition": "",
+      "name": "定位处置协议",
+      "definition": "树·过程协议层（四层 .4）：出问题怎么处置、升级、验证。对应 A×L 的监督/主导自主过程读数；案例可绑定异常类型与处置动作；合格阈值在 .3，整局 outcome 在 case.scoring。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -8430,7 +11244,64 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol_group",
+      "runtime_metrics": {
+        "layer": "process",
+        "tree_slot": "jd-x.4",
+        "source": "metric.md",
+        "note": "节点质量阈值见同能力 jd-x.3；案例 outcome 见 case.scoring。",
+        "axl": [
+          {
+            "cell": "A7×L3",
+            "layer": "process",
+            "metrics": [
+              "integrity_risk",
+              "missed_detection_rate",
+              "false_alert_rate",
+              "time_to_alert"
+            ],
+            "anchors": [
+              "jd-7.4.1",
+              "jd-7.4.2",
+              "jd-7.4.3"
+            ],
+            "direction_zh": "完整性风险与告警延迟 ↓",
+            "evidence": "alert limit；fault injection",
+            "sources": "导航完整性指标",
+            "maturity": "可迁移"
+          },
+          {
+            "cell": "A7×L4",
+            "layer": "process",
+            "metrics": [
+              "relocalization_success",
+              "recovery_time",
+              "post_recovery_ate",
+              "recovery_verification_accuracy"
+            ],
+            "anchors": [
+              "jd-7.4.2",
+              "jd-7.4.3"
+            ],
+            "direction_zh": "重定位成功 ↑；耗时与误差 ↓",
+            "evidence": "relocalization event",
+            "sources": "SLAM recovery",
+            "maturity": "可迁移"
+          }
+        ]
+      },
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "used_by_axl": [
+        "A7×L3",
+        "A7×L4"
+      ]
     },
     {
       "node_id": "jd-7.4.1",
@@ -8465,13 +11336,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "decreasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "integrity_risk",
+          "direction": "↓",
+          "used_by_axl": [
+            "A7×L3"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A7×L3"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-7.4.2",
@@ -8506,13 +11397,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "relocalization_success",
+          "direction": "↑",
+          "used_by_axl": [
+            "A7×L4"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A7×L4"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-7.4.3",
@@ -8535,13 +11446,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "recovery_verification_accuracy",
+          "direction": "↑",
+          "used_by_axl": [
+            "A7×L4"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A7×L4"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-8.1",
@@ -8734,8 +11665,8 @@
       "parent_id": "A8",
       "canonical_slot": null,
       "owner_a": "A8",
-      "name": "质量标准",
-      "definition": "",
+      "name": "几何精度标准",
+      "definition": "树·节点质量层（四层 .3）：定义该能力「什么算合格」。阈值由案例 values 绑定到本层叶子；整局 SR/CR/SPL 写在案例 scoring；异常处置/求助/重规划等过程挂 .4，不挂本层。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -8747,7 +11678,63 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "used_by_axl": [
+        "A8×L1",
+        "A8×L2"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor_group",
+      "runtime_metrics": {
+        "layer": "node",
+        "tree_slot": "jd-x.3",
+        "source": "metric.md",
+        "note": "过程协议见同能力 jd-x.4；案例 outcome 见 case.scoring。",
+        "axl": [
+          {
+            "cell": "A8×L1",
+            "layer": "node",
+            "metrics": [
+              "range_error",
+              "bearing_error",
+              "relative_pose_error"
+            ],
+            "anchors": [
+              "jd-8.3.1",
+              "jd-8.3.2"
+            ],
+            "direction_zh": "相对几何误差 ↓",
+            "evidence": "target-relative geometry GT",
+            "sources": "SpatialSky-Bench",
+            "maturity": "成熟"
+          },
+          {
+            "cell": "A8×L2",
+            "layer": "node",
+            "metrics": [
+              "relative_tracking_accuracy",
+              "abs_rel",
+              "epe",
+              "target_loss_rate"
+            ],
+            "anchors": [
+              "jd-8.3.1",
+              "jd-8.3.2",
+              "jd-8.3.3"
+            ],
+            "direction_zh": "跟踪准确 ↑；深度/光流误差与丢失 ↓",
+            "evidence": "temporal relative-pose/depth/flow GT",
+            "sources": "深度估计；optical flow；目标跟踪协议",
+            "maturity": "可迁移"
+          }
+        ]
+      }
     },
     {
       "node_id": "jd-8.3.1",
@@ -8755,19 +11742,39 @@
       "canonical_slot": null,
       "owner_a": "A8",
       "name": "距离估计精度",
-      "definition": "",
+      "definition": "距离估计精度标准。",
       "node_kind": "variable",
       "value_type": "range",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "decreasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A8×L1"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "range_error",
+          "direction": "↓",
+          "used_by_axl": [
+            "A8×L1"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-8.3.2",
@@ -8775,19 +11782,39 @@
       "canonical_slot": null,
       "owner_a": "A8",
       "name": "方位估计精度",
-      "definition": "",
+      "definition": "方位估计精度标准。",
       "node_kind": "variable",
       "value_type": "range",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "decreasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A8×L1"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "bearing_error",
+          "direction": "↓",
+          "used_by_axl": [
+            "A8×L1"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-8.3.3",
@@ -8795,27 +11822,47 @@
       "canonical_slot": null,
       "owner_a": "A8",
       "name": "关联正确率",
-      "definition": "",
+      "definition": "关联正确率标准。",
       "node_kind": "variable",
       "value_type": "range",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A8×L2"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "relative_tracking_accuracy",
+          "direction": "↑",
+          "used_by_axl": [
+            "A8×L2"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-8.4",
       "parent_id": "A8",
       "canonical_slot": null,
       "owner_a": "A8",
-      "name": "兜底协议",
-      "definition": "",
+      "name": "几何处置协议",
+      "definition": "树·过程协议层（四层 .4）：出问题怎么处置、升级、验证。对应 A×L 的监督/主导自主过程读数；案例可绑定异常类型与处置动作；合格阈值在 .3，整局 outcome 在 case.scoring。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -8827,7 +11874,64 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol_group",
+      "runtime_metrics": {
+        "layer": "process",
+        "tree_slot": "jd-x.4",
+        "source": "metric.md",
+        "note": "节点质量阈值见同能力 jd-x.3；案例 outcome 见 case.scoring。",
+        "axl": [
+          {
+            "cell": "A8×L3",
+            "layer": "process",
+            "metrics": [
+              "loss_detection_f1",
+              "jump_detection_f1",
+              "time_to_protect",
+              "unsafe_continuation"
+            ],
+            "anchors": [
+              "jd-8.4.1",
+              "jd-8.4.2",
+              "jd-8.4.3"
+            ],
+            "direction_zh": "丢失/跳变检出 ↑；保护延迟 ↓",
+            "evidence": "occlusion/jump injection",
+            "sources": "BEDI",
+            "maturity": "可迁移"
+          },
+          {
+            "cell": "A8×L4",
+            "layer": "process",
+            "metrics": [
+              "reacquisition_success",
+              "reacquisition_time",
+              "post_reacquisition_error",
+              "verification_accuracy"
+            ],
+            "anchors": [
+              "jd-8.4.2",
+              "jd-8.4.3"
+            ],
+            "direction_zh": "重捕获成功 ↑；耗时与误差 ↓",
+            "evidence": "reappearance GT",
+            "sources": "项目恢复扩展",
+            "maturity": "项目校准"
+          }
+        ]
+      },
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "used_by_axl": [
+        "A8×L3",
+        "A8×L4"
+      ]
     },
     {
       "node_id": "jd-8.4.1",
@@ -8858,13 +11962,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "loss_detection_f1",
+          "direction": "↑",
+          "used_by_axl": [
+            "A8×L3"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A8×L3"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-8.4.2",
@@ -8899,13 +12023,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "reacquisition_success",
+          "direction": "↑",
+          "used_by_axl": [
+            "A8×L4"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A8×L4"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-8.4.3",
@@ -8928,13 +12072,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "verification_accuracy",
+          "direction": "↑",
+          "used_by_axl": [
+            "A8×L4"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A8×L4"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-9.1",
@@ -9099,8 +12263,8 @@
       "parent_id": "A9",
       "canonical_slot": null,
       "owner_a": "A9",
-      "name": "质量标准",
-      "definition": "",
+      "name": "预警阈值标准",
+      "definition": "树·节点质量层（四层 .3）：定义该能力「什么算合格」。阈值由案例 values 绑定到本层叶子；整局 SR/CR/SPL 写在案例 scoring；异常处置/求助/重规划等过程挂 .4，不挂本层。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -9112,7 +12276,61 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "used_by_axl": [
+        "A9×L1",
+        "A9×L2"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor_group",
+      "runtime_metrics": {
+        "layer": "node",
+        "tree_slot": "jd-x.3",
+        "source": "metric.md",
+        "note": "过程协议见同能力 jd-x.4；案例 outcome 见 case.scoring。",
+        "axl": [
+          {
+            "cell": "A9×L1",
+            "layer": "node",
+            "metrics": [
+              "soc_error",
+              "remaining_flight_time_error",
+              "health_state_accuracy"
+            ],
+            "anchors": [
+              "jd-9.3.1"
+            ],
+            "direction_zh": "电量/航时误差 ↓；健康判断 ↑",
+            "evidence": "battery/health GT；power model",
+            "sources": "UAVBench；NASA Li-ion Dataset",
+            "maturity": "成熟"
+          },
+          {
+            "cell": "A9×L2",
+            "layer": "node",
+            "metrics": [
+              "energy_prediction_error",
+              "reserve_margin_violation_rate",
+              "deadline_miss_ratio",
+              "warning_lead_time"
+            ],
+            "anchors": [
+              "jd-9.3.2",
+              "jd-9.3.3"
+            ],
+            "direction_zh": "预测误差与储备违规 ↓；有效预警提前量",
+            "evidence": "energy/resource timeline；reserve/deadline config",
+            "sources": "UAVBench；ALFA",
+            "maturity": "可迁移"
+          }
+        ]
+      }
     },
     {
       "node_id": "jd-9.3.1",
@@ -9120,7 +12338,7 @@
       "canonical_slot": null,
       "owner_a": "A9",
       "name": "预警阈值",
-      "definition": "",
+      "definition": "资源预警阈值（剩余比例）。",
       "node_kind": "variable",
       "value_type": "range",
       "value_domain": null,
@@ -9132,7 +12350,34 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A9×L1"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "soc_error",
+          "direction": "↓",
+          "used_by_axl": [
+            "A9×L1"
+          ]
+        },
+        {
+          "metric_id": "health_state_accuracy",
+          "direction": "↑",
+          "used_by_axl": [
+            "A9×L1"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-9.3.2",
@@ -9140,19 +12385,39 @@
       "canonical_slot": null,
       "owner_a": "A9",
       "name": "返航储备要求",
-      "definition": "",
+      "definition": "返航储备要求（必须保留比例）。",
       "node_kind": "variable",
       "value_type": "range",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "decreasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A9×L2"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "reserve_margin_violation_rate",
+          "direction": "↓",
+          "used_by_axl": [
+            "A9×L2"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-9.3.3",
@@ -9160,27 +12425,47 @@
       "canonical_slot": null,
       "owner_a": "A9",
       "name": "消耗预测精度",
-      "definition": "",
+      "definition": "消耗预测精度标准。",
       "node_kind": "variable",
       "value_type": "range",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "decreasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "used_by_axl": [
+        "A9×L2"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "metric_layer": "node",
+      "metric_role": "quality_anchor",
+      "grader_metrics": [
+        {
+          "metric_id": "energy_prediction_error",
+          "direction": "↓",
+          "used_by_axl": [
+            "A9×L2"
+          ]
+        }
+      ]
     },
     {
       "node_id": "jd-9.4",
       "parent_id": "A9",
       "canonical_slot": null,
       "owner_a": "A9",
-      "name": "兜底协议",
-      "definition": "",
+      "name": "资源处置协议",
+      "definition": "树·过程协议层（四层 .4）：出问题怎么处置、升级、验证。对应 A×L 的监督/主导自主过程读数；案例可绑定异常类型与处置动作；合格阈值在 .3，整局 outcome 在 case.scoring。",
       "node_kind": "group",
       "value_type": "",
       "value_domain": null,
@@ -9192,7 +12477,64 @@
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol_group",
+      "runtime_metrics": {
+        "layer": "process",
+        "tree_slot": "jd-x.4",
+        "source": "metric.md",
+        "note": "节点质量阈值见同能力 jd-x.3；案例 outcome 见 case.scoring。",
+        "axl": [
+          {
+            "cell": "A9×L3",
+            "layer": "process",
+            "metrics": [
+              "health_risk_detection_f1",
+              "missed_warning_rate",
+              "time_to_protect",
+              "unsafe_resource_continuation"
+            ],
+            "anchors": [
+              "jd-9.4.1",
+              "jd-9.4.2",
+              "jd-9.4.3"
+            ],
+            "direction_zh": "风险识别 ↑；漏警/延迟/危险继续 ↓",
+            "evidence": "degradation；threshold",
+            "sources": "PADRE；RflyMAD",
+            "maturity": "可迁移"
+          },
+          {
+            "cell": "A9×L4",
+            "layer": "process",
+            "metrics": [
+              "safe_exit_decision_accuracy",
+              "safe_exit_success",
+              "remaining_reserve_at_exit",
+              "reconfiguration_success"
+            ],
+            "anchors": [
+              "jd-9.4.2",
+              "jd-9.4.3"
+            ],
+            "direction_zh": "安全退出与储备 ↑（可与案例 outcome 一并报）",
+            "evidence": "decision GT；exit trajectory",
+            "sources": "UAVBench；ALFA",
+            "maturity": "项目校准"
+          }
+        ]
+      },
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ],
+      "used_by_axl": [
+        "A9×L3",
+        "A9×L4"
+      ]
     },
     {
       "node_id": "jd-9.4.1",
@@ -9223,13 +12565,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "health_risk_detection_f1",
+          "direction": "↑",
+          "used_by_axl": [
+            "A9×L3"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A9×L3"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-9.4.2",
@@ -9268,13 +12630,33 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "safe_exit_success",
+          "direction": "↑",
+          "used_by_axl": [
+            "A9×L4"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A9×L4"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     },
     {
       "node_id": "jd-9.4.3",
@@ -9297,14 +12679,44 @@
       ],
       "unit": "",
       "configuration_side": "shared",
-      "difficulty_direction": "neutral",
+      "difficulty_direction": "increasing",
       "applicable_scenarios": [
         "cross_scenario"
       ],
       "review_status": "proposed",
       "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "metric_layer": "process",
+      "metric_role": "process_protocol",
+      "grader_metrics": [
+        {
+          "metric_id": "reconfiguration_success",
+          "direction": "↑",
+          "used_by_axl": [
+            "A9×L4"
+          ]
+        }
+      ],
+      "used_by_axl": [
+        "A9×L4"
+      ],
+      "visibility": [
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "grader"
+      ]
     }
   ],
-  "sources": []
+  "sources": [],
+  "metric_annotation": {
+    "version": "1.1.0",
+    "source": "metric.md",
+    "layers": {
+      "node": "树 jd-x.3 质量锚点",
+      "process": "树 jd-x.4 过程协议",
+      "case": "案例 case.scoring（能力根 case_metrics 提示）"
+    },
+    "note": "节点/过程是变量树四层槽位，不是独立于树的 metric 分类。"
+  }
 }
