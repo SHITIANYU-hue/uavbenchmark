@@ -198,7 +198,9 @@ function renderStep3() {
   }
   h += '<div class="action-row" style="margin:0 0 12px"><span class="action-note">当前 TBD ' + tbdCount + ' 个</span><div>'
     + '<button class="btn" type="button" onclick="loadTreeDomains()"' +
-    (state.fillTbdLoading ? " disabled" : "") + '>从变量树加载</button> '
+    (state.fillTbdLoading ? " disabled" : "") + '>从变量树加载域</button> '
+    + '<button class="btn" type="button" onclick="loadMetricsForStep3()"' +
+    (state.fillTbdLoading ? " disabled" : "") + '>加载质量标准</button> '
     + '<button class="btn" type="button" onclick="fillTbdDomains()"' +
     (state.fillTbdLoading || tbdCount === 0 || !providerReady() ? " disabled" : "") + ">" +
     (state.fillTbdLoading ? "智能填写中..." : "智能填写 TBD") + "</button></div></div>";
@@ -440,9 +442,11 @@ function renderStep4() {
   } else if (state.instanceMode === "batch") {
     h += '<input type="text" value="' + escapeHtml(state.instanceBatchSeeds) + '" id="ib" style="padding:4px 8px;width:200px;border:1px solid var(--line-strong);border-radius:6px" placeholder="如 0-4">';
   }
-  h += '<div class="action-row" style="margin-top:10px"><span class="action-note">基于 STEP 4 已确认的任务域模版</span>'
+  h += '<div class="action-row" style="margin-top:10px"><span class="action-note">基于 STEP 4 已确认的任务域模版</span><div>'
     + '<button class="btn primary" onclick="genTaskTemplate()"' + (state.instanceLoading || !domain ? " disabled" : "") + ">"
-    + (state.instanceLoading ? "生成中..." : "生成特定任务模版") + "</button></div>";
+    + (state.instanceLoading ? "生成中..." : "生成特定任务模版") + "</button> "
+    + '<button class="btn" onclick="generateFullTaskTemplate()"' + (state.instanceLoading || !domain ? " disabled" : "") + ">"
+    + "生成完整包(含质量标准+兜底协议)</button></div></div>";
 
   if (state.instanceError) {
     h += '<div class="choice-card dependency selected" style="margin-top:10px"><b>错误</b><p>' + escapeHtml(state.instanceError) + "</p></div>";

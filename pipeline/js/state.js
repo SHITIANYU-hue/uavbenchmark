@@ -16,6 +16,7 @@ function initialState() {
     extractionStatus: "idle", extractionRunId: null, extractionError: null, extractionProgress: null,
     domainEdits: {},
     fillTbdLoading: false, fillTbdError: null, fillTbdNotice: null,
+    treeMetrics: {}, treeSlice: null,
     instanceMode: "single", instanceSeed: 0, instanceBatchSeeds: "0-4",
     instanceRandomCount: 5, instanceRandomSeeds: [],
     instanceResult: null, instanceResults: null, instanceError: null, instanceLoading: false,

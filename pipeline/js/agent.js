@@ -362,3 +362,52 @@ async function loadTreeDomains() {
   state.fillTbdLoading = false;
   render();
 }
+
+async function loadMetricsForStep3() {
+  const c = state.agentResult && state.agentResult.candidate;
+  const abilities = c && c.coverage_candidates ? [...new Set(c.coverage_candidates.map(x => x.cell.split("×")[0]))] : [];
+  if (!abilities.length) { state.fillTbdError = "没有选中的能力"; render(); return; }
+  state.fillTbdLoading = true; state.fillTbdError = null; state.fillTbdNotice = null; render();
+  try {
+    const all = {};
+    for (const a of abilities) {
+      const r = await fetch("/api/metric-set?ability=" + a, {cache: "no-store"});
+      if (!r.ok) continue;
+      const ms = await r.json();
+      Object.assign(all, ms.values || {});
+    }
+    state.treeMetrics = all;
+    const qCount = Object.keys(all).filter(k => k.includes(".3.")).length;
+    const pCount = Object.keys(all).filter(k => k.includes(".4.")).length;
+    state.fillTbdNotice = "加载了 " + qCount + " 个质量标准 (.3) + " + pCount + " 个兜底协议 (.4)";
+  } catch(e) {
+    state.fillTbdError = String(e.message || e);
+  }
+  state.fillTbdLoading = false;
+  render();
+}
+
+async function generateFullTaskTemplate() {
+  const c = state.agentResult && state.agentResult.candidate;
+  const ability = c && c.coverage_candidates ? c.coverage_candidates[0].cell.split("×")[0] : "A11";
+  const seed = state.instanceSeed || 0;
+  state.instanceLoading = true; state.instanceError = null; render();
+  try {
+    const tpl = buildDomainTemplate();
+    const body = { ability, seed, template: tpl, domain_values: {}, scoring: {SR: true, CR: true, SPL: true} };
+    const r = await fetch("/api/task-template/generate", {
+      method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body),
+    });
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.message || d.error);
+    state.instanceResult = d.task;
+    state.fillTbdNotice = "生成完整 Task Template："
+      + Object.keys(d.task.scenario||{}).length + " 场景值 + "
+      + Object.keys(d.task.quality||{}).length + " 质量标准 + "
+      + Object.keys(d.task.protocols||{}).length + " 兜底协议";
+  } catch(e) {
+    state.instanceError = String(e.message || e);
+  }
+  state.instanceLoading = false;
+  render();
+}

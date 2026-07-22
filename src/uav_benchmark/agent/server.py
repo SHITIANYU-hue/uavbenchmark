@@ -190,31 +190,60 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
             self._json(HTTPStatus.OK, load_scenario_registry())
             return
         if parsed.path == "/api/jd-tree/domains":
-            tree_path = ROOT / "knowledge" / "jd_variable_tree_version1.json"
+            tree_path = ROOT / "knowledge" / "jd_variable_tree_version2.json"
             if not tree_path.exists():
                 self._json(HTTPStatus.NOT_FOUND, {"error": "jd_tree_not_found"})
                 return
             tree = json.loads(tree_path.read_text(encoding="utf-8"))
             domains: dict[str, Any] = {}
             for node in tree.get("nodes", []):
-                slot = node.get("canonical_slot")
-                if not slot or node.get("node_kind") != "variable":
+                if node.get("node_kind") != "variable":
                     continue
+                nid = node.get("node_id", "")
                 vtype = node.get("value_type", "")
                 raw_domain = node.get("value_domain") or []
-                if isinstance(raw_domain, list) and raw_domain:
-                    labels = []
+                labels = []
+                if isinstance(raw_domain, list):
                     for item in raw_domain:
                         if isinstance(item, dict):
                             labels.append(item.get("label_zh") or item.get("value") or "")
                         elif item is not None:
                             labels.append(str(item))
-                    labels = [l for l in labels if l]
-                    if labels:
-                        domains[slot] = {"value_type": vtype, "options": labels}
-                elif vtype in ("number", "number_or_range", "integer", "integer_or_range"):
-                    domains[slot] = {"value_type": vtype, "options": []}
+                labels = [l for l in labels if l]
+                if labels or vtype in ("number", "number_or_range", "integer", "integer_or_range"):
+                    domains[nid] = {"value_type": vtype, "name": node.get("name",""), "options": labels}
             self._json(HTTPStatus.OK, {"slots": domains})
+            return
+        if parsed.path == "/api/jd-tree/slice":
+            ability = (parse_qs(parsed.query).get("ability") or [""])[0]
+            tree_path = ROOT / "knowledge" / "jd_variable_tree_version2.json"
+            if not tree_path.exists() or not ability:
+                self._json(HTTPStatus.NOT_FOUND, {"error": "need ?ability=A11"})
+                return
+            tree = json.loads(tree_path.read_text(encoding="utf-8"))
+            # Collect all nodes for this ability + MULTI/global
+            slice_nodes = [n for n in tree["nodes"] if n.get("owner_a") == ability or n.get("owner_a") == "MULTI"]
+            # Load metric set if exists
+            metric_path = ROOT / "knowledge" / f"metric_set_{ability.lower()}_default.json"
+            metrics = {}
+            if metric_path.exists():
+                ms = json.loads(metric_path.read_text(encoding="utf-8"))
+                metrics = ms.get("values", {})
+            self._json(HTTPStatus.OK, {
+                "ability": ability,
+                "nodes": slice_nodes,
+                "metrics": metrics,
+                "metric_scope": ms.get("scope", []) if metric_path.exists() else [],
+            })
+            return
+        if parsed.path == "/api/metric-set":
+            ability = (parse_qs(parsed.query).get("ability") or [""])[0]
+            metric_path = ROOT / "knowledge" / f"metric_set_{ability.lower()}_default.json"
+            if not metric_path.exists():
+                self._json(HTTPStatus.NOT_FOUND, {"error": "no_metric_set"})
+                return
+            self._json(HTTPStatus.OK, json.loads(metric_path.read_text(encoding="utf-8")))
+            return
             return
         if parsed.path == "/api/config-agent/status":
             run_id = (parse_qs(parsed.query).get("run_id") or [""])[0]
@@ -284,6 +313,50 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                 save_path = ROOT / "saved_pipeline.json"
                 save_path.write_text(json.dumps(record, ensure_ascii=False, indent=2), encoding="utf-8")
                 self._json(HTTPStatus.OK, {"status": "saved", "savedAt": record["savedAt"]})
+                return
+
+            if self.path == "/api/task-template/generate":
+                # Full 4-layer task template from domain values + metric set
+                ability = payload.get("ability", "A11")
+                seed = int(payload.get("seed", 0))
+                domain_values = payload.get("domain_values", {})
+                scoring = payload.get("scoring", {"SR": True, "CR": True, "SPL": True})
+
+                # Load metric set
+                metric_path = ROOT / "knowledge" / f"metric_set_{ability.lower()}_default.json"
+                quality = {}
+                protocols = {}
+                if metric_path.exists():
+                    ms = json.loads(metric_path.read_text(encoding="utf-8"))
+                    for node_id, m in ms.get("values", {}).items():
+                        layer = ".3" if ".3." in node_id else ".4" if ".4." in node_id else None
+                        if layer == ".3":
+                            quality[node_id] = m
+                        elif layer == ".4":
+                            protocols[node_id] = m
+
+                task = {
+                    "task_id": f"{ability}_seed{seed}",
+                    "ability": ability,
+                    "seed": seed,
+                    "scenario": {},   # .1/.2 concrete values (from domain_values after seed)
+                    "quality": quality,    # .3 thresholds from metric_set
+                    "protocols": protocols, # .4 fallback from metric_set
+                    "scoring": scoring,
+                }
+
+                # Run seed instantiation for .1/.2 if template provided
+                tpl = payload.get("template")
+                if tpl:
+                    from ..instance.generator import generate_instance
+                    inst = generate_instance(tpl, seed)
+                    task["scenario"] = {
+                        s["slot_id"]: s["value"]
+                        for s in inst.get("slot_bindings", [])
+                    }
+                    task["seed_detail"] = inst
+
+                self._json(HTTPStatus.OK, {"task": task})
                 return
 
             if self.path == "/api/domain-template/build":
