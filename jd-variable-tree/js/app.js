@@ -3,32 +3,9 @@
 
   const DATA_URL = "knowledge/jd_variable_tree_version1.json";
   const COMMENT_STORAGE_KEY = "uav-benchmark-jd-comments-version1";
-  const abilities = {
-    A1: "意图 / 交互入口",
-    A2: "任务规范 / 约束模型",
-    A3: "意图推理 / 任务解释",
-    A4: "交互到执行编排",
-    A5: "监督 / 请求 / 交接",
-    A6: "业务对象感知与状态理解",
-    A7: "自定位",
-    A8: "相对定位 / 相对几何",
-    A9: "健康 / 能源 / 资源管理",
-    A10: "导航与航迹执行",
-    A11: "飞行控制 / 执行机构",
-  };
-  const abilityVisualGroup = {
-    A1: "human",
-    A2: "human",
-    A3: "human",
-    A4: "human",
-    A5: "human",
-    A6: "perception",
-    A7: "perception",
-    A8: "perception",
-    A9: "perception",
-    A10: "motion",
-    A11: "motion",
-  };
+  let abilities = {};
+  let abilityOrder = [];
+  const abilityVisualGroup = {};
   const scenarioLabels = {
     cross_scenario: "跨业务场景",
     highway_inspection: "高速巡检",
@@ -62,6 +39,16 @@
     grader_visible: "Grader 可见",
     grader_only: "Grader 专用",
     hidden_gt: "Hidden GT",
+  };
+  const variableRoleLabels = {
+    configuration_input: "可配置输入",
+    contract_schema: "合同 / Schema",
+    runtime_observation: "运行时观察",
+    derived_metric: "派生指标",
+    hidden_ground_truth: "Hidden Ground Truth",
+    structural_group: "结构分组",
+    example_profile: "示例 Profile",
+    TBD: "TBD",
   };
   const difficultyLabels = {
     increasing: "递增",
@@ -133,11 +120,48 @@
   }
 
   function shortId(nodeId) {
-    const abilityRoot = nodeId.match(
-      /^PROPOSED-jd-tree-(A1|A2|A3|A4|A5|A6|A7|A8|A9|A10|A11)$/,
-    );
+    const abilityRoot = nodeId.match(/^PROPOSED-jd-tree-(A\d+)$/);
     if (abilityRoot) return abilityRoot[1];
+    if (nodeId === "PROPOSED-jd-tree-global") return "JD-global";
     return nodeId.replace(/^PROPOSED-/, "");
+  }
+
+  function rootIdForAbility(ability) {
+    return ability === "GLOBAL"
+      ? "PROPOSED-jd-tree-global"
+      : `PROPOSED-jd-tree-${ability}`;
+  }
+
+  function nodesForAbility(ability) {
+    if (ability !== "GLOBAL") {
+      return state.nodes.filter((node) => node.owner_a === ability);
+    }
+    const result = [];
+    const pending = [rootIdForAbility(ability)];
+    const visited = new Set();
+    while (pending.length) {
+      const nodeId = pending.pop();
+      if (visited.has(nodeId)) continue;
+      visited.add(nodeId);
+      const node = state.nodeById.get(nodeId);
+      if (!node) continue;
+      result.push(node);
+      for (const child of state.childrenByParent.get(nodeId) || []) {
+        pending.push(child.node_id);
+      }
+    }
+    return result;
+  }
+
+  function displayAbilityForNode(node) {
+    if (
+      node.node_id === "PROPOSED-jd-tree-global" ||
+      /^jd-0\.(?:[1-9]|10)$/.test(node.node_id) ||
+      node.node_id.startsWith("PROPOSED-jd-0.")
+    ) {
+      return "GLOBAL";
+    }
+    return node.owner_a;
   }
 
   function loadReviewState() {
@@ -211,7 +235,33 @@
       }
       state.childrenByParent.get(node.parent_id).push(node);
     }
+    buildAbilityRegistry();
     migrateLegacyComments();
+  }
+
+  function visualGroupForAbility(ability) {
+    const number = Number(ability.slice(1));
+    if (number <= 5) return "human";
+    if (number <= 9) return "perception";
+    if (number <= 11) return "motion";
+    if (number <= 13) return "payload";
+    if (number <= 15) return "compliance";
+    return "safety";
+  }
+
+  function buildAbilityRegistry() {
+    abilityOrder = [...(state.catalog.scope || []), "GLOBAL"];
+    abilities = {};
+    for (const ability of state.catalog.scope || []) {
+      const root = state.nodeById.get(rootIdForAbility(ability));
+      abilities[ability] = root?.name || ability;
+      abilityVisualGroup[ability] = visualGroupForAbility(ability);
+    }
+    abilities.GLOBAL = "JD-global / 共享业务变量";
+    abilityVisualGroup.GLOBAL = "global";
+    if (!abilities[state.selectedAbility]) {
+      state.selectedAbility = abilityOrder[0] || "GLOBAL";
+    }
   }
 
   function migrateLegacyComments() {
@@ -235,15 +285,20 @@
   }
 
   function renderTabs() {
-    elements.abilityTabs.innerHTML = Object.entries(abilities)
-      .map(([ability, name]) => {
-        const count = state.nodes.filter(
-          (node) => node.owner_a === ability && node.node_kind === "variable",
+    elements.abilityTabs.innerHTML = abilityOrder
+      .map((ability) => {
+        const name = abilities[ability];
+        const count = nodesForAbility(ability).filter(
+          (node) => node.node_kind === "variable",
         ).length;
+        const displayName =
+          ability === "GLOBAL"
+            ? "JD-global · 共享业务变量"
+            : `${ability} · ${name}`;
         return `<button class="ability-tab group-${abilityVisualGroup[ability]}" type="button" role="tab"
           data-ability="${ability}"
           aria-selected="${ability === state.selectedAbility}">
-          <strong>${ability} · ${escapeHtml(name)}</strong>
+          <strong>${escapeHtml(displayName)}</strong>
           <span>${count} 个变量叶子</span>
         </button>`;
       })
@@ -251,6 +306,7 @@
   }
 
   function nodeClass(node) {
+    if (node.node_kind === "global_root") return "root global-root";
     if (node.node_kind === "capability_root") return "root";
     if (
       node.node_id === "PROPOSED-jd-11.4" ||
@@ -295,13 +351,12 @@
   }
 
   function renderMap() {
-    const root = state.nodeById.get(
-      `PROPOSED-jd-tree-${state.selectedAbility}`,
-    );
-    const count = state.nodes.filter(
-      (node) => node.owner_a === state.selectedAbility,
-    ).length;
-    elements.mapTitle.textContent = `${state.selectedAbility} · ${abilities[state.selectedAbility]}`;
+    const root = state.nodeById.get(rootIdForAbility(state.selectedAbility));
+    const count = nodesForAbility(state.selectedAbility).length;
+    elements.mapTitle.textContent =
+      state.selectedAbility === "GLOBAL"
+        ? "JD-global · 共享业务变量"
+        : `${state.selectedAbility} · ${abilities[state.selectedAbility]}`;
     elements.mapCount.textContent = `${count} 个节点，点击任一标签查看详情`;
     elements.mindmap.innerHTML = root
       ? renderBranch(root)
@@ -572,8 +627,9 @@
     if (!node) return;
     state.activeNodeId = nodeId;
     state.highlightedNodeId = nodeId;
-    if (node.owner_a !== state.selectedAbility) {
-      state.selectedAbility = node.owner_a;
+    const displayAbility = displayAbilityForNode(node);
+    if (displayAbility !== state.selectedAbility) {
+      state.selectedAbility = displayAbility;
       renderTabs();
     }
     renderMap();
@@ -608,6 +664,7 @@
           ${detailField("旧编号 / 别名", tags(node.legacy_aliases))}
           ${detailField("父节点", `<code>${escapeHtml(node.parent_id || "—")}</code>`)}
           ${detailField("值类型", escapeHtml(node.value_type))}
+          ${detailField("数据流角色", escapeHtml(variableRoleLabels[node.variable_role] || node.variable_role || "—"))}
           ${detailField("配置归属", escapeHtml(configurationLabels[node.configuration_side] || node.configuration_side))}
           ${detailField("配置投影", tags(node.projection_targets, projectionLabels))}
           ${detailField("可见性", tags(node.visibility, visibilityLabels))}

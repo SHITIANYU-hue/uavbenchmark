@@ -1,7 +1,7 @@
 {
   "schema": "uav-benchmark-jd-variable-tree",
-  "schema_version": "0.3.0",
-  "generated_at": "2026-07-21",
+  "schema_version": "0.4.0",
+  "generated_at": "2026-07-22",
   "generated_by": "scripts/generate_jd_variable_tree_version1.mjs",
   "ability_id_scheme": "ability-id-v3-2026-07-20",
   "numbering_scheme": "ability-id-v3-2026-07-20",
@@ -83,6 +83,16 @@
     "jd_rule": "L0 不进入 JD 值域，也不写入 used_by_axl；episode 层另存 coverage_level=L0。"
   },
   "controlled_vocabularies": {
+    "variable_role": [
+      "configuration_input",
+      "contract_schema",
+      "runtime_observation",
+      "derived_metric",
+      "hidden_ground_truth",
+      "structural_group",
+      "example_profile",
+      "TBD"
+    ],
     "configuration_side": [
       "world",
       "user",
@@ -150,6 +160,7 @@
     "name",
     "definition",
     "node_kind",
+    "variable_role",
     "value_type",
     "value_domain",
     "unit",
@@ -180,6 +191,9 @@
     "A×L 仅作责任引用，L1–L4 不进入 JD 取值域；L0 是 episode 覆盖哨兵。",
     "缺少依据的阈值、时限、业务判据、安全规则和 simulator 接口保持 TBD。",
     "configuration_side、projection_targets、visibility 和 observation_channel 分列。",
+    "variable_role 仅标注节点在数据流中的机器语义，不新增业务变量或改写 canonical 定义。",
+    "候选值逐值记录 source_refs 与 status；未逐值证明的候选不得由节点来源机械升级为 source_supported。",
+    "PROPOSED 子树可以不存在，但所有 related_jd、depends_on 和启用条件引用始终必须指向现存节点。",
     "derivation_status 与 evidence_status 分列。"
   ],
   "decision_log": [
@@ -297,6 +311,21 @@
       "decision_id": "schema-derivation-status",
       "status": "confirmed_by_user",
       "decision": "derivation_status 与 evidence_status 分列。"
+    },
+    {
+      "decision_id": "schema-variable-role",
+      "status": "confirmed_by_user",
+      "decision": "增加 variable_role 以区分可配置输入、合同/schema、运行时观察、派生指标、Hidden GT、结构节点与示例 Profile；该字段不是新增 JD 变量。"
+    },
+    {
+      "decision_id": "value-level-evidence",
+      "status": "confirmed_by_user",
+      "decision": "候选值必须独立声明 source_refs 与 status；缺少直接证据时保持 inferred_candidate 或 TBD。"
+    },
+    {
+      "decision_id": "strict-proposed-references",
+      "status": "confirmed_by_user",
+      "decision": "11.4/11.5 可选，但引用完整性不豁免；缺失 proposed 子树时不得保留指向它的悬空引用。"
     }
   ],
   "catalog_id": "jd-variable-tree-g2-g3-renumbered-version1-draft",
@@ -538,6 +567,15 @@
       "evidence_grade": "source_supported"
     },
     {
+      "source_id": "L-A8-V06",
+      "title": "需求草案-v0.6.md",
+      "issuer": "UAV Benchmark team",
+      "source_type": "team_draft",
+      "locator": "§2.0、§2.1、§2.2、§2.5",
+      "url": null,
+      "evidence_grade": "team_material_only"
+    },
+    {
       "source_id": "L-RENUMBER-20260719",
       "title": "A 域重编号会议输入（2026-07-19）",
       "issuer": "UAV Benchmark team",
@@ -558,7 +596,7 @@
   ],
   "nodes": [
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-tree-A6",
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
@@ -605,10 +643,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "given"
+      "derivation_status": "given",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-tree-A7",
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
@@ -655,10 +694,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "given"
+      "derivation_status": "given",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-tree-A8",
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
@@ -705,10 +745,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "given"
+      "derivation_status": "given",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-tree-A10",
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
@@ -755,10 +796,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "given"
+      "derivation_status": "given",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-6.1",
       "parent_id": "PROPOSED-jd-tree-A6",
       "canonical_slot": "jd-6.1",
@@ -804,10 +846,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "given"
+      "derivation_status": "given",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.1.1",
       "parent_id": "jd-6.1",
       "canonical_slot": "jd-6.1",
@@ -855,10 +898,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.1.1.1",
       "parent_id": "PROPOSED-jd-6.1.1",
       "canonical_slot": "jd-6.1",
@@ -937,10 +981,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.1.1.2",
       "parent_id": "PROPOSED-jd-6.1.1",
       "canonical_slot": "jd-6.1",
@@ -1080,10 +1125,11 @@
       "observation_channel": [
         "hidden_gt"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.1.1.3",
       "parent_id": "PROPOSED-jd-6.1.1",
       "canonical_slot": "jd-6.1",
@@ -1228,10 +1274,11 @@
       "observation_channel": [
         "hidden_gt"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.1.1.4",
       "parent_id": "PROPOSED-jd-6.1.1",
       "canonical_slot": "jd-6.1",
@@ -1409,10 +1456,11 @@
       "observation_channel": [
         "hidden_gt"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.1.2",
       "parent_id": "jd-6.1",
       "canonical_slot": "jd-6.1",
@@ -1464,10 +1512,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.1.2.1",
       "parent_id": "PROPOSED-jd-6.1.2",
       "canonical_slot": "jd-6.1",
@@ -1572,10 +1621,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.1.2.2",
       "parent_id": "PROPOSED-jd-6.1.2",
       "canonical_slot": "jd-6.1",
@@ -1759,10 +1809,11 @@
         "sut_input",
         "grader"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.1.2.3",
       "parent_id": "PROPOSED-jd-6.1.2",
       "canonical_slot": "jd-6.1",
@@ -1894,10 +1945,11 @@
       "observation_channel": [
         "hidden_gt"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.1.2.4",
       "parent_id": "PROPOSED-jd-6.1.2",
       "canonical_slot": "jd-6.1",
@@ -1972,8 +2024,9 @@
       },
       "multiplicity": "one",
       "difficulty_direction": "neutral",
-      "configuration_side": "shared",
+      "configuration_side": "world",
       "visibility": [
+        "fixture_only",
         "grader_only",
         "hidden_gt"
       ],
@@ -2007,21 +2060,21 @@
         "PROPOSED-jd-5.1.2.4",
         "jd-5.1"
       ],
-      "notes": "具体判定规则必须由法规、标志标线或团队园区规则提供，缺少规则时不得生成 violation。\n2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。",
+      "notes": "具体判定规则必须由法规、标志标线或团队园区规则提供，缺少规则时不得生成 violation。\n2026-07-20 连续编号迁移：A5 → A6；语义与取值保持原来源口径。\n本节点表示 Fixture 配置或 Grader 使用的实例真值，不作为 SUT 输入；SUT 只能从传感器、遥测或任务接口获得其可观测表现。",
       "projection_targets": [
         "world_config",
-        "user_config",
-        "sut_input",
         "harness"
       ],
       "observation_channel": [
+        "fixture",
         "grader",
         "hidden_gt"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "hidden_ground_truth"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.1.3",
       "parent_id": "jd-6.1",
       "canonical_slot": "jd-6.1",
@@ -2069,10 +2122,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.1.3.1",
       "parent_id": "PROPOSED-jd-6.1.3",
       "canonical_slot": "jd-6.1",
@@ -2169,10 +2223,11 @@
       "observation_channel": [
         "hidden_gt"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.1.3.2",
       "parent_id": "PROPOSED-jd-6.1.3",
       "canonical_slot": "jd-6.1",
@@ -2273,10 +2328,11 @@
       "observation_channel": [
         "hidden_gt"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.1.3.3",
       "parent_id": "PROPOSED-jd-6.1.3",
       "canonical_slot": "jd-6.1",
@@ -2329,10 +2385,11 @@
         "fixture",
         "hidden_gt"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-6.2",
       "parent_id": "PROPOSED-jd-tree-A6",
       "canonical_slot": "jd-6.2",
@@ -2378,10 +2435,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "given"
+      "derivation_status": "given",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.2.1",
       "parent_id": "jd-6.2",
       "canonical_slot": "jd-6.2",
@@ -2429,10 +2487,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.2.1.1",
       "parent_id": "PROPOSED-jd-6.2.1",
       "canonical_slot": "jd-6.2",
@@ -2485,10 +2544,11 @@
       "observation_channel": [
         "hidden_gt"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.2.1.2",
       "parent_id": "PROPOSED-jd-6.2.1",
       "canonical_slot": "jd-6.2",
@@ -2585,10 +2645,11 @@
         "sut_input",
         "grader"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.2.1.3",
       "parent_id": "PROPOSED-jd-6.2.1",
       "canonical_slot": "jd-6.2",
@@ -2700,10 +2761,11 @@
         "sut_input",
         "grader"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.2.1.4",
       "parent_id": "PROPOSED-jd-6.2.1",
       "canonical_slot": "jd-6.2",
@@ -2804,10 +2866,11 @@
       "observation_channel": [
         "hidden_gt"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.2.1.5",
       "parent_id": "PROPOSED-jd-6.2.1",
       "canonical_slot": "jd-6.2",
@@ -2868,10 +2931,11 @@
       "observation_channel": [
         "hidden_gt"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.2.2",
       "parent_id": "jd-6.2",
       "canonical_slot": "jd-6.2",
@@ -2924,10 +2988,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.2.2.1",
       "parent_id": "PROPOSED-jd-6.2.2",
       "canonical_slot": "jd-6.2",
@@ -3025,10 +3090,11 @@
       "observation_channel": [
         "hidden_gt"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.2.2.2",
       "parent_id": "PROPOSED-jd-6.2.2",
       "canonical_slot": "jd-6.2",
@@ -3124,10 +3190,11 @@
       "observation_channel": [
         "grader"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.2.2.3",
       "parent_id": "PROPOSED-jd-6.2.2",
       "canonical_slot": "jd-6.2",
@@ -3228,10 +3295,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.2.2.4",
       "parent_id": "PROPOSED-jd-6.2.2",
       "canonical_slot": "jd-6.2",
@@ -3380,10 +3448,11 @@
         "sut_input",
         "grader"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.2.2.5",
       "parent_id": "PROPOSED-jd-6.2.2",
       "canonical_slot": "jd-6.2",
@@ -3517,10 +3586,11 @@
       "observation_channel": [
         "hidden_gt"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-6.3",
       "parent_id": "PROPOSED-jd-tree-A6",
       "canonical_slot": "jd-6.3",
@@ -3566,10 +3636,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "given"
+      "derivation_status": "given",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.3.1",
       "parent_id": "jd-6.3",
       "canonical_slot": "jd-6.3",
@@ -3619,10 +3690,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.3.1.1",
       "parent_id": "PROPOSED-jd-6.3.1",
       "canonical_slot": "jd-6.3",
@@ -3736,10 +3808,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.3.1.2",
       "parent_id": "PROPOSED-jd-6.3.1",
       "canonical_slot": "jd-6.3",
@@ -3840,10 +3913,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.3.1.3",
       "parent_id": "PROPOSED-jd-6.3.1",
       "canonical_slot": "jd-6.3",
@@ -3902,7 +3976,7 @@
       ],
       "related_global_jd": [],
       "related_jd": [
-        "jd-9b.1"
+        "jd-13.1"
       ],
       "used_by_axl": [
         "A6×L1",
@@ -3929,10 +4003,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "given"
+      "derivation_status": "given",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.3.1.4",
       "parent_id": "PROPOSED-jd-6.3.1",
       "canonical_slot": "jd-6.3",
@@ -4019,10 +4094,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-6.4",
       "parent_id": "PROPOSED-jd-tree-A6",
       "canonical_slot": "jd-6.4",
@@ -4068,10 +4144,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "given"
+      "derivation_status": "given",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.4.1",
       "parent_id": "jd-6.4",
       "canonical_slot": "jd-6.4",
@@ -4119,10 +4196,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.4.1.1",
       "parent_id": "PROPOSED-jd-6.4.1",
       "canonical_slot": "jd-6.4",
@@ -4175,10 +4253,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.4.1.2",
       "parent_id": "PROPOSED-jd-6.4.1",
       "canonical_slot": "jd-6.4",
@@ -4231,10 +4310,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.4.1.3",
       "parent_id": "PROPOSED-jd-6.4.1",
       "canonical_slot": "jd-6.4",
@@ -4341,10 +4421,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.4.2",
       "parent_id": "jd-6.4",
       "canonical_slot": "jd-6.4",
@@ -4394,10 +4475,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.4.2.1",
       "parent_id": "PROPOSED-jd-6.4.2",
       "canonical_slot": "jd-6.4",
@@ -4520,10 +4602,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.4.2.2",
       "parent_id": "PROPOSED-jd-6.4.2",
       "canonical_slot": "jd-6.4",
@@ -4647,10 +4730,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "given"
+      "derivation_status": "given",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-6.4.2.3",
       "parent_id": "PROPOSED-jd-6.4.2",
       "canonical_slot": "jd-6.4",
@@ -4703,10 +4787,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "given"
+      "derivation_status": "given",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-7.1",
       "parent_id": "PROPOSED-jd-tree-A7",
       "canonical_slot": "jd-7.1",
@@ -4752,10 +4837,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "given"
+      "derivation_status": "given",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.1.1",
       "parent_id": "jd-7.1",
       "canonical_slot": "jd-7.1",
@@ -4804,10 +4890,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.1.1.1",
       "parent_id": "PROPOSED-jd-7.1.1",
       "canonical_slot": "jd-7.1",
@@ -4905,10 +4992,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.1.1.2",
       "parent_id": "PROPOSED-jd-7.1.1",
       "canonical_slot": "jd-7.1",
@@ -5009,10 +5097,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.1.1.3",
       "parent_id": "PROPOSED-jd-7.1.1",
       "canonical_slot": "jd-7.1",
@@ -5133,10 +5222,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.1.2",
       "parent_id": "jd-7.1",
       "canonical_slot": "jd-7.1",
@@ -5186,10 +5276,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.1.2.1",
       "parent_id": "PROPOSED-jd-7.1.2",
       "canonical_slot": "jd-7.1",
@@ -5341,10 +5432,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.1.2.2",
       "parent_id": "PROPOSED-jd-7.1.2",
       "canonical_slot": "jd-7.1",
@@ -5457,10 +5549,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.1.2.3",
       "parent_id": "PROPOSED-jd-7.1.2",
       "canonical_slot": "jd-7.1",
@@ -5574,10 +5667,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.1.2.4",
       "parent_id": "PROPOSED-jd-7.1.2",
       "canonical_slot": "jd-7.1",
@@ -5675,10 +5769,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.1.2.5",
       "parent_id": "PROPOSED-jd-7.1.2",
       "canonical_slot": "jd-7.1",
@@ -5755,7 +5850,8 @@
       "difficulty_direction": "context_dependent",
       "configuration_side": "world",
       "visibility": [
-        "sut_visible",
+        "fixture_only",
+        "grader_only",
         "hidden_gt"
       ],
       "applicable_scenarios": [
@@ -5783,19 +5879,21 @@
         "PROPOSED-jd-6a.1.2.5",
         "jd-6a.1"
       ],
-      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。\n本节点表示 Fixture 配置或 Grader 使用的实例真值，不作为 SUT 输入；SUT 只能从传感器、遥测或任务接口获得其可观测表现。",
       "projection_targets": [
         "world_config",
         "harness"
       ],
       "observation_channel": [
-        "sut_input",
+        "fixture",
+        "grader",
         "hidden_gt"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "hidden_ground_truth"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-7.2",
       "parent_id": "PROPOSED-jd-tree-A7",
       "canonical_slot": "jd-7.2",
@@ -5841,10 +5939,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "given"
+      "derivation_status": "given",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.2.1",
       "parent_id": "jd-7.2",
       "canonical_slot": "jd-7.2",
@@ -5892,10 +5991,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.2.1.1",
       "parent_id": "PROPOSED-jd-7.2.1",
       "canonical_slot": "jd-7.2",
@@ -5953,10 +6053,11 @@
         "sut_input",
         "grader"
       ],
-      "derivation_status": "TBD"
+      "derivation_status": "TBD",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.2.1.2",
       "parent_id": "PROPOSED-jd-7.2.1",
       "canonical_slot": "jd-7.2",
@@ -6014,10 +6115,11 @@
         "sut_input",
         "grader"
       ],
-      "derivation_status": "TBD"
+      "derivation_status": "TBD",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.2.1.3",
       "parent_id": "PROPOSED-jd-7.2.1",
       "canonical_slot": "jd-7.2",
@@ -6075,10 +6177,11 @@
         "sut_input",
         "grader"
       ],
-      "derivation_status": "TBD"
+      "derivation_status": "TBD",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.2.1.4",
       "parent_id": "PROPOSED-jd-7.2.1",
       "canonical_slot": "jd-7.2",
@@ -6136,10 +6239,11 @@
         "sut_input",
         "grader"
       ],
-      "derivation_status": "TBD"
+      "derivation_status": "TBD",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.2.1.5",
       "parent_id": "PROPOSED-jd-7.2.1",
       "canonical_slot": "jd-7.2",
@@ -6249,10 +6353,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.2.2",
       "parent_id": "jd-7.2",
       "canonical_slot": "jd-7.2",
@@ -6302,10 +6407,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.2.2.1",
       "parent_id": "PROPOSED-jd-7.2.2",
       "canonical_slot": "jd-7.2",
@@ -6418,10 +6524,11 @@
         "sut_input",
         "grader"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.2.2.2",
       "parent_id": "PROPOSED-jd-7.2.2",
       "canonical_slot": "jd-7.2",
@@ -6535,7 +6642,8 @@
       "difficulty_direction": "context_dependent",
       "configuration_side": "world",
       "visibility": [
-        "sut_visible",
+        "fixture_only",
+        "grader_only",
         "hidden_gt"
       ],
       "applicable_scenarios": [
@@ -6564,19 +6672,21 @@
         "PROPOSED-jd-6a.2.2.2",
         "jd-6a.2"
       ],
-      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6a → A7；语义与取值保持原来源口径。\n本节点表示 Fixture 配置或 Grader 使用的实例真值，不作为 SUT 输入；SUT 只能从传感器、遥测或任务接口获得其可观测表现。",
       "projection_targets": [
         "world_config",
         "harness"
       ],
       "observation_channel": [
-        "sut_input",
+        "fixture",
+        "grader",
         "hidden_gt"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "hidden_ground_truth"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.2.2.3",
       "parent_id": "PROPOSED-jd-7.2.2",
       "canonical_slot": "jd-7.2",
@@ -6678,10 +6788,11 @@
         "sut_input",
         "grader"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.2.2.4",
       "parent_id": "PROPOSED-jd-7.2.2",
       "canonical_slot": "jd-7.2",
@@ -6785,10 +6896,11 @@
         "sut_input",
         "grader"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.2.2.5",
       "parent_id": "PROPOSED-jd-7.2.2",
       "canonical_slot": "jd-7.2",
@@ -6843,10 +6955,11 @@
         "sut_input",
         "grader"
       ],
-      "derivation_status": "TBD"
+      "derivation_status": "TBD",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-7.3",
       "parent_id": "PROPOSED-jd-tree-A7",
       "canonical_slot": "jd-7.3",
@@ -6892,10 +7005,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "given"
+      "derivation_status": "given",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.3.1",
       "parent_id": "jd-7.3",
       "canonical_slot": "jd-7.3",
@@ -6943,10 +7057,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.3.1.1",
       "parent_id": "PROPOSED-jd-7.3.1",
       "canonical_slot": "jd-7.3",
@@ -7070,10 +7185,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.3.1.2",
       "parent_id": "PROPOSED-jd-7.3.1",
       "canonical_slot": "jd-7.3",
@@ -7234,10 +7350,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.3.1.3",
       "parent_id": "PROPOSED-jd-7.3.1",
       "canonical_slot": "jd-7.3",
@@ -7295,10 +7412,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "TBD"
+      "derivation_status": "TBD",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-7.3.1.4",
       "parent_id": "PROPOSED-jd-7.3.1",
       "canonical_slot": "jd-7.3",
@@ -7351,10 +7469,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "given"
+      "derivation_status": "given",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-8.1",
       "parent_id": "PROPOSED-jd-tree-A8",
       "canonical_slot": "jd-8.1",
@@ -7400,10 +7519,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "given"
+      "derivation_status": "given",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-8.1.1",
       "parent_id": "jd-8.1",
       "canonical_slot": "jd-8.1",
@@ -7452,10 +7572,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-8.1.1.1",
       "parent_id": "PROPOSED-jd-8.1.1",
       "canonical_slot": "jd-8.1",
@@ -7618,10 +7739,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-8.1.2",
       "parent_id": "jd-8.1",
       "canonical_slot": "jd-8.1",
@@ -7670,10 +7792,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-8.1.2.1",
       "parent_id": "PROPOSED-jd-8.1.2",
       "canonical_slot": "jd-8.1",
@@ -7799,10 +7922,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-8.1.2.2",
       "parent_id": "PROPOSED-jd-8.1.2",
       "canonical_slot": "jd-8.1",
@@ -7952,10 +8076,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-8.1.1.2",
       "parent_id": "PROPOSED-jd-8.1.1",
       "canonical_slot": "jd-8.1",
@@ -8057,10 +8182,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-8.1.2.3",
       "parent_id": "PROPOSED-jd-8.1.2",
       "canonical_slot": "jd-8.1",
@@ -8118,10 +8244,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "TBD"
+      "derivation_status": "TBD",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-8.2",
       "parent_id": "PROPOSED-jd-tree-A8",
       "canonical_slot": "jd-8.2",
@@ -8167,10 +8294,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "given"
+      "derivation_status": "given",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-8.2.1",
       "parent_id": "jd-8.2",
       "canonical_slot": "jd-8.2",
@@ -8218,10 +8346,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-8.2.1.1",
       "parent_id": "PROPOSED-jd-8.2.1",
       "canonical_slot": "jd-8.2",
@@ -8365,10 +8494,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-8.2.1.2",
       "parent_id": "PROPOSED-jd-8.2.1",
       "canonical_slot": "jd-8.2",
@@ -8468,10 +8598,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-8.2.1.3",
       "parent_id": "PROPOSED-jd-8.2.1",
       "canonical_slot": "jd-8.2",
@@ -8547,7 +8678,8 @@
       "difficulty_direction": "decreasing",
       "configuration_side": "world",
       "visibility": [
-        "sut_visible",
+        "fixture_only",
+        "grader_only",
         "hidden_gt"
       ],
       "applicable_scenarios": [
@@ -8576,19 +8708,21 @@
         "PROPOSED-jd-6b.2.1.3",
         "jd-6b.2"
       ],
-      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A6b → A8；语义与取值保持原来源口径。\n本节点表示 Fixture 配置或 Grader 使用的实例真值，不作为 SUT 输入；SUT 只能从传感器、遥测或任务接口获得其可观测表现。",
       "projection_targets": [
         "world_config",
         "harness"
       ],
       "observation_channel": [
-        "sut_input",
+        "fixture",
+        "grader",
         "hidden_gt"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "hidden_ground_truth"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-8.2.2",
       "parent_id": "jd-8.2",
       "canonical_slot": "jd-8.2",
@@ -8637,10 +8771,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-8.2.2.1",
       "parent_id": "PROPOSED-jd-8.2.2",
       "canonical_slot": "jd-8.2",
@@ -8765,10 +8900,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-8.2.2.2",
       "parent_id": "PROPOSED-jd-8.2.2",
       "canonical_slot": "jd-8.2",
@@ -8869,10 +9005,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-8.3",
       "parent_id": "PROPOSED-jd-tree-A8",
       "canonical_slot": "jd-8.3",
@@ -8918,10 +9055,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "given"
+      "derivation_status": "given",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-8.3.1",
       "parent_id": "jd-8.3",
       "canonical_slot": "jd-8.3",
@@ -8969,10 +9107,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-8.3.1.1",
       "parent_id": "PROPOSED-jd-8.3.1",
       "canonical_slot": "jd-8.3",
@@ -9099,10 +9238,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-8.3.1.2",
       "parent_id": "PROPOSED-jd-8.3.1",
       "canonical_slot": "jd-8.3",
@@ -9238,10 +9378,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-8.3.2",
       "parent_id": "jd-8.3",
       "canonical_slot": "jd-8.3",
@@ -9289,10 +9430,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-8.3.2.1",
       "parent_id": "PROPOSED-jd-8.3.2",
       "canonical_slot": "jd-8.3",
@@ -9391,10 +9533,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-8.3.2.2",
       "parent_id": "PROPOSED-jd-8.3.2",
       "canonical_slot": "jd-8.3",
@@ -9447,10 +9590,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "given"
+      "derivation_status": "given",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-10.1",
       "parent_id": "PROPOSED-jd-tree-A10",
       "canonical_slot": "jd-10.1",
@@ -9496,10 +9640,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "given"
+      "derivation_status": "given",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.1.1",
       "parent_id": "jd-10.1",
       "canonical_slot": "jd-10.1",
@@ -9549,10 +9694,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.1.1.1",
       "parent_id": "PROPOSED-jd-10.1.1",
       "canonical_slot": "jd-10.1",
@@ -9630,10 +9776,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.1.1.2",
       "parent_id": "PROPOSED-jd-10.1.1",
       "canonical_slot": "jd-10.1",
@@ -9816,10 +9963,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.1.1.3",
       "parent_id": "PROPOSED-jd-10.1.1",
       "canonical_slot": "jd-10.1",
@@ -9965,10 +10113,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.1.2",
       "parent_id": "jd-10.1",
       "canonical_slot": "jd-10.1",
@@ -10020,10 +10169,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.1.2.1",
       "parent_id": "PROPOSED-jd-10.1.2",
       "canonical_slot": "jd-10.1",
@@ -10122,10 +10272,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.1.2.2",
       "parent_id": "PROPOSED-jd-10.1.2",
       "canonical_slot": "jd-10.1",
@@ -10184,7 +10335,8 @@
       "difficulty_direction": "decreasing",
       "configuration_side": "world",
       "visibility": [
-        "sut_visible",
+        "fixture_only",
+        "grader_only",
         "hidden_gt"
       ],
       "applicable_scenarios": [
@@ -10214,19 +10366,21 @@
         "PROPOSED-jd-7.1.2.2",
         "jd-7.1"
       ],
-      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。\n本节点表示 Fixture 配置或 Grader 使用的实例真值，不作为 SUT 输入；SUT 只能从传感器、遥测或任务接口获得其可观测表现。",
       "projection_targets": [
         "world_config",
         "harness"
       ],
       "observation_channel": [
-        "sut_input",
+        "fixture",
+        "grader",
         "hidden_gt"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "hidden_ground_truth"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-10.2",
       "parent_id": "PROPOSED-jd-tree-A10",
       "canonical_slot": "jd-10.2",
@@ -10272,10 +10426,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "given"
+      "derivation_status": "given",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.2.1",
       "parent_id": "jd-10.2",
       "canonical_slot": "jd-10.2",
@@ -10323,10 +10478,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.2.1.1",
       "parent_id": "PROPOSED-jd-10.2.1",
       "canonical_slot": "jd-10.2",
@@ -10440,10 +10596,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.2.2",
       "parent_id": "jd-10.2",
       "canonical_slot": "jd-10.2",
@@ -10492,10 +10649,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.2.2.1",
       "parent_id": "PROPOSED-jd-10.2.2",
       "canonical_slot": "jd-10.2",
@@ -10645,10 +10803,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.2.1.2",
       "parent_id": "PROPOSED-jd-10.2.1",
       "canonical_slot": "jd-10.2",
@@ -10750,10 +10909,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.2.2.2",
       "parent_id": "PROPOSED-jd-10.2.2",
       "canonical_slot": "jd-10.2",
@@ -10850,16 +11010,17 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.2.2.3",
       "parent_id": "PROPOSED-jd-10.2.2",
       "canonical_slot": "jd-10.2",
       "owner_a": "A10",
       "name": "航点/航段观察动作",
-      "definition": "航点或航段附带的观察动作语义；载荷动作本体引用 A9a。",
+      "definition": "航点或航段附带的观察动作语义；载荷动作本体引用 A12。",
       "node_kind": "variable",
       "value_type": "multi_enum",
       "value_domain": [
@@ -10951,7 +11112,7 @@
       ],
       "related_global_jd": [],
       "related_jd": [
-        "jd-9a.1",
+        "jd-12.1",
         "jd-6.4",
         "jd-8.3"
       ],
@@ -10982,10 +11143,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-10.3",
       "parent_id": "PROPOSED-jd-tree-A10",
       "canonical_slot": "jd-10.3",
@@ -11031,10 +11193,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "given"
+      "derivation_status": "given",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.3.1",
       "parent_id": "jd-10.3",
       "canonical_slot": "jd-10.3",
@@ -11085,10 +11248,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.3.1.1",
       "parent_id": "PROPOSED-jd-10.3.1",
       "canonical_slot": "jd-10.3",
@@ -11213,10 +11377,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.3.1.2",
       "parent_id": "PROPOSED-jd-10.3.1",
       "canonical_slot": "jd-10.3",
@@ -11275,10 +11440,11 @@
         "sut_input",
         "grader"
       ],
-      "derivation_status": "TBD"
+      "derivation_status": "TBD",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.3.1.3",
       "parent_id": "PROPOSED-jd-10.3.1",
       "canonical_slot": "jd-10.3",
@@ -11460,10 +11626,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.3.2",
       "parent_id": "jd-10.3",
       "canonical_slot": "jd-10.3",
@@ -11514,10 +11681,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.3.2.1",
       "parent_id": "PROPOSED-jd-10.3.2",
       "canonical_slot": "jd-10.3",
@@ -11605,7 +11773,8 @@
       "difficulty_direction": "context_dependent",
       "configuration_side": "world",
       "visibility": [
-        "sut_visible",
+        "fixture_only",
+        "grader_only",
         "hidden_gt"
       ],
       "applicable_scenarios": [
@@ -11640,19 +11809,21 @@
         "PROPOSED-jd-7.3.2.1",
         "jd-7.3"
       ],
-      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。",
+      "notes": "2026-07-20 连续编号迁移：A7 → A10；语义与取值保持原来源口径。\n本节点表示 Fixture 配置或 Grader 使用的实例真值，不作为 SUT 输入；SUT 只能从传感器、遥测或任务接口获得其可观测表现。",
       "projection_targets": [
         "world_config",
         "harness"
       ],
       "observation_channel": [
-        "sut_input",
+        "fixture",
+        "grader",
         "hidden_gt"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "hidden_ground_truth"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.3.2.2",
       "parent_id": "PROPOSED-jd-10.3.2",
       "canonical_slot": "jd-10.3",
@@ -11753,10 +11924,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-10.4",
       "parent_id": "PROPOSED-jd-tree-A10",
       "canonical_slot": "jd-10.4",
@@ -11802,10 +11974,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "given"
+      "derivation_status": "given",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.4.1",
       "parent_id": "jd-10.4",
       "canonical_slot": "jd-10.4",
@@ -11855,10 +12028,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.4.1.1",
       "parent_id": "PROPOSED-jd-10.4.1",
       "canonical_slot": "jd-10.4",
@@ -12023,10 +12197,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.4.1.2",
       "parent_id": "PROPOSED-jd-10.4.1",
       "canonical_slot": "jd-10.4",
@@ -12083,10 +12258,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "TBD"
+      "derivation_status": "TBD",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.4.1.3",
       "parent_id": "PROPOSED-jd-10.4.1",
       "canonical_slot": "jd-10.4",
@@ -12185,10 +12361,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.4.2",
       "parent_id": "jd-10.4",
       "canonical_slot": "jd-10.4",
@@ -12238,10 +12415,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "proposed"
+      "derivation_status": "proposed",
+      "variable_role": "structural_group"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.4.2.1",
       "parent_id": "PROPOSED-jd-10.4.2",
       "canonical_slot": "jd-10.4",
@@ -12327,10 +12505,11 @@
       "observation_channel": [
         "sut_input"
       ],
-      "derivation_status": "derived"
+      "derivation_status": "derived",
+      "variable_role": "TBD"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-10.4.2.2",
       "parent_id": "PROPOSED-jd-10.4.2",
       "canonical_slot": "jd-10.4",
@@ -12388,7 +12567,241 @@
         "sut_input",
         "grader"
       ],
-      "derivation_status": "given"
+      "derivation_status": "given",
+      "variable_role": "TBD"
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-6.2.2.6",
+      "parent_id": "PROPOSED-jd-6.2.2",
+      "canonical_slot": "jd-6.2",
+      "owner_a": "A6",
+      "name": "目标 / 背景表面纹理复杂度",
+      "definition": "目标、障碍物或检查面相对背景的表面纹理复杂程度；用于配置可感知性条件，不等同于控制器能力或观测结果。",
+      "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
+      "value_type": "enum_or_metric",
+      "value_domain": [
+        {
+          "value": "none",
+          "label_zh": "无明显纹理",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection",
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "light_texture",
+          "label_zh": "轻纹理",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection",
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "complex_texture",
+          "label_zh": "复杂纹理",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection",
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "TBD",
+          "label_zh": "跨场景度量方法与阈值 TBD",
+          "source_refs": [],
+          "status": "TBD",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection",
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one_per_observed_surface",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "world",
+      "projection_targets": [
+        "world_config",
+        "harness"
+      ],
+      "visibility": [
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
+      ],
+      "observation_channel": [
+        "fixture",
+        "grader",
+        "hidden_gt"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario",
+        "highway_inspection",
+        "campus_inspection",
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [
+        "jd-0.3"
+      ],
+      "related_jd": [
+        "PROPOSED-jd-11.5.8.1"
+      ],
+      "used_by_axl": [
+        "A6×L1",
+        "A6×L2",
+        "A6×L3",
+        "A6×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": "无 / 轻纹理 / 复杂纹理仅来自白墙窄缝 v0.6 团队草案。能否跨高速、园区和其他场景复用，以及客观度量方法，均待确认。"
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-6.2.2.7",
+      "parent_id": "PROPOSED-jd-6.2.2",
+      "canonical_slot": "jd-6.2",
+      "owner_a": "A6",
+      "name": "目标 / 开口—背景局部对比度",
+      "definition": "目标、病害、开口或通行空间与其局部背景之间的可辨识对比条件；它是世界侧场景变量，观测后的低对比退化状态仍由 PROPOSED-jd-6.2.2.4 表达。",
+      "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
+      "value_type": "enum_or_metric",
+      "value_domain": [
+        {
+          "value": "high",
+          "label_zh": "高",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection",
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "medium",
+          "label_zh": "中",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection",
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "low",
+          "label_zh": "低",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection",
+            "white_wall_narrow_gap"
+          ]
+        },
+        {
+          "value": "TBD",
+          "label_zh": "对比度计算口径与档位阈值 TBD",
+          "source_refs": [],
+          "status": "TBD",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection",
+            "white_wall_narrow_gap"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one_per_target_background_pair",
+      "difficulty_direction": "decreasing",
+      "configuration_side": "world",
+      "projection_targets": [
+        "world_config",
+        "harness"
+      ],
+      "visibility": [
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
+      ],
+      "observation_channel": [
+        "fixture",
+        "grader",
+        "hidden_gt"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario",
+        "highway_inspection",
+        "campus_inspection",
+        "white_wall_narrow_gap"
+      ],
+      "related_global_jd": [
+        "jd-0.3"
+      ],
+      "related_jd": [
+        "PROPOSED-jd-6.2.2.4",
+        "PROPOSED-jd-11.5.8.2"
+      ],
+      "used_by_axl": [
+        "A6×L1",
+        "A6×L2",
+        "A6×L3",
+        "A6×L4"
+      ],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": "高 / 中 / 低只保留白墙窄缝 v0.6 原始档位；未发明亮度、色差、纹理或传感器域的计算公式与阈值。"
     }
   ]
 }

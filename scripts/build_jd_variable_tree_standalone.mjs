@@ -40,7 +40,7 @@ ${css}
     <div class="brand">
       <span class="brand-kicker">UAV BENCHMARK</span>
       <strong>JD 业务变量树</strong>
-      <span>A1 · A2 · A3 · A4 · A5 · A6 · A7 · A8 · A9 · A10 · A11</span>
+      <span>A1–A17 · JD-global · 默认全部展开</span>
     </div>
     <div class="header-actions">
       <button class="review-action" id="importCommentsButton" type="button">导入建议</button>

@@ -1,7 +1,7 @@
 {
   "schema": "uav-benchmark-jd-variable-tree",
-  "schema_version": "0.3.0",
-  "generated_at": "2026-07-21",
+  "schema_version": "0.4.0",
+  "generated_at": "2026-07-22",
   "generated_by": "scripts/generate_jd_variable_tree_version1.mjs",
   "ability_id_scheme": "ability-id-v3-2026-07-20",
   "numbering_scheme": "ability-id-v3-2026-07-20",
@@ -83,6 +83,16 @@
     "jd_rule": "L0 不进入 JD 值域，也不写入 used_by_axl；episode 层另存 coverage_level=L0。"
   },
   "controlled_vocabularies": {
+    "variable_role": [
+      "configuration_input",
+      "contract_schema",
+      "runtime_observation",
+      "derived_metric",
+      "hidden_ground_truth",
+      "structural_group",
+      "example_profile",
+      "TBD"
+    ],
     "configuration_side": [
       "world",
       "user",
@@ -150,6 +160,7 @@
     "name",
     "definition",
     "node_kind",
+    "variable_role",
     "value_type",
     "value_domain",
     "unit",
@@ -180,6 +191,9 @@
     "A×L 仅作责任引用，L1–L4 不进入 JD 取值域；L0 是 episode 覆盖哨兵。",
     "缺少依据的阈值、时限、业务判据、安全规则和 simulator 接口保持 TBD。",
     "configuration_side、projection_targets、visibility 和 observation_channel 分列。",
+    "variable_role 仅标注节点在数据流中的机器语义，不新增业务变量或改写 canonical 定义。",
+    "候选值逐值记录 source_refs 与 status；未逐值证明的候选不得由节点来源机械升级为 source_supported。",
+    "PROPOSED 子树可以不存在，但所有 related_jd、depends_on 和启用条件引用始终必须指向现存节点。",
     "derivation_status 与 evidence_status 分列。"
   ],
   "decision_log": [
@@ -297,6 +311,21 @@
       "decision_id": "schema-derivation-status",
       "status": "confirmed_by_user",
       "decision": "derivation_status 与 evidence_status 分列。"
+    },
+    {
+      "decision_id": "schema-variable-role",
+      "status": "confirmed_by_user",
+      "decision": "增加 variable_role 以区分可配置输入、合同/schema、运行时观察、派生指标、Hidden GT、结构节点与示例 Profile；该字段不是新增 JD 变量。"
+    },
+    {
+      "decision_id": "value-level-evidence",
+      "status": "confirmed_by_user",
+      "decision": "候选值必须独立声明 source_refs 与 status；缺少直接证据时保持 inferred_candidate 或 TBD。"
+    },
+    {
+      "decision_id": "strict-proposed-references",
+      "status": "confirmed_by_user",
+      "decision": "11.4/11.5 可选，但引用完整性不豁免；缺失 proposed 子树时不得保留指向它的悬空引用。"
     }
   ],
   "catalog_id": "jd-variable-tree-a11-control-version1-draft",
@@ -413,14 +442,15 @@
   ],
   "nodes": [
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-tree-A11",
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
       "owner_a": "A11",
-      "name": "飞行控制 / 执行机构",
+      "name": "控制飞行",
       "definition": "描述飞行控制、执行机构、控制质量、控制工作机制与局部控制恢复相关的 JD 业务变量；近障与受限空间条件通过非 canonical 场景 Profile 绑定到正式槽位。",
       "node_kind": "capability_root",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -471,7 +501,7 @@
       "notes": "A11 能力根及 jd-11.1、jd-11.2、jd-11.3 以 ability-id-v3 权威字典为准；PROPOSED-jd-11.4 与 PROPOSED-jd-11.5 均不计入当前 66 个 canonical 槽位。"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-11.1",
       "parent_id": "PROPOSED-jd-tree-A11",
       "canonical_slot": "jd-11.1",
@@ -479,6 +509,7 @@
       "name": "控制质量先验",
       "definition": "该 JD 对控制质量的容忍范围，包括位置、姿态、速度与航向误差。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -530,7 +561,7 @@
       "notes": "canonical 名称与定义取自 ability-id-v3 权威机读源；下级 PROPOSED 节点为巡检类保守归纳。"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-11.2",
       "parent_id": "PROPOSED-jd-tree-A11",
       "canonical_slot": "jd-11.2",
@@ -538,6 +569,7 @@
       "name": "控制工作机制",
       "definition": "该 JD 的控制工作范式，例如 PID、MPC、自适应控制、增益调度与 RL controller。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -588,7 +620,7 @@
       "notes": "canonical 名称与定义取自 ability-id-v3 权威机读源；下级 PROPOSED 节点为巡检类保守归纳。"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-11.3",
       "parent_id": "PROPOSED-jd-tree-A11",
       "canonical_slot": "jd-11.3",
@@ -596,6 +628,7 @@
       "name": "控制处置策略适用集",
       "definition": "该 JD 下 L4 可用且有效的控制处置策略子集，例如模式切换、降速、增大裕度、等待稳定与请求检查。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -645,7 +678,7 @@
       "notes": "canonical 名称与定义取自 ability-id-v3 权威机读源；下级 PROPOSED 节点为巡检类保守归纳。"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.1.1",
       "parent_id": "jd-11.1",
       "canonical_slot": "jd-11.1",
@@ -653,6 +686,7 @@
       "name": "跟踪误差要求",
       "definition": "任务允许的期望控制状态与实际控制状态之间的误差要求；具体数值须由场景、平台和评测方案共同确认。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -706,7 +740,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.1.1.1",
       "parent_id": "PROPOSED-jd-11.1.1",
       "canonical_slot": "jd-11.1",
@@ -714,6 +748,7 @@
       "name": "位置误差容忍范围",
       "definition": "水平与垂向位置设定值相对实际位置的允许误差向量；阈值按巡检阶段分别配置。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -778,7 +813,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.1.1.2",
       "parent_id": "PROPOSED-jd-11.1.1",
       "canonical_slot": "jd-11.1",
@@ -786,6 +821,7 @@
       "name": "速度误差容忍范围",
       "definition": "水平与垂向速度设定值相对实际速度的允许误差向量；阈值保持 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -850,7 +886,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.1.1.3",
       "parent_id": "PROPOSED-jd-11.1.1",
       "canonical_slot": "jd-11.1",
@@ -858,6 +894,7 @@
       "name": "姿态误差容忍范围",
       "definition": "横滚与俯仰姿态设定值相对实际姿态的允许误差向量；阈值保持 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -922,7 +959,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.1.1.4",
       "parent_id": "PROPOSED-jd-11.1.1",
       "canonical_slot": "jd-11.1",
@@ -930,6 +967,7 @@
       "name": "航向误差容忍范围",
       "definition": "航向或偏航设定值相对实际航向的允许误差；角度表示和阈值保持 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "number_or_range",
       "value_domain": [
         {
@@ -994,7 +1032,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.1.2",
       "parent_id": "jd-11.1",
       "canonical_slot": "jd-11.1",
@@ -1002,6 +1040,7 @@
       "name": "瞬态与稳定性质量",
       "definition": "描述控制响应、超调、调节过程、振荡与抖动等质量要求，不预设具体阈值。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -1055,7 +1094,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.1.2.1",
       "parent_id": "PROPOSED-jd-11.1.2",
       "canonical_slot": "jd-11.1",
@@ -1063,6 +1102,7 @@
       "name": "误差评价方式",
       "definition": "用于汇总控制误差的评价方式；正式评测窗口、统计量和组合规则待确认。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -1177,7 +1217,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.1.2.2",
       "parent_id": "PROPOSED-jd-11.1.2",
       "canonical_slot": "jd-11.1",
@@ -1185,6 +1225,7 @@
       "name": "超调容忍范围",
       "definition": "设定值变化后的超调允许范围；数值和计算窗口保持 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "number_or_range",
       "value_domain": [
         {
@@ -1249,7 +1290,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.1.2.3",
       "parent_id": "PROPOSED-jd-11.1.2",
       "canonical_slot": "jd-11.1",
@@ -1257,6 +1298,7 @@
       "name": "稳定 / 调节时间要求",
       "definition": "控制状态进入并持续保持在允许范围内所需的时间要求；具体窗口保持 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "duration_or_range",
       "value_domain": [
         {
@@ -1321,7 +1363,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.1.2.4",
       "parent_id": "PROPOSED-jd-11.1.2",
       "canonical_slot": "jd-11.1",
@@ -1329,6 +1371,7 @@
       "name": "振荡与抖动容忍范围",
       "definition": "控制状态振荡、姿态抖动或高频变化的允许程度；频段、幅值和持续时间保持 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -1393,7 +1436,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.1.3",
       "parent_id": "jd-11.1",
       "canonical_slot": "jd-11.1",
@@ -1401,6 +1444,7 @@
       "name": "控制与执行余量",
       "definition": "描述执行机构饱和及剩余控制权威，作为控制异常识别和局部恢复的输入。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -1453,7 +1497,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.1.3.1",
       "parent_id": "PROPOSED-jd-11.1.3",
       "canonical_slot": "jd-11.1",
@@ -1461,6 +1505,7 @@
       "name": "执行机构饱和状态",
       "definition": "执行机构或控制分配是否发生上限、下限或动态速率饱和；正式状态映射待确认。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -1579,7 +1624,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.1.3.2",
       "parent_id": "PROPOSED-jd-11.1.3",
       "canonical_slot": "jd-11.1",
@@ -1587,6 +1632,7 @@
       "name": "剩余控制权威",
       "definition": "当前状态下用于继续跟踪或恢复稳定的剩余控制能力；表示方式和阈值保持 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -1651,7 +1697,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.1.4",
       "parent_id": "jd-11.1",
       "canonical_slot": "jd-11.1",
@@ -1659,6 +1705,7 @@
       "name": "巡检阶段质量 Profile",
       "definition": "按巡检阶段激活不同控制质量要求；具体阈值由对应场景 Profile 绑定。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -1711,7 +1758,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.1.4.1",
       "parent_id": "PROPOSED-jd-11.1.4",
       "canonical_slot": "jd-11.1",
@@ -1719,6 +1766,7 @@
       "name": "控制质量激活阶段",
       "definition": "选择当前控制质量要求适用的巡检作业阶段；阶段名称为跨场景候选。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -1837,7 +1885,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.2.1",
       "parent_id": "jd-11.2",
       "canonical_slot": "jd-11.2",
@@ -1845,6 +1893,7 @@
       "name": "控制目标与指令层级",
       "definition": "描述 A11 接收和跟踪的飞控级目标类型、参考系与指令连续性要求。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -1898,7 +1947,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.2.1.1",
       "parent_id": "PROPOSED-jd-11.2.1",
       "canonical_slot": "jd-11.2",
@@ -1906,6 +1955,7 @@
       "name": "控制目标类型",
       "definition": "控制器接收的设定值层级；组合支持情况由具体平台能力声明决定。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -2042,7 +2092,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.2.1.2",
       "parent_id": "PROPOSED-jd-11.2.1",
       "canonical_slot": "jd-11.2",
@@ -2050,6 +2100,7 @@
       "name": "指令参考系",
       "definition": "控制目标所采用的坐标或机体参考系；需与 A7/A8 的状态估计和相对几何保持一致。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -2155,7 +2206,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.2.1.3",
       "parent_id": "PROPOSED-jd-11.2.1",
       "canonical_slot": "jd-11.2",
@@ -2163,6 +2214,7 @@
       "name": "指令更新与连续性要求",
       "definition": "指令更新频率、延迟、丢帧容忍和设定值连续性要求；v0.6 数值不推广，正式范围保持 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -2227,7 +2279,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.2.2",
       "parent_id": "jd-11.2",
       "canonical_slot": "jd-11.2",
@@ -2235,6 +2287,7 @@
       "name": "保持与跟踪模式",
       "definition": "A11 在当前执行片段内采用的飞控级保持或跟踪模式；任务路径仍由 A10 决定。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -2287,7 +2340,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.2.2.1",
       "parent_id": "PROPOSED-jd-11.2.2",
       "canonical_slot": "jd-11.2",
@@ -2295,6 +2348,7 @@
       "name": "控制保持 / 跟踪模式",
       "definition": "当前片段采用的姿态、高度、位置、速度或轨迹片段保持与跟踪模式。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -2431,7 +2485,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.2.3",
       "parent_id": "jd-11.2",
       "canonical_slot": "jd-11.2",
@@ -2439,6 +2493,7 @@
       "name": "控制回路与执行分配",
       "definition": "控制回路层级、外环旁路和控制分配机制；用于描述可配置或可声明的工作范式。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -2491,7 +2546,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.2.3.1",
       "parent_id": "PROPOSED-jd-11.2.3",
       "canonical_slot": "jd-11.2",
@@ -2499,6 +2554,7 @@
       "name": "控制回路结构",
       "definition": "控制器使用的外环与内环组合；具体实现可以按控制目标旁路部分外环。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -2588,7 +2644,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.2.3.2",
       "parent_id": "PROPOSED-jd-11.2.3",
       "canonical_slot": "jd-11.2",
@@ -2596,6 +2652,7 @@
       "name": "控制分配机制",
       "definition": "期望力与力矩到执行机构输出的分配方式；平台支持和参数范围必须由平台资料声明。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -2688,7 +2745,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.2.4",
       "parent_id": "jd-11.2",
       "canonical_slot": "jd-11.2",
@@ -2696,6 +2753,7 @@
       "name": "控制器类型声明",
       "definition": "保留受审 JD 中的控制器家族示例，用作 SUT 声明或 Trace，不默认作为场景难度变量。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -2747,7 +2805,7 @@
       "notes": "PX4 文档中的 MPC 常指 Multicopter Position Controller；机读枚举使用完整名称 model_predictive_control 避免缩写混淆。"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.2.4.1",
       "parent_id": "PROPOSED-jd-11.2.4",
       "canonical_slot": "jd-11.2",
@@ -2755,6 +2813,7 @@
       "name": "控制器家族",
       "definition": "SUT 声明的控制器家族；taxonomy 完整性和是否进入 benchmark 分层仍待确认。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -2893,7 +2952,7 @@
       "notes": "该节点描述 SUT 实现声明，不应默认投影为 world_config 或由 Seed 随机采样。"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.2.5",
       "parent_id": "jd-11.2",
       "canonical_slot": "jd-11.2",
@@ -2901,6 +2960,7 @@
       "name": "控制输入前提",
       "definition": "控制模式启用所需的状态估计和执行机构可用性；只保存引用，不复制 A7/A8/A9 的变量。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -2955,7 +3015,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.2.5.1",
       "parent_id": "PROPOSED-jd-11.2.5",
       "canonical_slot": "jd-11.2",
@@ -2963,6 +3023,7 @@
       "name": "所需状态估计引用",
       "definition": "当前控制目标需要的位置、速度、姿态、航向或相对几何状态引用。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_reference",
       "value_domain": [
         {
@@ -3067,7 +3128,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.2.5.2",
       "parent_id": "PROPOSED-jd-11.2.5",
       "canonical_slot": "jd-11.2",
@@ -3075,6 +3136,7 @@
       "name": "执行机构可用状态",
       "definition": "执行机构及控制分配对当前控制模式的可用程度；故障分类引用平台与 A9 资源健康状态。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -3182,7 +3244,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.3.1",
       "parent_id": "jd-11.3",
       "canonical_slot": "jd-11.3",
@@ -3190,6 +3252,7 @@
       "name": "控制异常触发",
       "definition": "按 A11×L3 责任识别需要局部控制处置的异常类别；具体判据引用 jd-11.1。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -3242,7 +3305,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.3.1.1",
       "parent_id": "PROPOSED-jd-11.3.1",
       "canonical_slot": "jd-11.3",
@@ -3250,6 +3313,7 @@
       "name": "控制异常类别",
       "definition": "触发局部控制恢复的偏差、饱和、振荡、姿态异常、风扰退化或执行余量下降。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -3381,7 +3445,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.3.2",
       "parent_id": "jd-11.3",
       "canonical_slot": "jd-11.3",
@@ -3389,6 +3453,7 @@
       "name": "可用局部处置动作",
       "definition": "当前 JD 下允许由 A11 选择、且不直接改变任务级航路或进入安全态的局部控制动作。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -3441,7 +3506,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.3.2.1",
       "parent_id": "PROPOSED-jd-11.3.2",
       "canonical_slot": "jd-11.3",
@@ -3449,6 +3514,7 @@
       "name": "局部控制处置动作集",
       "definition": "处置动作直接继承受审 JD 与 A11×L4；动作参数、组合与优先级仍待确认。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -3572,7 +3638,7 @@
       "notes": "改变任务速度 Profile、航路或高度属于 A10；返航、迫降或进入 safe state 属于 A16。"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.3.3",
       "parent_id": "jd-11.3",
       "canonical_slot": "jd-11.3",
@@ -3580,6 +3646,7 @@
       "name": "策略适用条件",
       "definition": "控制处置动作在任务阶段、当前模式、异常类型和剩余控制权威上的适用范围。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -3629,7 +3696,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.3.3.1",
       "parent_id": "PROPOSED-jd-11.3.3",
       "canonical_slot": "jd-11.3",
@@ -3637,6 +3704,7 @@
       "name": "适用任务阶段",
       "definition": "策略允许启用的巡检阶段集合。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_reference",
       "value_domain": [
         {
@@ -3703,7 +3771,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.3.3.2",
       "parent_id": "PROPOSED-jd-11.3.3",
       "canonical_slot": "jd-11.3",
@@ -3711,6 +3779,7 @@
       "name": "适用控制模式",
       "definition": "策略允许作用的当前保持或跟踪模式集合。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_reference",
       "value_domain": [
         {
@@ -3776,7 +3845,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.3.3.3",
       "parent_id": "PROPOSED-jd-11.3.3",
       "canonical_slot": "jd-11.3",
@@ -3784,6 +3853,7 @@
       "name": "所需剩余控制权威",
       "definition": "执行策略前必须具备的最低剩余控制权威；表示方式和阈值保持 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -3847,7 +3917,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.3.4",
       "parent_id": "jd-11.3",
       "canonical_slot": "jd-11.3",
@@ -3855,6 +3925,7 @@
       "name": "模式切换保护",
       "definition": "控制模式切换的入口、设定值连续性、回退与超时条件；正式状态机保持 TBD。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -3904,7 +3975,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.3.4.1",
       "parent_id": "PROPOSED-jd-11.3.4",
       "canonical_slot": "jd-11.3",
@@ -3912,6 +3983,7 @@
       "name": "模式切换保护规则",
       "definition": "描述切换入口、状态交接、设定值连续性、回退和超时；不得推断具体时限。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -3973,7 +4045,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.3.5",
       "parent_id": "jd-11.3",
       "canonical_slot": "jd-11.3",
@@ -3981,6 +4053,7 @@
       "name": "处置后验证与升级",
       "definition": "验证控制状态是否恢复可信，并在无法局部恢复时升级给其他能力或人工。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -4036,7 +4109,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.3.5.1",
       "parent_id": "PROPOSED-jd-11.3.5",
       "canonical_slot": "jd-11.3",
@@ -4044,6 +4117,7 @@
       "name": "处置后控制状态",
       "definition": "处置动作后控制质量、振荡、饱和和控制权威的综合恢复状态；通过标准保持 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -4157,7 +4231,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.3.5.2",
       "parent_id": "PROPOSED-jd-11.3.5",
       "canonical_slot": "jd-11.3",
@@ -4165,6 +4239,7 @@
       "name": "跨能力升级目标",
       "definition": "A11 无法在当前执行片段内恢复控制质量时，将问题升级到定位、资源、航迹、安全或人工确认。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_reference",
       "value_domain": [
         {
@@ -4286,14 +4361,15 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4",
       "parent_id": "PROPOSED-jd-tree-A11",
       "canonical_slot": null,
       "owner_a": "A11",
-      "name": "控制执行条件与动态包络",
+      "name": "当前可执行控制包络",
       "definition": "描述某个平台、载荷、控制接口和运行状态下可实际执行的控制边界；用于连接 jd-11.1 控制质量、jd-11.2 控制机制、jd-11.3 处置策略与具体场景 Profile。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -4353,7 +4429,7 @@
       "notes": "该节点用于补齐 A11 的结构空档，但不是当前 66 槽位中的 canonical JD。具体范围、阈值和正式编号均待确认。"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4.1",
       "parent_id": "PROPOSED-jd-11.4",
       "canonical_slot": null,
@@ -4361,6 +4437,7 @@
       "name": "平台与载荷执行基准",
       "definition": "引用决定控制执行边界的平台静态档案、机体占用空间和当前任务载荷配置，不在 A11 重复保存平台静态参数。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -4411,7 +4488,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4.1.1",
       "parent_id": "PROPOSED-jd-11.4.1",
       "canonical_slot": null,
@@ -4419,6 +4496,7 @@
       "name": "平台档案引用",
       "definition": "引用 jd-2.2 中的平台类型、尺寸、质量、运动学能力和设计运行域；A11 只读取其对控制执行的约束。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference",
       "value_domain": [
         {
@@ -4482,7 +4560,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4.1.2",
       "parent_id": "PROPOSED-jd-11.4.1",
       "canonical_slot": null,
@@ -4490,6 +4568,7 @@
       "name": "机体占用空间引用",
       "definition": "引用机体、旋翼、起落架和外伸部件共同形成的有效占用空间；正式几何表示和来源待确认。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference_or_geometry_profile",
       "value_domain": [
         {
@@ -4551,7 +4630,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4.1.3",
       "parent_id": "PROPOSED-jd-11.4.1",
       "canonical_slot": null,
@@ -4559,6 +4638,7 @@
       "name": "载荷配置引用",
       "definition": "引用当前任务载荷及其质量、重心、外形和工作状态对控制执行包络的影响。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference",
       "value_domain": [
         {
@@ -4634,7 +4714,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4.2",
       "parent_id": "PROPOSED-jd-11.4",
       "canonical_slot": null,
@@ -4642,6 +4722,7 @@
       "name": "指令接口执行约束",
       "definition": "描述已选控制目标在接口层的更新、时序、连续性和失效边界；不重复定义 jd-11.2 的控制目标 taxonomy。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -4692,7 +4773,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4.2.1",
       "parent_id": "PROPOSED-jd-11.4.2",
       "canonical_slot": null,
@@ -4700,6 +4781,7 @@
       "name": "控制目标引用",
       "definition": "引用 jd-11.2 下当前启用的位置、速度、加速度 / 力、姿态、角速度或推力控制目标。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference",
       "value_domain": [
         {
@@ -4764,7 +4846,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4.2.2",
       "parent_id": "PROPOSED-jd-11.4.2",
       "canonical_slot": null,
@@ -4772,6 +4854,7 @@
       "name": "指令更新频率范围",
       "definition": "控制指令或设定值被接受并持续有效所需的更新频率范围；不得套用白墙示例的固定值。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "number_or_range",
       "value_domain": [
         {
@@ -4831,7 +4914,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4.2.3",
       "parent_id": "PROPOSED-jd-11.4.2",
       "canonical_slot": null,
@@ -4839,6 +4922,7 @@
       "name": "指令时延与超时边界",
       "definition": "指令从生成到生效的允许时延、丢更容忍和超时失效边界；具体时限保持 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -4897,7 +4981,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4.2.4",
       "parent_id": "PROPOSED-jd-11.4.2",
       "canonical_slot": null,
@@ -4905,6 +4989,7 @@
       "name": "指令连续性要求",
       "definition": "模式切换或设定值更新过程中，对位置、速度、姿态、推力等指令连续性的要求。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -4967,7 +5052,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4.3",
       "parent_id": "PROPOSED-jd-11.4",
       "canonical_slot": null,
@@ -4975,6 +5060,7 @@
       "name": "运动与姿态动态包络",
       "definition": "描述在当前平台、载荷、模式和环境下允许执行的速度、加速度、姿态与角速度范围。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -5030,7 +5116,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4.3.1",
       "parent_id": "PROPOSED-jd-11.4.3",
       "canonical_slot": null,
@@ -5038,6 +5124,7 @@
       "name": "水平速度包络",
       "definition": "当前条件下可指令和可稳定跟踪的水平速度范围。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "number_or_range_or_axis_object",
       "value_domain": [
         {
@@ -5104,7 +5191,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4.3.2",
       "parent_id": "PROPOSED-jd-11.4.3",
       "canonical_slot": null,
@@ -5112,6 +5199,7 @@
       "name": "垂向速度包络",
       "definition": "当前条件下可指令和可稳定跟踪的爬升、下降速度范围。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "number_or_range_or_axis_object",
       "value_domain": [
         {
@@ -5178,7 +5266,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4.3.3",
       "parent_id": "PROPOSED-jd-11.4.3",
       "canonical_slot": null,
@@ -5186,6 +5274,7 @@
       "name": "加速度 / 减速度包络",
       "definition": "当前条件下可指令和可稳定实现的平动加速度与减速度范围。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "number_or_range_or_axis_object",
       "value_domain": [
         {
@@ -5252,7 +5341,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4.3.4",
       "parent_id": "PROPOSED-jd-11.4.3",
       "canonical_slot": null,
@@ -5260,6 +5349,7 @@
       "name": "姿态角包络",
       "definition": "当前条件下可指令和可保持的滚转、俯仰与航向角范围。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "number_or_range_or_axis_object",
       "value_domain": [
         {
@@ -5326,7 +5416,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4.3.5",
       "parent_id": "PROPOSED-jd-11.4.3",
       "canonical_slot": null,
@@ -5334,6 +5424,7 @@
       "name": "角速度包络",
       "definition": "当前条件下可指令和可稳定实现的机体系角速度范围。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "number_or_range_or_axis_object",
       "value_domain": [
         {
@@ -5400,7 +5491,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4.4",
       "parent_id": "PROPOSED-jd-11.4",
       "canonical_slot": null,
@@ -5408,6 +5499,7 @@
       "name": "执行机构约束",
       "definition": "描述执行机构与控制分配在各控制轴上的可用性、限幅、速率和剩余执行能力。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -5459,7 +5551,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4.4.1",
       "parent_id": "PROPOSED-jd-11.4.4",
       "canonical_slot": null,
@@ -5467,6 +5559,7 @@
       "name": "控制轴可用性",
       "definition": "滚转、俯仰、偏航、升力及平动控制轴当前是否具备有效控制分配能力。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "axis_status_object",
       "value_domain": [
         {
@@ -5569,7 +5662,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4.4.2",
       "parent_id": "PROPOSED-jd-11.4.4",
       "canonical_slot": null,
@@ -5577,6 +5670,7 @@
       "name": "执行机构输出与速率限制",
       "definition": "各执行机构或控制轴的输出上下限、变化速率和可能的死区；具体参数必须由平台资料给出。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "actuator_limit_object",
       "value_domain": [
         {
@@ -5639,7 +5733,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4.4.3",
       "parent_id": "PROPOSED-jd-11.4.4",
       "canonical_slot": null,
@@ -5647,6 +5741,7 @@
       "name": "执行余量下限",
       "definition": "允许继续执行当前控制片段所需的最低剩余执行能力；阈值及其安全含义必须与 A16 联合确认。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "number_range_or_axis_object",
       "value_domain": [
         {
@@ -5711,7 +5806,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4.5",
       "parent_id": "PROPOSED-jd-11.4",
       "canonical_slot": null,
@@ -5719,6 +5814,7 @@
       "name": "包络修正与适用条件",
       "definition": "描述环境、载荷、控制模式和任务阶段对基础执行包络的降额、收缩或失效条件。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -5773,7 +5869,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4.5.1",
       "parent_id": "PROPOSED-jd-11.4.5",
       "canonical_slot": null,
@@ -5781,6 +5877,7 @@
       "name": "环境扰动修正",
       "definition": "风、气流和其他扰动对基础速度、姿态、控制余量及跟踪质量包络的修正关系。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference_or_rule_object",
       "value_domain": [
         {
@@ -5858,7 +5955,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4.5.2",
       "parent_id": "PROPOSED-jd-11.4.5",
       "canonical_slot": null,
@@ -5866,6 +5963,7 @@
       "name": "载荷配置修正",
       "definition": "载荷质量、重心、外形或工作状态对基础执行包络的修正关系。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference_or_rule_object",
       "value_domain": [
         {
@@ -5942,7 +6040,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4.5.3",
       "parent_id": "PROPOSED-jd-11.4.5",
       "canonical_slot": null,
@@ -5950,6 +6048,7 @@
       "name": "控制模式修正",
       "definition": "不同保持、跟踪或降级模式对可用控制目标、动态包络和执行余量的修正关系。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference_or_rule_object",
       "value_domain": [
         {
@@ -6024,7 +6123,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.4.5.4",
       "parent_id": "PROPOSED-jd-11.4.5",
       "canonical_slot": null,
@@ -6032,6 +6131,7 @@
       "name": "任务阶段适用性",
       "definition": "执行包络在起降、航路转场、连续扫描、定点观测和抵近检查阶段的适用范围。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference_or_multi_enum",
       "value_domain": [
         {
@@ -6107,7 +6207,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5",
       "parent_id": "PROPOSED-jd-tree-A11",
       "canonical_slot": null,
@@ -6115,6 +6215,7 @@
       "name": "近障 / 受限空间控制场景 Profile",
       "definition": "将障碍物、通行空间、布局、动态性和遭遇关系抽象为跨巡检场景可复用的控制压力 Profile；该分支不是当前 66 槽位中的 canonical JD。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -6169,7 +6270,7 @@
       "notes": "白墙窄缝 v0.6 已降为本 Profile 的示例；是否将 jd-11.5 正式纳入 JD 字典仍待确认。"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.1",
       "parent_id": "PROPOSED-jd-11.5",
       "canonical_slot": null,
@@ -6177,6 +6278,7 @@
       "name": "障碍物几何",
       "definition": "障碍物本体的形态、尺寸与边缘规则性。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -6223,7 +6325,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.2",
       "parent_id": "PROPOSED-jd-11.5",
       "canonical_slot": null,
@@ -6231,6 +6333,7 @@
       "name": "通行空间几何",
       "definition": "障碍物之间或内部可供通过、抵近或观察的净空间。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -6277,7 +6380,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.3",
       "parent_id": "PROPOSED-jd-11.5",
       "canonical_slot": null,
@@ -6285,6 +6388,7 @@
       "name": "障碍物布局",
       "definition": "多个障碍物之间的数量、间距、角度、对齐和拓扑关系。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -6331,7 +6435,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.4",
       "parent_id": "PROPOSED-jd-11.5",
       "canonical_slot": null,
@@ -6339,6 +6443,7 @@
       "name": "障碍物动态性",
       "definition": "障碍物的运动状态、速度、方向、模式与可预测性。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -6385,7 +6490,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.5",
       "parent_id": "PROPOSED-jd-11.5",
       "canonical_slot": null,
@@ -6393,6 +6498,7 @@
       "name": "遭遇与通过关系",
       "definition": "巡检任务相对障碍物的绕行、穿越、沿面、抵近或定点观察关系。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -6439,7 +6545,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.6",
       "parent_id": "PROPOSED-jd-11.5",
       "canonical_slot": null,
@@ -6447,6 +6553,7 @@
       "name": "控制压力派生量",
       "definition": "由世界几何、平台包络和任务关系推导的通行余量与响应窗口。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -6493,7 +6600,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.7",
       "parent_id": "PROPOSED-jd-11.5",
       "canonical_slot": null,
@@ -6501,6 +6608,7 @@
       "name": "A11 控制要求绑定",
       "definition": "将场景 Profile 投影到 jd-11.1、jd-11.2、jd-11.3、PROPOSED-jd-11.4，并引用 A16 安全边界。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -6553,7 +6661,62 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-11.5.8",
+      "parent_id": "PROPOSED-jd-11.5",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "外观与可感知性 Profile 引用",
+      "definition": "引用 A6 的表面纹理与局部对比变量，以及 jd-0.3 的光学基线和动态光线扰动；A11 不重复定义感知变量。",
+      "node_kind": "group",
+      "variable_role": "structural_group",
+      "value_type": "none",
+      "value_domain": null,
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "TBD",
+      "configuration_side": "world",
+      "projection_targets": [
+        "world_config",
+        "harness"
+      ],
+      "visibility": [
+        "sut_visible",
+        "grader_visible"
+      ],
+      "observation_channel": [
+        "sut_input",
+        "sut_trace",
+        "grader"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario",
+        "highway_inspection",
+        "campus_inspection"
+      ],
+      "related_global_jd": [
+        "jd-0.3",
+        "jd-0.9",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06",
+        "W-MOT-UAV-BRIDGE"
+      ],
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.1.1",
       "parent_id": "PROPOSED-jd-11.5.1",
       "canonical_slot": null,
@@ -6561,6 +6724,7 @@
       "name": "障碍物形态",
       "definition": "障碍物本体的几何形态类别；正式 taxonomy 待巡检场景研究确认。",
       "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
       "value_type": "enum",
       "value_domain": [
         {
@@ -6631,11 +6795,12 @@
         "harness"
       ],
       "visibility": [
-        "sut_visible",
-        "grader_visible"
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
       ],
       "observation_channel": [
-        "sut_input",
+        "fixture",
         "grader",
         "hidden_gt"
       ],
@@ -6665,7 +6830,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.1.2",
       "parent_id": "PROPOSED-jd-11.5.1",
       "canonical_slot": null,
@@ -6673,6 +6838,7 @@
       "name": "障碍物尺寸向量",
       "definition": "障碍物的高度、宽度与纵深；单位和数值必须来自世界配置。",
       "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
       "value_type": "vector3_or_object",
       "value_domain": [
         {
@@ -6697,11 +6863,12 @@
         "harness"
       ],
       "visibility": [
-        "sut_visible",
-        "grader_visible"
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
       ],
       "observation_channel": [
-        "sut_input",
+        "fixture",
         "grader",
         "hidden_gt"
       ],
@@ -6731,7 +6898,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.1.3",
       "parent_id": "PROPOSED-jd-11.5.1",
       "canonical_slot": null,
@@ -6739,6 +6906,7 @@
       "name": "边缘规则性",
       "definition": "障碍物边缘和轮廓是否规则、混合或不规则。",
       "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
       "value_type": "enum",
       "value_domain": [
         {
@@ -6798,11 +6966,12 @@
         "harness"
       ],
       "visibility": [
-        "sut_visible",
-        "grader_visible"
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
       ],
       "observation_channel": [
-        "sut_input",
+        "fixture",
         "grader",
         "hidden_gt"
       ],
@@ -6832,7 +7001,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.2.1",
       "parent_id": "PROPOSED-jd-11.5.2",
       "canonical_slot": null,
@@ -6840,6 +7009,7 @@
       "name": "通行空间类型",
       "definition": "任务需要穿越、沿行或抵近的可用空间类型。",
       "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
       "value_type": "enum",
       "value_domain": [
         {
@@ -6927,11 +7097,12 @@
         "harness"
       ],
       "visibility": [
-        "sut_visible",
-        "grader_visible"
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
       ],
       "observation_channel": [
-        "sut_input",
+        "fixture",
         "grader",
         "hidden_gt"
       ],
@@ -6961,7 +7132,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.2.2",
       "parent_id": "PROPOSED-jd-11.5.2",
       "canonical_slot": null,
@@ -6969,6 +7140,7 @@
       "name": "通行空间尺寸向量",
       "definition": "可用通行空间的净宽、净高与纵深。",
       "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
       "value_type": "vector3_or_object",
       "value_domain": [
         {
@@ -6993,11 +7165,12 @@
         "harness"
       ],
       "visibility": [
-        "sut_visible",
-        "grader_visible"
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
       ],
       "observation_channel": [
-        "sut_input",
+        "fixture",
         "grader",
         "hidden_gt"
       ],
@@ -7027,7 +7200,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.2.3",
       "parent_id": "PROPOSED-jd-11.5.2",
       "canonical_slot": null,
@@ -7035,6 +7208,7 @@
       "name": "通行空间偏移",
       "definition": "开口或通道相对障碍物、任务目标或参考中心的横向与垂向偏移。",
       "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
       "value_type": "vector2_or_object",
       "value_domain": [
         {
@@ -7059,11 +7233,12 @@
         "harness"
       ],
       "visibility": [
-        "sut_visible",
-        "grader_visible"
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
       ],
       "observation_channel": [
-        "sut_input",
+        "fixture",
         "grader",
         "hidden_gt"
       ],
@@ -7095,7 +7270,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.2.4",
       "parent_id": "PROPOSED-jd-11.5.2",
       "canonical_slot": null,
@@ -7103,6 +7278,7 @@
       "name": "通行截面形状",
       "definition": "通行空间截面的几何形状。",
       "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
       "value_type": "enum",
       "value_domain": [
         {
@@ -7162,11 +7338,12 @@
         "harness"
       ],
       "visibility": [
-        "sut_visible",
-        "grader_visible"
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
       ],
       "observation_channel": [
-        "sut_input",
+        "fixture",
         "grader",
         "hidden_gt"
       ],
@@ -7196,7 +7373,412 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-11.5.2.5",
+      "parent_id": "PROPOSED-jd-11.5.2",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "通行空间数量",
+      "definition": "同一宿主障碍物或当前局部场景中可被引用的通行空间实例数量。",
+      "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
+      "value_type": "integer_or_range",
+      "value_domain": [
+        {
+          "value": 1,
+          "label_zh": "1",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        },
+        {
+          "value": 2,
+          "label_zh": "2",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        },
+        {
+          "value": 3,
+          "label_zh": "3",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        },
+        {
+          "value": "TBD",
+          "label_zh": "跨场景数量范围与上限 TBD",
+          "source_refs": [],
+          "status": "TBD",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "world",
+      "projection_targets": [
+        "world_config",
+        "harness"
+      ],
+      "visibility": [
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
+      ],
+      "observation_channel": [
+        "fixture",
+        "grader",
+        "hidden_gt"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario",
+        "highway_inspection",
+        "campus_inspection"
+      ],
+      "related_global_jd": [
+        "jd-0.3",
+        "jd-0.9",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06",
+        "W-MOT-UAV-BRIDGE"
+      ],
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": "1 / 2 / 3 来自白墙窄缝 v0.6 的缝数档位，只是已给示例值，不是跨场景通用上限。"
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-11.5.2.6",
+      "parent_id": "PROPOSED-jd-11.5.2",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "通行空间实例集合",
+      "definition": "由稳定实例 ID、所属障碍物、空间类型、尺寸、形状与偏移组成的通行空间列表；允许同一墙体或结构包含多个孔洞 / 缝隙。",
+      "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
+      "value_type": "array_of_reference_objects",
+      "value_domain": [
+        {
+          "value": "TBD",
+          "label_zh": "实例对象 schema、唯一 ID 规则与数量上限 TBD",
+          "source_refs": [],
+          "status": "TBD",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "many",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "world",
+      "projection_targets": [
+        "world_config",
+        "harness"
+      ],
+      "visibility": [
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
+      ],
+      "observation_channel": [
+        "fixture",
+        "grader",
+        "hidden_gt"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario",
+        "highway_inspection",
+        "campus_inspection"
+      ],
+      "related_global_jd": [
+        "jd-0.3",
+        "jd-0.9",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [],
+      "depends_on": [
+        "PROPOSED-jd-11.5.2.5"
+      ],
+      "mutual_exclusion_group": null,
+      "constraints": [
+        {
+          "rule": "collection_length_matches_count",
+          "count_node": "PROPOSED-jd-11.5.2.5",
+          "status": "proposed"
+        }
+      ],
+      "source": [
+        "L-A8-V06",
+        "W-MOT-UAV-BRIDGE"
+      ],
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": "本节点抽象 v0.6 的“一墙多缝 + 列表值”方法，但不直接规定 simulator 字段。"
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-11.5.2.7",
+      "parent_id": "PROPOSED-jd-11.5.2",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "同一障碍物内排列",
+      "definition": "同一宿主障碍物内多个通行空间的相对排列关系；仅在通行空间数量不少于 2 时启用。",
+      "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "horizontal",
+          "label_zh": "并排（横向）",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        },
+        {
+          "value": "vertical",
+          "label_zh": "上下（纵向）",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        },
+        {
+          "value": "mixed",
+          "label_zh": "混合",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        },
+        {
+          "value": "TBD",
+          "label_zh": "跨场景排列 taxonomy TBD",
+          "source_refs": [],
+          "status": "TBD",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": {
+        "node": "PROPOSED-jd-11.5.2.5",
+        "operator": "greater_than_or_equal",
+        "value": 2
+      },
+      "multiplicity": "one",
+      "difficulty_direction": "non_monotonic",
+      "configuration_side": "world",
+      "projection_targets": [
+        "world_config",
+        "harness"
+      ],
+      "visibility": [
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
+      ],
+      "observation_channel": [
+        "fixture",
+        "grader",
+        "hidden_gt"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario",
+        "highway_inspection",
+        "campus_inspection"
+      ],
+      "related_global_jd": [
+        "jd-0.3",
+        "jd-0.9",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06",
+        "W-MOT-UAV-BRIDGE"
+      ],
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-11.5.2.8",
+      "parent_id": "PROPOSED-jd-11.5.2",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "同一障碍物内通行空间间距",
+      "definition": "同一宿主障碍物内多个通行空间之间的距离或距离集合；仅在通行空间数量不少于 2 时启用。",
+      "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
+      "value_type": "number_range_or_enum",
+      "value_domain": [
+        {
+          "value": "large",
+          "label_zh": "大",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        },
+        {
+          "value": "medium",
+          "label_zh": "中",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        },
+        {
+          "value": "near",
+          "label_zh": "近",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "team_material_only",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        },
+        {
+          "value": "TBD",
+          "label_zh": "距离定义、单位与档位阈值 TBD",
+          "source_refs": [],
+          "status": "TBD",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        }
+      ],
+      "unit": "m_or_normalized_TBD",
+      "activation_condition": {
+        "node": "PROPOSED-jd-11.5.2.5",
+        "operator": "greater_than_or_equal",
+        "value": 2
+      },
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "world",
+      "projection_targets": [
+        "world_config",
+        "harness"
+      ],
+      "visibility": [
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
+      ],
+      "observation_channel": [
+        "fixture",
+        "grader",
+        "hidden_gt"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario",
+        "highway_inspection",
+        "campus_inspection"
+      ],
+      "related_global_jd": [
+        "jd-0.3",
+        "jd-0.9",
+        "jd-0.5"
+      ],
+      "related_jd": [],
+      "used_by_axl": [],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06",
+        "W-MOT-UAV-BRIDGE"
+      ],
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.3.1",
       "parent_id": "PROPOSED-jd-11.5.3",
       "canonical_slot": null,
@@ -7204,6 +7786,7 @@
       "name": "障碍物数量",
       "definition": "当前控制压力 Profile 涉及的障碍物实例数量。",
       "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
       "value_type": "integer_or_range",
       "value_domain": [
         {
@@ -7228,11 +7811,12 @@
         "harness"
       ],
       "visibility": [
-        "sut_visible",
-        "grader_visible"
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
       ],
       "observation_channel": [
-        "sut_input",
+        "fixture",
         "grader",
         "hidden_gt"
       ],
@@ -7262,7 +7846,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.3.2",
       "parent_id": "PROPOSED-jd-11.5.3",
       "canonical_slot": null,
@@ -7270,6 +7854,7 @@
       "name": "障碍物间距",
       "definition": "连续障碍物之间的空间距离。",
       "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
       "value_type": "number_or_range",
       "value_domain": [
         {
@@ -7294,11 +7879,12 @@
         "harness"
       ],
       "visibility": [
-        "sut_visible",
-        "grader_visible"
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
       ],
       "observation_channel": [
-        "sut_input",
+        "fixture",
         "grader",
         "hidden_gt"
       ],
@@ -7328,7 +7914,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.3.3",
       "parent_id": "PROPOSED-jd-11.5.3",
       "canonical_slot": null,
@@ -7336,6 +7922,7 @@
       "name": "相对摆放角度",
       "definition": "障碍物相对任务运动方向或前一障碍物的摆放角度。",
       "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
       "value_type": "number_or_range",
       "value_domain": [
         {
@@ -7360,11 +7947,12 @@
         "harness"
       ],
       "visibility": [
-        "sut_visible",
-        "grader_visible"
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
       ],
       "observation_channel": [
-        "sut_input",
+        "fixture",
         "grader",
         "hidden_gt"
       ],
@@ -7394,7 +7982,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.3.4",
       "parent_id": "PROPOSED-jd-11.5.3",
       "canonical_slot": null,
@@ -7402,6 +7990,7 @@
       "name": "通行空间对齐关系",
       "definition": "多个通行空间之间的对齐或错位关系。",
       "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
       "value_type": "enum",
       "value_domain": [
         {
@@ -7465,11 +8054,12 @@
         "harness"
       ],
       "visibility": [
-        "sut_visible",
-        "grader_visible"
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
       ],
       "observation_channel": [
-        "sut_input",
+        "fixture",
         "grader",
         "hidden_gt"
       ],
@@ -7499,7 +8089,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.3.5",
       "parent_id": "PROPOSED-jd-11.5.3",
       "canonical_slot": null,
@@ -7507,6 +8097,7 @@
       "name": "排列拓扑",
       "definition": "多个障碍物构成的空间排列拓扑。",
       "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
       "value_type": "enum",
       "value_domain": [
         {
@@ -7583,11 +8174,12 @@
         "harness"
       ],
       "visibility": [
-        "sut_visible",
-        "grader_visible"
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
       ],
       "observation_channel": [
-        "sut_input",
+        "fixture",
         "grader",
         "hidden_gt"
       ],
@@ -7617,7 +8209,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.4.1",
       "parent_id": "PROPOSED-jd-11.5.4",
       "canonical_slot": null,
@@ -7625,6 +8217,7 @@
       "name": "障碍物运动状态",
       "definition": "障碍物是静止、运动还是当前状态未知。",
       "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
       "value_type": "enum",
       "value_domain": [
         {
@@ -7675,11 +8268,12 @@
         "harness"
       ],
       "visibility": [
-        "sut_visible",
-        "grader_visible"
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
       ],
       "observation_channel": [
-        "sut_input",
+        "fixture",
         "grader",
         "hidden_gt"
       ],
@@ -7709,7 +8303,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.4.2",
       "parent_id": "PROPOSED-jd-11.5.4",
       "canonical_slot": null,
@@ -7717,6 +8311,7 @@
       "name": "障碍物速度向量",
       "definition": "运动障碍物的速度大小和方向；仅在运动状态启用。",
       "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
       "value_type": "vector3_or_object",
       "value_domain": [
         {
@@ -7745,11 +8340,12 @@
         "harness"
       ],
       "visibility": [
-        "sut_visible",
-        "grader_visible"
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
       ],
       "observation_channel": [
-        "sut_input",
+        "fixture",
         "grader",
         "hidden_gt"
       ],
@@ -7781,7 +8377,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.4.3",
       "parent_id": "PROPOSED-jd-11.5.4",
       "canonical_slot": null,
@@ -7789,6 +8385,7 @@
       "name": "运动模式",
       "definition": "运动障碍物的时间变化模式；白墙草案只提供部分实例。",
       "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
       "value_type": "enum",
       "value_domain": [
         {
@@ -7856,11 +8453,12 @@
         "harness"
       ],
       "visibility": [
-        "sut_visible",
-        "grader_visible"
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
       ],
       "observation_channel": [
-        "sut_input",
+        "fixture",
         "grader",
         "hidden_gt"
       ],
@@ -7890,7 +8488,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.4.4",
       "parent_id": "PROPOSED-jd-11.5.4",
       "canonical_slot": null,
@@ -7898,6 +8496,7 @@
       "name": "运动可预测性",
       "definition": "障碍物未来运动对 SUT 是否可预测及预测依据的可用程度。",
       "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
       "value_type": "enum",
       "value_domain": [
         {
@@ -7955,11 +8554,12 @@
         "harness"
       ],
       "visibility": [
-        "sut_visible",
-        "grader_visible"
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
       ],
       "observation_channel": [
-        "sut_input",
+        "fixture",
         "grader",
         "hidden_gt"
       ],
@@ -7989,7 +8589,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.5.1",
       "parent_id": "PROPOSED-jd-11.5.5",
       "canonical_slot": null,
@@ -7997,6 +8597,7 @@
       "name": "任务—障碍物关系",
       "definition": "任务要求相对障碍物采取的空间关系。",
       "node_kind": "variable",
+      "variable_role": "contract_schema",
       "value_type": "enum",
       "value_domain": [
         {
@@ -8067,9 +8668,10 @@
       "activation_condition": null,
       "multiplicity": "one",
       "difficulty_direction": "non_monotonic",
-      "configuration_side": "world",
+      "configuration_side": "user",
       "projection_targets": [
-        "world_config",
+        "user_config",
+        "sut_input",
         "harness"
       ],
       "visibility": [
@@ -8078,8 +8680,7 @@
       ],
       "observation_channel": [
         "sut_input",
-        "grader",
-        "hidden_gt"
+        "grader"
       ],
       "applicable_scenarios": [
         "cross_scenario",
@@ -8110,7 +8711,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.5.2",
       "parent_id": "PROPOSED-jd-11.5.5",
       "canonical_slot": null,
@@ -8118,6 +8719,7 @@
       "name": "接近关系",
       "definition": "无人机相对目标障碍物或通行空间的接近方向、相对速度与相对航向。",
       "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
       "value_type": "object",
       "value_domain": [
         {
@@ -8142,11 +8744,12 @@
         "harness"
       ],
       "visibility": [
-        "sut_visible",
-        "grader_visible"
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
       ],
       "observation_channel": [
-        "sut_input",
+        "fixture",
         "grader",
         "hidden_gt"
       ],
@@ -8178,7 +8781,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.5.3",
       "parent_id": "PROPOSED-jd-11.5.5",
       "canonical_slot": null,
@@ -8186,6 +8789,7 @@
       "name": "目标通行空间",
       "definition": "任务指定需要通过、沿行或抵近的通行空间实例引用。",
       "node_kind": "variable",
+      "variable_role": "contract_schema",
       "value_type": "reference",
       "value_domain": [
         {
@@ -8204,9 +8808,10 @@
       "activation_condition": null,
       "multiplicity": "one",
       "difficulty_direction": "context_dependent",
-      "configuration_side": "world",
+      "configuration_side": "user",
       "projection_targets": [
-        "world_config",
+        "user_config",
+        "sut_input",
         "harness"
       ],
       "visibility": [
@@ -8215,8 +8820,7 @@
       ],
       "observation_channel": [
         "sut_input",
-        "grader",
-        "hidden_gt"
+        "grader"
       ],
       "applicable_scenarios": [
         "cross_scenario",
@@ -8233,7 +8837,9 @@
         "jd-10.2"
       ],
       "used_by_axl": [],
-      "depends_on": [],
+      "depends_on": [
+        "PROPOSED-jd-11.5.2.6"
+      ],
       "mutual_exclusion_group": null,
       "constraints": [],
       "source": [
@@ -8247,7 +8853,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.5.4",
       "parent_id": "PROPOSED-jd-11.5.5",
       "canonical_slot": null,
@@ -8255,6 +8861,7 @@
       "name": "载荷朝向保持要求",
       "definition": "近障控制过程中需要保持的相机或任务载荷朝向关系。",
       "node_kind": "variable",
+      "variable_role": "contract_schema",
       "value_type": "object",
       "value_domain": [
         {
@@ -8277,6 +8884,7 @@
       "projection_targets": [
         "user_config",
         "world_config",
+        "sut_input",
         "harness"
       ],
       "visibility": [
@@ -8285,8 +8893,8 @@
       ],
       "observation_channel": [
         "sut_input",
-        "grader",
-        "hidden_gt"
+        "sut_trace",
+        "grader"
       ],
       "applicable_scenarios": [
         "cross_scenario",
@@ -8315,7 +8923,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.6.1",
       "parent_id": "PROPOSED-jd-11.5.6",
       "canonical_slot": null,
@@ -8323,6 +8931,7 @@
       "name": "有效通行空间",
       "definition": "根据通行空间尺寸、障碍物角度和布局推导的有效净宽与净高；公式与阈值保持 TBD。",
       "node_kind": "variable",
+      "variable_role": "derived_metric",
       "value_type": "derived_object",
       "value_domain": [
         {
@@ -8347,11 +8956,10 @@
         "harness"
       ],
       "visibility": [
-        "sut_visible",
-        "grader_visible"
+        "grader_only",
+        "hidden_gt"
       ],
       "observation_channel": [
-        "sut_input",
         "grader",
         "hidden_gt"
       ],
@@ -8385,7 +8993,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.6.2",
       "parent_id": "PROPOSED-jd-11.5.6",
       "canonical_slot": null,
@@ -8393,6 +9001,7 @@
       "name": "剩余几何余量",
       "definition": "有效通行空间扣除平台执行包络和附加安全裕度后的剩余几何余量。",
       "node_kind": "variable",
+      "variable_role": "derived_metric",
       "value_type": "derived_object",
       "value_domain": [
         {
@@ -8417,11 +9026,10 @@
         "harness"
       ],
       "visibility": [
-        "sut_visible",
-        "grader_visible"
+        "grader_only",
+        "hidden_gt"
       ],
       "observation_channel": [
-        "sut_input",
         "grader",
         "hidden_gt"
       ],
@@ -8458,7 +9066,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.6.3",
       "parent_id": "PROPOSED-jd-11.5.6",
       "canonical_slot": null,
@@ -8466,6 +9074,7 @@
       "name": "控制响应窗口",
       "definition": "由相对运动、剩余距离和任务关系推导的局部控制响应时间窗口；公式保持 TBD。",
       "node_kind": "variable",
+      "variable_role": "derived_metric",
       "value_type": "derived_object",
       "value_domain": [
         {
@@ -8490,11 +9099,10 @@
         "harness"
       ],
       "visibility": [
-        "sut_visible",
-        "grader_visible"
+        "grader_only",
+        "hidden_gt"
       ],
       "observation_channel": [
-        "sut_input",
         "grader",
         "hidden_gt"
       ],
@@ -8530,7 +9138,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.7.1",
       "parent_id": "PROPOSED-jd-11.5.7",
       "canonical_slot": null,
@@ -8538,6 +9146,7 @@
       "name": "控制质量 Profile 引用",
       "definition": "选择本场景启用的误差、稳定性、振荡和控制余量要求。",
       "node_kind": "variable",
+      "variable_role": "contract_schema",
       "value_type": "reference",
       "value_domain": [
         {
@@ -8572,8 +9181,8 @@
       ],
       "observation_channel": [
         "sut_input",
-        "grader",
-        "hidden_gt"
+        "sut_trace",
+        "grader"
       ],
       "applicable_scenarios": [
         "cross_scenario",
@@ -8605,7 +9214,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.7.2",
       "parent_id": "PROPOSED-jd-11.5.7",
       "canonical_slot": null,
@@ -8613,6 +9222,7 @@
       "name": "控制机制 Profile 引用",
       "definition": "选择本场景允许或要求的控制目标、模式和输入前提。",
       "node_kind": "variable",
+      "variable_role": "contract_schema",
       "value_type": "reference",
       "value_domain": [
         {
@@ -8647,8 +9257,8 @@
       ],
       "observation_channel": [
         "sut_input",
-        "grader",
-        "hidden_gt"
+        "sut_trace",
+        "grader"
       ],
       "applicable_scenarios": [
         "cross_scenario",
@@ -8680,7 +9290,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.7.3",
       "parent_id": "PROPOSED-jd-11.5.7",
       "canonical_slot": null,
@@ -8688,6 +9298,7 @@
       "name": "控制策略 Profile 引用",
       "definition": "选择本场景允许的局部控制异常处置和恢复验证规则。",
       "node_kind": "variable",
+      "variable_role": "contract_schema",
       "value_type": "reference",
       "value_domain": [
         {
@@ -8722,8 +9333,8 @@
       ],
       "observation_channel": [
         "sut_input",
-        "grader",
-        "hidden_gt"
+        "sut_trace",
+        "grader"
       ],
       "applicable_scenarios": [
         "cross_scenario",
@@ -8755,7 +9366,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.7.4",
       "parent_id": "PROPOSED-jd-11.5.7",
       "canonical_slot": null,
@@ -8763,6 +9374,7 @@
       "name": "安全包络引用",
       "definition": "引用 A16 分相位安全阈值；A11 不在本分支重复定义安全态。",
       "node_kind": "variable",
+      "variable_role": "contract_schema",
       "value_type": "reference",
       "value_domain": [
         {
@@ -8794,8 +9406,8 @@
       ],
       "observation_channel": [
         "sut_input",
-        "grader",
-        "hidden_gt"
+        "sut_trace",
+        "grader"
       ],
       "applicable_scenarios": [
         "cross_scenario",
@@ -8825,7 +9437,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-11.5.7.5",
       "parent_id": "PROPOSED-jd-11.5.7",
       "canonical_slot": null,
@@ -8833,6 +9445,7 @@
       "name": "控制执行包络 Profile 引用",
       "definition": "选择本场景适用的平台、指令接口、动态包络、执行机构约束和包络修正规则。",
       "node_kind": "variable",
+      "variable_role": "contract_schema",
       "value_type": "reference",
       "value_domain": [
         {
@@ -8864,8 +9477,8 @@
       ],
       "observation_channel": [
         "sut_input",
-        "grader",
-        "hidden_gt"
+        "sut_trace",
+        "grader"
       ],
       "applicable_scenarios": [
         "cross_scenario",
@@ -8895,14 +9508,228 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
-      "node_id": "EXAMPLE-jd-11.5-white-wall-v0.6",
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-11.5.8.1",
+      "parent_id": "PROPOSED-jd-11.5.8",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "表面纹理条件引用",
+      "definition": "引用 A6 的目标 / 背景表面纹理复杂度；A11 只消费该条件形成控制场景 Profile。",
+      "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
+      "value_type": "reference",
+      "value_domain": [
+        {
+          "value": "PROPOSED-jd-6.2.2.6",
+          "label_zh": "引用 PROPOSED-jd-6.2.2.6",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "inferred_candidate",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "world",
+      "projection_targets": [
+        "world_config",
+        "harness"
+      ],
+      "visibility": [
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
+      ],
+      "observation_channel": [
+        "fixture",
+        "grader",
+        "hidden_gt"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario",
+        "highway_inspection",
+        "campus_inspection"
+      ],
+      "related_global_jd": [
+        "jd-0.3",
+        "jd-0.9",
+        "jd-0.5"
+      ],
+      "related_jd": [
+        "PROPOSED-jd-6.2.2.6"
+      ],
+      "used_by_axl": [],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-11.5.8.2",
+      "parent_id": "PROPOSED-jd-11.5.8",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "局部对比条件引用",
+      "definition": "引用 A6 的目标 / 开口—背景局部对比度；A11 不复制感知退化 taxonomy。",
+      "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
+      "value_type": "reference",
+      "value_domain": [
+        {
+          "value": "PROPOSED-jd-6.2.2.7",
+          "label_zh": "引用 PROPOSED-jd-6.2.2.7",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "inferred_candidate",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "world",
+      "projection_targets": [
+        "world_config",
+        "harness"
+      ],
+      "visibility": [
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
+      ],
+      "observation_channel": [
+        "fixture",
+        "grader",
+        "hidden_gt"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario",
+        "highway_inspection",
+        "campus_inspection"
+      ],
+      "related_global_jd": [
+        "jd-0.3",
+        "jd-0.9",
+        "jd-0.5"
+      ],
+      "related_jd": [
+        "PROPOSED-jd-6.2.2.7"
+      ],
+      "used_by_axl": [],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "PROPOSED-jd-11.5.8.3",
+      "parent_id": "PROPOSED-jd-11.5.8",
+      "canonical_slot": null,
+      "owner_a": "A11",
+      "name": "光学基线与动态光线扰动引用",
+      "definition": "引用 jd-0.3 下的静态光照基线与动态光线扰动，并保持两者分别启用。",
+      "node_kind": "variable",
+      "variable_role": "hidden_ground_truth",
+      "value_type": "reference",
+      "value_domain": [
+        {
+          "value": "PROPOSED-jd-0.3.3",
+          "label_zh": "引用 PROPOSED-jd-0.3.3",
+          "source_refs": [
+            "L-A8-V06"
+          ],
+          "status": "inferred_candidate",
+          "applicable_scenarios": [
+            "cross_scenario",
+            "highway_inspection",
+            "campus_inspection"
+          ]
+        }
+      ],
+      "unit": null,
+      "activation_condition": null,
+      "multiplicity": "one",
+      "difficulty_direction": "context_dependent",
+      "configuration_side": "world",
+      "projection_targets": [
+        "world_config",
+        "harness"
+      ],
+      "visibility": [
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
+      ],
+      "observation_channel": [
+        "fixture",
+        "grader",
+        "hidden_gt"
+      ],
+      "applicable_scenarios": [
+        "cross_scenario",
+        "highway_inspection",
+        "campus_inspection"
+      ],
+      "related_global_jd": [
+        "jd-0.3",
+        "jd-0.9",
+        "jd-0.5"
+      ],
+      "related_jd": [
+        "PROPOSED-jd-0.3.3"
+      ],
+      "used_by_axl": [],
+      "depends_on": [],
+      "mutual_exclusion_group": null,
+      "constraints": [],
+      "source": [
+        "L-A8-V06"
+      ],
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed",
+      "review_status": "proposed",
+      "legacy_aliases": [],
+      "notes": null
+    },
+    {
+      "schema_version": "jd-tree/0.4.0",
+      "node_id": "CASE-jd-11.5-white-wall-v0.6",
       "parent_id": "PROPOSED-jd-11.5",
       "canonical_slot": null,
       "owner_a": "A11",
       "name": "白墙窄缝草案 v0.6 示例",
       "definition": "需求草案 v0.6 的白墙、缝、布局、运动和平台基准原始内容；作为 PROPOSED-jd-11.5 的具体实例保留，不代表跨巡检场景的通用取值。",
       "node_kind": "example_profile",
+      "variable_role": "example_profile",
       "value_type": "example_profile",
       "value_domain": [
         {
@@ -8927,11 +9754,12 @@
         "harness"
       ],
       "visibility": [
-        "sut_visible",
-        "grader_visible"
+        "fixture_only",
+        "grader_only",
+        "hidden_gt"
       ],
       "observation_channel": [
-        "sut_input",
+        "fixture",
         "grader",
         "hidden_gt"
       ],
@@ -8947,7 +9775,8 @@
         "PROPOSED-jd-11.5.4",
         "PROPOSED-jd-11.5.5",
         "PROPOSED-jd-11.5.6",
-        "PROPOSED-jd-11.5.7"
+        "PROPOSED-jd-11.5.7",
+        "PROPOSED-jd-11.5.8"
       ],
       "used_by_axl": [
         "A11×L3",

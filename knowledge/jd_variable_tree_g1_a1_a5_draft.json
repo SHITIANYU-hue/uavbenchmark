@@ -1,7 +1,7 @@
 {
   "schema": "uav-benchmark-jd-variable-tree",
-  "schema_version": "0.3.0",
-  "generated_at": "2026-07-21",
+  "schema_version": "0.4.0",
+  "generated_at": "2026-07-22",
   "generated_by": "scripts/generate_jd_variable_tree_version1.mjs",
   "ability_id_scheme": "ability-id-v3-2026-07-20",
   "numbering_scheme": "ability-id-v3-2026-07-20",
@@ -83,6 +83,16 @@
     "jd_rule": "L0 不进入 JD 值域，也不写入 used_by_axl；episode 层另存 coverage_level=L0。"
   },
   "controlled_vocabularies": {
+    "variable_role": [
+      "configuration_input",
+      "contract_schema",
+      "runtime_observation",
+      "derived_metric",
+      "hidden_ground_truth",
+      "structural_group",
+      "example_profile",
+      "TBD"
+    ],
     "configuration_side": [
       "world",
       "user",
@@ -150,6 +160,7 @@
     "name",
     "definition",
     "node_kind",
+    "variable_role",
     "value_type",
     "value_domain",
     "unit",
@@ -180,6 +191,9 @@
     "A×L 仅作责任引用，L1–L4 不进入 JD 取值域；L0 是 episode 覆盖哨兵。",
     "缺少依据的阈值、时限、业务判据、安全规则和 simulator 接口保持 TBD。",
     "configuration_side、projection_targets、visibility 和 observation_channel 分列。",
+    "variable_role 仅标注节点在数据流中的机器语义，不新增业务变量或改写 canonical 定义。",
+    "候选值逐值记录 source_refs 与 status；未逐值证明的候选不得由节点来源机械升级为 source_supported。",
+    "PROPOSED 子树可以不存在，但所有 related_jd、depends_on 和启用条件引用始终必须指向现存节点。",
     "derivation_status 与 evidence_status 分列。"
   ],
   "decision_log": [
@@ -297,6 +311,21 @@
       "decision_id": "schema-derivation-status",
       "status": "confirmed_by_user",
       "decision": "derivation_status 与 evidence_status 分列。"
+    },
+    {
+      "decision_id": "schema-variable-role",
+      "status": "confirmed_by_user",
+      "decision": "增加 variable_role 以区分可配置输入、合同/schema、运行时观察、派生指标、Hidden GT、结构节点与示例 Profile；该字段不是新增 JD 变量。"
+    },
+    {
+      "decision_id": "value-level-evidence",
+      "status": "confirmed_by_user",
+      "decision": "候选值必须独立声明 source_refs 与 status；缺少直接证据时保持 inferred_candidate 或 TBD。"
+    },
+    {
+      "decision_id": "strict-proposed-references",
+      "status": "confirmed_by_user",
+      "decision": "11.4/11.5 可选，但引用完整性不豁免；缺失 proposed 子树时不得保留指向它的悬空引用。"
     }
   ],
   "catalog_id": "jd-variable-tree-g1-a1-a5-version1-draft",
@@ -405,14 +434,15 @@
   ],
   "nodes": [
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-tree-version1",
       "parent_id": null,
       "canonical_slot": null,
       "owner_a": "MULTI",
       "name": "JD 业务变量树 version1",
-      "definition": "按 ability-id-v3-2026-07-20 汇总 A1–A11 当前已建设分支，包含 A9 健康 / 能源 / 资源管理；页面按单项能力切换，不显示组别标题。",
+      "definition": "按 ability-id-v3-2026-07-20 汇总 A1–A11 当前已建设分支，并单列跨能力共享的 JD-global 审阅分支；页面按单项能力或 global 分支切换，不显示组别标题。",
       "node_kind": "catalog_root",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -454,7 +484,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-tree-A1",
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
@@ -462,6 +492,7 @@
       "name": "意图 / 交互入口",
       "definition": "描述 意图 / 交互入口 对应的 JD 业务变量分支；A×L 只作为责任引用，不作为变量取值。",
       "node_kind": "capability_root",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -505,7 +536,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-tree-A2",
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
@@ -513,6 +544,7 @@
       "name": "任务规范 / 约束模型",
       "definition": "描述 任务规范 / 约束模型 对应的 JD 业务变量分支；A×L 只作为责任引用，不作为变量取值。",
       "node_kind": "capability_root",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -558,7 +590,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-tree-A3",
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
@@ -566,6 +598,7 @@
       "name": "意图推理 / 任务解释",
       "definition": "描述 意图推理 / 任务解释 对应的 JD 业务变量分支；A×L 只作为责任引用，不作为变量取值。",
       "node_kind": "capability_root",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -608,7 +641,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-tree-A4",
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
@@ -616,6 +649,7 @@
       "name": "交互到执行编排",
       "definition": "描述 交互到执行编排 对应的 JD 业务变量分支；A×L 只作为责任引用，不作为变量取值。",
       "node_kind": "capability_root",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -659,7 +693,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-tree-A5",
       "parent_id": "PROPOSED-jd-tree-version1",
       "canonical_slot": null,
@@ -667,6 +701,7 @@
       "name": "监督 / 请求 / 交接",
       "definition": "描述 监督 / 请求 / 交接 对应的 JD 业务变量分支；A×L 只作为责任引用，不作为变量取值。",
       "node_kind": "capability_root",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -714,7 +749,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-1.1",
       "parent_id": "PROPOSED-jd-tree-A1",
       "canonical_slot": "jd-1.1",
@@ -722,6 +757,7 @@
       "name": "指称对象目录",
       "definition": "JD 中可被指称的业务对象或实体类型，包含统一 ID 体系。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -770,7 +806,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-1.1.1",
       "parent_id": "jd-1.1",
       "canonical_slot": "jd-1.1",
@@ -778,6 +814,7 @@
       "name": "对象类型",
       "definition": "目录中被指称实体的业务类型。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -880,7 +917,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-1.1.2",
       "parent_id": "jd-1.1",
       "canonical_slot": "jd-1.1",
@@ -888,6 +925,7 @@
       "name": "对象标识与命名空间",
       "definition": "对象 ID 的来源、命名空间及唯一性范围。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -934,7 +972,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-1.1.3",
       "parent_id": "jd-1.1",
       "canonical_slot": "jd-1.1",
@@ -942,6 +980,7 @@
       "name": "目录版本与适用范围",
       "definition": "对象目录的版本、业务场景与生效范围。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -988,7 +1027,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-1.1.4",
       "parent_id": "jd-1.1",
       "canonical_slot": "jd-1.1",
@@ -996,6 +1035,7 @@
       "name": "当前与历史对象关系",
       "definition": "当前任务对象与对话历史、既往任务记录之间的关联方式。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -1078,7 +1118,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-1.1.5",
       "parent_id": "jd-1.1",
       "canonical_slot": "jd-1.1",
@@ -1086,6 +1126,7 @@
       "name": "对象解析状态",
       "definition": "指称解析后对象的存在性和唯一性状态。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -1169,7 +1210,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-1.2",
       "parent_id": "PROPOSED-jd-tree-A1",
       "canonical_slot": "jd-1.2",
@@ -1177,6 +1218,7 @@
       "name": "指称方式集",
       "definition": "该 JD 中指向同一对象的可用指称方式，例如按 ID、地图指示、视频指示或自然语言描述。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -1225,7 +1267,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-1.2.1",
       "parent_id": "jd-1.2",
       "canonical_slot": "jd-1.2",
@@ -1233,6 +1275,7 @@
       "name": "输入与指示通道",
       "definition": "向系统提供指称的交互通道。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -1337,7 +1380,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-1.2.2",
       "parent_id": "jd-1.2",
       "canonical_slot": "jd-1.2",
@@ -1345,6 +1388,7 @@
       "name": "语言指称形式",
       "definition": "自然语言中用于识别对象的表达形式。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -1448,7 +1492,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-1.2.3",
       "parent_id": "jd-1.2",
       "canonical_slot": "jd-1.2",
@@ -1456,6 +1500,7 @@
       "name": "上下文取用范围",
       "definition": "解析指称时允许引用的上下文范围。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -1537,7 +1582,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-1.2.4",
       "parent_id": "jd-1.2",
       "canonical_slot": "jd-1.2",
@@ -1545,6 +1590,7 @@
       "name": "指称基数",
       "definition": "一次指称表达期望解析出的对象数量语义。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -1628,7 +1674,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-1.2.5",
       "parent_id": "jd-1.2",
       "canonical_slot": "jd-1.2",
@@ -1636,6 +1682,7 @@
       "name": "歧义与可推断性",
       "definition": "指称是否唯一、是否欠定以及是否需要澄清。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -1725,7 +1772,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-1.3",
       "parent_id": "PROPOSED-jd-tree-A1",
       "canonical_slot": "jd-1.3",
@@ -1733,6 +1780,7 @@
       "name": "业务术语表",
       "definition": "该 JD 的专有名词、动作动词与状态形容词词表。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -1781,7 +1829,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-1.3.1",
       "parent_id": "jd-1.3",
       "canonical_slot": "jd-1.3",
@@ -1789,6 +1837,7 @@
       "name": "术语类型",
       "definition": "业务词项在术语表中的语义类别。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -1879,7 +1928,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-1.3.2",
       "parent_id": "jd-1.3",
       "canonical_slot": "jd-1.3",
@@ -1887,6 +1936,7 @@
       "name": "规范词项",
       "definition": "术语的 canonical 表达与机器可引用标识。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -1933,7 +1983,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-1.3.3",
       "parent_id": "jd-1.3",
       "canonical_slot": "jd-1.3",
@@ -1941,6 +1991,7 @@
       "name": "别名与同义表达",
       "definition": "规范词项允许对应的别名、缩写和口语表达。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "list",
       "value_domain": [],
       "unit": null,
@@ -1987,7 +2038,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-1.3.4",
       "parent_id": "jd-1.3",
       "canonical_slot": "jd-1.3",
@@ -1995,6 +2046,7 @@
       "name": "术语定义与消歧",
       "definition": "术语的业务定义、排除项和冲突说明。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -2041,7 +2093,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-1.3.5",
       "parent_id": "jd-1.3",
       "canonical_slot": "jd-1.3",
@@ -2049,6 +2101,7 @@
       "name": "版本与适用场景",
       "definition": "术语表版本、适用业务场景和生效范围。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -2095,7 +2148,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-2.1",
       "parent_id": "PROPOSED-jd-tree-A2",
       "canonical_slot": "jd-2.1",
@@ -2103,6 +2156,7 @@
       "name": "任务参数表",
       "definition": "JD 的任务级参数、类型、取值范围与默认值，例如飞行高度、拍摄间隔、覆盖率判据等。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -2153,7 +2207,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-2.1.1",
       "parent_id": "jd-2.1",
       "canonical_slot": "jd-2.1",
@@ -2161,6 +2215,7 @@
       "name": "参数 schema 与版本",
       "definition": "任务参数表的 schema 标识、版本与兼容性。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -2209,7 +2264,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-2.1.2",
       "parent_id": "jd-2.1",
       "canonical_slot": "jd-2.1",
@@ -2217,6 +2272,7 @@
       "name": "参数语义分组",
       "definition": "参数在任务对象、空间、时间、执行、输出或约束中的语义归属。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -2320,7 +2376,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-2.1.3",
       "parent_id": "jd-2.1",
       "canonical_slot": "jd-2.1",
@@ -2328,6 +2384,7 @@
       "name": "值类型、单位与参考系",
       "definition": "参数的值类型、单位、坐标系或参考系声明。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -2376,7 +2433,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-2.1.4",
       "parent_id": "jd-2.1",
       "canonical_slot": "jd-2.1",
@@ -2384,6 +2441,7 @@
       "name": "必填、可选与缺省状态",
       "definition": "参数是否必须显式给出，以及缺省值是否存在。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -2476,7 +2534,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-2.1.5",
       "parent_id": "jd-2.1",
       "canonical_slot": "jd-2.1",
@@ -2484,6 +2542,7 @@
       "name": "参数依赖与约束引用",
       "definition": "参数之间的依赖，以及对合规域和安全包络的引用。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -2532,7 +2591,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-2.1.6",
       "parent_id": "jd-2.1",
       "canonical_slot": "jd-2.1",
@@ -2540,6 +2599,7 @@
       "name": "值来源与确认状态",
       "definition": "参数值来自用户、世界、默认规则或推断，并记录是否已确认。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -2642,7 +2702,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-2.2",
       "parent_id": "PROPOSED-jd-tree-A2",
       "canonical_slot": "jd-2.2",
@@ -2650,6 +2710,7 @@
       "name": "平台参数表",
       "definition": "无人机及其他实体的平台级参数、默认值与设计运行域，例如最大风速、续航与环境耐受范围。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -2700,7 +2761,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-2.2.1",
       "parent_id": "jd-2.2",
       "canonical_slot": "jd-2.2",
@@ -2708,6 +2769,7 @@
       "name": "平台档案标识与版本",
       "definition": "被任务规范引用的平台档案 ID、类型与版本。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -2756,7 +2818,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-2.2.2",
       "parent_id": "jd-2.2",
       "canonical_slot": "jd-2.2",
@@ -2764,6 +2826,7 @@
       "name": "物理与运动学参数",
       "definition": "平台静态物理和运动学边界的引用集合；具体数值必须来自平台资料。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference",
       "value_domain": [],
       "unit": null,
@@ -2812,7 +2875,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-2.2.3",
       "parent_id": "jd-2.2",
       "canonical_slot": "jd-2.2",
@@ -2820,6 +2883,7 @@
       "name": "载荷、传感器与计算能力",
       "definition": "平台可用载荷、传感器和计算资源的静态能力声明。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference",
       "value_domain": [],
       "unit": null,
@@ -2868,7 +2932,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-2.2.4",
       "parent_id": "jd-2.2",
       "canonical_slot": "jd-2.2",
@@ -2876,6 +2940,7 @@
       "name": "设计运行域与环境耐受",
       "definition": "平台受审 ODD 和环境耐受范围；未提供的阈值保持 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference",
       "value_domain": [
         {
@@ -2934,7 +2999,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-2.2.5",
       "parent_id": "jd-2.2",
       "canonical_slot": "jd-2.2",
@@ -2942,6 +3007,7 @@
       "name": "任务兼容性",
       "definition": "平台档案与任务类型、载荷组合及场景要求的兼容关系。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -2990,7 +3056,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-2.2.6",
       "parent_id": "jd-2.2",
       "canonical_slot": "jd-2.2",
@@ -2998,6 +3064,7 @@
       "name": "运行时状态边界",
       "definition": "仅声明静态平台档案；电量、健康和实时资源状态归 A9，不在本槽位复制。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference",
       "value_domain": [
         {
@@ -3068,7 +3135,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-2.3",
       "parent_id": "PROPOSED-jd-tree-A2",
       "canonical_slot": "jd-2.3",
@@ -3076,6 +3143,7 @@
       "name": "隐式参数规则",
       "definition": "上下文相关的参数自动推断规则，即专家默认知道但 JD-SOP 未显式写出的规则。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -3124,7 +3192,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-2.3.1",
       "parent_id": "jd-2.3",
       "canonical_slot": "jd-2.3",
@@ -3132,6 +3200,7 @@
       "name": "规则标识、版本与来源",
       "definition": "隐式参数规则的唯一标识、版本及业务依据。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -3178,7 +3247,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-2.3.2",
       "parent_id": "jd-2.3",
       "canonical_slot": "jd-2.3",
@@ -3186,6 +3255,7 @@
       "name": "启用上下文",
       "definition": "规则允许生效的业务场景、任务阶段和前置条件。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -3232,7 +3302,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-2.3.3",
       "parent_id": "jd-2.3",
       "canonical_slot": "jd-2.3",
@@ -3240,6 +3310,7 @@
       "name": "被推断参数",
       "definition": "规则输出的参数槽位及其来源记录。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference",
       "value_domain": [],
       "unit": null,
@@ -3286,7 +3357,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-2.3.4",
       "parent_id": "jd-2.3",
       "canonical_slot": "jd-2.3",
@@ -3294,6 +3365,7 @@
       "name": "推断证据与可追溯性",
       "definition": "触发规则时必须保留的上下文证据和推断来源。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -3340,7 +3412,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-2.3.5",
       "parent_id": "jd-2.3",
       "canonical_slot": "jd-2.3",
@@ -3348,6 +3420,7 @@
       "name": "确认要求",
       "definition": "推断结果是否必须请求用户确认；时限和阈值保持 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -3426,7 +3499,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-2.3.6",
       "parent_id": "jd-2.3",
       "canonical_slot": "jd-2.3",
@@ -3434,6 +3507,7 @@
       "name": "例外与规则冲突",
       "definition": "规则不适用的例外、优先级和冲突解决状态。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -3490,7 +3564,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-3.1",
       "parent_id": "PROPOSED-jd-tree-A3",
       "canonical_slot": "jd-3.1",
@@ -3498,6 +3572,7 @@
       "name": "任务技能库",
       "definition": "该 JD 的可组合执行原语集，例如飞到、拍照、红外、喊话、采样、复检等。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -3546,7 +3621,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-3.1.1",
       "parent_id": "jd-3.1",
       "canonical_slot": "jd-3.1",
@@ -3554,6 +3629,7 @@
       "name": "技能标识与版本",
       "definition": "技能的 canonical 标识、版本和适用范围。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -3600,7 +3676,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-3.1.2",
       "parent_id": "jd-3.1",
       "canonical_slot": "jd-3.1",
@@ -3608,6 +3684,7 @@
       "name": "技能类别",
       "definition": "技能在移动、观测、载荷、交互或任务控制中的类别。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -3722,7 +3799,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-3.1.3",
       "parent_id": "jd-3.1",
       "canonical_slot": "jd-3.1",
@@ -3730,6 +3807,7 @@
       "name": "参数 schema",
       "definition": "技能输入参数、类型、单位与必填条件。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference",
       "value_domain": [],
       "unit": null,
@@ -3776,7 +3854,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-3.1.4",
       "parent_id": "jd-3.1",
       "canonical_slot": "jd-3.1",
@@ -3784,6 +3862,7 @@
       "name": "前置条件",
       "definition": "技能可被选择和执行前必须满足的状态。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -3830,7 +3909,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-3.1.5",
       "parent_id": "jd-3.1",
       "canonical_slot": "jd-3.1",
@@ -3838,6 +3917,7 @@
       "name": "预期效果与副作用",
       "definition": "技能完成后的预期状态变化和已知副作用。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -3884,7 +3964,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-3.1.6",
       "parent_id": "jd-3.1",
       "canonical_slot": "jd-3.1",
@@ -3892,6 +3972,7 @@
       "name": "组合与依赖",
       "definition": "技能与其他技能的可组合顺序、依赖和互斥关系。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -3938,7 +4019,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-3.1.7",
       "parent_id": "jd-3.1",
       "canonical_slot": "jd-3.1",
@@ -3946,6 +4027,7 @@
       "name": "可用性状态",
       "definition": "技能在当前平台、场景和运行状态下是否可用。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -4029,7 +4111,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-3.2",
       "parent_id": "PROPOSED-jd-tree-A3",
       "canonical_slot": "jd-3.2",
@@ -4037,6 +4119,7 @@
       "name": "任务完成语义",
       "definition": "JD 任务级“完成”的语义：哪些子单元完成才算完成，什么异常算部分完成，什么状态算中止。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -4083,7 +4166,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-3.2.1",
       "parent_id": "jd-3.2",
       "canonical_slot": "jd-3.2",
@@ -4091,6 +4174,7 @@
       "name": "必要、可选与禁止子目标",
       "definition": "任务完成语义中的必要、可选和禁止子目标集合。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -4135,7 +4219,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-3.2.2",
       "parent_id": "jd-3.2",
       "canonical_slot": "jd-3.2",
@@ -4143,6 +4227,7 @@
       "name": "完成谓词",
       "definition": "用于判断任务完成的结构化语义，引用全局 jd-0.7。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference",
       "value_domain": [],
       "unit": null,
@@ -4187,7 +4272,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-3.2.3",
       "parent_id": "jd-3.2",
       "canonical_slot": "jd-3.2",
@@ -4195,6 +4280,7 @@
       "name": "部分完成语义",
       "definition": "未满足全部目标时可接受的部分完成状态。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -4249,7 +4335,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-3.2.4",
       "parent_id": "jd-3.2",
       "canonical_slot": "jd-3.2",
@@ -4257,6 +4343,7 @@
       "name": "失败、终止与中止语义",
       "definition": "任务失败、正常终止和安全中止的区分。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -4358,7 +4445,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-3.2.5",
       "parent_id": "jd-3.2",
       "canonical_slot": "jd-3.2",
@@ -4366,6 +4453,7 @@
       "name": "验证证据要求",
       "definition": "证明完成语义已满足所需的结果、状态或证据引用。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -4410,7 +4498,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-3.2.6",
       "parent_id": "jd-3.2",
       "canonical_slot": "jd-3.2",
@@ -4418,6 +4506,7 @@
       "name": "版本与变更规则",
       "definition": "完成语义的版本、生效范围和变更记录。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -4462,7 +4551,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-4.1",
       "parent_id": "PROPOSED-jd-tree-A4",
       "canonical_slot": "jd-4.1",
@@ -4470,6 +4559,7 @@
       "name": "任务结构",
       "definition": "JD 的标准相位以及相位间依赖和顺序约束，例如准备→起飞→巡检→返航→数据落地。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -4517,7 +4607,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.1.1",
       "parent_id": "jd-4.1",
       "canonical_slot": "jd-4.1",
@@ -4525,6 +4615,7 @@
       "name": "任务阶段目录",
       "definition": "JD 的标准任务阶段集合。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "list",
       "value_domain": [
         {
@@ -4627,7 +4718,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.1.2",
       "parent_id": "jd-4.1",
       "canonical_slot": "jd-4.1",
@@ -4635,6 +4726,7 @@
       "name": "阶段依赖与偏序",
       "definition": "任务阶段之间必须满足的依赖和先后约束。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -4680,7 +4772,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.1.3",
       "parent_id": "jd-4.1",
       "canonical_slot": "jd-4.1",
@@ -4688,6 +4780,7 @@
       "name": "阶段转换条件",
       "definition": "进入下一阶段所需的状态、事件或人工决定。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -4733,7 +4826,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.1.4",
       "parent_id": "jd-4.1",
       "canonical_slot": "jd-4.1",
@@ -4741,6 +4834,7 @@
       "name": "重复、分支与基数",
       "definition": "阶段允许的重复次数语义、条件分支和实例数量。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -4796,7 +4890,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.1.5",
       "parent_id": "jd-4.1",
       "canonical_slot": "jd-4.1",
@@ -4804,6 +4898,7 @@
       "name": "阶段入口与退出条件",
       "definition": "每个阶段的入口、完成、失败和退出语义。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -4849,7 +4944,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.1.6",
       "parent_id": "jd-4.1",
       "canonical_slot": "jd-4.1",
@@ -4857,6 +4952,7 @@
       "name": "任务生命周期状态",
       "definition": "编排层可观察的任务生命周期状态。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -4948,7 +5044,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-4.2",
       "parent_id": "PROPOSED-jd-tree-A4",
       "canonical_slot": "jd-4.2",
@@ -4956,6 +5052,7 @@
       "name": "人机交接点",
       "definition": "任务流中需要人介入的位置；A4 描述在哪里交接，A5 描述用什么协议交接。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -5002,7 +5099,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.2.1",
       "parent_id": "jd-4.2",
       "canonical_slot": "jd-4.2",
@@ -5010,6 +5107,7 @@
       "name": "交接点类型",
       "definition": "任务流程中交接点的业务类型。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -5100,7 +5198,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.2.2",
       "parent_id": "jd-4.2",
       "canonical_slot": "jd-4.2",
@@ -5108,6 +5206,7 @@
       "name": "流程位置",
       "definition": "交接点所属任务、阶段、步骤或阶段间边界。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference",
       "value_domain": [],
       "unit": null,
@@ -5152,7 +5251,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.2.3",
       "parent_id": "jd-4.2",
       "canonical_slot": "jd-4.2",
@@ -5160,6 +5259,7 @@
       "name": "有效窗口",
       "definition": "交接点允许触发和接受响应的业务窗口；具体时限 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -5214,7 +5314,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.2.4",
       "parent_id": "jd-4.2",
       "canonical_slot": "jd-4.2",
@@ -5222,6 +5322,7 @@
       "name": "安全暂停状态",
       "definition": "等待人工时允许保持的安全任务状态引用。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference",
       "value_domain": [
         {
@@ -5276,7 +5377,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.2.5",
       "parent_id": "jd-4.2",
       "canonical_slot": "jd-4.2",
@@ -5284,6 +5385,7 @@
       "name": "状态快照与上下文",
       "definition": "交接时需要保存的任务状态、已完成项和未决问题。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -5328,7 +5430,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.2.6",
       "parent_id": "jd-4.2",
       "canonical_slot": "jd-4.2",
@@ -5336,6 +5438,7 @@
       "name": "恢复位置",
       "definition": "交接结束后继续、重做或终止的流程位置。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference",
       "value_domain": [],
       "unit": null,
@@ -5380,7 +5483,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-4.3",
       "parent_id": "PROPOSED-jd-tree-A4",
       "canonical_slot": "jd-4.3",
@@ -5388,6 +5491,7 @@
       "name": "重编排触发",
       "definition": "JD 特定的任务级重规划触发条件，区别于 A10 的轨迹级重规划判据。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -5434,7 +5538,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.3.1",
       "parent_id": "jd-4.3",
       "canonical_slot": "jd-4.3",
@@ -5442,6 +5546,7 @@
       "name": "触发类别",
       "definition": "引起任务结构或步骤变化的事件类别。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -5532,7 +5637,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.3.2",
       "parent_id": "jd-4.3",
       "canonical_slot": "jd-4.3",
@@ -5540,6 +5645,7 @@
       "name": "触发来源",
       "definition": "触发来自用户、SUT、世界状态、harness 或 grader 的哪一侧。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -5625,7 +5731,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.3.3",
       "parent_id": "jd-4.3",
       "canonical_slot": "jd-4.3",
@@ -5633,6 +5739,7 @@
       "name": "受影响范围",
       "definition": "触发影响的任务、阶段、步骤或目标集合。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference",
       "value_domain": [],
       "unit": null,
@@ -5677,7 +5784,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.3.4",
       "parent_id": "jd-4.3",
       "canonical_slot": "jd-4.3",
@@ -5685,6 +5792,7 @@
       "name": "触发窗口",
       "definition": "触发在任务生命周期中的有效范围；具体阈值和时限 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -5739,7 +5847,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.3.5",
       "parent_id": "jd-4.3",
       "canonical_slot": "jd-4.3",
@@ -5747,6 +5855,7 @@
       "name": "可恢复性",
       "definition": "触发后的任务是否可继续、需重做或必须终止。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -5828,7 +5937,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.3.6",
       "parent_id": "jd-4.3",
       "canonical_slot": "jd-4.3",
@@ -5836,6 +5945,7 @@
       "name": "触发证据",
       "definition": "支持触发判定的输入、状态或 Trace 证据。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -5880,7 +5990,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-4.4",
       "parent_id": "PROPOSED-jd-tree-A4",
       "canonical_slot": "jd-4.4",
@@ -5888,6 +5998,7 @@
       "name": "任务级重规划策略",
       "definition": "JD 典型的多步重规划与恢复模式，区别于 A16 的反射级兜底动作。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -5933,7 +6044,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.4.1",
       "parent_id": "jd-4.4",
       "canonical_slot": "jd-4.4",
@@ -5941,6 +6052,7 @@
       "name": "重规划范围",
       "definition": "允许重规划的任务、阶段、步骤或子目标范围。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference",
       "value_domain": [],
       "unit": null,
@@ -5984,7 +6096,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.4.2",
       "parent_id": "jd-4.4",
       "canonical_slot": "jd-4.4",
@@ -5992,6 +6104,7 @@
       "name": "编排编辑操作",
       "definition": "对原任务结构可执行的编辑类型。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -6081,7 +6194,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.4.3",
       "parent_id": "jd-4.4",
       "canonical_slot": "jd-4.4",
@@ -6089,6 +6202,7 @@
       "name": "策略类别",
       "definition": "任务级修复策略的业务类别。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -6178,7 +6292,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.4.4",
       "parent_id": "jd-4.4",
       "canonical_slot": "jd-4.4",
@@ -6186,6 +6300,7 @@
       "name": "修复后验证",
       "definition": "重规划结果再次检查依赖、约束和完成语义的方式。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -6229,7 +6344,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.4.5",
       "parent_id": "jd-4.4",
       "canonical_slot": "jd-4.4",
@@ -6237,6 +6352,7 @@
       "name": "继续、降级或终止",
       "definition": "修复后的任务状态选择。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -6317,7 +6433,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-4.5",
       "parent_id": "PROPOSED-jd-tree-A4",
       "canonical_slot": "jd-4.5",
@@ -6325,6 +6441,7 @@
       "name": "编排输出机制",
       "definition": "JD 的 A4 输出抽象层级，例如 tool call、skill 调用、trajectory 或 velocity。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -6369,7 +6486,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.5.1",
       "parent_id": "jd-4.5",
       "canonical_slot": "jd-4.5",
@@ -6377,6 +6494,7 @@
       "name": "输出抽象层级",
       "definition": "A4 向后续执行层输出的抽象形式。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -6465,7 +6583,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.5.2",
       "parent_id": "jd-4.5",
       "canonical_slot": "jd-4.5",
@@ -6473,6 +6591,7 @@
       "name": "输出 schema 与版本",
       "definition": "编排输出的数据合同标识、版本和兼容性。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -6515,7 +6634,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.5.3",
       "parent_id": "jd-4.5",
       "canonical_slot": "jd-4.5",
@@ -6523,6 +6642,7 @@
       "name": "接收方类别",
       "definition": "编排输出被交付给的下游能力或执行组件类别。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference",
       "value_domain": [],
       "unit": null,
@@ -6565,7 +6685,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.5.4",
       "parent_id": "jd-4.5",
       "canonical_slot": "jd-4.5",
@@ -6573,6 +6693,7 @@
       "name": "下发模式",
       "definition": "输出是单次、流式、分段还是事务式提交。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -6657,7 +6778,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-4.5.5",
       "parent_id": "jd-4.5",
       "canonical_slot": "jd-4.5",
@@ -6665,6 +6786,7 @@
       "name": "响应与验证 Trace",
       "definition": "下游响应、接受、拒绝和执行效果的可观察记录。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -6707,7 +6829,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-5.1",
       "parent_id": "PROPOSED-jd-tree-A5",
       "canonical_slot": "jd-5.1",
@@ -6715,6 +6837,7 @@
       "name": "交接协议表",
       "definition": "交接类型×优先级×延迟预算的综合协议表，覆盖确认、纠偏、批准、审计、通知等类型。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -6766,7 +6889,7 @@
       "notes": "语义继承旧 jd-14.1；编号按 2026-07-19 会议草案迁移。"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-5.1.1",
       "parent_id": "jd-5.1",
       "canonical_slot": "jd-5.1",
@@ -6774,6 +6897,7 @@
       "name": "交接类型",
       "definition": "交互膜中请求或交接的类型。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -6892,7 +7016,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-5.1.2",
       "parent_id": "jd-5.1",
       "canonical_slot": "jd-5.1",
@@ -6900,6 +7024,7 @@
       "name": "接收角色与权限",
       "definition": "交接对象及其对批准、纠偏、暂停或接管的权限。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference",
       "value_domain": [],
       "unit": null,
@@ -6949,7 +7074,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-5.1.3",
       "parent_id": "jd-5.1",
       "canonical_slot": "jd-5.1",
@@ -6957,6 +7082,7 @@
       "name": "优先级",
       "definition": "交接消息或请求的优先级分类；正式档位和业务规则 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -7016,7 +7142,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-5.1.4",
       "parent_id": "jd-5.1",
       "canonical_slot": "jd-5.1",
@@ -7024,6 +7150,7 @@
       "name": "触发条件",
       "definition": "交接协议被启用的任务状态、风险或信息缺口。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -7073,7 +7200,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-5.1.5",
       "parent_id": "jd-5.1",
       "canonical_slot": "jd-5.1",
@@ -7081,6 +7208,7 @@
       "name": "延迟预算",
       "definition": "请求发出、等待和升级的时间预算；具体数值不得推断。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -7140,7 +7268,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-5.1.6",
       "parent_id": "jd-5.1",
       "canonical_slot": "jd-5.1",
@@ -7148,6 +7276,7 @@
       "name": "交接载荷",
       "definition": "交接消息所需的任务上下文、状态、证据和请求内容。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -7197,7 +7326,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-5.1.7",
       "parent_id": "jd-5.1",
       "canonical_slot": "jd-5.1",
@@ -7205,6 +7334,7 @@
       "name": "确认、回读与继续规则",
       "definition": "交接后的等待、确认、回读、恢复或终止状态机。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -7264,7 +7394,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-5.2",
       "parent_id": "PROPOSED-jd-tree-A5",
       "canonical_slot": "jd-5.2",
@@ -7272,6 +7402,7 @@
       "name": "偏好对齐协议",
       "definition": "JD 中用户偏好可表达的维度与系统对齐流程，包含 preference taxonomy。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -7322,7 +7453,7 @@
       "notes": "语义继承旧 jd-14.2；编号按 2026-07-19 会议草案迁移。"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-5.2.1",
       "parent_id": "jd-5.2",
       "canonical_slot": "jd-5.2",
@@ -7330,6 +7461,7 @@
       "name": "偏好类别",
       "definition": "业务中允许表达和对齐的偏好类别；最终 taxonomy TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -7424,7 +7556,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-5.2.2",
       "parent_id": "jd-5.2",
       "canonical_slot": "jd-5.2",
@@ -7432,6 +7564,7 @@
       "name": "偏好值表示",
       "definition": "偏好值的类型、允许范围和不适用状态。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -7480,7 +7613,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-5.2.3",
       "parent_id": "jd-5.2",
       "canonical_slot": "jd-5.2",
@@ -7488,6 +7621,7 @@
       "name": "偏好来源",
       "definition": "偏好来自用户显式声明、组织规则、历史记录或推断。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -7589,7 +7723,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-5.2.4",
       "parent_id": "jd-5.2",
       "canonical_slot": "jd-5.2",
@@ -7597,6 +7731,7 @@
       "name": "适用范围与生效版本",
       "definition": "偏好对任务、场景、角色和时间范围的适用性。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -7645,7 +7780,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-5.2.5",
       "parent_id": "jd-5.2",
       "canonical_slot": "jd-5.2",
@@ -7653,6 +7788,7 @@
       "name": "优先级与冲突",
       "definition": "多个偏好及其与合规、安全约束冲突时的状态；解决规则 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -7711,7 +7847,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-5.2.6",
       "parent_id": "jd-5.2",
       "canonical_slot": "jd-5.2",
@@ -7719,6 +7855,7 @@
       "name": "更新与撤销",
       "definition": "用户或组织更新、暂停和撤销偏好的协议。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -7767,7 +7904,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "jd-5.3",
       "parent_id": "PROPOSED-jd-tree-A5",
       "canonical_slot": "jd-5.3",
@@ -7775,6 +7912,7 @@
       "name": "高层通知规则",
       "definition": "L4 高层通知、边界发现与策略切换时采用的通知规则。",
       "node_kind": "group",
+      "variable_role": "structural_group",
       "value_type": "none",
       "value_domain": null,
       "unit": null,
@@ -7825,7 +7963,7 @@
       "notes": "语义继承旧 jd-14.3；编号按 2026-07-19 会议草案迁移。"
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-5.3.1",
       "parent_id": "jd-5.3",
       "canonical_slot": "jd-5.3",
@@ -7833,6 +7971,7 @@
       "name": "高层事件类别",
       "definition": "需要产生高层通知的业务事件类别。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "multi_enum",
       "value_domain": [
         {
@@ -7928,7 +8067,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-5.3.2",
       "parent_id": "jd-5.3",
       "canonical_slot": "jd-5.3",
@@ -7936,6 +8075,7 @@
       "name": "通知对象与路由",
       "definition": "通知面向的角色、渠道和路由关系。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference",
       "value_domain": [],
       "unit": null,
@@ -7984,7 +8124,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-5.3.3",
       "parent_id": "jd-5.3",
       "canonical_slot": "jd-5.3",
@@ -7992,6 +8132,7 @@
       "name": "通知优先级",
       "definition": "高层通知的优先级；正式档位和触发规则 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "enum",
       "value_domain": [
         {
@@ -8050,7 +8191,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-5.3.4",
       "parent_id": "jd-5.3",
       "canonical_slot": "jd-5.3",
@@ -8058,6 +8199,7 @@
       "name": "证据摘要",
       "definition": "通知中附带的任务状态、边界、原因和证据摘要。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [],
       "unit": null,
@@ -8106,7 +8248,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-5.3.5",
       "parent_id": "jd-5.3",
       "canonical_slot": "jd-5.3",
@@ -8114,6 +8256,7 @@
       "name": "去重与抑制",
       "definition": "重复通知的合并、抑制和恢复条件；规则 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -8172,7 +8315,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-5.3.6",
       "parent_id": "jd-5.3",
       "canonical_slot": "jd-5.3",
@@ -8180,6 +8323,7 @@
       "name": "升级与确认",
       "definition": "通知升级、人工确认和未确认处置；时限和阈值 TBD。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "object",
       "value_domain": [
         {
@@ -8238,7 +8382,7 @@
       "notes": null
     },
     {
-      "schema_version": "jd-tree/0.3.0",
+      "schema_version": "jd-tree/0.4.0",
       "node_id": "PROPOSED-jd-5.3.7",
       "parent_id": "jd-5.3",
       "canonical_slot": "jd-5.3",
@@ -8246,6 +8390,7 @@
       "name": "审计关联",
       "definition": "通知与任务 Trace、交接记录和审计证据的关联标识。",
       "node_kind": "variable",
+      "variable_role": "TBD",
       "value_type": "reference",
       "value_domain": [],
       "unit": null,
