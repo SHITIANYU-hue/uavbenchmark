@@ -13,7 +13,13 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
 from urllib.parse import parse_qs, urlparse
 
-from .catalog import ROOT, load_fixed_scenario, load_reference_catalog, load_scenario_registry
+from .catalog import (
+    ROOT,
+    load_fixed_scenario,
+    load_jd_tree_domains,
+    load_reference_catalog,
+    load_scenario_registry,
+)
 from .models import AgentCandidate
 from .service import (
     ConfigAgentError,
@@ -190,31 +196,12 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
             self._json(HTTPStatus.OK, load_scenario_registry())
             return
         if parsed.path == "/api/jd-tree/domains":
-            tree_path = ROOT / "knowledge" / "jd_variable_tree_version1.json"
-            if not tree_path.exists():
+            try:
+                domains = load_jd_tree_domains()
+            except FileNotFoundError:
                 self._json(HTTPStatus.NOT_FOUND, {"error": "jd_tree_not_found"})
                 return
-            tree = json.loads(tree_path.read_text(encoding="utf-8"))
-            domains: dict[str, Any] = {}
-            for node in tree.get("nodes", []):
-                slot = node.get("canonical_slot")
-                if not slot or node.get("node_kind") != "variable":
-                    continue
-                vtype = node.get("value_type", "")
-                raw_domain = node.get("value_domain") or []
-                if isinstance(raw_domain, list) and raw_domain:
-                    labels = []
-                    for item in raw_domain:
-                        if isinstance(item, dict):
-                            labels.append(item.get("label_zh") or item.get("value") or "")
-                        elif item is not None:
-                            labels.append(str(item))
-                    labels = [l for l in labels if l]
-                    if labels:
-                        domains[slot] = {"value_type": vtype, "options": labels}
-                elif vtype in ("number", "number_or_range", "integer", "integer_or_range"):
-                    domains[slot] = {"value_type": vtype, "options": []}
-            self._json(HTTPStatus.OK, {"slots": domains})
+            self._json(HTTPStatus.OK, domains)
             return
         if parsed.path == "/api/config-agent/status":
             run_id = (parse_qs(parsed.query).get("run_id") or [""])[0]
