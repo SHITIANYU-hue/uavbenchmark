@@ -39,9 +39,9 @@
     "A11a": "A12",
     "A11b": "A13",
     "A12": "A14",
-    "A13": "A15",
-    "A14": "A16",
-    "A15": "A17"
+    "A13": "A16",
+    "A14": "A17",
+    "A16": "A15"
   },
   "jd_local_prefix_migration_v2_to_v3": {
     "jd-7a": "jd-7",
@@ -52,9 +52,9 @@
     "jd-11a": "jd-12",
     "jd-11b": "jd-13",
     "jd-12": "jd-14",
-    "jd-13": "jd-15",
-    "jd-14": "jd-16",
-    "jd-15": "jd-17"
+    "jd-13": "jd-16",
+    "jd-14": "jd-17",
+    "jd-16": "jd-15"
   },
   "counts": {
     "total": 66,
@@ -145,9 +145,9 @@
         "A12",
         "A13",
         "A14",
-        "A15",
         "A16",
-        "A17"
+        "A17",
+        "A15"
       ]
     },
     {
@@ -161,9 +161,9 @@
       "related_a": [
         "A2",
         "A10",
-        "A15",
         "A16",
-        "A17"
+        "A17",
+        "A15"
       ]
     },
     {
@@ -216,7 +216,7 @@
       "description": "任务执行前已声明的安全边界、允许范围、阈值及最低安全储备。",
       "related_a": [
         "A2",
-        "A16"
+        "A17"
       ]
     },
     {
@@ -260,7 +260,7 @@
       "scope": "local",
       "g_group": "G1",
       "owner_a": "A2",
-      "ability": "外部填参",
+      "ability": "实况填参",
       "name": "任务参数表",
       "description": "JD 的任务级参数、类型、取值范围与默认值，例如飞行高度、拍摄间隔、覆盖率判据等。",
       "related_a": [
@@ -272,7 +272,7 @@
       "scope": "local",
       "g_group": "G1",
       "owner_a": "A2",
-      "ability": "外部填参",
+      "ability": "实况填参",
       "name": "平台参数表",
       "description": "无人机及其他实体的平台级参数、默认值与设计运行域，例如最大风速、续航与环境耐受范围。",
       "related_a": [
@@ -284,7 +284,7 @@
       "scope": "local",
       "g_group": "G1",
       "owner_a": "A2",
-      "ability": "外部填参",
+      "ability": "实况填参",
       "name": "隐式参数规则",
       "description": "上下文相关的参数自动推断规则，即专家默认知道但 JD-SOP 未显式写出的规则。",
       "related_a": [
@@ -358,7 +358,7 @@
       "owner_a": "A4",
       "ability": "编排执行",
       "name": "任务级重规划策略",
-      "description": "JD 典型的多步重规划与恢复模式，区别于 A16 的反射级兜底动作。",
+      "description": "JD 典型的多步重规划与恢复模式，区别于 A17 的反射级兜底动作。",
       "related_a": [
         "A4"
       ]
@@ -760,73 +760,13 @@
       ]
     },
     {
-      "id": "jd-15.1",
+      "id": "jd-16.1",
       "scope": "local",
       "g_group": "G5",
-      "owner_a": "A15",
+      "owner_a": "A16",
       "ability": "合规申报",
       "name": "空域类别",
       "description": "该 JD 涉及的空域类别，例如 ICAO G/E/D/C/B/A 等。",
-      "related_a": [
-        "A15"
-      ]
-    },
-    {
-      "id": "jd-15.2",
-      "scope": "local",
-      "g_group": "G5",
-      "owner_a": "A15",
-      "ability": "合规申报",
-      "name": "地理围栏集",
-      "description": "JD 的地理围栏集合，包含具体边界。",
-      "related_a": [
-        "A15"
-      ]
-    },
-    {
-      "id": "jd-15.3",
-      "scope": "local",
-      "g_group": "G5",
-      "owner_a": "A15",
-      "ability": "合规申报",
-      "name": "交通信息源需求",
-      "description": "JD 要求平台接入的交通信息源集，例如 UTM、U-space 与 ADS-B。",
-      "related_a": [
-        "A15"
-      ]
-    },
-    {
-      "id": "jd-15.4",
-      "scope": "local",
-      "g_group": "G5",
-      "owner_a": "A15",
-      "ability": "合规申报",
-      "name": "授权生命周期",
-      "description": "授权的生命周期管理，例如长期、临时与即时授权。",
-      "related_a": [
-        "A15"
-      ]
-    },
-    {
-      "id": "jd-15.5",
-      "scope": "local",
-      "g_group": "G5",
-      "owner_a": "A15",
-      "ability": "合规申报",
-      "name": "合规处置策略适用集",
-      "description": "该 JD 下 L4 可用且有效的合规处置策略子集，例如刷新授权、更新围栏、等待恢复、复核交通、退避与返航。",
-      "related_a": [
-        "A15"
-      ]
-    },
-    {
-      "id": "jd-16.1",
-      "scope": "local",
-      "g_group": "G6",
-      "owner_a": "A16",
-      "ability": "安全包络",
-      "name": "分相位安全阈值",
-      "description": "“任务相位×安全阈值”的 schedule；起飞、巡检与返航可采用不同阈值。",
       "related_a": [
         "A16"
       ]
@@ -834,11 +774,11 @@
     {
       "id": "jd-16.2",
       "scope": "local",
-      "g_group": "G6",
+      "g_group": "G5",
       "owner_a": "A16",
-      "ability": "安全包络",
-      "name": "安全处置策略适用集",
-      "description": "L4 兜底动作子集及触发条件，包括 ODD 越界响应、返航、悬停、降级、备降与安全模式。",
+      "ability": "合规申报",
+      "name": "地理围栏集",
+      "description": "JD 的地理围栏集合，包含具体边界。",
       "related_a": [
         "A16"
       ]
@@ -846,11 +786,35 @@
     {
       "id": "jd-16.3",
       "scope": "local",
-      "g_group": "G6",
+      "g_group": "G5",
       "owner_a": "A16",
-      "ability": "安全包络",
-      "name": "安全态定义",
-      "description": "该 JD 接受的 safe state 集合，以及悬停、返航点、备降点和安全模式各自的进入条件。",
+      "ability": "合规申报",
+      "name": "交通信息源需求",
+      "description": "JD 要求平台接入的交通信息源集，例如 UTM、U-space 与 ADS-B。",
+      "related_a": [
+        "A16"
+      ]
+    },
+    {
+      "id": "jd-16.4",
+      "scope": "local",
+      "g_group": "G5",
+      "owner_a": "A16",
+      "ability": "合规申报",
+      "name": "授权生命周期",
+      "description": "授权的生命周期管理，例如长期、临时与即时授权。",
+      "related_a": [
+        "A16"
+      ]
+    },
+    {
+      "id": "jd-16.5",
+      "scope": "local",
+      "g_group": "G5",
+      "owner_a": "A16",
+      "ability": "合规申报",
+      "name": "合规处置策略适用集",
+      "description": "该 JD 下 L4 可用且有效的合规处置策略子集，例如刷新授权、更新围栏、等待恢复、复核交通、退避与返航。",
       "related_a": [
         "A16"
       ]
@@ -860,9 +824,9 @@
       "scope": "local",
       "g_group": "G6",
       "owner_a": "A17",
-      "ability": "审计日志",
-      "name": "事件类目",
-      "description": "该 JD 要记录的跨 A 事件类目；meta-A 用于列举其他 A 产生的关键事件。",
+      "ability": "安全包络",
+      "name": "分相位安全阈值",
+      "description": "“任务相位×安全阈值”的 schedule；起飞、巡检与返航可采用不同阈值。",
       "related_a": [
         "A17"
       ]
@@ -872,9 +836,9 @@
       "scope": "local",
       "g_group": "G6",
       "owner_a": "A17",
-      "ability": "审计日志",
-      "name": "证据格式规格",
-      "description": "JD 的证据格式与审计协议，吸收原 audit protocol。",
+      "ability": "安全包络",
+      "name": "安全处置策略适用集",
+      "description": "L4 兜底动作子集及触发条件，包括 ODD 越界响应、返航、悬停、降级、备降与安全模式。",
       "related_a": [
         "A17"
       ]
@@ -884,11 +848,47 @@
       "scope": "local",
       "g_group": "G6",
       "owner_a": "A17",
+      "ability": "安全包络",
+      "name": "安全态定义",
+      "description": "该 JD 接受的 safe state 集合，以及悬停、返航点、备降点和安全模式各自的进入条件。",
+      "related_a": [
+        "A17"
+      ]
+    },
+    {
+      "id": "jd-15.1",
+      "scope": "local",
+      "g_group": "G6",
+      "owner_a": "A15",
+      "ability": "审计日志",
+      "name": "事件类目",
+      "description": "该 JD 要记录的跨 A 事件类目；meta-A 用于列举其他 A 产生的关键事件。",
+      "related_a": [
+        "A15"
+      ]
+    },
+    {
+      "id": "jd-15.2",
+      "scope": "local",
+      "g_group": "G6",
+      "owner_a": "A15",
+      "ability": "审计日志",
+      "name": "证据格式规格",
+      "description": "JD 的证据格式与审计协议，吸收原 audit protocol。",
+      "related_a": [
+        "A15"
+      ]
+    },
+    {
+      "id": "jd-15.3",
+      "scope": "local",
+      "g_group": "G6",
+      "owner_a": "A15",
       "ability": "审计日志",
       "name": "留存策略",
       "description": "日志与证据留存策略，是 JD-SOP 对法定 minimum 的进一步细化。",
       "related_a": [
-        "A17"
+        "A15"
       ]
     }
   ],
@@ -907,7 +907,7 @@
     },
     "A2": {
       "g_group": "G1",
-      "ability": "外部填参",
+      "ability": "实况填参",
       "global_ids": [
         "jd-0.6",
         "jd-0.10"
@@ -1085,7 +1085,7 @@
         "jd-14.3"
       ]
     },
-    "A15": {
+    "A16": {
       "g_group": "G5",
       "ability": "合规申报",
       "global_ids": [
@@ -1093,14 +1093,14 @@
         "jd-0.6"
       ],
       "local_ids": [
-        "jd-15.1",
-        "jd-15.2",
-        "jd-15.3",
-        "jd-15.4",
-        "jd-15.5"
+        "jd-16.1",
+        "jd-16.2",
+        "jd-16.3",
+        "jd-16.4",
+        "jd-16.5"
       ]
     },
-    "A16": {
+    "A17": {
       "g_group": "G6",
       "ability": "安全包络",
       "global_ids": [
@@ -1109,12 +1109,12 @@
         "jd-0.10"
       ],
       "local_ids": [
-        "jd-16.1",
-        "jd-16.2",
-        "jd-16.3"
+        "jd-17.1",
+        "jd-17.2",
+        "jd-17.3"
       ]
     },
-    "A17": {
+    "A15": {
       "g_group": "G6",
       "ability": "审计日志",
       "global_ids": [
@@ -1122,9 +1122,9 @@
         "jd-0.6"
       ],
       "local_ids": [
-        "jd-17.1",
-        "jd-17.2",
-        "jd-17.3"
+        "jd-15.1",
+        "jd-15.2",
+        "jd-15.3"
       ]
     }
   },

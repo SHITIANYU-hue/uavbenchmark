@@ -15,6 +15,46 @@
   },
   "nodes": [
     {
+      "node_id": "A1",
+      "parent_id": null,
+      "canonical_slot": null,
+      "owner_a": "A1",
+      "name": "意图入口",
+      "definition": "",
+      "node_kind": "capability_root",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "A10",
+      "parent_id": null,
+      "canonical_slot": null,
+      "owner_a": "A10",
+      "name": "导航飞行",
+      "definition": "",
+      "node_kind": "capability_root",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
       "node_id": "A11",
       "parent_id": null,
       "canonical_slot": null,
@@ -24,6 +64,1057 @@
       "node_kind": "capability_root",
       "value_type": "",
       "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "A12",
+      "parent_id": null,
+      "canonical_slot": null,
+      "owner_a": "A12",
+      "name": "载荷执行",
+      "definition": "",
+      "node_kind": "capability_root",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "A13",
+      "parent_id": null,
+      "canonical_slot": null,
+      "owner_a": "A13",
+      "name": "成果呈现",
+      "definition": "",
+      "node_kind": "capability_root",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "A14",
+      "parent_id": null,
+      "canonical_slot": null,
+      "owner_a": "A14",
+      "name": "通信链路",
+      "definition": "",
+      "node_kind": "capability_root",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "A15",
+      "parent_id": null,
+      "canonical_slot": null,
+      "owner_a": "A15",
+      "name": "审计日志",
+      "definition": "",
+      "node_kind": "capability_root",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "A16",
+      "parent_id": null,
+      "canonical_slot": null,
+      "owner_a": "A16",
+      "name": "合规申报",
+      "definition": "",
+      "node_kind": "capability_root",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "A17",
+      "parent_id": null,
+      "canonical_slot": null,
+      "owner_a": "A17",
+      "name": "安全包络",
+      "definition": "",
+      "node_kind": "capability_root",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "A2",
+      "parent_id": null,
+      "canonical_slot": null,
+      "owner_a": "A2",
+      "name": "实况填参",
+      "definition": "",
+      "node_kind": "capability_root",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "A3",
+      "parent_id": null,
+      "canonical_slot": null,
+      "owner_a": "A3",
+      "name": "分步推理",
+      "definition": "",
+      "node_kind": "capability_root",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "A4",
+      "parent_id": null,
+      "canonical_slot": null,
+      "owner_a": "A4",
+      "name": "编排执行",
+      "definition": "",
+      "node_kind": "capability_root",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "A5",
+      "parent_id": null,
+      "canonical_slot": null,
+      "owner_a": "A5",
+      "name": "请求交接",
+      "definition": "",
+      "node_kind": "capability_root",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "A6",
+      "parent_id": null,
+      "canonical_slot": null,
+      "owner_a": "A6",
+      "name": "环境感知",
+      "definition": "",
+      "node_kind": "capability_root",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "A7",
+      "parent_id": null,
+      "canonical_slot": null,
+      "owner_a": "A7",
+      "name": "自身定位",
+      "definition": "",
+      "node_kind": "capability_root",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "A8",
+      "parent_id": null,
+      "canonical_slot": null,
+      "owner_a": "A8",
+      "name": "相对定位",
+      "definition": "",
+      "node_kind": "capability_root",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "A9",
+      "parent_id": null,
+      "canonical_slot": null,
+      "owner_a": "A9",
+      "name": "资源管理",
+      "definition": "",
+      "node_kind": "capability_root",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-1.1",
+      "parent_id": "A1",
+      "canonical_slot": null,
+      "owner_a": "A1",
+      "name": "本体目录",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-1.1.1",
+      "parent_id": "jd-1.1",
+      "canonical_slot": null,
+      "owner_a": "A1",
+      "name": "对象类型集",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "业务实体",
+          "label_zh": "业务实体"
+        },
+        {
+          "value": "空间区域",
+          "label_zh": "空间区域"
+        },
+        {
+          "value": "事件状态",
+          "label_zh": "事件状态"
+        },
+        {
+          "value": "任务产物",
+          "label_zh": "任务产物"
+        },
+        {
+          "value": "人员角色",
+          "label_zh": "人员角色"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-1.1.2",
+      "parent_id": "jd-1.1",
+      "canonical_slot": null,
+      "owner_a": "A1",
+      "name": "对象属性集",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-1.1.3",
+      "parent_id": "jd-1.1",
+      "canonical_slot": null,
+      "owner_a": "A1",
+      "name": "术语词表",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "multi_enum",
+      "value_domain": [
+        {
+          "value": "动作动词",
+          "label_zh": "动作动词"
+        },
+        {
+          "value": "状态形容词",
+          "label_zh": "状态形容词"
+        },
+        {
+          "value": "专有名词",
+          "label_zh": "专有名词"
+        },
+        {
+          "value": "量化表达",
+          "label_zh": "量化表达"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-1.2",
+      "parent_id": "A1",
+      "canonical_slot": null,
+      "owner_a": "A1",
+      "name": "方法与边界",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-1.2.1",
+      "parent_id": "jd-1.2",
+      "canonical_slot": null,
+      "owner_a": "A1",
+      "name": "指称方式集",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "ID指称",
+          "label_zh": "ID指称"
+        },
+        {
+          "value": "地图指示",
+          "label_zh": "地图指示"
+        },
+        {
+          "value": "视频指示",
+          "label_zh": "视频指示"
+        },
+        {
+          "value": "自然语言",
+          "label_zh": "自然语言"
+        },
+        {
+          "value": "指示性指称",
+          "label_zh": "指示性指称"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-1.2.2",
+      "parent_id": "jd-1.2",
+      "canonical_slot": null,
+      "owner_a": "A1",
+      "name": "输入通道边界",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-1.3",
+      "parent_id": "A1",
+      "canonical_slot": null,
+      "owner_a": "A1",
+      "name": "质量标准",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-1.3.1",
+      "parent_id": "jd-1.3",
+      "canonical_slot": null,
+      "owner_a": "A1",
+      "name": "指称消解准确率",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "range",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-1.3.2",
+      "parent_id": "jd-1.3",
+      "canonical_slot": null,
+      "owner_a": "A1",
+      "name": "歧义检测召回率",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "range",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-1.4",
+      "parent_id": "A1",
+      "canonical_slot": null,
+      "owner_a": "A1",
+      "name": "兜底协议",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-1.4.1",
+      "parent_id": "jd-1.4",
+      "canonical_slot": null,
+      "owner_a": "A1",
+      "name": "歧义类型",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "多义",
+          "label_zh": "多义"
+        },
+        {
+          "value": "缺省",
+          "label_zh": "缺省"
+        },
+        {
+          "value": "指代不明",
+          "label_zh": "指代不明"
+        },
+        {
+          "value": "冲突指令",
+          "label_zh": "冲突指令"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-1.4.2",
+      "parent_id": "jd-1.4",
+      "canonical_slot": null,
+      "owner_a": "A1",
+      "name": "消解动作",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "请求澄清",
+          "label_zh": "请求澄清"
+        },
+        {
+          "value": "上下文推断",
+          "label_zh": "上下文推断"
+        },
+        {
+          "value": "默认假设",
+          "label_zh": "默认假设"
+        },
+        {
+          "value": "拒绝执行",
+          "label_zh": "拒绝执行"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-1.4.3",
+      "parent_id": "jd-1.4",
+      "canonical_slot": null,
+      "owner_a": "A1",
+      "name": "升级目标",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "ref",
+      "value_domain": [
+        {
+          "value": "→A5请求交接",
+          "label_zh": "→A5请求交接"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-10.1",
+      "parent_id": "A10",
+      "canonical_slot": null,
+      "owner_a": "A10",
+      "name": "本体目录",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-10.1.1",
+      "parent_id": "jd-10.1",
+      "canonical_slot": null,
+      "owner_a": "A10",
+      "name": "航路类型集",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "航点序列",
+          "label_zh": "航点序列"
+        },
+        {
+          "value": "线段扫描",
+          "label_zh": "线段扫描"
+        },
+        {
+          "value": "螺旋扫描",
+          "label_zh": "螺旋扫描"
+        },
+        {
+          "value": "盘旋等待",
+          "label_zh": "盘旋等待"
+        },
+        {
+          "value": "自由航迹",
+          "label_zh": "自由航迹"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-10.1.2",
+      "parent_id": "jd-10.1",
+      "canonical_slot": null,
+      "owner_a": "A10",
+      "name": "航路属性",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-10.1.3",
+      "parent_id": "jd-10.1",
+      "canonical_slot": null,
+      "owner_a": "A10",
+      "name": "任务段划分",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-10.2",
+      "parent_id": "A10",
+      "canonical_slot": null,
+      "owner_a": "A10",
+      "name": "方法与边界",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-10.2.1",
+      "parent_id": "jd-10.2",
+      "canonical_slot": null,
+      "owner_a": "A10",
+      "name": "导航方法",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "航点跟随",
+          "label_zh": "航点跟随"
+        },
+        {
+          "value": "轨迹跟踪",
+          "label_zh": "轨迹跟踪"
+        },
+        {
+          "value": "矢量场制导",
+          "label_zh": "矢量场制导"
+        },
+        {
+          "value": "反应式避障",
+          "label_zh": "反应式避障"
+        },
+        {
+          "value": "混合",
+          "label_zh": "混合"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-10.2.2",
+      "parent_id": "jd-10.2",
+      "canonical_slot": null,
+      "owner_a": "A10",
+      "name": "轨迹物理约束",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-10.3",
+      "parent_id": "A10",
+      "canonical_slot": null,
+      "owner_a": "A10",
+      "name": "质量标准",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-10.3.1",
+      "parent_id": "jd-10.3",
+      "canonical_slot": null,
+      "owner_a": "A10",
+      "name": "横向偏差",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "range",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-10.3.2",
+      "parent_id": "jd-10.3",
+      "canonical_slot": null,
+      "owner_a": "A10",
+      "name": "高度偏差",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "range",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-10.3.3",
+      "parent_id": "jd-10.3",
+      "canonical_slot": null,
+      "owner_a": "A10",
+      "name": "到达精度",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "range",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-10.4",
+      "parent_id": "A10",
+      "canonical_slot": null,
+      "owner_a": "A10",
+      "name": "兜底协议",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-10.4.1",
+      "parent_id": "jd-10.4",
+      "canonical_slot": null,
+      "owner_a": "A10",
+      "name": "偏航触发",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "横向超限",
+          "label_zh": "横向超限"
+        },
+        {
+          "value": "高度超限",
+          "label_zh": "高度超限"
+        },
+        {
+          "value": "风偏",
+          "label_zh": "风偏"
+        },
+        {
+          "value": "避障需求",
+          "label_zh": "避障需求"
+        },
+        {
+          "value": "航路失效",
+          "label_zh": "航路失效"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-10.4.2",
+      "parent_id": "jd-10.4",
+      "canonical_slot": null,
+      "owner_a": "A10",
+      "name": "重规划动作",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "局部重规划",
+          "label_zh": "局部重规划"
+        },
+        {
+          "value": "改变高度",
+          "label_zh": "改变高度"
+        },
+        {
+          "value": "悬停等待",
+          "label_zh": "悬停等待"
+        },
+        {
+          "value": "切换备降",
+          "label_zh": "切换备降"
+        },
+        {
+          "value": "紧急返航",
+          "label_zh": "紧急返航"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-10.4.3",
+      "parent_id": "jd-10.4",
+      "canonical_slot": null,
+      "owner_a": "A10",
+      "name": "升级目标",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "ref",
+      "value_domain": [
+        {
+          "value": "→A11控制",
+          "label_zh": "→A11控制"
+        },
+        {
+          "value": "→A4编排",
+          "label_zh": "→A4编排"
+        }
+      ],
       "unit": "",
       "configuration_side": "shared",
       "difficulty_direction": "neutral",
@@ -2681,8 +3772,8 @@
           "label_zh": "→A10导航飞行"
         },
         {
-          "value": "→A16安全包络",
-          "label_zh": "→A16安全包络"
+          "value": "→A17安全包络",
+          "label_zh": "→A17安全包络"
         }
       ],
       "unit": "",
@@ -2696,30 +3787,10 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "A1",
-      "parent_id": null,
+      "node_id": "jd-12.1",
+      "parent_id": "A12",
       "canonical_slot": null,
-      "owner_a": "A1",
-      "name": "意图入口",
-      "definition": "",
-      "node_kind": "capability_root",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-1.1",
-      "parent_id": "A1",
-      "canonical_slot": null,
-      "owner_a": "A1",
+      "owner_a": "A12",
       "name": "本体目录",
       "definition": "",
       "node_kind": "group",
@@ -2736,34 +3807,46 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-1.1.1",
-      "parent_id": "jd-1.1",
+      "node_id": "jd-12.1.1",
+      "parent_id": "jd-12.1",
       "canonical_slot": null,
-      "owner_a": "A1",
-      "name": "对象类型集",
+      "owner_a": "A12",
+      "name": "动作类型集",
       "definition": "",
       "node_kind": "variable",
       "value_type": "enum",
       "value_domain": [
         {
-          "value": "业务实体",
-          "label_zh": "业务实体"
+          "value": "拍照",
+          "label_zh": "拍照"
         },
         {
-          "value": "空间区域",
-          "label_zh": "空间区域"
+          "value": "录像",
+          "label_zh": "录像"
         },
         {
-          "value": "事件状态",
-          "label_zh": "事件状态"
+          "value": "喊话",
+          "label_zh": "喊话"
         },
         {
-          "value": "任务产物",
-          "label_zh": "任务产物"
+          "value": "投送",
+          "label_zh": "投送"
         },
         {
-          "value": "人员角色",
-          "label_zh": "人员角色"
+          "value": "采样",
+          "label_zh": "采样"
+        },
+        {
+          "value": "云台调位",
+          "label_zh": "云台调位"
+        },
+        {
+          "value": "照射",
+          "label_zh": "照射"
+        },
+        {
+          "value": "扫描",
+          "label_zh": "扫描"
         }
       ],
       "unit": "",
@@ -2777,11 +3860,11 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-1.1.2",
-      "parent_id": "jd-1.1",
+      "node_id": "jd-12.1.2",
+      "parent_id": "jd-12.1",
       "canonical_slot": null,
-      "owner_a": "A1",
-      "name": "对象属性集",
+      "owner_a": "A12",
+      "name": "动作属性",
       "definition": "",
       "node_kind": "variable",
       "value_type": "object",
@@ -2797,32 +3880,15 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-1.1.3",
-      "parent_id": "jd-1.1",
+      "node_id": "jd-12.1.3",
+      "parent_id": "jd-12.1",
       "canonical_slot": null,
-      "owner_a": "A1",
-      "name": "术语词表",
+      "owner_a": "A12",
+      "name": "动作依赖规则",
       "definition": "",
       "node_kind": "variable",
-      "value_type": "multi_enum",
-      "value_domain": [
-        {
-          "value": "动作动词",
-          "label_zh": "动作动词"
-        },
-        {
-          "value": "状态形容词",
-          "label_zh": "状态形容词"
-        },
-        {
-          "value": "专有名词",
-          "label_zh": "专有名词"
-        },
-        {
-          "value": "量化表达",
-          "label_zh": "量化表达"
-        }
-      ],
+      "value_type": "rules",
+      "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
       "difficulty_direction": "neutral",
@@ -2834,10 +3900,10 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-1.2",
-      "parent_id": "A1",
+      "node_id": "jd-12.2",
+      "parent_id": "A12",
       "canonical_slot": null,
-      "owner_a": "A1",
+      "owner_a": "A12",
       "name": "方法与边界",
       "definition": "",
       "node_kind": "group",
@@ -2854,34 +3920,30 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-1.2.1",
-      "parent_id": "jd-1.2",
+      "node_id": "jd-12.2.1",
+      "parent_id": "jd-12.2",
       "canonical_slot": null,
-      "owner_a": "A1",
-      "name": "指称方式集",
+      "owner_a": "A12",
+      "name": "执行机制",
       "definition": "",
       "node_kind": "variable",
       "value_type": "enum",
       "value_domain": [
         {
-          "value": "ID指称",
-          "label_zh": "ID指称"
+          "value": "指令触发",
+          "label_zh": "指令触发"
         },
         {
-          "value": "地图指示",
-          "label_zh": "地图指示"
+          "value": "定时触发",
+          "label_zh": "定时触发"
         },
         {
-          "value": "视频指示",
-          "label_zh": "视频指示"
+          "value": "事件触发",
+          "label_zh": "事件触发"
         },
         {
-          "value": "自然语言",
-          "label_zh": "自然语言"
-        },
-        {
-          "value": "指示性指称",
-          "label_zh": "指示性指称"
+          "value": "条件触发",
+          "label_zh": "条件触发"
         }
       ],
       "unit": "",
@@ -2895,11 +3957,11 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-1.2.2",
-      "parent_id": "jd-1.2",
+      "node_id": "jd-12.2.2",
+      "parent_id": "jd-12.2",
       "canonical_slot": null,
-      "owner_a": "A1",
-      "name": "输入通道边界",
+      "owner_a": "A12",
+      "name": "载荷物理边界",
       "definition": "",
       "node_kind": "variable",
       "value_type": "object",
@@ -2915,10 +3977,10 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-1.3",
-      "parent_id": "A1",
+      "node_id": "jd-12.3",
+      "parent_id": "A12",
       "canonical_slot": null,
-      "owner_a": "A1",
+      "owner_a": "A12",
       "name": "质量标准",
       "definition": "",
       "node_kind": "group",
@@ -2935,11 +3997,31 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-1.3.1",
-      "parent_id": "jd-1.3",
+      "node_id": "jd-12.3.1",
+      "parent_id": "jd-12.3",
       "canonical_slot": null,
-      "owner_a": "A1",
-      "name": "指称消解准确率",
+      "owner_a": "A12",
+      "name": "动作时序精度",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "duration",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-12.3.2",
+      "parent_id": "jd-12.3",
+      "canonical_slot": null,
+      "owner_a": "A12",
+      "name": "动作成功率",
       "definition": "",
       "node_kind": "variable",
       "value_type": "range",
@@ -2955,15 +4037,28 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-1.3.2",
-      "parent_id": "jd-1.3",
+      "node_id": "jd-12.3.3",
+      "parent_id": "jd-12.3",
       "canonical_slot": null,
-      "owner_a": "A1",
-      "name": "歧义检测召回率",
+      "owner_a": "A12",
+      "name": "数据质量",
       "definition": "",
       "node_kind": "variable",
-      "value_type": "range",
-      "value_domain": null,
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "合格",
+          "label_zh": "合格"
+        },
+        {
+          "value": "部分可用",
+          "label_zh": "部分可用"
+        },
+        {
+          "value": "不可用",
+          "label_zh": "不可用"
+        }
+      ],
       "unit": "",
       "configuration_side": "shared",
       "difficulty_direction": "neutral",
@@ -2975,10 +4070,10 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-1.4",
-      "parent_id": "A1",
+      "node_id": "jd-12.4",
+      "parent_id": "A12",
       "canonical_slot": null,
-      "owner_a": "A1",
+      "owner_a": "A12",
       "name": "兜底协议",
       "definition": "",
       "node_kind": "group",
@@ -2995,30 +4090,34 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-1.4.1",
-      "parent_id": "jd-1.4",
+      "node_id": "jd-12.4.1",
+      "parent_id": "jd-12.4",
       "canonical_slot": null,
-      "owner_a": "A1",
-      "name": "歧义类型",
+      "owner_a": "A12",
+      "name": "异常类型",
       "definition": "",
       "node_kind": "variable",
       "value_type": "enum",
       "value_domain": [
         {
-          "value": "多义",
-          "label_zh": "多义"
+          "value": "动作失败",
+          "label_zh": "动作失败"
         },
         {
-          "value": "缺省",
-          "label_zh": "缺省"
+          "value": "干扰",
+          "label_zh": "干扰"
         },
         {
-          "value": "指代不明",
-          "label_zh": "指代不明"
+          "value": "资源不足",
+          "label_zh": "资源不足"
         },
         {
-          "value": "冲突指令",
-          "label_zh": "冲突指令"
+          "value": "载荷故障",
+          "label_zh": "载荷故障"
+        },
+        {
+          "value": "数据损坏",
+          "label_zh": "数据损坏"
         }
       ],
       "unit": "",
@@ -3032,30 +4131,38 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-1.4.2",
-      "parent_id": "jd-1.4",
+      "node_id": "jd-12.4.2",
+      "parent_id": "jd-12.4",
       "canonical_slot": null,
-      "owner_a": "A1",
-      "name": "消解动作",
+      "owner_a": "A12",
+      "name": "处置动作",
       "definition": "",
       "node_kind": "variable",
       "value_type": "enum",
       "value_domain": [
         {
-          "value": "请求澄清",
-          "label_zh": "请求澄清"
+          "value": "重试",
+          "label_zh": "重试"
         },
         {
-          "value": "上下文推断",
-          "label_zh": "上下文推断"
+          "value": "换角度",
+          "label_zh": "换角度"
         },
         {
-          "value": "默认假设",
-          "label_zh": "默认假设"
+          "value": "调参数",
+          "label_zh": "调参数"
         },
         {
-          "value": "拒绝执行",
-          "label_zh": "拒绝执行"
+          "value": "切模式",
+          "label_zh": "切模式"
+        },
+        {
+          "value": "暂停",
+          "label_zh": "暂停"
+        },
+        {
+          "value": "请求检查",
+          "label_zh": "请求检查"
         }
       ],
       "unit": "",
@@ -3069,15 +4176,19 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "jd-1.4.3",
-      "parent_id": "jd-1.4",
+      "node_id": "jd-12.4.3",
+      "parent_id": "jd-12.4",
       "canonical_slot": null,
-      "owner_a": "A1",
+      "owner_a": "A12",
       "name": "升级目标",
       "definition": "",
       "node_kind": "variable",
       "value_type": "ref",
       "value_domain": [
+        {
+          "value": "→A13成果",
+          "label_zh": "→A13成果"
+        },
         {
           "value": "→A5请求交接",
           "label_zh": "→A5请求交接"
@@ -3094,15 +4205,1904 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "A2",
-      "parent_id": null,
+      "node_id": "jd-13.1",
+      "parent_id": "A13",
       "canonical_slot": null,
-      "owner_a": "A2",
-      "name": "外部填参",
+      "owner_a": "A13",
+      "name": "本体目录",
       "definition": "",
-      "node_kind": "capability_root",
+      "node_kind": "group",
       "value_type": "",
       "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-13.1.1",
+      "parent_id": "jd-13.1",
+      "canonical_slot": null,
+      "owner_a": "A13",
+      "name": "成果类型集",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "结构化报告",
+          "label_zh": "结构化报告"
+        },
+        {
+          "value": "图序",
+          "label_zh": "图序"
+        },
+        {
+          "value": "视频流",
+          "label_zh": "视频流"
+        },
+        {
+          "value": "采样记录",
+          "label_zh": "采样记录"
+        },
+        {
+          "value": "热图",
+          "label_zh": "热图"
+        },
+        {
+          "value": "三维模型",
+          "label_zh": "三维模型"
+        },
+        {
+          "value": "告警",
+          "label_zh": "告警"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-13.1.2",
+      "parent_id": "jd-13.1",
+      "canonical_slot": null,
+      "owner_a": "A13",
+      "name": "成果属性",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-13.2",
+      "parent_id": "A13",
+      "canonical_slot": null,
+      "owner_a": "A13",
+      "name": "方法与边界",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-13.2.1",
+      "parent_id": "jd-13.2",
+      "canonical_slot": null,
+      "owner_a": "A13",
+      "name": "生成方法",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "实时生成",
+          "label_zh": "实时生成"
+        },
+        {
+          "value": "批量处理",
+          "label_zh": "批量处理"
+        },
+        {
+          "value": "边缘计算",
+          "label_zh": "边缘计算"
+        },
+        {
+          "value": "云端处理",
+          "label_zh": "云端处理"
+        },
+        {
+          "value": "混合",
+          "label_zh": "混合"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-13.2.2",
+      "parent_id": "jd-13.2",
+      "canonical_slot": null,
+      "owner_a": "A13",
+      "name": "数据限制",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-13.3",
+      "parent_id": "A13",
+      "canonical_slot": null,
+      "owner_a": "A13",
+      "name": "质量标准",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-13.3.1",
+      "parent_id": "jd-13.3",
+      "canonical_slot": null,
+      "owner_a": "A13",
+      "name": "覆盖完整度",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "range",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-13.3.2",
+      "parent_id": "jd-13.3",
+      "canonical_slot": null,
+      "owner_a": "A13",
+      "name": "格式合规性",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "完全合规",
+          "label_zh": "完全合规"
+        },
+        {
+          "value": "部分偏差",
+          "label_zh": "部分偏差"
+        },
+        {
+          "value": "不合规",
+          "label_zh": "不合规"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-13.3.3",
+      "parent_id": "jd-13.3",
+      "canonical_slot": null,
+      "owner_a": "A13",
+      "name": "内容质量",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "清晰可用",
+          "label_zh": "清晰可用"
+        },
+        {
+          "value": "模糊部分可用",
+          "label_zh": "模糊部分可用"
+        },
+        {
+          "value": "不可用",
+          "label_zh": "不可用"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-13.4",
+      "parent_id": "A13",
+      "canonical_slot": null,
+      "owner_a": "A13",
+      "name": "兜底协议",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-13.4.1",
+      "parent_id": "jd-13.4",
+      "canonical_slot": null,
+      "owner_a": "A13",
+      "name": "异常类型",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "覆盖不足",
+          "label_zh": "覆盖不足"
+        },
+        {
+          "value": "质量差",
+          "label_zh": "质量差"
+        },
+        {
+          "value": "格式错误",
+          "label_zh": "格式错误"
+        },
+        {
+          "value": "数据丢失",
+          "label_zh": "数据丢失"
+        },
+        {
+          "value": "处理超时",
+          "label_zh": "处理超时"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-13.4.2",
+      "parent_id": "jd-13.4",
+      "canonical_slot": null,
+      "owner_a": "A13",
+      "name": "处置动作",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "重拍",
+          "label_zh": "重拍"
+        },
+        {
+          "value": "补扫",
+          "label_zh": "补扫"
+        },
+        {
+          "value": "换角度",
+          "label_zh": "换角度"
+        },
+        {
+          "value": "切格式",
+          "label_zh": "切格式"
+        },
+        {
+          "value": "重新生成",
+          "label_zh": "重新生成"
+        },
+        {
+          "value": "降级交付",
+          "label_zh": "降级交付"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-13.4.3",
+      "parent_id": "jd-13.4",
+      "canonical_slot": null,
+      "owner_a": "A13",
+      "name": "升级目标",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "ref",
+      "value_domain": [
+        {
+          "value": "→A12载荷",
+          "label_zh": "→A12载荷"
+        },
+        {
+          "value": "→A5请求交接",
+          "label_zh": "→A5请求交接"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-14.1",
+      "parent_id": "A14",
+      "canonical_slot": null,
+      "owner_a": "A14",
+      "name": "本体目录",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-14.1.1",
+      "parent_id": "jd-14.1",
+      "canonical_slot": null,
+      "owner_a": "A14",
+      "name": "拓扑类型集",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "单地面站",
+          "label_zh": "单地面站"
+        },
+        {
+          "value": "多地面站",
+          "label_zh": "多地面站"
+        },
+        {
+          "value": "接力站",
+          "label_zh": "接力站"
+        },
+        {
+          "value": "卫星中继",
+          "label_zh": "卫星中继"
+        },
+        {
+          "value": "Mesh",
+          "label_zh": "Mesh"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-14.1.2",
+      "parent_id": "jd-14.1",
+      "canonical_slot": null,
+      "owner_a": "A14",
+      "name": "链路属性",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-14.2",
+      "parent_id": "A14",
+      "canonical_slot": null,
+      "owner_a": "A14",
+      "name": "方法与边界",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-14.2.1",
+      "parent_id": "jd-14.2",
+      "canonical_slot": null,
+      "owner_a": "A14",
+      "name": "通信协议",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "FDMA",
+          "label_zh": "FDMA"
+        },
+        {
+          "value": "TDMA",
+          "label_zh": "TDMA"
+        },
+        {
+          "value": "CDMA",
+          "label_zh": "CDMA"
+        },
+        {
+          "value": "OFDM",
+          "label_zh": "OFDM"
+        },
+        {
+          "value": "自适应调制",
+          "label_zh": "自适应调制"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-14.2.2",
+      "parent_id": "jd-14.2",
+      "canonical_slot": null,
+      "owner_a": "A14",
+      "name": "链路物理边界",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-14.3",
+      "parent_id": "A14",
+      "canonical_slot": null,
+      "owner_a": "A14",
+      "name": "质量标准",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-14.3.1",
+      "parent_id": "jd-14.3",
+      "canonical_slot": null,
+      "owner_a": "A14",
+      "name": "延迟标准",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "range",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-14.3.2",
+      "parent_id": "jd-14.3",
+      "canonical_slot": null,
+      "owner_a": "A14",
+      "name": "可靠性",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "range",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-14.3.3",
+      "parent_id": "jd-14.3",
+      "canonical_slot": null,
+      "owner_a": "A14",
+      "name": "吞吐量",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "range",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-14.4",
+      "parent_id": "A14",
+      "canonical_slot": null,
+      "owner_a": "A14",
+      "name": "兜底协议",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-14.4.1",
+      "parent_id": "jd-14.4",
+      "canonical_slot": null,
+      "owner_a": "A14",
+      "name": "异常类型",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "完全中断",
+          "label_zh": "完全中断"
+        },
+        {
+          "value": "部分降级",
+          "label_zh": "部分降级"
+        },
+        {
+          "value": "干扰",
+          "label_zh": "干扰"
+        },
+        {
+          "value": "拥塞",
+          "label_zh": "拥塞"
+        },
+        {
+          "value": "延迟突增",
+          "label_zh": "延迟突增"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-14.4.2",
+      "parent_id": "jd-14.4",
+      "canonical_slot": null,
+      "owner_a": "A14",
+      "name": "处置动作",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "切换链路",
+          "label_zh": "切换链路"
+        },
+        {
+          "value": "切备用站",
+          "label_zh": "切备用站"
+        },
+        {
+          "value": "降低遥测频率",
+          "label_zh": "降低遥测频率"
+        },
+        {
+          "value": "缓存数据",
+          "label_zh": "缓存数据"
+        },
+        {
+          "value": "等待恢复",
+          "label_zh": "等待恢复"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-14.4.3",
+      "parent_id": "jd-14.4",
+      "canonical_slot": null,
+      "owner_a": "A14",
+      "name": "升级目标",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "ref",
+      "value_domain": [
+        {
+          "value": "→A17安全",
+          "label_zh": "→A17安全"
+        },
+        {
+          "value": "→A4编排",
+          "label_zh": "→A4编排"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-15.1",
+      "parent_id": "A15",
+      "canonical_slot": null,
+      "owner_a": "A15",
+      "name": "本体目录",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-15.1.1",
+      "parent_id": "jd-15.1",
+      "canonical_slot": null,
+      "owner_a": "A15",
+      "name": "事件类型集",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "multi_enum",
+      "value_domain": [
+        {
+          "value": "决策",
+          "label_zh": "决策"
+        },
+        {
+          "value": "模式切换",
+          "label_zh": "模式切换"
+        },
+        {
+          "value": "异常检测",
+          "label_zh": "异常检测"
+        },
+        {
+          "value": "处置动作",
+          "label_zh": "处置动作"
+        },
+        {
+          "value": "人工介入",
+          "label_zh": "人工介入"
+        },
+        {
+          "value": "任务完成",
+          "label_zh": "任务完成"
+        },
+        {
+          "value": "安全告警",
+          "label_zh": "安全告警"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-15.1.2",
+      "parent_id": "jd-15.1",
+      "canonical_slot": null,
+      "owner_a": "A15",
+      "name": "事件属性",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-15.2",
+      "parent_id": "A15",
+      "canonical_slot": null,
+      "owner_a": "A15",
+      "name": "方法与边界",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-15.2.1",
+      "parent_id": "jd-15.2",
+      "canonical_slot": null,
+      "owner_a": "A15",
+      "name": "记录方法",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "实时写入",
+          "label_zh": "实时写入"
+        },
+        {
+          "value": "批量写入",
+          "label_zh": "批量写入"
+        },
+        {
+          "value": "压缩存储",
+          "label_zh": "压缩存储"
+        },
+        {
+          "value": "分布式存储",
+          "label_zh": "分布式存储"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-15.2.2",
+      "parent_id": "jd-15.2",
+      "canonical_slot": null,
+      "owner_a": "A15",
+      "name": "存储边界",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-15.3",
+      "parent_id": "A15",
+      "canonical_slot": null,
+      "owner_a": "A15",
+      "name": "质量标准",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-15.3.1",
+      "parent_id": "jd-15.3",
+      "canonical_slot": null,
+      "owner_a": "A15",
+      "name": "证据格式规格",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "JSON",
+          "label_zh": "JSON"
+        },
+        {
+          "value": "Protobuf",
+          "label_zh": "Protobuf"
+        },
+        {
+          "value": "自定义二进制",
+          "label_zh": "自定义二进制"
+        },
+        {
+          "value": "标准审计格式",
+          "label_zh": "标准审计格式"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-15.3.2",
+      "parent_id": "jd-15.3",
+      "canonical_slot": null,
+      "owner_a": "A15",
+      "name": "完整性",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "range",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-15.3.3",
+      "parent_id": "jd-15.3",
+      "canonical_slot": null,
+      "owner_a": "A15",
+      "name": "时间戳精度",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "duration",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-15.4",
+      "parent_id": "A15",
+      "canonical_slot": null,
+      "owner_a": "A15",
+      "name": "兜底协议",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-15.4.1",
+      "parent_id": "jd-15.4",
+      "canonical_slot": null,
+      "owner_a": "A15",
+      "name": "记录异常类型",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "数据丢失",
+          "label_zh": "数据丢失"
+        },
+        {
+          "value": "存储满",
+          "label_zh": "存储满"
+        },
+        {
+          "value": "写入失败",
+          "label_zh": "写入失败"
+        },
+        {
+          "value": "时间不同步",
+          "label_zh": "时间不同步"
+        },
+        {
+          "value": "格式错误",
+          "label_zh": "格式错误"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-15.4.2",
+      "parent_id": "jd-15.4",
+      "canonical_slot": null,
+      "owner_a": "A15",
+      "name": "处置动作",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "补录",
+          "label_zh": "补录"
+        },
+        {
+          "value": "切换存储",
+          "label_zh": "切换存储"
+        },
+        {
+          "value": "压缩旧数据",
+          "label_zh": "压缩旧数据"
+        },
+        {
+          "value": "降级记录",
+          "label_zh": "降级记录"
+        },
+        {
+          "value": "告警",
+          "label_zh": "告警"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-15.4.3",
+      "parent_id": "jd-15.4",
+      "canonical_slot": null,
+      "owner_a": "A15",
+      "name": "留存策略",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "rules",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-16.1",
+      "parent_id": "A16",
+      "canonical_slot": null,
+      "owner_a": "A16",
+      "name": "本体目录",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-16.1.1",
+      "parent_id": "jd-16.1",
+      "canonical_slot": null,
+      "owner_a": "A16",
+      "name": "合规类型集",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "空域类别",
+          "label_zh": "空域类别"
+        },
+        {
+          "value": "地理围栏",
+          "label_zh": "地理围栏"
+        },
+        {
+          "value": "交通信息源",
+          "label_zh": "交通信息源"
+        },
+        {
+          "value": "飞行授权",
+          "label_zh": "飞行授权"
+        },
+        {
+          "value": "身份识别",
+          "label_zh": "身份识别"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-16.1.2",
+      "parent_id": "jd-16.1",
+      "canonical_slot": null,
+      "owner_a": "A16",
+      "name": "合规属性",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-16.2",
+      "parent_id": "A16",
+      "canonical_slot": null,
+      "owner_a": "A16",
+      "name": "方法与边界",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-16.2.1",
+      "parent_id": "jd-16.2",
+      "canonical_slot": null,
+      "owner_a": "A16",
+      "name": "授权方法",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "预授权",
+          "label_zh": "预授权"
+        },
+        {
+          "value": "临时申请",
+          "label_zh": "临时申请"
+        },
+        {
+          "value": "自动申报",
+          "label_zh": "自动申报"
+        },
+        {
+          "value": "人工审批",
+          "label_zh": "人工审批"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-16.2.2",
+      "parent_id": "jd-16.2",
+      "canonical_slot": null,
+      "owner_a": "A16",
+      "name": "法规约束",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-16.3",
+      "parent_id": "A16",
+      "canonical_slot": null,
+      "owner_a": "A16",
+      "name": "质量标准",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-16.3.1",
+      "parent_id": "jd-16.3",
+      "canonical_slot": null,
+      "owner_a": "A16",
+      "name": "授权完整性",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "全部有效",
+          "label_zh": "全部有效"
+        },
+        {
+          "value": "部分过期",
+          "label_zh": "部分过期"
+        },
+        {
+          "value": "缺失关键",
+          "label_zh": "缺失关键"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-16.3.2",
+      "parent_id": "jd-16.3",
+      "canonical_slot": null,
+      "owner_a": "A16",
+      "name": "申报时效",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "duration",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-16.4",
+      "parent_id": "A16",
+      "canonical_slot": null,
+      "owner_a": "A16",
+      "name": "兜底协议",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-16.4.1",
+      "parent_id": "jd-16.4",
+      "canonical_slot": null,
+      "owner_a": "A16",
+      "name": "合规异常类型",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "授权过期",
+          "label_zh": "授权过期"
+        },
+        {
+          "value": "闯入禁飞",
+          "label_zh": "闯入禁飞"
+        },
+        {
+          "value": "高度超限",
+          "label_zh": "高度超限"
+        },
+        {
+          "value": "身份失效",
+          "label_zh": "身份失效"
+        },
+        {
+          "value": "交通冲突",
+          "label_zh": "交通冲突"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-16.4.2",
+      "parent_id": "jd-16.4",
+      "canonical_slot": null,
+      "owner_a": "A16",
+      "name": "处置动作",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "刷新授权",
+          "label_zh": "刷新授权"
+        },
+        {
+          "value": "更新围栏",
+          "label_zh": "更新围栏"
+        },
+        {
+          "value": "降低高度",
+          "label_zh": "降低高度"
+        },
+        {
+          "value": "等待恢复",
+          "label_zh": "等待恢复"
+        },
+        {
+          "value": "退避返航",
+          "label_zh": "退避返航"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-16.4.3",
+      "parent_id": "jd-16.4",
+      "canonical_slot": null,
+      "owner_a": "A16",
+      "name": "升级目标",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "ref",
+      "value_domain": [
+        {
+          "value": "→A17安全",
+          "label_zh": "→A17安全"
+        },
+        {
+          "value": "→A4编排",
+          "label_zh": "→A4编排"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-17.1",
+      "parent_id": "A17",
+      "canonical_slot": null,
+      "owner_a": "A17",
+      "name": "本体目录",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-17.1.1",
+      "parent_id": "jd-17.1",
+      "canonical_slot": null,
+      "owner_a": "A17",
+      "name": "安全域类型集",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "ODD边界",
+          "label_zh": "ODD边界"
+        },
+        {
+          "value": "安全态",
+          "label_zh": "安全态"
+        },
+        {
+          "value": "威胁类别",
+          "label_zh": "威胁类别"
+        },
+        {
+          "value": "运行约束",
+          "label_zh": "运行约束"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-17.1.2",
+      "parent_id": "jd-17.1",
+      "canonical_slot": null,
+      "owner_a": "A17",
+      "name": "安全属性",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-17.2",
+      "parent_id": "A17",
+      "canonical_slot": null,
+      "owner_a": "A17",
+      "name": "方法与边界",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-17.2.1",
+      "parent_id": "jd-17.2",
+      "canonical_slot": null,
+      "owner_a": "A17",
+      "name": "监控方法",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "实时越界检测",
+          "label_zh": "实时越界检测"
+        },
+        {
+          "value": "相位切换监控",
+          "label_zh": "相位切换监控"
+        },
+        {
+          "value": "预测性告警",
+          "label_zh": "预测性告警"
+        },
+        {
+          "value": "多维度联合",
+          "label_zh": "多维度联合"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-17.2.2",
+      "parent_id": "jd-17.2",
+      "canonical_slot": null,
+      "owner_a": "A17",
+      "name": "ODD运行限制",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-17.3",
+      "parent_id": "A17",
+      "canonical_slot": null,
+      "owner_a": "A17",
+      "name": "质量标准",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-17.3.1",
+      "parent_id": "jd-17.3",
+      "canonical_slot": null,
+      "owner_a": "A17",
+      "name": "分相位安全阈值",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "object",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-17.3.2",
+      "parent_id": "jd-17.3",
+      "canonical_slot": null,
+      "owner_a": "A17",
+      "name": "安全态定义",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "正常",
+          "label_zh": "正常"
+        },
+        {
+          "value": "警告",
+          "label_zh": "警告"
+        },
+        {
+          "value": "降级",
+          "label_zh": "降级"
+        },
+        {
+          "value": "紧急",
+          "label_zh": "紧急"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-17.3.3",
+      "parent_id": "jd-17.3",
+      "canonical_slot": null,
+      "owner_a": "A17",
+      "name": "安全响应时效",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "duration",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-17.4",
+      "parent_id": "A17",
+      "canonical_slot": null,
+      "owner_a": "A17",
+      "name": "兜底协议",
+      "definition": "",
+      "node_kind": "group",
+      "value_type": "",
+      "value_domain": null,
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-17.4.1",
+      "parent_id": "jd-17.4",
+      "canonical_slot": null,
+      "owner_a": "A17",
+      "name": "安全异常类型",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "ODD越界",
+          "label_zh": "ODD越界"
+        },
+        {
+          "value": "包络突破",
+          "label_zh": "包络突破"
+        },
+        {
+          "value": "安全态降级",
+          "label_zh": "安全态降级"
+        },
+        {
+          "value": "多重故障",
+          "label_zh": "多重故障"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-17.4.2",
+      "parent_id": "jd-17.4",
+      "canonical_slot": null,
+      "owner_a": "A17",
+      "name": "兜底动作",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "enum",
+      "value_domain": [
+        {
+          "value": "返航",
+          "label_zh": "返航"
+        },
+        {
+          "value": "悬停",
+          "label_zh": "悬停"
+        },
+        {
+          "value": "备降",
+          "label_zh": "备降"
+        },
+        {
+          "value": "安全模式",
+          "label_zh": "安全模式"
+        },
+        {
+          "value": "紧急着陆",
+          "label_zh": "紧急着陆"
+        }
+      ],
+      "unit": "",
+      "configuration_side": "shared",
+      "difficulty_direction": "neutral",
+      "applicable_scenarios": [
+        "cross_scenario"
+      ],
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "derivation_status": "proposed"
+    },
+    {
+      "node_id": "jd-17.4.3",
+      "parent_id": "jd-17.4",
+      "canonical_slot": null,
+      "owner_a": "A17",
+      "name": "升级目标",
+      "definition": "",
+      "node_kind": "variable",
+      "value_type": "ref",
+      "value_domain": [
+        {
+          "value": "→A4编排",
+          "label_zh": "→A4编排"
+        },
+        {
+          "value": "→A15审计",
+          "label_zh": "→A15审计"
+        }
+      ],
       "unit": "",
       "configuration_side": "shared",
       "difficulty_direction": "neutral",
@@ -3435,26 +6435,6 @@
           "label_zh": "中止"
         }
       ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "A3",
-      "parent_id": null,
-      "canonical_slot": null,
-      "owner_a": "A3",
-      "name": "分步推理",
-      "definition": "",
-      "node_kind": "capability_root",
-      "value_type": "",
-      "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
       "difficulty_direction": "neutral",
@@ -3870,26 +6850,6 @@
           "label_zh": "→A5请求交接"
         }
       ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "A4",
-      "parent_id": null,
-      "canonical_slot": null,
-      "owner_a": "A4",
-      "name": "编排执行",
-      "definition": "",
-      "node_kind": "capability_root",
-      "value_type": "",
-      "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
       "difficulty_direction": "neutral",
@@ -4364,26 +7324,6 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "A5",
-      "parent_id": null,
-      "canonical_slot": null,
-      "owner_a": "A5",
-      "name": "请求交接",
-      "definition": "",
-      "node_kind": "capability_root",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
       "node_id": "jd-5.1",
       "parent_id": "A5",
       "canonical_slot": null,
@@ -4757,26 +7697,6 @@
       "definition": "",
       "node_kind": "variable",
       "value_type": "rules",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "A6",
-      "parent_id": null,
-      "canonical_slot": null,
-      "owner_a": "A6",
-      "name": "环境感知",
-      "definition": "",
-      "node_kind": "capability_root",
-      "value_type": "",
       "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
@@ -5223,26 +8143,6 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "A7",
-      "parent_id": null,
-      "canonical_slot": null,
-      "owner_a": "A7",
-      "name": "自身定位",
-      "definition": "",
-      "node_kind": "capability_root",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
       "node_id": "jd-7.1",
       "parent_id": "A7",
       "canonical_slot": null,
@@ -5629,30 +8529,10 @@
           "label_zh": "→A11控制"
         },
         {
-          "value": "→A16安全",
-          "label_zh": "→A16安全"
+          "value": "→A17安全",
+          "label_zh": "→A17安全"
         }
       ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "A8",
-      "parent_id": null,
-      "canonical_slot": null,
-      "owner_a": "A8",
-      "name": "相对定位",
-      "definition": "",
-      "node_kind": "capability_root",
-      "value_type": "",
-      "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
       "difficulty_direction": "neutral",
@@ -6057,26 +8937,6 @@
       "derivation_status": "proposed"
     },
     {
-      "node_id": "A9",
-      "parent_id": null,
-      "canonical_slot": null,
-      "owner_a": "A9",
-      "name": "资源管理",
-      "definition": "",
-      "node_kind": "capability_root",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
       "node_id": "jd-9.1",
       "parent_id": "A9",
       "canonical_slot": null,
@@ -6431,2870 +9291,10 @@
           "label_zh": "→A4编排"
         },
         {
-          "value": "→A16安全",
-          "label_zh": "→A16安全"
+          "value": "→A17安全",
+          "label_zh": "→A17安全"
         }
       ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "A10",
-      "parent_id": null,
-      "canonical_slot": null,
-      "owner_a": "A10",
-      "name": "导航飞行",
-      "definition": "",
-      "node_kind": "capability_root",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-10.1",
-      "parent_id": "A10",
-      "canonical_slot": null,
-      "owner_a": "A10",
-      "name": "本体目录",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-10.1.1",
-      "parent_id": "jd-10.1",
-      "canonical_slot": null,
-      "owner_a": "A10",
-      "name": "航路类型集",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "航点序列",
-          "label_zh": "航点序列"
-        },
-        {
-          "value": "线段扫描",
-          "label_zh": "线段扫描"
-        },
-        {
-          "value": "螺旋扫描",
-          "label_zh": "螺旋扫描"
-        },
-        {
-          "value": "盘旋等待",
-          "label_zh": "盘旋等待"
-        },
-        {
-          "value": "自由航迹",
-          "label_zh": "自由航迹"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-10.1.2",
-      "parent_id": "jd-10.1",
-      "canonical_slot": null,
-      "owner_a": "A10",
-      "name": "航路属性",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "object",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-10.1.3",
-      "parent_id": "jd-10.1",
-      "canonical_slot": null,
-      "owner_a": "A10",
-      "name": "任务段划分",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "object",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-10.2",
-      "parent_id": "A10",
-      "canonical_slot": null,
-      "owner_a": "A10",
-      "name": "方法与边界",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-10.2.1",
-      "parent_id": "jd-10.2",
-      "canonical_slot": null,
-      "owner_a": "A10",
-      "name": "导航方法",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "航点跟随",
-          "label_zh": "航点跟随"
-        },
-        {
-          "value": "轨迹跟踪",
-          "label_zh": "轨迹跟踪"
-        },
-        {
-          "value": "矢量场制导",
-          "label_zh": "矢量场制导"
-        },
-        {
-          "value": "反应式避障",
-          "label_zh": "反应式避障"
-        },
-        {
-          "value": "混合",
-          "label_zh": "混合"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-10.2.2",
-      "parent_id": "jd-10.2",
-      "canonical_slot": null,
-      "owner_a": "A10",
-      "name": "轨迹物理约束",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "object",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-10.3",
-      "parent_id": "A10",
-      "canonical_slot": null,
-      "owner_a": "A10",
-      "name": "质量标准",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-10.3.1",
-      "parent_id": "jd-10.3",
-      "canonical_slot": null,
-      "owner_a": "A10",
-      "name": "横向偏差",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "range",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-10.3.2",
-      "parent_id": "jd-10.3",
-      "canonical_slot": null,
-      "owner_a": "A10",
-      "name": "高度偏差",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "range",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-10.3.3",
-      "parent_id": "jd-10.3",
-      "canonical_slot": null,
-      "owner_a": "A10",
-      "name": "到达精度",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "range",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-10.4",
-      "parent_id": "A10",
-      "canonical_slot": null,
-      "owner_a": "A10",
-      "name": "兜底协议",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-10.4.1",
-      "parent_id": "jd-10.4",
-      "canonical_slot": null,
-      "owner_a": "A10",
-      "name": "偏航触发",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "横向超限",
-          "label_zh": "横向超限"
-        },
-        {
-          "value": "高度超限",
-          "label_zh": "高度超限"
-        },
-        {
-          "value": "风偏",
-          "label_zh": "风偏"
-        },
-        {
-          "value": "避障需求",
-          "label_zh": "避障需求"
-        },
-        {
-          "value": "航路失效",
-          "label_zh": "航路失效"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-10.4.2",
-      "parent_id": "jd-10.4",
-      "canonical_slot": null,
-      "owner_a": "A10",
-      "name": "重规划动作",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "局部重规划",
-          "label_zh": "局部重规划"
-        },
-        {
-          "value": "改变高度",
-          "label_zh": "改变高度"
-        },
-        {
-          "value": "悬停等待",
-          "label_zh": "悬停等待"
-        },
-        {
-          "value": "切换备降",
-          "label_zh": "切换备降"
-        },
-        {
-          "value": "紧急返航",
-          "label_zh": "紧急返航"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-10.4.3",
-      "parent_id": "jd-10.4",
-      "canonical_slot": null,
-      "owner_a": "A10",
-      "name": "升级目标",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "ref",
-      "value_domain": [
-        {
-          "value": "→A11控制",
-          "label_zh": "→A11控制"
-        },
-        {
-          "value": "→A4编排",
-          "label_zh": "→A4编排"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "A12",
-      "parent_id": null,
-      "canonical_slot": null,
-      "owner_a": "A12",
-      "name": "载荷执行",
-      "definition": "",
-      "node_kind": "capability_root",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-12.1",
-      "parent_id": "A12",
-      "canonical_slot": null,
-      "owner_a": "A12",
-      "name": "本体目录",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-12.1.1",
-      "parent_id": "jd-12.1",
-      "canonical_slot": null,
-      "owner_a": "A12",
-      "name": "动作类型集",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "拍照",
-          "label_zh": "拍照"
-        },
-        {
-          "value": "录像",
-          "label_zh": "录像"
-        },
-        {
-          "value": "喊话",
-          "label_zh": "喊话"
-        },
-        {
-          "value": "投送",
-          "label_zh": "投送"
-        },
-        {
-          "value": "采样",
-          "label_zh": "采样"
-        },
-        {
-          "value": "云台调位",
-          "label_zh": "云台调位"
-        },
-        {
-          "value": "照射",
-          "label_zh": "照射"
-        },
-        {
-          "value": "扫描",
-          "label_zh": "扫描"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-12.1.2",
-      "parent_id": "jd-12.1",
-      "canonical_slot": null,
-      "owner_a": "A12",
-      "name": "动作属性",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "object",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-12.1.3",
-      "parent_id": "jd-12.1",
-      "canonical_slot": null,
-      "owner_a": "A12",
-      "name": "动作依赖规则",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "rules",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-12.2",
-      "parent_id": "A12",
-      "canonical_slot": null,
-      "owner_a": "A12",
-      "name": "方法与边界",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-12.2.1",
-      "parent_id": "jd-12.2",
-      "canonical_slot": null,
-      "owner_a": "A12",
-      "name": "执行机制",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "指令触发",
-          "label_zh": "指令触发"
-        },
-        {
-          "value": "定时触发",
-          "label_zh": "定时触发"
-        },
-        {
-          "value": "事件触发",
-          "label_zh": "事件触发"
-        },
-        {
-          "value": "条件触发",
-          "label_zh": "条件触发"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-12.2.2",
-      "parent_id": "jd-12.2",
-      "canonical_slot": null,
-      "owner_a": "A12",
-      "name": "载荷物理边界",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "object",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-12.3",
-      "parent_id": "A12",
-      "canonical_slot": null,
-      "owner_a": "A12",
-      "name": "质量标准",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-12.3.1",
-      "parent_id": "jd-12.3",
-      "canonical_slot": null,
-      "owner_a": "A12",
-      "name": "动作时序精度",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "duration",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-12.3.2",
-      "parent_id": "jd-12.3",
-      "canonical_slot": null,
-      "owner_a": "A12",
-      "name": "动作成功率",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "range",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-12.3.3",
-      "parent_id": "jd-12.3",
-      "canonical_slot": null,
-      "owner_a": "A12",
-      "name": "数据质量",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "合格",
-          "label_zh": "合格"
-        },
-        {
-          "value": "部分可用",
-          "label_zh": "部分可用"
-        },
-        {
-          "value": "不可用",
-          "label_zh": "不可用"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-12.4",
-      "parent_id": "A12",
-      "canonical_slot": null,
-      "owner_a": "A12",
-      "name": "兜底协议",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-12.4.1",
-      "parent_id": "jd-12.4",
-      "canonical_slot": null,
-      "owner_a": "A12",
-      "name": "异常类型",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "动作失败",
-          "label_zh": "动作失败"
-        },
-        {
-          "value": "干扰",
-          "label_zh": "干扰"
-        },
-        {
-          "value": "资源不足",
-          "label_zh": "资源不足"
-        },
-        {
-          "value": "载荷故障",
-          "label_zh": "载荷故障"
-        },
-        {
-          "value": "数据损坏",
-          "label_zh": "数据损坏"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-12.4.2",
-      "parent_id": "jd-12.4",
-      "canonical_slot": null,
-      "owner_a": "A12",
-      "name": "处置动作",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "重试",
-          "label_zh": "重试"
-        },
-        {
-          "value": "换角度",
-          "label_zh": "换角度"
-        },
-        {
-          "value": "调参数",
-          "label_zh": "调参数"
-        },
-        {
-          "value": "切模式",
-          "label_zh": "切模式"
-        },
-        {
-          "value": "暂停",
-          "label_zh": "暂停"
-        },
-        {
-          "value": "请求检查",
-          "label_zh": "请求检查"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-12.4.3",
-      "parent_id": "jd-12.4",
-      "canonical_slot": null,
-      "owner_a": "A12",
-      "name": "升级目标",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "ref",
-      "value_domain": [
-        {
-          "value": "→A13成果",
-          "label_zh": "→A13成果"
-        },
-        {
-          "value": "→A5请求交接",
-          "label_zh": "→A5请求交接"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "A13",
-      "parent_id": null,
-      "canonical_slot": null,
-      "owner_a": "A13",
-      "name": "成果呈现",
-      "definition": "",
-      "node_kind": "capability_root",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-13.1",
-      "parent_id": "A13",
-      "canonical_slot": null,
-      "owner_a": "A13",
-      "name": "本体目录",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-13.1.1",
-      "parent_id": "jd-13.1",
-      "canonical_slot": null,
-      "owner_a": "A13",
-      "name": "成果类型集",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "结构化报告",
-          "label_zh": "结构化报告"
-        },
-        {
-          "value": "图序",
-          "label_zh": "图序"
-        },
-        {
-          "value": "视频流",
-          "label_zh": "视频流"
-        },
-        {
-          "value": "采样记录",
-          "label_zh": "采样记录"
-        },
-        {
-          "value": "热图",
-          "label_zh": "热图"
-        },
-        {
-          "value": "三维模型",
-          "label_zh": "三维模型"
-        },
-        {
-          "value": "告警",
-          "label_zh": "告警"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-13.1.2",
-      "parent_id": "jd-13.1",
-      "canonical_slot": null,
-      "owner_a": "A13",
-      "name": "成果属性",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "object",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-13.2",
-      "parent_id": "A13",
-      "canonical_slot": null,
-      "owner_a": "A13",
-      "name": "方法与边界",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-13.2.1",
-      "parent_id": "jd-13.2",
-      "canonical_slot": null,
-      "owner_a": "A13",
-      "name": "生成方法",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "实时生成",
-          "label_zh": "实时生成"
-        },
-        {
-          "value": "批量处理",
-          "label_zh": "批量处理"
-        },
-        {
-          "value": "边缘计算",
-          "label_zh": "边缘计算"
-        },
-        {
-          "value": "云端处理",
-          "label_zh": "云端处理"
-        },
-        {
-          "value": "混合",
-          "label_zh": "混合"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-13.2.2",
-      "parent_id": "jd-13.2",
-      "canonical_slot": null,
-      "owner_a": "A13",
-      "name": "数据限制",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "object",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-13.3",
-      "parent_id": "A13",
-      "canonical_slot": null,
-      "owner_a": "A13",
-      "name": "质量标准",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-13.3.1",
-      "parent_id": "jd-13.3",
-      "canonical_slot": null,
-      "owner_a": "A13",
-      "name": "覆盖完整度",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "range",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-13.3.2",
-      "parent_id": "jd-13.3",
-      "canonical_slot": null,
-      "owner_a": "A13",
-      "name": "格式合规性",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "完全合规",
-          "label_zh": "完全合规"
-        },
-        {
-          "value": "部分偏差",
-          "label_zh": "部分偏差"
-        },
-        {
-          "value": "不合规",
-          "label_zh": "不合规"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-13.3.3",
-      "parent_id": "jd-13.3",
-      "canonical_slot": null,
-      "owner_a": "A13",
-      "name": "内容质量",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "清晰可用",
-          "label_zh": "清晰可用"
-        },
-        {
-          "value": "模糊部分可用",
-          "label_zh": "模糊部分可用"
-        },
-        {
-          "value": "不可用",
-          "label_zh": "不可用"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-13.4",
-      "parent_id": "A13",
-      "canonical_slot": null,
-      "owner_a": "A13",
-      "name": "兜底协议",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-13.4.1",
-      "parent_id": "jd-13.4",
-      "canonical_slot": null,
-      "owner_a": "A13",
-      "name": "异常类型",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "覆盖不足",
-          "label_zh": "覆盖不足"
-        },
-        {
-          "value": "质量差",
-          "label_zh": "质量差"
-        },
-        {
-          "value": "格式错误",
-          "label_zh": "格式错误"
-        },
-        {
-          "value": "数据丢失",
-          "label_zh": "数据丢失"
-        },
-        {
-          "value": "处理超时",
-          "label_zh": "处理超时"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-13.4.2",
-      "parent_id": "jd-13.4",
-      "canonical_slot": null,
-      "owner_a": "A13",
-      "name": "处置动作",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "重拍",
-          "label_zh": "重拍"
-        },
-        {
-          "value": "补扫",
-          "label_zh": "补扫"
-        },
-        {
-          "value": "换角度",
-          "label_zh": "换角度"
-        },
-        {
-          "value": "切格式",
-          "label_zh": "切格式"
-        },
-        {
-          "value": "重新生成",
-          "label_zh": "重新生成"
-        },
-        {
-          "value": "降级交付",
-          "label_zh": "降级交付"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-13.4.3",
-      "parent_id": "jd-13.4",
-      "canonical_slot": null,
-      "owner_a": "A13",
-      "name": "升级目标",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "ref",
-      "value_domain": [
-        {
-          "value": "→A12载荷",
-          "label_zh": "→A12载荷"
-        },
-        {
-          "value": "→A5请求交接",
-          "label_zh": "→A5请求交接"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "A14",
-      "parent_id": null,
-      "canonical_slot": null,
-      "owner_a": "A14",
-      "name": "通信链路",
-      "definition": "",
-      "node_kind": "capability_root",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-14.1",
-      "parent_id": "A14",
-      "canonical_slot": null,
-      "owner_a": "A14",
-      "name": "本体目录",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-14.1.1",
-      "parent_id": "jd-14.1",
-      "canonical_slot": null,
-      "owner_a": "A14",
-      "name": "拓扑类型集",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "单地面站",
-          "label_zh": "单地面站"
-        },
-        {
-          "value": "多地面站",
-          "label_zh": "多地面站"
-        },
-        {
-          "value": "接力站",
-          "label_zh": "接力站"
-        },
-        {
-          "value": "卫星中继",
-          "label_zh": "卫星中继"
-        },
-        {
-          "value": "Mesh",
-          "label_zh": "Mesh"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-14.1.2",
-      "parent_id": "jd-14.1",
-      "canonical_slot": null,
-      "owner_a": "A14",
-      "name": "链路属性",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "object",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-14.2",
-      "parent_id": "A14",
-      "canonical_slot": null,
-      "owner_a": "A14",
-      "name": "方法与边界",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-14.2.1",
-      "parent_id": "jd-14.2",
-      "canonical_slot": null,
-      "owner_a": "A14",
-      "name": "通信协议",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "FDMA",
-          "label_zh": "FDMA"
-        },
-        {
-          "value": "TDMA",
-          "label_zh": "TDMA"
-        },
-        {
-          "value": "CDMA",
-          "label_zh": "CDMA"
-        },
-        {
-          "value": "OFDM",
-          "label_zh": "OFDM"
-        },
-        {
-          "value": "自适应调制",
-          "label_zh": "自适应调制"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-14.2.2",
-      "parent_id": "jd-14.2",
-      "canonical_slot": null,
-      "owner_a": "A14",
-      "name": "链路物理边界",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "object",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-14.3",
-      "parent_id": "A14",
-      "canonical_slot": null,
-      "owner_a": "A14",
-      "name": "质量标准",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-14.3.1",
-      "parent_id": "jd-14.3",
-      "canonical_slot": null,
-      "owner_a": "A14",
-      "name": "延迟标准",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "range",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-14.3.2",
-      "parent_id": "jd-14.3",
-      "canonical_slot": null,
-      "owner_a": "A14",
-      "name": "可靠性",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "range",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-14.3.3",
-      "parent_id": "jd-14.3",
-      "canonical_slot": null,
-      "owner_a": "A14",
-      "name": "吞吐量",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "range",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-14.4",
-      "parent_id": "A14",
-      "canonical_slot": null,
-      "owner_a": "A14",
-      "name": "兜底协议",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-14.4.1",
-      "parent_id": "jd-14.4",
-      "canonical_slot": null,
-      "owner_a": "A14",
-      "name": "异常类型",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "完全中断",
-          "label_zh": "完全中断"
-        },
-        {
-          "value": "部分降级",
-          "label_zh": "部分降级"
-        },
-        {
-          "value": "干扰",
-          "label_zh": "干扰"
-        },
-        {
-          "value": "拥塞",
-          "label_zh": "拥塞"
-        },
-        {
-          "value": "延迟突增",
-          "label_zh": "延迟突增"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-14.4.2",
-      "parent_id": "jd-14.4",
-      "canonical_slot": null,
-      "owner_a": "A14",
-      "name": "处置动作",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "切换链路",
-          "label_zh": "切换链路"
-        },
-        {
-          "value": "切备用站",
-          "label_zh": "切备用站"
-        },
-        {
-          "value": "降低遥测频率",
-          "label_zh": "降低遥测频率"
-        },
-        {
-          "value": "缓存数据",
-          "label_zh": "缓存数据"
-        },
-        {
-          "value": "等待恢复",
-          "label_zh": "等待恢复"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-14.4.3",
-      "parent_id": "jd-14.4",
-      "canonical_slot": null,
-      "owner_a": "A14",
-      "name": "升级目标",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "ref",
-      "value_domain": [
-        {
-          "value": "→A16安全",
-          "label_zh": "→A16安全"
-        },
-        {
-          "value": "→A4编排",
-          "label_zh": "→A4编排"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "A15",
-      "parent_id": null,
-      "canonical_slot": null,
-      "owner_a": "A15",
-      "name": "合规申报",
-      "definition": "",
-      "node_kind": "capability_root",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-15.1",
-      "parent_id": "A15",
-      "canonical_slot": null,
-      "owner_a": "A15",
-      "name": "本体目录",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-15.1.1",
-      "parent_id": "jd-15.1",
-      "canonical_slot": null,
-      "owner_a": "A15",
-      "name": "合规类型集",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "空域类别",
-          "label_zh": "空域类别"
-        },
-        {
-          "value": "地理围栏",
-          "label_zh": "地理围栏"
-        },
-        {
-          "value": "交通信息源",
-          "label_zh": "交通信息源"
-        },
-        {
-          "value": "飞行授权",
-          "label_zh": "飞行授权"
-        },
-        {
-          "value": "身份识别",
-          "label_zh": "身份识别"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-15.1.2",
-      "parent_id": "jd-15.1",
-      "canonical_slot": null,
-      "owner_a": "A15",
-      "name": "合规属性",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "object",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-15.2",
-      "parent_id": "A15",
-      "canonical_slot": null,
-      "owner_a": "A15",
-      "name": "方法与边界",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-15.2.1",
-      "parent_id": "jd-15.2",
-      "canonical_slot": null,
-      "owner_a": "A15",
-      "name": "授权方法",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "预授权",
-          "label_zh": "预授权"
-        },
-        {
-          "value": "临时申请",
-          "label_zh": "临时申请"
-        },
-        {
-          "value": "自动申报",
-          "label_zh": "自动申报"
-        },
-        {
-          "value": "人工审批",
-          "label_zh": "人工审批"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-15.2.2",
-      "parent_id": "jd-15.2",
-      "canonical_slot": null,
-      "owner_a": "A15",
-      "name": "法规约束",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "object",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-15.3",
-      "parent_id": "A15",
-      "canonical_slot": null,
-      "owner_a": "A15",
-      "name": "质量标准",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-15.3.1",
-      "parent_id": "jd-15.3",
-      "canonical_slot": null,
-      "owner_a": "A15",
-      "name": "授权完整性",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "全部有效",
-          "label_zh": "全部有效"
-        },
-        {
-          "value": "部分过期",
-          "label_zh": "部分过期"
-        },
-        {
-          "value": "缺失关键",
-          "label_zh": "缺失关键"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-15.3.2",
-      "parent_id": "jd-15.3",
-      "canonical_slot": null,
-      "owner_a": "A15",
-      "name": "申报时效",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "duration",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-15.4",
-      "parent_id": "A15",
-      "canonical_slot": null,
-      "owner_a": "A15",
-      "name": "兜底协议",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-15.4.1",
-      "parent_id": "jd-15.4",
-      "canonical_slot": null,
-      "owner_a": "A15",
-      "name": "合规异常类型",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "授权过期",
-          "label_zh": "授权过期"
-        },
-        {
-          "value": "闯入禁飞",
-          "label_zh": "闯入禁飞"
-        },
-        {
-          "value": "高度超限",
-          "label_zh": "高度超限"
-        },
-        {
-          "value": "身份失效",
-          "label_zh": "身份失效"
-        },
-        {
-          "value": "交通冲突",
-          "label_zh": "交通冲突"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-15.4.2",
-      "parent_id": "jd-15.4",
-      "canonical_slot": null,
-      "owner_a": "A15",
-      "name": "处置动作",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "刷新授权",
-          "label_zh": "刷新授权"
-        },
-        {
-          "value": "更新围栏",
-          "label_zh": "更新围栏"
-        },
-        {
-          "value": "降低高度",
-          "label_zh": "降低高度"
-        },
-        {
-          "value": "等待恢复",
-          "label_zh": "等待恢复"
-        },
-        {
-          "value": "退避返航",
-          "label_zh": "退避返航"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-15.4.3",
-      "parent_id": "jd-15.4",
-      "canonical_slot": null,
-      "owner_a": "A15",
-      "name": "升级目标",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "ref",
-      "value_domain": [
-        {
-          "value": "→A16安全",
-          "label_zh": "→A16安全"
-        },
-        {
-          "value": "→A4编排",
-          "label_zh": "→A4编排"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "A16",
-      "parent_id": null,
-      "canonical_slot": null,
-      "owner_a": "A16",
-      "name": "安全包络",
-      "definition": "",
-      "node_kind": "capability_root",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-16.1",
-      "parent_id": "A16",
-      "canonical_slot": null,
-      "owner_a": "A16",
-      "name": "本体目录",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-16.1.1",
-      "parent_id": "jd-16.1",
-      "canonical_slot": null,
-      "owner_a": "A16",
-      "name": "安全域类型集",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "ODD边界",
-          "label_zh": "ODD边界"
-        },
-        {
-          "value": "安全态",
-          "label_zh": "安全态"
-        },
-        {
-          "value": "威胁类别",
-          "label_zh": "威胁类别"
-        },
-        {
-          "value": "运行约束",
-          "label_zh": "运行约束"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-16.1.2",
-      "parent_id": "jd-16.1",
-      "canonical_slot": null,
-      "owner_a": "A16",
-      "name": "安全属性",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "object",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-16.2",
-      "parent_id": "A16",
-      "canonical_slot": null,
-      "owner_a": "A16",
-      "name": "方法与边界",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-16.2.1",
-      "parent_id": "jd-16.2",
-      "canonical_slot": null,
-      "owner_a": "A16",
-      "name": "监控方法",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "实时越界检测",
-          "label_zh": "实时越界检测"
-        },
-        {
-          "value": "相位切换监控",
-          "label_zh": "相位切换监控"
-        },
-        {
-          "value": "预测性告警",
-          "label_zh": "预测性告警"
-        },
-        {
-          "value": "多维度联合",
-          "label_zh": "多维度联合"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-16.2.2",
-      "parent_id": "jd-16.2",
-      "canonical_slot": null,
-      "owner_a": "A16",
-      "name": "ODD运行限制",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "object",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-16.3",
-      "parent_id": "A16",
-      "canonical_slot": null,
-      "owner_a": "A16",
-      "name": "质量标准",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-16.3.1",
-      "parent_id": "jd-16.3",
-      "canonical_slot": null,
-      "owner_a": "A16",
-      "name": "分相位安全阈值",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "object",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-16.3.2",
-      "parent_id": "jd-16.3",
-      "canonical_slot": null,
-      "owner_a": "A16",
-      "name": "安全态定义",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "正常",
-          "label_zh": "正常"
-        },
-        {
-          "value": "警告",
-          "label_zh": "警告"
-        },
-        {
-          "value": "降级",
-          "label_zh": "降级"
-        },
-        {
-          "value": "紧急",
-          "label_zh": "紧急"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-16.3.3",
-      "parent_id": "jd-16.3",
-      "canonical_slot": null,
-      "owner_a": "A16",
-      "name": "安全响应时效",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "duration",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-16.4",
-      "parent_id": "A16",
-      "canonical_slot": null,
-      "owner_a": "A16",
-      "name": "兜底协议",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-16.4.1",
-      "parent_id": "jd-16.4",
-      "canonical_slot": null,
-      "owner_a": "A16",
-      "name": "安全异常类型",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "ODD越界",
-          "label_zh": "ODD越界"
-        },
-        {
-          "value": "包络突破",
-          "label_zh": "包络突破"
-        },
-        {
-          "value": "安全态降级",
-          "label_zh": "安全态降级"
-        },
-        {
-          "value": "多重故障",
-          "label_zh": "多重故障"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-16.4.2",
-      "parent_id": "jd-16.4",
-      "canonical_slot": null,
-      "owner_a": "A16",
-      "name": "兜底动作",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "返航",
-          "label_zh": "返航"
-        },
-        {
-          "value": "悬停",
-          "label_zh": "悬停"
-        },
-        {
-          "value": "备降",
-          "label_zh": "备降"
-        },
-        {
-          "value": "安全模式",
-          "label_zh": "安全模式"
-        },
-        {
-          "value": "紧急着陆",
-          "label_zh": "紧急着陆"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-16.4.3",
-      "parent_id": "jd-16.4",
-      "canonical_slot": null,
-      "owner_a": "A16",
-      "name": "升级目标",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "ref",
-      "value_domain": [
-        {
-          "value": "→A4编排",
-          "label_zh": "→A4编排"
-        },
-        {
-          "value": "→A17审计",
-          "label_zh": "→A17审计"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "A17",
-      "parent_id": null,
-      "canonical_slot": null,
-      "owner_a": "A17",
-      "name": "审计日志",
-      "definition": "",
-      "node_kind": "capability_root",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-17.1",
-      "parent_id": "A17",
-      "canonical_slot": null,
-      "owner_a": "A17",
-      "name": "本体目录",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-17.1.1",
-      "parent_id": "jd-17.1",
-      "canonical_slot": null,
-      "owner_a": "A17",
-      "name": "事件类型集",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "multi_enum",
-      "value_domain": [
-        {
-          "value": "决策",
-          "label_zh": "决策"
-        },
-        {
-          "value": "模式切换",
-          "label_zh": "模式切换"
-        },
-        {
-          "value": "异常检测",
-          "label_zh": "异常检测"
-        },
-        {
-          "value": "处置动作",
-          "label_zh": "处置动作"
-        },
-        {
-          "value": "人工介入",
-          "label_zh": "人工介入"
-        },
-        {
-          "value": "任务完成",
-          "label_zh": "任务完成"
-        },
-        {
-          "value": "安全告警",
-          "label_zh": "安全告警"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-17.1.2",
-      "parent_id": "jd-17.1",
-      "canonical_slot": null,
-      "owner_a": "A17",
-      "name": "事件属性",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "object",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-17.2",
-      "parent_id": "A17",
-      "canonical_slot": null,
-      "owner_a": "A17",
-      "name": "方法与边界",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-17.2.1",
-      "parent_id": "jd-17.2",
-      "canonical_slot": null,
-      "owner_a": "A17",
-      "name": "记录方法",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "实时写入",
-          "label_zh": "实时写入"
-        },
-        {
-          "value": "批量写入",
-          "label_zh": "批量写入"
-        },
-        {
-          "value": "压缩存储",
-          "label_zh": "压缩存储"
-        },
-        {
-          "value": "分布式存储",
-          "label_zh": "分布式存储"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-17.2.2",
-      "parent_id": "jd-17.2",
-      "canonical_slot": null,
-      "owner_a": "A17",
-      "name": "存储边界",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "object",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-17.3",
-      "parent_id": "A17",
-      "canonical_slot": null,
-      "owner_a": "A17",
-      "name": "质量标准",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-17.3.1",
-      "parent_id": "jd-17.3",
-      "canonical_slot": null,
-      "owner_a": "A17",
-      "name": "证据格式规格",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "JSON",
-          "label_zh": "JSON"
-        },
-        {
-          "value": "Protobuf",
-          "label_zh": "Protobuf"
-        },
-        {
-          "value": "自定义二进制",
-          "label_zh": "自定义二进制"
-        },
-        {
-          "value": "标准审计格式",
-          "label_zh": "标准审计格式"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-17.3.2",
-      "parent_id": "jd-17.3",
-      "canonical_slot": null,
-      "owner_a": "A17",
-      "name": "完整性",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "range",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-17.3.3",
-      "parent_id": "jd-17.3",
-      "canonical_slot": null,
-      "owner_a": "A17",
-      "name": "时间戳精度",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "duration",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-17.4",
-      "parent_id": "A17",
-      "canonical_slot": null,
-      "owner_a": "A17",
-      "name": "兜底协议",
-      "definition": "",
-      "node_kind": "group",
-      "value_type": "",
-      "value_domain": null,
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-17.4.1",
-      "parent_id": "jd-17.4",
-      "canonical_slot": null,
-      "owner_a": "A17",
-      "name": "记录异常类型",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "数据丢失",
-          "label_zh": "数据丢失"
-        },
-        {
-          "value": "存储满",
-          "label_zh": "存储满"
-        },
-        {
-          "value": "写入失败",
-          "label_zh": "写入失败"
-        },
-        {
-          "value": "时间不同步",
-          "label_zh": "时间不同步"
-        },
-        {
-          "value": "格式错误",
-          "label_zh": "格式错误"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-17.4.2",
-      "parent_id": "jd-17.4",
-      "canonical_slot": null,
-      "owner_a": "A17",
-      "name": "处置动作",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "enum",
-      "value_domain": [
-        {
-          "value": "补录",
-          "label_zh": "补录"
-        },
-        {
-          "value": "切换存储",
-          "label_zh": "切换存储"
-        },
-        {
-          "value": "压缩旧数据",
-          "label_zh": "压缩旧数据"
-        },
-        {
-          "value": "降级记录",
-          "label_zh": "降级记录"
-        },
-        {
-          "value": "告警",
-          "label_zh": "告警"
-        }
-      ],
-      "unit": "",
-      "configuration_side": "shared",
-      "difficulty_direction": "neutral",
-      "applicable_scenarios": [
-        "cross_scenario"
-      ],
-      "review_status": "proposed",
-      "evidence_status": "inferred_candidate",
-      "derivation_status": "proposed"
-    },
-    {
-      "node_id": "jd-17.4.3",
-      "parent_id": "jd-17.4",
-      "canonical_slot": null,
-      "owner_a": "A17",
-      "name": "留存策略",
-      "definition": "",
-      "node_kind": "variable",
-      "value_type": "rules",
-      "value_domain": null,
       "unit": "",
       "configuration_side": "shared",
       "difficulty_direction": "neutral",
