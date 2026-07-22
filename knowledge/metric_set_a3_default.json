@@ -1,0 +1,75 @@
+{
+  "metric_set_id": "metric_set_a3_default",
+  "metric_set_name": "A3 默认 metric",
+  "kind": "metric_set",
+  "ability": "A3",
+  "scope": [
+    "jd-3.3",
+    "jd-3.4"
+  ],
+  "description": "A3 核心 metric → 树节点实例。L等级覆盖: L1, L2, L3, L4",
+  "values": {
+    "jd-3.3.1": [
+      {
+        "metric_id": "skill_selection_accuracy",
+        "mode": "range",
+        "min": 0,
+        "max": 1,
+        "unit": "",
+        "direction": "↑",
+        "used_by_axl": [
+          "A3×L1"
+        ],
+        "label": "技能选择正确率"
+      },
+      {
+        "metric_id": "required_subgoal_recall",
+        "mode": "range",
+        "min": 0,
+        "max": 1,
+        "unit": "",
+        "direction": "↑",
+        "used_by_axl": [
+          "A3×L2"
+        ],
+        "label": "子目标覆盖率"
+      }
+    ],
+    "jd-3.3.2": {
+      "metric_id": "dependency_edge_f1",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A3×L2"
+      ],
+      "label": "依赖边F1"
+    },
+    "jd-3.3.3": {
+      "metric_id": "blocker_detection_f1",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A3×L3"
+      ],
+      "label": "阻塞检出F1"
+    },
+    "jd-3.4.2": {
+      "metric_id": "retained_constraint_accuracy",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A3×L4"
+      ],
+      "label": "保留约束正确率"
+    }
+  }
+}

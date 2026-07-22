@@ -1,0 +1,61 @@
+{
+  "metric_set_id": "metric_set_a9_default",
+  "metric_set_name": "A9 默认 metric",
+  "kind": "metric_set",
+  "ability": "A9",
+  "scope": [
+    "jd-9.3",
+    "jd-9.4"
+  ],
+  "description": "A9 核心 metric → 树节点实例。L等级覆盖: L1, L2, L3, L4",
+  "values": {
+    "jd-9.3.1": {
+      "metric_id": "soc_error",
+      "mode": "range",
+      "min": 0,
+      "max": 10,
+      "unit": "%",
+      "direction": "↓",
+      "used_by_axl": [
+        "A9×L1"
+      ],
+      "label": "电量误差"
+    },
+    "jd-9.3.2": {
+      "metric_id": "energy_prediction_error",
+      "mode": "range",
+      "min": 0,
+      "max": 15,
+      "unit": "%",
+      "direction": "↓",
+      "used_by_axl": [
+        "A9×L2"
+      ],
+      "label": "能耗预测误差"
+    },
+    "jd-9.4.1": {
+      "metric_id": "health_risk_detection_f1",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A9×L3"
+      ],
+      "label": "健康风险检出F1"
+    },
+    "jd-9.4.2": {
+      "metric_id": "safe_exit_decision_accuracy",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A9×L4"
+      ],
+      "label": "安全退出决策正确率"
+    }
+  }
+}

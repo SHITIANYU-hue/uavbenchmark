@@ -1,0 +1,75 @@
+{
+  "metric_set_id": "metric_set_a7_default",
+  "metric_set_name": "A7 默认 metric",
+  "kind": "metric_set",
+  "ability": "A7",
+  "scope": [
+    "jd-7.3",
+    "jd-7.4"
+  ],
+  "description": "A7 核心 metric → 树节点实例。L等级覆盖: L1, L2, L3, L4",
+  "values": {
+    "jd-7.3.1": [
+      {
+        "metric_id": "position_rmse",
+        "mode": "range",
+        "min": 0,
+        "max": 5,
+        "unit": "m",
+        "direction": "↓",
+        "used_by_axl": [
+          "A7×L1"
+        ],
+        "label": "位置RMSE"
+      },
+      {
+        "metric_id": "ate",
+        "mode": "range",
+        "min": 0,
+        "max": 2,
+        "unit": "m",
+        "direction": "↓",
+        "used_by_axl": [
+          "A7×L2"
+        ],
+        "label": "绝对轨迹误差"
+      }
+    ],
+    "jd-7.3.2": {
+      "metric_id": "orientation_error",
+      "mode": "range",
+      "min": 0,
+      "max": 10,
+      "unit": "°",
+      "direction": "↓",
+      "used_by_axl": [
+        "A7×L1"
+      ],
+      "label": "姿态误差"
+    },
+    "jd-7.4.1": {
+      "metric_id": "integrity_risk",
+      "mode": "range",
+      "min": 0,
+      "max": 0.1,
+      "unit": "",
+      "direction": "↓",
+      "used_by_axl": [
+        "A7×L3"
+      ],
+      "label": "完整性风险"
+    },
+    "jd-7.4.2": {
+      "metric_id": "relocalization_success",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A7×L4"
+      ],
+      "label": "重定位成功率"
+    }
+  }
+}

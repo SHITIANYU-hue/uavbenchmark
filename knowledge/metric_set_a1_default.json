@@ -1,0 +1,75 @@
+{
+  "metric_set_id": "metric_set_a1_default",
+  "metric_set_name": "A1 默认 metric",
+  "kind": "metric_set",
+  "ability": "A1",
+  "scope": [
+    "jd-1.3",
+    "jd-1.4"
+  ],
+  "description": "A1 核心 metric → 树节点实例。L等级覆盖: L1, L2, L3, L4",
+  "values": {
+    "jd-1.3.1": [
+      {
+        "metric_id": "intent_macro_f1",
+        "mode": "range",
+        "min": 0,
+        "max": 1,
+        "unit": "",
+        "direction": "↑",
+        "used_by_axl": [
+          "A1×L1"
+        ],
+        "label": "意图宏F1"
+      },
+      {
+        "metric_id": "slot_f1",
+        "mode": "range",
+        "min": 0,
+        "max": 1,
+        "unit": "",
+        "direction": "↑",
+        "used_by_axl": [
+          "A1×L1"
+        ],
+        "label": "槽位F1"
+      },
+      {
+        "metric_id": "referent_accuracy",
+        "mode": "range",
+        "min": 0,
+        "max": 1,
+        "unit": "",
+        "direction": "↑",
+        "used_by_axl": [
+          "A1×L2"
+        ],
+        "label": "指称准确率"
+      }
+    ],
+    "jd-1.3.2": {
+      "metric_id": "ambiguity_detection_f1",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A1×L3"
+      ],
+      "label": "歧义检出F1"
+    },
+    "jd-1.4.3": {
+      "metric_id": "evidence_pointer_accuracy",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A1×L4"
+      ],
+      "label": "证据锚点准确率"
+    }
+  }
+}

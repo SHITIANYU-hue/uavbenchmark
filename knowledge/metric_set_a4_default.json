@@ -1,0 +1,75 @@
+{
+  "metric_set_id": "metric_set_a4_default",
+  "metric_set_name": "A4 默认 metric",
+  "kind": "metric_set",
+  "ability": "A4",
+  "scope": [
+    "jd-4.3",
+    "jd-4.4"
+  ],
+  "description": "A4 核心 metric → 树节点实例。L等级覆盖: L1, L2, L3, L4",
+  "values": {
+    "jd-4.3.1": [
+      {
+        "metric_id": "next_step_accuracy",
+        "mode": "range",
+        "min": 0,
+        "max": 1,
+        "unit": "",
+        "direction": "↑",
+        "used_by_axl": [
+          "A4×L1"
+        ],
+        "label": "下一步正确率"
+      },
+      {
+        "metric_id": "workflow_validity_rate",
+        "mode": "range",
+        "min": 0,
+        "max": 1,
+        "unit": "",
+        "direction": "↑",
+        "used_by_axl": [
+          "A4×L2"
+        ],
+        "label": "工作流有效率"
+      }
+    ],
+    "jd-4.3.2": {
+      "metric_id": "precedence_violation_rate",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↓",
+      "used_by_axl": [
+        "A4×L2"
+      ],
+      "label": "顺序违规率"
+    },
+    "jd-4.4.1": {
+      "metric_id": "interruption_detection_f1",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A4×L3"
+      ],
+      "label": "中断检出F1"
+    },
+    "jd-4.4.2": {
+      "metric_id": "replanning_trigger_f1",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A4×L4"
+      ],
+      "label": "重编排触发F1"
+    }
+  }
+}

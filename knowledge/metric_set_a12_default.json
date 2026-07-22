@@ -1,0 +1,61 @@
+{
+  "metric_set_id": "metric_set_a12_default",
+  "metric_set_name": "A12 默认 metric",
+  "kind": "metric_set",
+  "ability": "A12",
+  "scope": [
+    "jd-12.3",
+    "jd-12.4"
+  ],
+  "description": "A12 核心 metric → 树节点实例。L等级覆盖: L1, L2, L3, L4",
+  "values": {
+    "jd-12.3.1": {
+      "metric_id": "action_timing_accuracy",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A12×L1"
+      ],
+      "label": "动作时序精度"
+    },
+    "jd-12.3.2": {
+      "metric_id": "action_success_rate",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A12×L2"
+      ],
+      "label": "动作成功率"
+    },
+    "jd-12.4.1": {
+      "metric_id": "failure_detection_f1",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A12×L3"
+      ],
+      "label": "失败检出F1"
+    },
+    "jd-12.4.2": {
+      "metric_id": "retry_success_rate",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A12×L4"
+      ],
+      "label": "重试成功率"
+    }
+  }
+}

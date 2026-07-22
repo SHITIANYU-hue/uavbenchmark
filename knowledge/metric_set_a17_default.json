@@ -1,0 +1,61 @@
+{
+  "metric_set_id": "metric_set_a17_default",
+  "metric_set_name": "A17 默认 metric",
+  "kind": "metric_set",
+  "ability": "A17",
+  "scope": [
+    "jd-17.3",
+    "jd-17.4"
+  ],
+  "description": "A17 核心 metric → 树节点实例。L等级覆盖: L1, L2, L3, L4",
+  "values": {
+    "jd-17.3.1": {
+      "metric_id": "threshold_compliance",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A17×L1"
+      ],
+      "label": "阈值合规率"
+    },
+    "jd-17.3.2": {
+      "metric_id": "safe_state_accuracy",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A17×L2"
+      ],
+      "label": "安全态准确率"
+    },
+    "jd-17.4.1": {
+      "metric_id": "degradation_detection_auroc",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A17×L3"
+      ],
+      "label": "降级检出AUROC"
+    },
+    "jd-17.4.2": {
+      "metric_id": "fallback_success_rate",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A17×L4"
+      ],
+      "label": "兜底成功率"
+    }
+  }
+}

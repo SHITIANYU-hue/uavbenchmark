@@ -1,0 +1,61 @@
+{
+  "metric_set_id": "metric_set_a14_default",
+  "metric_set_name": "A14 默认 metric",
+  "kind": "metric_set",
+  "ability": "A14",
+  "scope": [
+    "jd-14.3",
+    "jd-14.4"
+  ],
+  "description": "A14 核心 metric → 树节点实例。L等级覆盖: L1, L2, L3, L4",
+  "values": {
+    "jd-14.3.1": {
+      "metric_id": "end_to_end_latency",
+      "mode": "range",
+      "min": 0,
+      "max": 500,
+      "unit": "ms",
+      "direction": "↓",
+      "used_by_axl": [
+        "A14×L1"
+      ],
+      "label": "端到端延迟"
+    },
+    "jd-14.3.2": {
+      "metric_id": "packet_delivery_rate",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A14×L2"
+      ],
+      "label": "投递率"
+    },
+    "jd-14.4.1": {
+      "metric_id": "link_loss_detection_f1",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A14×L3"
+      ],
+      "label": "断链检出F1"
+    },
+    "jd-14.4.2": {
+      "metric_id": "link_recovery_success",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A14×L4"
+      ],
+      "label": "链路恢复成功率"
+    }
+  }
+}

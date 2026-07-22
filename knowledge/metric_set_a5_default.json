@@ -1,0 +1,75 @@
+{
+  "metric_set_id": "metric_set_a5_default",
+  "metric_set_name": "A5 默认 metric",
+  "kind": "metric_set",
+  "ability": "A5",
+  "scope": [
+    "jd-5.3",
+    "jd-5.4"
+  ],
+  "description": "A5 核心 metric → 树节点实例。L等级覆盖: L1, L2, L3, L4",
+  "values": {
+    "jd-5.3.1": [
+      {
+        "metric_id": "status_accuracy",
+        "mode": "range",
+        "min": 0,
+        "max": 1,
+        "unit": "",
+        "direction": "↑",
+        "used_by_axl": [
+          "A5×L1"
+        ],
+        "label": "状态准确率"
+      },
+      {
+        "metric_id": "failure_notification_f1",
+        "mode": "range",
+        "min": 0,
+        "max": 1,
+        "unit": "",
+        "direction": "↑",
+        "used_by_axl": [
+          "A5×L2"
+        ],
+        "label": "故障通知F1"
+      }
+    ],
+    "jd-5.3.2": {
+      "metric_id": "report_latency",
+      "mode": "range",
+      "min": 0,
+      "max": 5000,
+      "unit": "ms",
+      "direction": "↓",
+      "used_by_axl": [
+        "A5×L1"
+      ],
+      "label": "报告延迟"
+    },
+    "jd-5.4.1": {
+      "metric_id": "ask_f1",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A5×L3"
+      ],
+      "label": "求助F1"
+    },
+    "jd-5.4.2": {
+      "metric_id": "authority_routing_accuracy",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A5×L4"
+      ],
+      "label": "权限路由正确率"
+    }
+  }
+}

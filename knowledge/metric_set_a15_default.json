@@ -1,0 +1,61 @@
+{
+  "metric_set_id": "metric_set_a15_default",
+  "metric_set_name": "A15 默认 metric",
+  "kind": "metric_set",
+  "ability": "A15",
+  "scope": [
+    "jd-15.3",
+    "jd-15.4"
+  ],
+  "description": "A15 核心 metric → 树节点实例。L等级覆盖: L1, L2, L3, L4",
+  "values": {
+    "jd-15.3.2": {
+      "metric_id": "event_completeness",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A15×L1"
+      ],
+      "label": "事件完整性"
+    },
+    "jd-15.3.1": {
+      "metric_id": "format_specification_compliance",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A15×L2"
+      ],
+      "label": "格式合规率"
+    },
+    "jd-15.4.1": {
+      "metric_id": "data_loss_detection_f1",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A15×L3"
+      ],
+      "label": "数据丢失检出F1"
+    },
+    "jd-15.4.2": {
+      "metric_id": "recovery_log_success",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A15×L4"
+      ],
+      "label": "补录成功率"
+    }
+  }
+}

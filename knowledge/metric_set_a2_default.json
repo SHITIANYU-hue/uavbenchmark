@@ -1,0 +1,63 @@
+{
+  "metric_set_id": "metric_set_a2_default",
+  "metric_set_name": "A2 默认 metric",
+  "kind": "metric_set",
+  "ability": "A2",
+  "scope": [
+    "jd-2.3",
+    "jd-2.4"
+  ],
+  "description": "A2 核心 metric → 树节点实例。L等级覆盖: L1, L2, L3, L4",
+  "values": {
+    "jd-2.3.2": {
+      "metric_id": "parameter_exact_match",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A2×L1"
+      ],
+      "label": "参数精确匹配率"
+    },
+    "jd-2.3.1": [
+      {
+        "metric_id": "required_field_recall",
+        "mode": "range",
+        "min": 0,
+        "max": 1,
+        "unit": "",
+        "direction": "↑",
+        "used_by_axl": [
+          "A2×L2"
+        ],
+        "label": "必填覆盖率"
+      },
+      {
+        "metric_id": "constraint_satisfaction",
+        "mode": "range",
+        "min": 0,
+        "max": 1,
+        "unit": "",
+        "direction": "↑",
+        "used_by_axl": [
+          "A2×L3"
+        ],
+        "label": "约束满足率"
+      }
+    ],
+    "jd-2.4.2": {
+      "metric_id": "field_provenance_accuracy",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A2×L4"
+      ],
+      "label": "来源标注准确率"
+    }
+  }
+}

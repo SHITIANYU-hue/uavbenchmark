@@ -1,0 +1,73 @@
+{
+  "metric_set_id": "metric_set_a8_default",
+  "metric_set_name": "A8 默认 metric",
+  "kind": "metric_set",
+  "ability": "A8",
+  "scope": [
+    "jd-8.3",
+    "jd-8.4"
+  ],
+  "description": "A8 核心 metric → 树节点实例。L等级覆盖: L1, L2, L3, L4",
+  "values": {
+    "jd-8.3.1": {
+      "metric_id": "range_error",
+      "mode": "range",
+      "min": 0,
+      "max": 0.5,
+      "unit": "m",
+      "direction": "↓",
+      "used_by_axl": [
+        "A8×L1"
+      ],
+      "label": "距离误差"
+    },
+    "jd-8.3.2": {
+      "metric_id": "bearing_error",
+      "mode": "range",
+      "min": 0,
+      "max": 5,
+      "unit": "°",
+      "direction": "↓",
+      "used_by_axl": [
+        "A8×L1"
+      ],
+      "label": "方位误差"
+    },
+    "jd-8.3.3": {
+      "metric_id": "relative_tracking_accuracy",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A8×L2"
+      ],
+      "label": "相对跟踪精度"
+    },
+    "jd-8.4.1": {
+      "metric_id": "loss_detection_f1",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A8×L3"
+      ],
+      "label": "丢失检出F1"
+    },
+    "jd-8.4.2": {
+      "metric_id": "reacquisition_success",
+      "mode": "range",
+      "min": 0,
+      "max": 1,
+      "unit": "",
+      "direction": "↑",
+      "used_by_axl": [
+        "A8×L4"
+      ],
+      "label": "重捕获成功率"
+    }
+  }
+}
