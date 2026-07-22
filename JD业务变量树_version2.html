@@ -160,8 +160,219 @@ pre {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  gap: 7px;
+  gap: 10px;
   flex-wrap: wrap;
+}
+
+.case-toolbar,
+.review-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.case-toolbar {
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface-soft);
+}
+
+.case-toolbar[data-active="true"] {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+  background: color-mix(in srgb, var(--accent-soft) 70%, var(--surface));
+}
+
+.case-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.case-field[hidden],
+.case-status[hidden] {
+  display: none !important;
+}
+
+.case-field-icon {
+  flex: none;
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--accent);
+}
+
+.case-field-icon svg {
+  width: 15px;
+  height: 15px;
+  display: block;
+}
+
+.case-field-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.case-field-body > span {
+  color: var(--muted);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  line-height: 1;
+}
+
+.case-select {
+  appearance: none;
+  min-width: 158px;
+  max-width: 220px;
+  padding: 6px 28px 6px 9px;
+  border: 1px solid var(--border-strong);
+  border-radius: 8px;
+  background:
+    var(--surface)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M3 4.5L6 7.5L9 4.5' stroke='%23687689' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+    right 8px center / 12px no-repeat;
+  color: var(--foreground);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+}
+
+.case-select:hover,
+.case-select:focus-visible {
+  border-color: var(--accent);
+}
+
+.case-toolbar.is-loading .case-select {
+  opacity: 0.7;
+  cursor: wait;
+}
+
+.case-select option {
+  font-weight: 500;
+}
+
+.case-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 9px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+}
+
+.case-toggle:hover {
+  border-color: var(--accent);
+  color: var(--foreground);
+}
+
+.case-toggle input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.case-toggle-ui {
+  position: relative;
+  width: 28px;
+  height: 16px;
+  flex: none;
+  border-radius: 999px;
+  background: var(--border-strong);
+  transition: background 0.15s ease;
+}
+
+.case-toggle-ui::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(22, 33, 45, 0.2);
+  transition: transform 0.15s ease;
+}
+
+.case-toggle:has(input:checked) {
+  border-color: color-mix(in srgb, var(--accent) 50%, var(--border));
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.case-toggle:has(input:checked) .case-toggle-ui {
+  background: var(--accent);
+}
+
+.case-toggle:has(input:checked) .case-toggle-ui::after {
+  transform: translateX(12px);
+}
+
+.case-toggle:has(input:disabled) {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.case-status {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--foreground);
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.case-toolbar[data-active="true"] .case-status {
+  display: inline-flex;
+}
+
+.case-status-ability {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  padding: 2px 5px;
+  border-radius: 999px;
+  background: var(--group-motion-soft);
+  color: var(--group-motion);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+
+.case-status-name {
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.case-status-meta {
+  color: var(--muted);
+  font-weight: 500;
 }
 
 .review-action {
@@ -464,8 +675,11 @@ main {
 
   .case-badge {
     margin-top: 5px;
-    padding: 3px 7px;
-    border-radius: 5px;
+    padding: 4px 7px;
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    border-radius: 6px;
     border-left: 3px solid #356d9b;
     background: #e8f1f8;
     color: #2a5878;
@@ -476,7 +690,7 @@ main {
   }
   .case-badge .case-label {
     font-weight: 700;
-    margin-right: 4px;
+    margin-right: 3px;
     color: #356d9b;
   }
   .case-badge.mode-range, .case-badge.mode-enum {
@@ -488,9 +702,19 @@ main {
     color: #9c6a2d;
   }
   .case-badge .mode-icon {
-    display: inline-block;
-    margin-right: 3px;
-    font-weight: 700;
+    flex: none;
+    width: 12px;
+    height: 12px;
+    margin-top: 1px;
+    color: inherit;
+  }
+  .case-badge .mode-icon svg {
+    display: block;
+    width: 12px;
+    height: 12px;
+  }
+  .case-badge-text {
+    min-width: 0;
   }
 
 .detail-dialog {
@@ -937,6 +1161,26 @@ pre {
 
   .header-actions {
     justify-content: flex-start;
+    width: 100%;
+  }
+
+  .case-toolbar,
+  .review-toolbar {
+    width: 100%;
+  }
+
+  .case-select {
+    min-width: 0;
+    width: 100%;
+    max-width: none;
+  }
+
+  .case-field {
+    flex: 1;
+  }
+
+  .case-status-name {
+    max-width: 160px;
   }
 
   .ability-tabs {
@@ -1020,25 +1264,53 @@ pre {
       <span>A1 · A2 · A3 · A4 · A5 · A6 · A7 · A8 · A9 · A10 · A11 · A12 · A13 · A14 · A15 · A16 · A17</span>
     </div>
     <div class="header-actions">
-      <select id="caseSelector" class="review-action" style="min-width:140px">
-        <option value="">无案例</option>
-        <option value="knowledge/case_white_wall_narrow_gap.json">白墙窄缝穿梭</option>
-      </select>
-      <select id="dLevelSelector" class="review-action" style="min-width:100px;display:none">
-        <option value="">全部D档</option>
-        <option value="D1">D1 宽缝·无扰动</option>
-        <option value="D2">D2 中缝·静态</option>
-        <option value="D3">D3 窄缝·单干扰</option>
-        <option value="D4">D4 极窄·联合干扰</option>
-      </select>
-      <label class="review-action" style="display:flex;align-items:center;gap:6px;cursor:pointer">
-        <input type="checkbox" id="caseToggle" style="margin:0"> 显示实例值
-      </label>
-      <button class="review-action" id="importCommentsButton" type="button">导入建议</button>
-      <button class="review-action" id="exportCommentsButton" type="button">
-        导出建议 <span id="totalCommentCount">0</span>
-      </button>
-      <input id="commentImportInput" type="file" accept="application/json,.json" hidden>
+      <div class="case-toolbar" id="caseToolbar" data-active="false">
+        <label class="case-field" for="caseSelector">
+          <span class="case-field-icon" aria-hidden="true">
+            <svg viewBox="0 0 16 16" fill="none">
+              <rect x="1.5" y="3" width="4.5" height="10" rx="1" stroke="currentColor" stroke-width="1.4"/>
+              <rect x="10" y="3" width="4.5" height="10" rx="1" stroke="currentColor" stroke-width="1.4"/>
+              <path d="M6 8h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+            </svg>
+          </span>
+          <span class="case-field-body">
+            <span>案例</span>
+            <select id="caseSelector" class="case-select">
+              <option value="">不载入案例</option>
+              <option value="knowledge/case_white_wall_narrow_gap.json">白墙窄缝穿梭 · A11</option>
+            </select>
+          </span>
+        </label>
+        <label class="case-field" id="dLevelField" for="dLevelSelector" hidden>
+          <span class="case-field-body">
+            <span>难度</span>
+            <select id="dLevelSelector" class="case-select" style="min-width:132px">
+              <option value="">全部 D 档</option>
+              <option value="D1">D1 宽缝·无扰动</option>
+              <option value="D2">D2 中缝·静态</option>
+              <option value="D3">D3 窄缝·单干扰</option>
+              <option value="D4">D4 极窄·联合干扰</option>
+            </select>
+          </span>
+        </label>
+        <label class="case-toggle" for="caseToggle" title="在变量节点上显示案例实例值">
+          <input type="checkbox" id="caseToggle" disabled>
+          <span class="case-toggle-ui" aria-hidden="true"></span>
+          <span>实例值</span>
+        </label>
+        <div class="case-status" id="caseStatus" aria-live="polite">
+          <span class="case-status-ability" id="caseStatusAbility">A11</span>
+          <span class="case-status-name" id="caseStatusName">白墙窄缝穿梭</span>
+          <span class="case-status-meta" id="caseStatusMeta"></span>
+        </div>
+      </div>
+      <div class="review-toolbar">
+        <button class="review-action" id="importCommentsButton" type="button">导入建议</button>
+        <button class="review-action" id="exportCommentsButton" type="button">
+          导出建议 <span id="totalCommentCount">0</span>
+        </button>
+        <input id="commentImportInput" type="file" accept="application/json,.json" hidden>
+      </div>
     </div>
   </header>
 
@@ -1103,8 +1375,8 @@ pre {
     A6: "perception", A7: "perception", A8: "perception", A9: "perception",
     A10: "motion", A11: "motion",
     A12: "payload", A13: "payload",
-    A14: "comms", A15: "comms",
-    A16: "safety", A17: "safety",
+    A14: "comms", A17: "comms",
+    A15: "safety", A16: "safety",
   };
   const scenarioLabels = {
     cross_scenario: "跨业务场景",
@@ -1346,6 +1618,15 @@ pre {
     return escapeHtml(String(val));
   }
 
+  const CASE_MODE_ICONS = {
+    fixed:
+      '<svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><rect x="2.5" y="5.5" width="7" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/><path d="M4 5.5V4a2 2 0 0 1 4 0v1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>',
+    range:
+      '<svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 3.5h5.5M2 8.5h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="8.5" cy="3.5" r="1.4" fill="currentColor"/><circle cx="5" cy="8.5" r="1.4" fill="currentColor"/></svg>',
+    enum:
+      '<svg viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 3h7M2.5 6h7M2.5 9h4.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="9.2" cy="9" r="1.3" fill="currentColor"/></svg>',
+  };
+
   function caseBadgeHtml(node) {
     if (!state.caseVisible || !state.caseData || !state.caseData.values) return "";
     const entry = state.caseData.values[node.node_id];
@@ -1353,33 +1634,71 @@ pre {
     const caseName = state.caseData.case_name || "案例";
     const mode = entry.mode || "fixed";
 
-    let modeIcon, modeClass, displayVal;
+    let modeClass = "";
+    let displayVal;
     if (mode === "fixed") {
-      modeIcon = "🔒";
-      modeClass = "";
       displayVal = formatCaseValue(entry.value);
     } else if (mode === "range") {
-      modeIcon = "🔀";
       modeClass = "mode-range";
       const unit = entry.unit ? escapeHtml(entry.unit) : "";
       displayVal = `[${entry.min}, ${entry.max}]${unit ? " " + unit : ""}`;
       if (entry.label) displayVal = escapeHtml(entry.label) + ": " + displayVal;
     } else if (mode === "enum") {
-      modeIcon = "🔀";
       modeClass = "mode-enum";
       if (entry.options) {
-        displayVal = entry.options.map(o => escapeHtml(String(o))).join(" | ");
+        displayVal = entry.options.map((o) => escapeHtml(String(o))).join(" | ");
       } else {
         displayVal = formatCaseValue(entry.value);
       }
       if (entry.label) displayVal = escapeHtml(entry.label) + ": [" + displayVal + "]";
     } else {
-      modeIcon = "";
-      modeClass = "";
       displayVal = formatCaseValue(entry.value || entry);
     }
 
-    return `<div class="case-badge ${modeClass}"><span class="mode-icon">${modeIcon}</span><span class="case-label">${escapeHtml(caseName)}:</span>${displayVal}</div>`;
+    const modeIcon = CASE_MODE_ICONS[mode] || CASE_MODE_ICONS.fixed;
+    return `<div class="case-badge ${modeClass}"><span class="mode-icon">${modeIcon}</span><span class="case-badge-text"><span class="case-label">${escapeHtml(caseName)}</span>${displayVal}</span></div>`;
+  }
+
+
+  function syncCaseToolbar() {
+    const toolbar = document.getElementById("caseToolbar");
+    const toggle = document.getElementById("caseToggle");
+    const dLevelField = document.getElementById("dLevelField");
+    const statusAbility = document.getElementById("caseStatusAbility");
+    const statusName = document.getElementById("caseStatusName");
+    const statusMeta = document.getElementById("caseStatusMeta");
+    if (!toolbar || !toggle) return;
+
+    const active = Boolean(state.caseData);
+    toolbar.dataset.active = active ? "true" : "false";
+    toggle.disabled = !active;
+    toggle.checked = active && state.caseVisible;
+
+    const hasDAxis = Boolean(state.caseData?.axes?.D?.levels?.length);
+    if (dLevelField) {
+      dLevelField.hidden = !hasDAxis;
+      if (!hasDAxis) {
+        const dLevelSelector = document.getElementById("dLevelSelector");
+        if (dLevelSelector) dLevelSelector.value = "";
+        state.dLevel = "";
+      }
+    }
+
+    if (statusAbility && statusName && statusMeta) {
+      if (!active) {
+        statusAbility.textContent = "";
+        statusName.textContent = "";
+        statusMeta.textContent = "";
+      } else {
+        const ability = state.caseData.ability || "—";
+        const boundCount = state.caseData.values
+          ? Object.keys(state.caseData.values).length
+          : 0;
+        statusAbility.textContent = ability;
+        statusName.textContent = state.caseData.case_name || "未命名案例";
+        statusMeta.textContent = boundCount ? `${boundCount} 绑定` : "";
+      }
+    }
   }
 
   function renderBranch(node) {
@@ -2112,32 +2431,61 @@ pre {
       centerMapRoot();
     });
 
+    const caseToolbar = document.getElementById("caseToolbar");
     const caseSelector = document.getElementById("caseSelector");
     if (caseSelector) {
       caseSelector.addEventListener("change", async () => {
         const url = caseSelector.value;
-        if (!url) { state.caseData = null; state.caseVisible = false; renderTabs(); renderMap(); return; }
+        if (!url) {
+          state.caseData = null;
+          state.caseVisible = false;
+          state.dLevel = "";
+          syncCaseToolbar();
+          renderTabs();
+          renderMap();
+          return;
+        }
+        caseToolbar?.classList.add("is-loading");
+        caseSelector.disabled = true;
         try {
-          const r = await fetch(url, {cache: "no-store"});
+          const r = await fetch(url, { cache: "no-store" });
           if (!r.ok) throw new Error("案例加载失败");
           state.caseData = await r.json();
           state.caseVisible = true;
           if (state.caseData.ability) {
             state.selectedAbility = state.caseData.ability;
           }
-          document.getElementById("caseToggle").checked = true;
+          syncCaseToolbar();
           renderTabs();
           renderMap();
-        } catch(e) { window.alert(e.message); }
+        } catch (e) {
+          state.caseData = null;
+          state.caseVisible = false;
+          caseSelector.value = "";
+          syncCaseToolbar();
+          window.alert(e.message);
+        } finally {
+          caseToolbar?.classList.remove("is-loading");
+          caseSelector.disabled = false;
+        }
       });
     }
     const caseToggle = document.getElementById("caseToggle");
     if (caseToggle) {
       caseToggle.addEventListener("change", () => {
         state.caseVisible = caseToggle.checked;
+        syncCaseToolbar();
         renderMap();
       });
     }
+    const dLevelSelector = document.getElementById("dLevelSelector");
+    if (dLevelSelector) {
+      dLevelSelector.addEventListener("change", () => {
+        state.dLevel = dLevelSelector.value || "";
+        renderMap();
+      });
+    }
+    syncCaseToolbar();
   }
 
   async function init() {

@@ -346,7 +346,7 @@
     },
     {
       "a_id": "A15",
-      "g_group": "G5",
+      "g_group": "G6",
       "ability": "合规申报",
       "global_jd": [
         "jd-0.6",
@@ -377,7 +377,7 @@
     },
     {
       "a_id": "A17",
-      "g_group": "G6",
+      "g_group": "G5",
       "ability": "审计日志",
       "global_jd": [
         "jd-0.6",
