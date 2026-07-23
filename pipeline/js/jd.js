@@ -111,11 +111,30 @@ function getEdits() {
     const e = state.domainEdits[j.slot_id] || {};
     return {slot_id: j.slot_id, name: j.name, binding_mode: e.binding_mode || j.binding_mode || "fixed",
       value: e.value !== undefined ? e.value : j.value, allowed_values: e.allowed_values || j.allowed_values || [],
-      minimum: e.minimum !== undefined ? e.minimum : j.minimum, maximum: e.maximum !== undefined ? e.maximum : j.maximum};
+      minimum: e.minimum !== undefined ? e.minimum : j.minimum, maximum: e.maximum !== undefined ? e.maximum : j.maximum,
+      status: e.status || j.status || "TBD", provenance: e.provenance || j.provenance || "agent_extracted",
+      source_note: e.source_note !== undefined ? e.source_note : j.source_note,
+      evidence_quote: e.evidence_quote !== undefined ? e.evidence_quote : j.evidence_quote};
   });
 }
 
-function setEdit(id, f, v) { if (!state.domainEdits[id]) state.domainEdits[id] = {}; state.domainEdits[id][f] = f === "allowed_values" ? v.split(/[,，]/).map(s => s.trim()).filter(Boolean) : v; }
+function setEdit(id, f, v, source) {
+  if (!state.domainEdits[id]) state.domainEdits[id] = {};
+  const next = f === "allowed_values" && typeof v === "string"
+    ? v.split(/[,，]/).map(s => s.trim()).filter(Boolean)
+    : v;
+  const before = state.domainEdits[id][f];
+  if (JSON.stringify(before) === JSON.stringify(next)) return;
+  state.domainEdits[id][f] = next;
+  state.domainEditHistory.push({
+    slot_id: id,
+    field: f,
+    before: before === undefined ? null : before,
+    after: next,
+    source: source || "human_edit",
+    changed_at: new Date().toISOString(),
+  });
+}
 
 function tbdEdits() {
   return getEdits().filter(e => e.binding_mode === "TBD");

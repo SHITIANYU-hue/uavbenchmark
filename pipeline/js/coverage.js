@@ -120,7 +120,7 @@ function renderCoveragePickerHtml(opts) {
   const editable = !!(opts && opts.editable);
   const cells = selectedCoverageCells();
   let h = '<div class="field-label" style="margin-top:10px"><label>目标 Coverage（先选再扩充）</label></div>';
-  h += '<p class="intro" style="margin-top:4px">默认已预填巡检常用 <b>L2</b>，可逐项改等级。选 L3 = 累计 L1–L3；选「不覆盖」= <b>L0</b>（本次不考该能力）。</p>';
+  h += '<p class="intro" style="margin-top:4px">这里就是本轮评测的 A×L 目标。当前不写死默认等级；请按任务选择。选 L3 = 累计 L1–L3；选「不覆盖」= <b>L0</b>。</p>';
   h += '<div class="group-label">L 等级含义</div><div class="level-legend">';
   levelPolicyEntries().forEach(lv => {
     h += '<div class="level-legend-item ' + levelClass(lv.id) + '"><b>' + escapeHtml(lv.id) + '</b><span><em>'
@@ -133,12 +133,6 @@ function renderCoveragePickerHtml(opts) {
   if (editable) {
     h += '<div class="action-row" style="margin:0 0 10px;flex-wrap:wrap;gap:8px">'
       + '<span class="action-note">灰=L0 · 蓝=L1 · 青=L2 · 琥珀=L3 · 绿=L4</span><div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">'
-      + '<span class="action-note">Seed</span>'
-      + '<input type="number" min="0" id="coverageSeedInput" value="' + (state.coverageSeed || 0) + '" '
-      + 'style="padding:4px 8px;width:72px;border:1px solid var(--line-strong);border-radius:6px;font-size:10px">'
-      + '<button class="btn" type="button" onclick="randomizeCoverageFromUi()">按 Seed 随机</button> '
-      + '<button class="btn" type="button" onclick="rerollCoverageSeed()">换 Seed</button> '
-      + '<button class="btn" type="button" onclick="resetCoverageDefaults()">恢复默认</button> '
       + '<button class="btn" type="button" onclick="clearCoverageSelection()">全部清空</button>'
       + '</div></div>';
   }

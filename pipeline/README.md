@@ -6,13 +6,14 @@
 pipeline/
   css/app.css
   js/
-    constants.js      # 五步标签、默认 Coverage、世界侧 JD
+    constants.js      # 五步标签、能力编号与基础常量
     utils.js
     state.js          # 进度与阶段跳转
     scenarios.js
-    coverage.js       # A×L 选择 / Seed 随机
+    coverage.js       # A×L 人工选择
     jd.js             # JD 分组、用户侧·世界侧
-    agent.js          # 扩充 / 分类 / fill-tbd
+    jd_tree_v2.js     # A×L 子树加载、V2 变量选择与清单导出
+    agent.js          # 扩充 / 分类 / V2 约束提取 / TBD 来源复核
     persistence.js    # 保存·加载检查点
     steps.js          # STEP 1–5 界面
     shell.js          # 侧栏 Provider / 进度

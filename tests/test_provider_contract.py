@@ -69,7 +69,7 @@ def test_ui_keeps_team_flow_and_provider_checkpoint_controls() -> None:
 
 
 def test_ui_splits_coverage_step2_from_jd_extraction_step3() -> None:
-    """STEP 2 runs coverage only; JD extraction runs on demand in STEP 3."""
+    """STEP 2 fixes coverage; STEP 3 confirms a V2 slice before extraction."""
     blob = _ui_blob()
     # dedicated endpoints for the two-step split
     assert "/api/config-agent/classify" in blob
@@ -77,6 +77,10 @@ def test_ui_splits_coverage_step2_from_jd_extraction_step3() -> None:
     # STEP 3 runs (and can retry) extraction on its own
     assert "runExtraction" in blob
     assert "运行 JD 域提取" in blob
+    assert "/api/jd-tree/selection/build" in blob
+    assert "jd_tree_selection" in blob
+    assert "tree.options[0]" not in blob
+    assert "const DEFAULT_TARGET_LEVELS = {}" in blob
 
 
 def test_server_exposes_classify_and_extract_endpoints() -> None:
@@ -89,7 +93,7 @@ def test_pipeline_ui_is_split_into_modules() -> None:
     js_dir = ROOT / "pipeline" / "js"
     expected = {
         "constants.js", "utils.js", "state.js", "scenarios.js", "coverage.js",
-        "jd.js", "agent.js", "persistence.js", "steps.js", "shell.js", "main.js",
+        "jd.js", "jd_tree_v2.js", "agent.js", "persistence.js", "steps.js", "shell.js", "main.js",
     }
     assert expected <= {p.name for p in js_dir.glob("*.js")}
     assert (ROOT / "pipeline" / "css" / "app.css").is_file()

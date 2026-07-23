@@ -12,6 +12,7 @@ SCHEMAS = ROOT / "schemas"
 EXAMPLES = ROOT / "examples" / "contracts"
 
 SCHEMA_FILES = {
+    "jd_tree_selection": "jd_tree_selection.schema.json",
     "task_template": "task_template.schema.json",
     "task_instance": "task_instance.schema.json",
     "ground_truth": "ground_truth.schema.json",
@@ -40,6 +41,7 @@ def test_schema_is_valid_draft_2020_12(schema_file: str) -> None:
     ("schema_name", "example_file"),
     [
         ("task_template", "task_template.valid.json"),
+        ("jd_tree_selection", "jd_tree_selection.valid.json"),
         ("task_instance", "task_instance.valid.json"),
         ("ground_truth", "ground_truth.valid.json"),
         ("grader_result", "grader_result.valid.json"),

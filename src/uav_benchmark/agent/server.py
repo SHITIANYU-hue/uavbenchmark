@@ -17,6 +17,7 @@ from .catalog import (
     ROOT,
     load_fixed_scenario,
     load_jd_tree_domains,
+    load_jd_tree_selection,
     load_jd_tree_slice,
     load_reference_catalog,
     load_scenario_registry,
@@ -330,6 +331,7 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
             "/api/task-template/batch",
             "/api/task-template/traverse",
             "/api/domain-template/build",
+            "/api/jd-tree/selection/build",
             "/api/pipeline/save",
         }:
             self._json(HTTPStatus.NOT_FOUND, {"error": "not_found"})
@@ -350,6 +352,24 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                 save_path = ROOT / "saved_pipeline.json"
                 save_path.write_text(json.dumps(record, ensure_ascii=False, indent=2), encoding="utf-8")
                 self._json(HTTPStatus.OK, {"status": "saved", "savedAt": record["savedAt"]})
+                return
+
+            if self.path == "/api/jd-tree/selection/build":
+                abilities = payload.get("abilities") or []
+                selected_nodes = payload.get("selected_node_ids") or []
+                coverage_cells = payload.get("coverage_cells") or []
+                if not isinstance(abilities, list):
+                    raise ValueError("abilities must be a list")
+                if not isinstance(selected_nodes, list):
+                    raise ValueError("selected_node_ids must be a list")
+                if not isinstance(coverage_cells, list):
+                    raise ValueError("coverage_cells must be a list")
+                selection = load_jd_tree_selection(
+                    [str(value) for value in abilities],
+                    [str(value) for value in selected_nodes],
+                    coverage_cells=[str(value) for value in coverage_cells],
+                )
+                self._json(HTTPStatus.OK, {"jd_tree_selection": selection})
                 return
 
             if self.path == "/api/domain-template/build":
@@ -587,6 +607,34 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                 coverage_candidates = payload.get("coverage_candidates") or []
                 if not isinstance(coverage_candidates, list) or not coverage_candidates:
                     raise ValueError("coverage_candidates must be a non-empty list")
+                raw_selection = payload.get("jd_tree_selection")
+                jd_tree_selection = None
+                if raw_selection is not None:
+                    if not isinstance(raw_selection, dict):
+                        raise ValueError("jd_tree_selection must be an object")
+                    selected_nodes = raw_selection.get("selected_nodes") or []
+                    selected_node_ids = [
+                        str(node.get("node_id"))
+                        for node in selected_nodes
+                        if isinstance(node, dict) and node.get("node_id")
+                    ]
+                    basis = raw_selection.get("selection_basis") or {}
+                    jd_tree_selection = load_jd_tree_selection(
+                        [str(value) for value in (basis.get("abilities") or [])],
+                        selected_node_ids,
+                        coverage_cells=[
+                            str(item.get("cell"))
+                            for item in coverage_candidates
+                            if isinstance(item, dict) and item.get("cell")
+                        ],
+                    )
+                    if (
+                        raw_selection.get("selection_id")
+                        != jd_tree_selection.get("selection_id")
+                    ):
+                        raise ValueError(
+                            "jd_tree_selection does not match the current Version2 source"
+                        )
                 source_task_description = str(payload.get("source_task_description") or "").strip() or None
                 narrative_parent_run_id = str(payload.get("narrative_parent_run_id") or "").strip() or None
                 if narrative_parent_run_id and not re.fullmatch(r"agent-[a-z0-9-]{6,64}", narrative_parent_run_id):
@@ -598,6 +646,7 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                     task_title=str(payload.get("task_title") or "").strip() or "任务域模版",
                     scenario_summary=str(payload.get("scenario_summary") or "").strip(),
                     responsibility_boundaries=payload.get("responsibility_boundaries") or [],
+                    jd_tree_selection=jd_tree_selection,
                     fixed_scenario=fixed_scenario,
                     run_id=run_id,
                     progress=lambda event, details: _log_event(run_id, event, details),
@@ -608,6 +657,7 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                     fixed_scenario,
                     source_task_description=source_task_description,
                     narrative_parent_run_id=narrative_parent_run_id,
+                    jd_tree_selection=jd_tree_selection,
                 )
                 with RUN_STATUS_LOCK:
                     RUN_STATUS.setdefault(run_id, {})["result"] = result.model_dump(mode="json")

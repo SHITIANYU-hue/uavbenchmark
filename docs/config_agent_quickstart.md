@@ -9,7 +9,7 @@
 ```text
 STEP 1  任务域选择      任务描述 + 可选场景示例
 STEP 2  文案与 A×L      Coverage → 文案扩充 → A×L 分类
-STEP 3  JD 域提取       按 A 查看变量域
+STEP 3  JD V2 选变量    加载子树 → 勾选 → 生成清单 → 提取
 STEP 4  任务域模版      fixed / enum / range / TBD
 STEP 5  特定任务模版    Seed → 具体 JD 值
 ```
@@ -51,16 +51,20 @@ http://127.0.0.1:8765
 
 ### STEP 2 · 文案与 A×L
 
-1. 选目标 Coverage（可改等级；可用 Seed「按 Seed 随机 / 换 Seed」；或恢复默认）  
+1. 在矩阵中人工选择目标 Coverage；没有确认资料时页面不替你写死默认等级
 2. **确认 Coverage → 运行文案扩充**  
 3. 改文案后 **确认文案 → 跑分类**  
 4. 看结果里的 A×L，确认 → STEP 3  
 
 自然语言文案是后续模版的来源，STEP 3/5 也可折叠查看。
 
-### STEP 3 · JD 域提取
+### STEP 3 · JD Version2 选变量与域提取
 
-按 A 查看 Agent 给出的变量域；确认 → STEP 4。
+1. 页面按 STEP 2 的 A×L 加载对应能力子树和全局变量，不展开完整 444 节点
+2. 检查每个变量的 canonical JD、配置侧、role、visibility、Hidden GT 和 TBD
+3. 调整勾选；“恢复 A×L 建议”只恢复建议范围，不代表业务批准
+4. **确认选择并生成清单**；可复制或下载 `jd_tree_selection.json`
+5. **运行 JD 域提取**；Agent 只能使用清单内映射出的 canonical JD
 
 ### STEP 4 · 任务域模版
 
@@ -71,7 +75,7 @@ http://127.0.0.1:8765
 | fixed | 固定值 |
 | enum | 离散选项（逗号分隔） |
 | range | 数值区间 |
-| TBD | 未知；可「智能填写 TBD」 |
+| TBD | 未知；可“按来源复核”，但来源不足时必须继续保持 TBD |
 
 确认 → STEP 5。
 
@@ -82,6 +86,9 @@ http://127.0.0.1:8765
 3. 卡片说明域模版与本实例的关系；JD 分**用户侧 / 世界侧**，并对照「取值域 → 具体值」  
 
 同一 Seed + 同一域模版结果可复现。
+
+> 当前 STEP 5 的两侧卡片仍是过渡展示，不是最终三类交付包。`task_template`、
+> `world_config`、`user_config` 的独立 schema、隔离校验和整包导出属于下一批实现。
 
 ## 常见问题
 

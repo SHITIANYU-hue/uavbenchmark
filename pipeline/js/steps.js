@@ -95,8 +95,8 @@ function renderStep2a() {
     if (issueIdx.other.length) {
       h += renderInlineHints(issueIdx.other.slice(0, 8), { title: "其他校验 · " + issueIdx.other.length + " 条" });
     }
-    h += '<div class="action-row" style="margin-top:14px"><span class="action-note">确认 A×L 后进入 STEP 3，单独运行 JD 域提取</span>'
-      + '<button class="btn primary" onclick="completeStage(1)">确认 A×L → STEP 3</button></div>';
+    h += '<div class="action-row" style="margin-top:14px"><span class="action-note">确认 A×L 后，系统只加载对应能力的 JD Version2 子树</span>'
+      + '<button class="btn primary" onclick="confirmCoverageAndLoadV2()">确认 A×L → 加载 V2 子树</button></div>';
   }
   if (state.agentError) h += '<div class="choice-card dependency selected" style="margin-top:8px"><b>分类错误</b><p>' + escapeHtml(state.agentError) + "</p></div>";
   document.getElementById("workspaceBody").innerHTML = h;
@@ -108,8 +108,9 @@ function renderStep2a() {
 function renderStep2b() {
   const hasCoverage = state.agentResult && state.agentResult.candidate && (state.agentResult.candidate.coverage_candidates || []).length;
   const hasJd = state.extractionStatus === "done" && state.agentResult && state.agentResult.candidate && (state.agentResult.candidate.jd_candidates || []).length;
-  setHeader(2, state.completed.has(2) ? "已完成" : hasJd ? "待确认" : state.extractionStatus === "running" ? "提取中" : hasCoverage ? "待运行提取" : "等待 STEP 2");
-  let h = saveBar() + '<p class="intro">STEP 3：在这里单独运行 JD 域提取（由 STEP 2 的 coverage 决定）。提取分批进行，避免一次返回过长被截断；失败可直接重试。</p>';
+  const hasSelection = !!state.jdTreeSelection;
+  setHeader(2, state.completed.has(2) ? "已完成" : hasJd ? "JD 域待确认" : state.extractionStatus === "running" ? "提取中" : hasSelection ? "V2 清单已确认" : hasCoverage ? "选择 V2 变量" : "等待 STEP 2");
+  let h = saveBar() + '<p class="intro">STEP 3：A×L 先限定 JD Version2 子树；你再勾选本题需要的细粒度变量。确认后生成 <span class="mono">jd_tree_selection.json</span>，Agent 只能在其映射的 canonical JD 范围内提取。</p>';
   if (!hasCoverage) {
     h += '<div class="choice-card dependency selected"><b>尚未完成 STEP 2</b><p>请先在 STEP 2 完成文案确认与 A×L 分类。</p></div>';
     h += '<div class="action-row" style="margin-top:12px"><button class="btn" type="button" onclick="goToStage(1)">← 回 STEP 2</button></div>';
@@ -119,19 +120,32 @@ function renderStep2b() {
   const cov = state.agentResult.candidate.coverage_candidates || [];
   h += '<div class="field-label" style="margin-top:8px"><label>来自 STEP 2 的 A×L（' + cov.length + '）</label></div>';
   h += '<div class="coverage-chips">' + cov.map(x => '<span class="lvl-pill ' + cellLevelClass(x.cell) + '">' + escapeHtml(x.cell) + "</span>").join("") + '</div>';
+  h += renderJdTreeSelectionHtml();
+  if (state.jdTreeError) {
+    h += '<div class="choice-card dependency selected" style="margin-top:10px"><b>V2 选择错误</b><p>' + escapeHtml(state.jdTreeError) + '</p></div>';
+  }
+  if (state.jdTreeNotice) {
+    h += '<div class="choice-card selected" style="margin-top:10px"><b>' + escapeHtml(state.jdTreeNotice) + '</b></div>';
+  }
+
+  if (!hasSelection) {
+    document.getElementById("workspaceBody").innerHTML = h;
+    return;
+  }
 
   if (state.extractionStatus === "running") {
     const pr = state.extractionProgress;
     const note = pr && pr.total ? ("正在提取 JD 变量域…第 " + pr.chunk + "/" + pr.total + " 批") : "正在根据 A×L 提取 JD 变量域…";
     h += '<div class="choice-card selected" id="extractionProgressCard" style="margin-top:12px"><b>' + escapeHtml(note) + '</b>'
-      + '<p>分批调用可避免单次响应过长被截断，请稍候。提取期间可随时点上方 STEP 跳转。</p></div>';
+      + '<p>Agent 只看到选择清单映射出的 canonical JD；未确认字段继续保持 TBD。</p></div>';
   } else if (!hasJd) {
     const label = state.extractionError ? "重试 JD 域提取" : "运行 JD 域提取";
-    const note = state.extractionError ? "上次提取失败，可直接重试（不需重跑 STEP 2）" : "点下方按钮，根据已确认的 A×L 提取 JD 变量域";
+    const note = state.extractionError ? "上次提取失败，可直接重试" : "清单已锁定，现在可让 Agent 提取 canonical JD 变量域";
     if (state.extractionError) {
       h += '<div class="choice-card dependency selected" style="margin-top:12px"><b>提取失败</b><p>' + escapeHtml(state.extractionError) + "</p></div>";
     }
-    h += '<div class="action-row" style="margin-top:12px"><span class="action-note">' + escapeHtml(note) + '</span>'
+    h += '<div class="action-row" style="margin-top:12px"><span class="action-note">' + escapeHtml(note)
+      + (providerReady() ? "" : "；当前未配置可用 API Key") + '</span>'
       + '<button class="btn primary" type="button" onclick="runExtraction()"' + (providerReady() ? "" : " disabled") + ">" + escapeHtml(label) + "</button></div>";
     document.getElementById("workspaceBody").innerHTML = h;
     return;
@@ -141,12 +155,12 @@ function renderStep2b() {
     const c = state.agentResult.candidate;
     const issueIdx = indexValidationIssues();
     const tbdSlots = (c.jd_candidates || []).filter(j => (j.binding_mode || "") === "TBD");
-    h += '<div class="action-row" style="margin-top:10px"><span class="action-note">已提取 ' + (c.jd_candidates || []).length + ' 个 JD 域；如需重跑可重试</span>'
+    h += '<div class="action-row" style="margin-top:10px"><span class="action-note">已在 V2 选择范围内提取 ' + (c.jd_candidates || []).length + ' 个 canonical JD 域</span>'
       + '<button class="btn" type="button" onclick="runExtraction()"' + (providerReady() ? "" : " disabled") + ">重跑提取</button></div>";
     h += '<div class="field-label"><label>结果 · JD 变量域（' + (c.jd_candidates || []).length + ' 个，按 A 分类）</label></div>';
     if (tbdSlots.length) {
       h += '<div class="tbd-banner"><b>待补全 TBD · ' + tbdSlots.length + ' 个</b>'
-        + '<p>琥珀色行即 TBD；进入 STEP 4 可「智能填写 TBD」或手改。</p>'
+        + '<p>琥珀色行即未确认内容；进入 STEP 4 可人工补充。Agent 复核仍无明确来源时必须继续保持 TBD。</p>'
         + '<div class="coverage-chips">' + tbdSlots.map(j =>
           '<span class="lvl-pill lv-L3">' + escapeHtml(j.slot_id) + '</span>'
         ).join("") + '</div></div>';
@@ -180,7 +194,7 @@ function renderStep3() {
   setHeader(3, state.completed.has(3) ? "已确认" : "编辑取值域");
   const edits = getEdits();
   const tbdCount = edits.filter(e => e.binding_mode === "TBD").length;
-  let h = saveBar() + '<p class="intro">域编辑器：为每个 JD 变量选模式。fixed=固定；enum=离散选项；range=数值区间；TBD=未知。可对 TBD 一键智能填写。</p>';
+  let h = saveBar() + '<p class="intro">域编辑器：fixed=已确认固定值；enum=已确认离散选项；range=已确认数值区间；TBD=仍待确认。系统不会从枚举中偷偷挑默认值。</p>';
   h += narrativeReferencePanel({ open: false });
   const c = state.agentResult ? state.agentResult.candidate : null;
   if (c && c.coverage_candidates) {
@@ -191,7 +205,7 @@ function renderStep3() {
   const tbdList = edits.filter(e => e.binding_mode === "TBD");
   if (tbdCount) {
     h += '<div class="tbd-banner"><b>待处理 TBD · ' + tbdCount + ' 个</b>'
-      + '<p>琥珀色行为 TBD。可点「智能填写 TBD」，或在行内改 Mode/Domain。对应校验提示已挂在行下。</p>'
+      + '<p>琥珀色行为 TBD。可让 Agent 按来源再复核，或由人工补充；来源不足时仍保持 TBD。</p>'
       + '<div class="coverage-chips">' + tbdList.map(e =>
         '<span class="lvl-pill lv-L3">' + escapeHtml(e.slot_id) + '</span>'
       ).join("") + '</div></div>';
@@ -203,8 +217,8 @@ function renderStep3() {
     (state.fillTbdLoading ? " disabled" : "") + '>加载质量标准</button> '
     + '<button class="btn" type="button" onclick="fillTbdDomains()"' +
     (state.fillTbdLoading || tbdCount === 0 || !providerReady() ? " disabled" : "") + ">" +
-    (state.fillTbdLoading ? "智能填写中..." : "智能填写 TBD") + "</button></div></div>";
-  if (state.fillTbdError) h += '<div class="choice-card dependency selected" style="margin-bottom:10px"><b>智能填写失败</b><p>' + escapeHtml(state.fillTbdError) + "</p></div>";
+    (state.fillTbdLoading ? "复核中..." : "按来源复核 TBD") + "</button></div></div>";
+  if (state.fillTbdError) h += '<div class="choice-card dependency selected" style="margin-bottom:10px"><b>TBD 复核失败</b><p>' + escapeHtml(state.fillTbdError) + "</p></div>";
   if (state.fillTbdNotice) h += '<div class="choice-card selected" style="margin-bottom:10px"><b>' + escapeHtml(state.fillTbdNotice) + "</b></div>";
   const styleSelect = "padding:4px 8px;border:1px solid var(--line-strong);border-radius:6px;font-size:10px";
   const styleInput = "width:100%;padding:4px 8px;border:1px solid var(--line-strong);border-radius:6px;font-size:10px";
@@ -242,7 +256,7 @@ function renderStep3() {
       } else {
         const note = ((state.agentResult && state.agentResult.candidate && state.agentResult.candidate.jd_candidates) || [])
           .find(j => j.slot_id === e.slot_id);
-        h += "<td><div>" + escapeHtml((note && note.source_note) || "待智能填写 / 人工补全域") + "</div>"
+        h += "<td><div>" + escapeHtml((note && note.source_note) || "待按来源复核 / 人工补全域") + "</div>"
           + renderInlineHints(hints, { title: "提示 · " + hints.length, compact: true }) + "</td>";
       }
       h += "</tr>";
@@ -250,6 +264,16 @@ function renderStep3() {
     h += '</tbody></table>';
   });
   const variable = edits.filter(e => e.binding_mode === "enum" || e.binding_mode === "range").length;
+  const history = state.domainEditHistory || [];
+  if (history.length) {
+    h += '<details class="hint-fold" style="margin-top:14px"><summary>修改记录 · ' + history.length
+      + ' 条</summary><div class="hint-fold-body"><table class="data-table"><thead><tr>'
+      + '<th>JD</th><th>字段</th><th>来源</th><th>时间</th></tr></thead><tbody>'
+      + history.slice().reverse().slice(0, 100).map(item => '<tr><td class="mono">'
+        + escapeHtml(item.slot_id) + '</td><td>' + escapeHtml(item.field) + '</td><td>'
+        + escapeHtml(item.source) + '</td><td class="mono">' + escapeHtml(item.changed_at)
+        + '</td></tr>').join("") + '</tbody></table></div></details>';
+  }
   h += '<div class="action-row" style="margin-top:14px"><span class="action-note">' + variable + ' 个可变域 · TBD ' + tbdCount + '</span><button class="btn primary" onclick="completeStage(3)">确认 → STEP 5</button></div>';
   document.getElementById("workspaceBody").innerHTML = h;
   document.querySelectorAll(".domain-edit").forEach(el => {
@@ -278,12 +302,35 @@ function buildDomainTemplate() {
     coverage: c.coverage_candidates || [],
     runtime_dependencies: c.runtime_dependencies || [],
     jd_slots: getEdits().map(e => {
-      const b = {mode: e.binding_mode, status: "verified"};
+      const selectedNodes = ((state.jdTreeSelection && state.jdTreeSelection.selected_nodes) || [])
+        .filter(node => node.canonical_jd && node.canonical_jd.slot_id === e.slot_id);
+      const hidden = selectedNodes.some(node => node.variable_role === "hidden_ground_truth"
+        || (node.visibility || []).includes("hidden_gt")
+        || (node.observation_channel || []).includes("hidden_gt"));
+      const visible = selectedNodes.some(node => (node.visibility || []).includes("sut_visible"));
+      const status = e.status === "given" ? "verified" : e.status === "proposed" ? "proposed" : "TBD";
+      const b = {mode: e.binding_mode, status};
       if (e.binding_mode === "fixed") b.value = e.value;
       else if (e.binding_mode === "enum") { b.allowed_values = e.allowed_values; b.value = e.value; }
       else if (e.binding_mode === "range") { b.minimum = e.minimum; b.maximum = e.maximum; }
       else { b.mode = "TBD"; b.status = "TBD"; }
-      return {slot_id: e.slot_id, description: e.name, visibility: "sut_visible", binding: b};
+      return {
+        slot_id: e.slot_id,
+        description: e.name,
+        visibility: hidden ? "grader_only" : visible ? "sut_visible" : "compiler_only",
+        binding: b,
+        provenance: [{
+          source_id: e.provenance || "config_agent",
+          locator: e.slot_id,
+          status,
+          notes: e.source_note || e.evidence_quote || null,
+        }],
+        extensions: {
+          jd_v2_node_ids: selectedNodes.map(node => node.node_id),
+          configuration_sides: [...new Set(selectedNodes.map(node => node.configuration_side))],
+          edit_history: (state.domainEditHistory || []).filter(item => item.slot_id === e.slot_id),
+        },
+      };
     }),
   };
 }

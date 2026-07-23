@@ -14,9 +14,11 @@ function initialState() {
     agentStatus: "idle", agentPhase: "idle", agentRunId: null, agentResult: null, agentError: null,
     coverageProgress: null,
     extractionStatus: "idle", extractionRunId: null, extractionError: null, extractionProgress: null,
-    domainEdits: {},
+    domainEdits: {}, domainEditHistory: [],
     fillTbdLoading: false, fillTbdError: null, fillTbdNotice: null,
     treeMetrics: {}, treeSlice: null,
+    jdTreeStatus: "idle", jdTreeError: null, jdTreeNotice: null,
+    jdTreeSlice: null, jdTreeSelectedNodeIds: [], jdTreeSelection: null,
     instanceMode: "single", instanceSeed: 0, instanceBatchSeeds: "0-4",
     instanceRandomCount: 5, instanceRandomSeeds: [],
     instanceResult: null, instanceResults: null, instanceError: null, instanceLoading: false,
@@ -42,6 +44,7 @@ function loadState() {
     if (!s.targetLevels || !Object.keys(s.targetLevels).length) s.targetLevels = defaultTargetLevels();
     // 恢复后清掉「进行中」的瞬时标记，避免刷新后卡在 loading/disabled
     s.fillTbdLoading = false;
+    if (s.jdTreeStatus === "loading" || s.jdTreeStatus === "building") s.jdTreeStatus = "idle";
     s.instanceLoading = false;
     if (s.narrativeStatus === "running") s.narrativeStatus = s.narrativeDraft ? "done" : "idle";
     if (s.agentStatus === "running") s.agentStatus = s.agentResult ? "done" : "idle";

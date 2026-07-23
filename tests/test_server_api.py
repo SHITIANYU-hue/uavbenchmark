@@ -102,6 +102,28 @@ def test_jd_tree_domain_endpoint_filters_by_native_v2_group() -> None:
     ]
 
 
+def test_jd_tree_selection_endpoint_builds_reviewable_v2_artifact() -> None:
+    with _pipeline_server() as base_url:
+        status, payload = _post_json(
+            f"{base_url}/api/jd-tree/selection/build",
+            {
+                "abilities": ["A6"],
+                "coverage_cells": ["A6×L2"],
+                "selected_node_ids": ["jd-6.1.1", "jd-6.2.1"],
+            },
+        )
+
+    assert status == 200
+    selection = payload["jd_tree_selection"]
+    assert selection["artifact_type"] == "jd_tree_selection"
+    assert selection["source_tree"]["catalog_version"] == "2.4.0-merged"
+    assert selection["allowed_agent_slot_ids"] == ["jd-6.1", "jd-6.2"]
+    assert all(
+        node["authority_status"] == "proposed_v2_detail"
+        for node in selection["selected_nodes"]
+    )
+
+
 def test_task_template_generate_uses_one_deterministic_contract() -> None:
     domain = build_domain_template(
         task_title="V2 API contract",

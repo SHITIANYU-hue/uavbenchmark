@@ -4,6 +4,7 @@ import pytest
 
 from uav_benchmark.agent.catalog import (
     build_jd_tree_domains,
+    build_jd_tree_selection,
     build_jd_tree_slice,
     load_jd_tree_domains,
     load_jd_tree_slice,
@@ -161,3 +162,37 @@ def test_real_a6_slice_preserves_native_v2_identity() -> None:
     leaf = next(node for node in result["nodes"] if node["node_id"] == "jd-6.2.1")
     assert leaf["name"] == "感知模态集"
     assert leaf["node_path"] == ["A6", "jd-6.2", "jd-6.2.1"]
+
+
+def test_v2_selection_keeps_detail_authority_and_canonical_trace_separate() -> None:
+    result = build_jd_tree_selection(
+        _sample_tree(),
+        {"A6"},
+        {"jd-6.1.1"},
+        coverage_cells={"A6×L2"},
+    )
+
+    node = result["selected_nodes"][0]
+    assert node["authority_status"] == "proposed_v2_detail"
+    assert node["canonical_jd"] == {
+        "slot_id": "jd-6.1",
+        "trace_method": "ancestor_path",
+        "status": "valid",
+    }
+    assert result["allowed_agent_slot_ids"] == ["jd-6.1"]
+    assert node["metadata_gaps"] == [
+        "projection_targets",
+        "visibility",
+        "observation_channel",
+    ]
+    assert result["validation"]["tbd_metadata_preserved"] is True
+
+
+def test_v2_selection_rejects_group_nodes() -> None:
+    with pytest.raises(ValueError, match="variable nodes only"):
+        build_jd_tree_selection(
+            _sample_tree(),
+            {"A6"},
+            {"jd-6.1"},
+            coverage_cells={"A6×L2"},
+        )

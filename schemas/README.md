@@ -1,7 +1,8 @@
 # Machine contract v0.1
 
-五个 JSON Schema 使用 Draft 2020-12：
+当前 JSON Schema 使用 Draft 2020-12：
 
+- `jd_tree_selection.schema.json`：一次经人工确认的 JD Version2 细粒度变量选择、canonical 追溯和 Agent 允许范围。
 - `task_template.schema.json`：可实例化任务、coverage、JD slot、阶段、接口和 metric 规格。
 - `task_instance.schema.json`：template + seed 的确定性编译结果。
 - `ground_truth.schema.json`：仅供 grader 使用的 hidden GT。

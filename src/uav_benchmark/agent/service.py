@@ -150,20 +150,21 @@ Rules:
 FILL_TBD_INSTRUCTION = """
 You are the JDDomainFill sub-agent in a UAV benchmark pipeline.
 
-Your job is to REPLACE previously TBD JD slots with concrete variable domains.
+Your job is to review previously TBD JD slots against confirmed source text.
 You receive the confirmed task narrative, optional scenario context, already
 resolved JD domains (for consistency), and the TBD slots that still need domains.
 
-For EACH TBD slot, choose binding_mode and fill the domain:
-1. fixed  — set value to one Chinese phrase inferred from the narrative/scenario
-2. enum   — set allowed_values (>=2) and optional default value
-3. range  — set numeric minimum/maximum when the slot is continuous
-4. TBD    — only if still impossible; then source_note MUST explain what is missing
+For EACH TBD slot, use fixed / enum / range only when the complete value or
+domain is explicitly supported by the confirmed task or fixed scenario.
+Otherwise keep binding_mode="TBD" and explain what must be confirmed.
 
 Rules:
-- Prefer fixed/enum/range over TBD. Infer qualitatively even when thresholds are unknown.
+- Never invent a threshold, range endpoint, enum member, default value, business
+  rule, safety criterion, simulator API, object identity, or ground-truth label.
+- An enum domain does not imply a default; keep value=null unless one value is
+  explicitly fixed by source text.
 - Keep names and slot_id exactly as provided; do not invent new slot IDs.
-- status="proposed" for inferred domains; evidence_quote from narrative when possible.
+- status="given" only for exact source evidence; otherwise keep status="TBD".
 - provenance="agent_extracted" (or scenario_fixed when clearly from scenario).
 - Return ONLY the slots that were TBD in the input (same slot_id set).
 - Express values in Chinese except numeric ranges and fixed IDs.
@@ -184,41 +185,27 @@ coverage_cells (with their required_jd_ids), and the compact JD catalog
 
 For EACH required JD slot, choose a binding_mode and define its domain:
 
-1. binding_mode="fixed"   — the value is determined by the scenario or task
-   and should NOT vary across instances. Use for fixed facts.
-   Set value to the single confirmed value. Example:
-   jd-0.2: binding_mode="fixed", value="高速公路巡检走廊"
+1. binding_mode="fixed"   — the single value is explicitly determined by the
+   confirmed scenario or task and should not vary across instances.
 
-2. binding_mode="enum"    — there is a closed set of meaningful options.
-   Set allowed_values to the full list. Set value to the recommended default.
-   Example:
-   jd-6.1: binding_mode="enum", allowed_values=["车辆","行人","非机动车","道路设施"],
-           value="车辆"
+2. binding_mode="enum"    — the source explicitly provides a closed option set.
+   Set allowed_values to that set and keep value=null unless the source also
+   explicitly fixes one value. Never choose a recommended default.
 
-3. binding_mode="range"   — the variable is numeric and varies continuously.
-   Set minimum and maximum. Set value to null.
-   Example:
-   jd-0.1: binding_mode="range", minimum=60, maximum=300, value=null
+3. binding_mode="range"   — both numeric endpoints are explicitly provided.
+   Set minimum and maximum and keep value=null.
 
 4. binding_mode="TBD"     — truly cannot determine the domain.
    Set value=null, allowed_values=[], minimum=null, maximum=null.
 
 Rules:
-- Emit every required JD slot (from coverage required_jd_ids AND base backbone
-  ["jd-0.2", "jd-0.7"]). Never omit a slot.
-- You MUST analyze the confirmed_task_narrative and propose a domain for each
-  slot. Empty "—" / null domains are a failure mode, not the default.
-- Especially for task-derived slots such as jd-0.7 (任务完成判据), jd-0.1
-  (任务时长), object catalogs, and completion/safety criteria: infer a
-  fixed value or enum/range from the narrative. Do not leave them TBD just
-  because a numeric threshold is missing — propose the qualitative criterion
-  or a closed option set instead.
-- PREFER enum or range over fixed when the variable could legitimately vary
-  across benchmark instances. The more variables have non-trivial domains,
-  the more diverse later 特定任务模版 seeds can be.
-- PREFER fixed or enum over TBD. Infer reasonable domains from task context,
-  scenario, and UAV domain knowledge. Only use TBD when truly nothing can be
-  inferred even qualitatively.
+- Emit every slot listed by the confirmed Version2 selection. Never emit a slot
+  outside that selection.
+- Never invent thresholds, range endpoints, enum members, defaults, business
+  rules, safety criteria, simulator APIs, real object identities, or hidden
+  ground-truth labels.
+- A missing or only partially specified domain MUST stay binding_mode="TBD",
+  value=null, with a source_note that states what requires human confirmation.
 - If binding_mode="TBD", you MUST set source_note to a short Chinese reason
   (what is missing). If you want to raise an open question, add it to the
   top-level open_questions array — NEVER add an "open_question" (or any other)
@@ -584,6 +571,8 @@ def validate_candidate(
     candidate: AgentCandidate,
     task_description: str,
     fixed_scenario: dict[str, Any] | None = None,
+    *,
+    required_jd_slot_ids: set[str] | None = None,
 ) -> list[ValidationIssue]:
     fixed_scenario = fixed_scenario or load_fixed_scenario()
     scenario_evidence = _scenario_evidence_text(fixed_scenario)
@@ -703,10 +692,13 @@ def validate_candidate(
                 path=f"runtime_dependencies[{index}].evidence_quote",
             ))
 
-    required_slots = set(backbone["base_slots"])
-    for item in candidate.coverage_candidates:
-        if item.cell in cells:
-            required_slots.update(cells[item.cell]["required_jd_ids"])
+    if required_jd_slot_ids is None:
+        required_slots = set(backbone["base_slots"])
+        for item in candidate.coverage_candidates:
+            if item.cell in cells:
+                required_slots.update(cells[item.cell]["required_jd_ids"])
+    else:
+        required_slots = set(required_jd_slot_ids)
     emitted_slots = {item.slot_id for item in candidate.jd_candidates}
     for slot in sorted(required_slots - emitted_slots):
         issues.append(ValidationIssue(
@@ -1031,23 +1023,53 @@ class ConfigAgent:
         coverage_cells: list[CoverageCandidate],
         gal_catalog: dict[str, Any],
         jd_catalog: dict[str, Any],
+        allowed_jd_slot_ids: set[str] | None = None,
         run_id: str,
         emit: Callable[[str, dict[str, Any]], None],
     ) -> tuple[ExtractionResult, dict[str, Any]]:
         """Extract JD domains in bounded chunks so responses never truncate."""
 
-        base_slots = load_template_backbone().get("base_slots", ["jd-0.2", "jd-0.7"])
+        backbone_slots = set(
+            load_template_backbone().get("base_slots", ["jd-0.2", "jd-0.7"])
+        )
         coverage_summary = [
             {"cell": c.cell, "required_jd_ids": _lookup_required_jds(c.cell, gal_catalog)}
             for c in coverage_cells
         ]
-        # The template must only carry JD slots the selected coverage actually
-        # requires. The model is shown the full JD catalog per chunk and tends to
-        # emit domains for unrelated slots; keep the required set so those extras
-        # (and the spurious TBDs they create) never leak into the template.
-        required_slots: set[str] = set(base_slots)
+        # Keep a deterministic allowed set. With a V2 selection it comes from
+        # the human-confirmed artifact; legacy callers fall back to coverage +
+        # backbone requirements.
+        coverage_required: set[str] = set()
         for entry in coverage_summary:
-            required_slots.update(entry.get("required_jd_ids") or [])
+            coverage_required.update(entry.get("required_jd_ids") or [])
+        if allowed_jd_slot_ids is None:
+            required_slots = backbone_slots | coverage_required
+        else:
+            required_slots = set(allowed_jd_slot_ids)
+            if not required_slots:
+                raise ConfigAgentError(
+                    "已确认的 JD Version2 选择未映射到任何 canonical JD，无法运行提取。"
+                )
+            for entry in coverage_summary:
+                entry["required_jd_ids"] = [
+                    slot
+                    for slot in entry.get("required_jd_ids") or []
+                    if slot in required_slots
+                ]
+            jd_catalog = {
+                **jd_catalog,
+                "jd_fields": [
+                    field
+                    for field in jd_catalog.get("jd_fields", [])
+                    if field.get("id") in required_slots
+                ],
+            }
+        covered_slots = {
+            slot
+            for entry in coverage_summary
+            for slot in entry.get("required_jd_ids") or []
+        }
+        base_slots = sorted(required_slots - covered_slots)
         chunks = _chunk_coverage_for_extraction(coverage_summary, base_slots)
         total_chunks = len(chunks)
 
@@ -1059,12 +1081,20 @@ class ConfigAgent:
 
         for idx, chunk in enumerate(chunks):
             operation = "extraction" if total_chunks == 1 else f"extraction_{idx + 1}of{total_chunks}"
+            chunk_slots = {
+                slot
+                for entry in chunk
+                for slot in entry.get("required_jd_ids") or []
+            }
+            if idx == 0:
+                chunk_slots.update(base_slots)
             extraction_input = json.dumps({
                 "fixed_scenario": fixed_scenario,
                 "confirmed_task_narrative": task_description,
                 "coverage_cells": chunk,
-                # Emit the shared backbone slots only once (first chunk).
+                # Emit selected slots not attached to a coverage cell only once.
                 "base_backbone_slots": base_slots if idx == 0 else [],
+                "confirmed_v2_selection_slots": sorted(chunk_slots),
                 "jd_catalog": jd_catalog,
             }, ensure_ascii=False)
             ext_messages = [
@@ -1193,6 +1223,7 @@ class ConfigAgent:
         task_title: str,
         scenario_summary: str,
         responsibility_boundaries: list[dict[str, Any]] | None = None,
+        jd_tree_selection: dict[str, Any] | None = None,
         fixed_scenario: dict[str, Any] | None = None,
         run_id: str | None = None,
         progress: Callable[[str, dict[str, Any]], None] | None = None,
@@ -1230,12 +1261,29 @@ class ConfigAgent:
         trace.append(ToolTrace(tool="lookup_jd_catalog", status="completed"))
         emit("tool_completed", {"tool": "lookup_jd_catalog"})
 
+        allowed_slots: set[str] | None = None
+        if jd_tree_selection is not None:
+            allowed_slots = {
+                str(slot)
+                for slot in jd_tree_selection.get("allowed_agent_slot_ids") or []
+                if str(slot)
+            }
+            emit("tool_called", {"tool": "apply_jd_v2_selection"})
+            trace.append(ToolTrace(tool="apply_jd_v2_selection", status="called"))
+            trace.append(ToolTrace(tool="apply_jd_v2_selection", status="completed"))
+            emit("tool_completed", {
+                "tool": "apply_jd_v2_selection",
+                "allowed_slot_count": len(allowed_slots),
+                "selection_id": jd_tree_selection.get("selection_id"),
+            })
+
         extraction_result, usage = self._run_extraction(
             task_description=task_description,
             fixed_scenario=fixed_scenario,
             coverage_cells=coverage_objs,
             gal_catalog=gal_catalog,
             jd_catalog=jd_catalog,
+            allowed_jd_slot_ids=allowed_slots,
             run_id=run_id or "unknown",
             emit=emit,
         )
@@ -1252,7 +1300,12 @@ class ConfigAgent:
             warnings=extraction_result.warnings,
             natural_language_template=task_description,
         )
-        issues = validate_candidate(candidate, task_description, fixed_scenario)
+        issues = validate_candidate(
+            candidate,
+            task_description,
+            fixed_scenario,
+            required_jd_slot_ids=allowed_slots,
+        )
         emit("candidate_validated", {"issue_count": len(issues)})
         return AgentRunResult(
             run_id=run_id or f"agent-{uuid.uuid4().hex[:12]}",
@@ -1362,6 +1415,7 @@ def save_agent_run(
     *,
     source_task_description: str | None = None,
     narrative_parent_run_id: str | None = None,
+    jd_tree_selection: dict[str, Any] | None = None,
 ) -> Path:
     fixed_scenario = fixed_scenario or load_fixed_scenario()
     output_dir = ROOT / ".agent_runs"
@@ -1377,6 +1431,7 @@ def save_agent_run(
             "source_task_description": source_task_description,
             "confirmed_task_narrative": task_description,
             "narrative_parent_run_id": narrative_parent_run_id,
+            "jd_tree_selection": jd_tree_selection,
             "result": result.model_dump(mode="json"),
         }, ensure_ascii=False, indent=2),
         encoding="utf-8",

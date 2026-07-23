@@ -16,7 +16,7 @@
     ↓ STEP 2
 目标 Coverage → 扩充文案 → A×L 分类
     ↓ STEP 3
-JD 变量域（按 A 分组）
+JD Version2 子树（A×L 限定）→ 人工变量选择清单 → canonical JD 域
     ↓ STEP 4
 任务域模版（fixed / enum / range / TBD）
     ↓ STEP 5
@@ -40,7 +40,7 @@ JD 变量域（按 A 分组）
 
 三件事串在一起：
 
-1. **先选目标 Coverage**（默认预填巡检常用 L2；可改等级、按 Seed 随机、恢复默认）
+1. **先选目标 Coverage**（由人明确选择；当前没有确认资料时不写死默认等级）
 2. **确认 Coverage → 扩充文案**（自动保存）
 3. **确认文案 → 只跑 A×L 分类**（按已选 A×L 分批，可看进度）
 
@@ -54,11 +54,25 @@ JD 域提取不在这一步，放到 STEP 3。
 
 分类完成后可看到结果 chips，确认 A×L 再进 STEP 3。
 
-## STEP 3 · JD 域提取
+## STEP 3 · JD Version2 选变量与域提取
 
-根据 STEP 2 已确认的 A×L，单独跑 JD 变量域提取（分批，避免一次返回过长被截断；失败可重试，不必重跑 STEP 2）。
+根据 STEP 2 已确认的 A×L，页面只加载相关能力子树和全局变量。它不会让
+Agent 自由探索完整 444 节点。
 
-结果按 **A** 分组展示；琥珀色 TBD 会在 STEP 4 补全。
+每个细粒度变量会显示：
+
+- V2 原始 node ID 和名称；
+- 可追溯的 canonical JD（细粒度节点仍是 `proposed`，不会冒充 canonical）；
+- `configuration_side`、`variable_role`、`visibility`、`observation_channel`；
+- Hidden GT 标记；
+- V2 中缺失的元数据，原样显示为 TBD。
+
+操作顺序：
+
+1. 审阅或调整勾选；
+2. 生成 `jd_tree_selection.json`，需要时复制或下载；
+3. 在清单范围内运行 Agent 域提取；
+4. 查看 canonical JD 域和 TBD，确认后进入 STEP 4。
 
 ## STEP 4 · 任务域模版
 
@@ -69,7 +83,7 @@ JD 域提取不在这一步，放到 STEP 3。
 | `fixed` | 固定值 |
 | `enum` | 离散选项 |
 | `range` | 数值区间 |
-| `TBD` | 未知；可「智能填写 TBD」或手改 |
+| `TBD` | 未知；可按已知来源复核或人工补充，来源不足时继续保留 |
 
 这里定的是**取值范围**，还不是某一趟任务的具体采样值。
 

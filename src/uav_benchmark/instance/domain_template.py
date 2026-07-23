@@ -30,7 +30,14 @@ def slug_id(raw: str, *, fallback: str = "tpl", max_len: int = 48) -> str:
 
 def _binding_from_edit(edit: Mapping[str, Any]) -> dict[str, Any]:
     mode = edit.get("binding_mode") or edit.get("mode") or "TBD"
-    binding: dict[str, Any] = {"mode": mode, "status": "verified"}
+    raw_status = edit.get("status")
+    status = (
+        "verified" if raw_status == "given"
+        else "proposed" if raw_status == "proposed"
+        else "TBD" if raw_status == "TBD"
+        else "verified"
+    )
+    binding: dict[str, Any] = {"mode": mode, "status": status}
     if mode == "fixed":
         binding["value"] = edit.get("value")
         if edit.get("value") is None:
@@ -87,17 +94,24 @@ def build_domain_template(
         slot_id = edit.get("slot_id")
         if not slot_id:
             continue
+        source_status = (
+            "verified" if edit.get("status") == "given"
+            else "proposed" if edit.get("status") == "proposed"
+            else "TBD" if edit.get("status") == "TBD"
+            else "verified"
+        )
         jd_slots.append({
             "slot_id": slot_id,
             "description": edit.get("name") or edit.get("description") or slot_id,
-            "visibility": "sut_visible",
+            "visibility": edit.get("visibility") or "compiler_only",
             "binding": _binding_from_edit(edit),
-            "provenance": [{
+            "provenance": edit.get("provenance") or [{
                 "source_id": "domain_template_editor",
                 "locator": slot_id,
-                "status": "verified",
-                "notes": "Edited in Step 3 Domain Template",
+                "status": source_status,
+                "notes": edit.get("source_note") or "Edited in Pipeline Domain Template",
             }],
+            "extensions": dict(edit.get("extensions") or {}),
         })
 
     executor_responsibilities = [

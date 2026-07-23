@@ -2,7 +2,7 @@
 const STAGES = [
   ["STEP 1", "任务域选择",   "场景 + 简短描述"],
   ["STEP 2", "文案与 A×L",  "Coverage · 文案 · 分类"],
-  ["STEP 3", "JD 域提取",   "变量域按 A 分组"],
+  ["STEP 3", "JD V2 选变量", "确认子树后再提取变量域"],
   ["STEP 4", "任务域模版",   "域编辑器(每行选模式)"],
   ["STEP 5", "特定任务模版", "Seed→具体 JD 值"],
 ];
@@ -17,16 +17,12 @@ const SCENARIO_TASK_EXAMPLES = {
 
 // ability-id-v3 changes every renamed A/JD identifier; do not silently restore
 // browser drafts produced under the legacy numbering scheme.
-const STORAGE_KEY = "uav_pipeline_v9";
+const STORAGE_KEY = "uav_pipeline_v10";
 const ABILITY_ID_SCHEME = "ability-id-v3-2026-07-20";
 const SCENARIO_NONE = "";
 const SCENARIO_FALLBACK_ID = "other_inspection";
-// 巡检常用默认：L2 受令自主；进入 Step 2 后可改等级或改成「不覆盖」
-const DEFAULT_TARGET_LEVELS = {
-  A1: "L2", A2: "L2", A3: "L2", A4: "L2", A5: "L2",
-  A6: "L2", A7: "L2", A10: "L2",
-  A12: "L2", A13: "L2", A16: "L2", A17: "L2",
-};
+// 没有经场景资料确认的“主测能力”时不预填等级。A×L 由人在 STEP 2 定靶。
+const DEFAULT_TARGET_LEVELS = {};
 
 function defaultTargetLevels() { return Object.assign({}, DEFAULT_TARGET_LEVELS); }
 

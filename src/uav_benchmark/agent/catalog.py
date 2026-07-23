@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from functools import lru_cache
 from pathlib import Path
 from typing import Any, Iterable, Mapping
@@ -412,5 +413,196 @@ def load_jd_tree_slice(
         ability_ids,
         include_global=include_global,
         selected_node_ids=selected_node_ids,
+        source_hash=_file_hash(JD_TREE_V2_PATH),
+    )
+
+
+def _canonical_anchor_for_node(
+    node_id: str,
+    index: Mapping[str, Mapping[str, Any]],
+    canonical_ids: set[str],
+) -> tuple[str | None, str]:
+    """Resolve a V2 detail node to a compact canonical JD without upgrading it.
+
+    Version2 contains both explicitly linked ``PROPOSED-*`` detail nodes and
+    native fine-grained branches whose nearest canonical parent is encoded in
+    the parent path.  The returned trace method makes that distinction
+    auditable; the detail node itself is never labelled canonical.
+    """
+
+    node = index[node_id]
+    explicit = node.get("canonical_slot")
+    if explicit and str(explicit) in canonical_ids:
+        return str(explicit), "explicit"
+    for ancestor_id in reversed(_node_path(node_id, index)[:-1]):
+        if ancestor_id in canonical_ids:
+            return ancestor_id, "ancestor_path"
+    return None, "unresolved"
+
+
+def build_jd_tree_selection(
+    tree: Mapping[str, Any],
+    ability_ids: Iterable[str],
+    selected_node_ids: Iterable[str],
+    *,
+    coverage_cells: Iterable[str] | None = None,
+    source_hash: str | None = None,
+) -> dict[str, Any]:
+    """Build the reviewable artifact that freezes one human V2 selection.
+
+    Only real Version2 variable nodes may be selected.  Canonical traceability
+    is recorded separately from the authority of each fine-grained node, and
+    missing routing metadata stays visible as ``TBD`` instead of being inferred.
+    """
+
+    abilities = _normalise_ids(ability_ids)
+    selected = _normalise_ids(selected_node_ids)
+    if not selected:
+        raise ValueError("At least one JD Version2 variable node must be selected")
+
+    # Reuse the slice validator for ability ownership and node existence.
+    build_jd_tree_slice(
+        tree,
+        abilities,
+        include_global=True,
+        selected_node_ids=selected,
+        source_hash=source_hash,
+    )
+    index = jd_tree_node_index(tree)
+    non_variables = sorted(
+        node_id
+        for node_id in selected
+        if index[node_id].get("node_kind") != "variable"
+    )
+    if non_variables:
+        raise ValueError(
+            "JD tree selection accepts variable nodes only: "
+            + ", ".join(non_variables)
+        )
+
+    coverage = sorted(_normalise_ids(coverage_cells))
+    invalid_coverage = sorted(set(coverage) - set(gal_cell_index()))
+    if invalid_coverage:
+        raise ValueError(
+            "Unknown canonical A×L coverage cells: "
+            + ", ".join(invalid_coverage)
+        )
+    outside_coverage = sorted({
+        match.group(1)
+        for cell in coverage
+        if (match := re.match(r"^(A\d+)×L[1-4]$", cell))
+        and match.group(1) not in abilities
+    })
+    if outside_coverage:
+        raise ValueError(
+            "Coverage abilities fall outside the requested V2 slice: "
+            + ", ".join(outside_coverage)
+        )
+
+    canonical_ids = set(jd_field_index())
+    selected_nodes: list[dict[str, Any]] = []
+    allowed_agent_slots: set[str] = set()
+    unresolved_nodes: list[dict[str, Any]] = []
+    metadata_fields = (
+        "variable_role",
+        "configuration_side",
+        "projection_targets",
+        "visibility",
+        "observation_channel",
+    )
+
+    for raw_node in tree.get("nodes", []):
+        node_id = raw_node.get("node_id")
+        if node_id not in selected:
+            continue
+        canonical_slot, trace_method = _canonical_anchor_for_node(
+            str(node_id), index, canonical_ids
+        )
+        if canonical_slot:
+            allowed_agent_slots.add(canonical_slot)
+        gaps = [
+            field
+            for field in metadata_fields
+            if raw_node.get(field) in (None, "", [])
+        ]
+        record = {
+            "node_id": str(node_id),
+            "parent_id": raw_node.get("parent_id"),
+            "node_path": _node_path(str(node_id), index),
+            "owner_a": raw_node.get("owner_a"),
+            "name": raw_node.get("name") or str(node_id),
+            "authority_status": "proposed_v2_detail",
+            "canonical_jd": {
+                "slot_id": canonical_slot,
+                "trace_method": trace_method,
+                "status": "valid" if canonical_slot else "TBD",
+            },
+            "variable_role": raw_node.get("variable_role") or "TBD",
+            "configuration_side": raw_node.get("configuration_side") or "TBD",
+            "projection_targets": raw_node.get("projection_targets") or [],
+            "visibility": raw_node.get("visibility") or [],
+            "observation_channel": raw_node.get("observation_channel") or [],
+            "value_contract": {
+                "value_type": raw_node.get("value_type") or "TBD",
+                "value_domain": raw_node.get("value_domain"),
+                "unit": raw_node.get("unit") or None,
+            },
+            "review_status": raw_node.get("review_status") or "TBD",
+            "evidence_status": raw_node.get("evidence_status") or "TBD",
+            "metadata_gaps": gaps,
+        }
+        selected_nodes.append(record)
+        if gaps or canonical_slot is None:
+            unresolved_nodes.append({
+                "node_id": str(node_id),
+                "missing_fields": gaps + (
+                    ["canonical_jd"] if canonical_slot is None else []
+                ),
+                "status": "TBD",
+            })
+
+    selection_basis = {
+        "coverage_cells": coverage,
+        "abilities": sorted(abilities, key=lambda value: int(value[1:])),
+    }
+    identity_payload = {
+        "tree_sha256": source_hash or _json_hash(tree),
+        "selection_basis": selection_basis,
+        "selected_node_ids": sorted(selected),
+    }
+    return {
+        "schema_version": "0.1.0",
+        "artifact_type": "jd_tree_selection",
+        "selection_id": "jdsel-" + _json_hash(identity_payload)[:16],
+        "source_tree": _tree_metadata(tree, source_hash=source_hash),
+        "selection_basis": selection_basis,
+        "selected_nodes": selected_nodes,
+        "allowed_agent_slot_ids": sorted(allowed_agent_slots),
+        "unresolved_nodes": unresolved_nodes,
+        "validation": {
+            "selected_nodes_exist": True,
+            "selected_nodes_are_variables": True,
+            "canonical_references_valid": all(
+                node["canonical_jd"]["status"] == "valid"
+                for node in selected_nodes
+            ),
+            "tbd_metadata_preserved": True,
+        },
+    }
+
+
+def load_jd_tree_selection(
+    ability_ids: Iterable[str],
+    selected_node_ids: Iterable[str],
+    *,
+    coverage_cells: Iterable[str] | None = None,
+) -> dict[str, Any]:
+    """Build a selection from the immutable team-delivered Version2 file."""
+
+    return build_jd_tree_selection(
+        load_jd_variable_tree_version2(),
+        ability_ids,
+        selected_node_ids,
+        coverage_cells=coverage_cells,
         source_hash=_file_hash(JD_TREE_V2_PATH),
     )

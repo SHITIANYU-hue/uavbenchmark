@@ -1,0 +1,68 @@
+{
+  "schema_version": "0.1.0",
+  "artifact_type": "jd_tree_selection",
+  "selection_id": "jdsel-0123456789abcdef",
+  "source_tree": {
+    "source_tree": "jd_variable_tree_version2.json",
+    "schema_version": "2.3",
+    "catalog_version": "2.4.0-merged",
+    "tree_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "node_count": 444
+  },
+  "selection_basis": {
+    "coverage_cells": ["A6×L2"],
+    "abilities": ["A6"]
+  },
+  "selected_nodes": [
+    {
+      "node_id": "jd-6.1.1",
+      "parent_id": "jd-6.1",
+      "node_path": ["A6", "jd-6.1", "jd-6.1.1"],
+      "owner_a": "A6",
+      "name": "目标类型集",
+      "authority_status": "proposed_v2_detail",
+      "canonical_jd": {
+        "slot_id": "jd-6.1",
+        "trace_method": "ancestor_path",
+        "status": "valid"
+      },
+      "variable_role": "TBD",
+      "configuration_side": "shared",
+      "projection_targets": [],
+      "visibility": [],
+      "observation_channel": [],
+      "value_contract": {
+        "value_type": "enum",
+        "value_domain": null,
+        "unit": null
+      },
+      "review_status": "proposed",
+      "evidence_status": "inferred_candidate",
+      "metadata_gaps": [
+        "variable_role",
+        "projection_targets",
+        "visibility",
+        "observation_channel"
+      ]
+    }
+  ],
+  "allowed_agent_slot_ids": ["jd-6.1"],
+  "unresolved_nodes": [
+    {
+      "node_id": "jd-6.1.1",
+      "missing_fields": [
+        "variable_role",
+        "projection_targets",
+        "visibility",
+        "observation_channel"
+      ],
+      "status": "TBD"
+    }
+  ],
+  "validation": {
+    "selected_nodes_exist": true,
+    "selected_nodes_are_variables": true,
+    "canonical_references_valid": true,
+    "tbd_metadata_preserved": true
+  }
+}

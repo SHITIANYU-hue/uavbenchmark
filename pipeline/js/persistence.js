@@ -14,7 +14,10 @@ async function savePipeline() {
         llmProvider: state.llmProvider, modelTier: state.modelTier,
         targetLevels: state.targetLevels, coverageSeed: state.coverageSeed,
         narrativeRunId: state.narrativeRunId, narrativeDraft: state.narrativeDraft,
-        agentRunId: state.agentRunId, agentResult: state.agentResult, domainEdits: state.domainEdits,
+        agentRunId: state.agentRunId, agentResult: state.agentResult,
+        domainEdits: state.domainEdits, domainEditHistory: state.domainEditHistory,
+        jdTreeSlice: state.jdTreeSlice, jdTreeSelectedNodeIds: state.jdTreeSelectedNodeIds,
+        jdTreeSelection: state.jdTreeSelection,
         instanceMode: state.instanceMode, instanceSeed: state.instanceSeed, instanceBatchSeeds: state.instanceBatchSeeds,
         instanceRandomCount: state.instanceRandomCount, instanceRandomSeeds: state.instanceRandomSeeds,
         instanceResult: state.instanceResult, instanceResults: state.instanceResults,
@@ -61,6 +64,13 @@ async function loadPipeline() {
       if (jd.length) state.extractionStatus = "done";
     }
     if (d.domainEdits) state.domainEdits = d.domainEdits;
+    if (Array.isArray(d.domainEditHistory)) state.domainEditHistory = d.domainEditHistory;
+    if (d.jdTreeSlice) {
+      state.jdTreeSlice = d.jdTreeSlice;
+      state.jdTreeStatus = "ready";
+    }
+    if (Array.isArray(d.jdTreeSelectedNodeIds)) state.jdTreeSelectedNodeIds = d.jdTreeSelectedNodeIds;
+    if (d.jdTreeSelection) state.jdTreeSelection = d.jdTreeSelection;
     if (d.instanceMode) state.instanceMode = d.instanceMode;
     if (d.instanceSeed !== undefined) state.instanceSeed = d.instanceSeed;
     if (d.instanceBatchSeeds) state.instanceBatchSeeds = d.instanceBatchSeeds;

@@ -1,0 +1,161 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uav-benchmark.local/schemas/jd_tree_selection.schema.json",
+  "title": "JD Version2 Tree Selection",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact_type",
+    "selection_id",
+    "source_tree",
+    "selection_basis",
+    "selected_nodes",
+    "allowed_agent_slot_ids",
+    "unresolved_nodes",
+    "validation"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1.0"},
+    "artifact_type": {"const": "jd_tree_selection"},
+    "selection_id": {"type": "string", "pattern": "^jdsel-[a-f0-9]{16}$"},
+    "source_tree": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_tree", "schema_version", "catalog_version", "tree_sha256", "node_count"],
+      "properties": {
+        "source_tree": {"const": "jd_variable_tree_version2.json"},
+        "schema_version": {"type": "string", "minLength": 1},
+        "catalog_version": {"type": "string", "minLength": 1},
+        "tree_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "node_count": {"type": "integer", "minimum": 1}
+      }
+    },
+    "selection_basis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["coverage_cells", "abilities"],
+      "properties": {
+        "coverage_cells": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^A(?:[1-9]|1[0-7])×L[1-4]$"}
+        },
+        "abilities": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^A(?:[1-9]|1[0-7])$"}
+        }
+      }
+    },
+    "selected_nodes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/selected_node"}
+    },
+    "allowed_agent_slot_ids": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^jd-(?:0|[1-9]|1[0-7])\\.[1-9][0-9]*$"}
+    },
+    "unresolved_nodes": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/unresolved_node"}
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "selected_nodes_exist",
+        "selected_nodes_are_variables",
+        "canonical_references_valid",
+        "tbd_metadata_preserved"
+      ],
+      "properties": {
+        "selected_nodes_exist": {"const": true},
+        "selected_nodes_are_variables": {"const": true},
+        "canonical_references_valid": {"type": "boolean"},
+        "tbd_metadata_preserved": {"const": true}
+      }
+    }
+  },
+  "$defs": {
+    "selected_node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "node_id",
+        "parent_id",
+        "node_path",
+        "owner_a",
+        "name",
+        "authority_status",
+        "canonical_jd",
+        "variable_role",
+        "configuration_side",
+        "projection_targets",
+        "visibility",
+        "observation_channel",
+        "value_contract",
+        "review_status",
+        "evidence_status",
+        "metadata_gaps"
+      ],
+      "properties": {
+        "node_id": {"type": "string", "minLength": 1},
+        "parent_id": {"type": ["string", "null"]},
+        "node_path": {
+          "type": "array",
+          "minItems": 2,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "owner_a": {"type": "string", "minLength": 1},
+        "name": {"type": "string", "minLength": 1},
+        "authority_status": {"const": "proposed_v2_detail"},
+        "canonical_jd": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["slot_id", "trace_method", "status"],
+          "properties": {
+            "slot_id": {"type": ["string", "null"]},
+            "trace_method": {"enum": ["explicit", "ancestor_path", "unresolved"]},
+            "status": {"enum": ["valid", "TBD"]}
+          }
+        },
+        "variable_role": {"type": "string", "minLength": 1},
+        "configuration_side": {"type": "string", "minLength": 1},
+        "projection_targets": {"type": "array", "items": {"type": "string"}},
+        "visibility": {"type": "array", "items": {"type": "string"}},
+        "observation_channel": {"type": "array", "items": {"type": "string"}},
+        "value_contract": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["value_type", "value_domain", "unit"],
+          "properties": {
+            "value_type": {"type": "string", "minLength": 1},
+            "value_domain": {},
+            "unit": {"type": ["string", "null"]}
+          }
+        },
+        "review_status": {"type": "string", "minLength": 1},
+        "evidence_status": {"type": "string", "minLength": 1},
+        "metadata_gaps": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "unresolved_node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["node_id", "missing_fields", "status"],
+      "properties": {
+        "node_id": {"type": "string", "minLength": 1},
+        "missing_fields": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"type": "string", "minLength": 1}
+        },
+        "status": {"const": "TBD"}
+      }
+    }
+  }
+}

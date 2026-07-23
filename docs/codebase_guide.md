@@ -7,7 +7,7 @@
 ```text
 STEP 1  任务域选择      任务描述 + 可选场景
 STEP 2  文案与 A×L      Coverage → 文案 → 分类
-STEP 3  JD 域提取       按 A 查看变量域
+STEP 3  JD V2 选变量    A×L 子树 → 选择清单 → 受限域提取
 STEP 4  任务域模版      fixed / enum / range / TBD
 STEP 5  特定任务模版    Seed → 具体 JD 值
 ```
@@ -48,7 +48,9 @@ docs/                         使用、设计与工程文档
 | `GET /api/scenarios` | 场景注册表 |
 | `POST /api/config-agent/expand` | 文案扩充（可带 `target_coverage`） |
 | `POST /api/config-agent/analyze` | A×L + JD 提取（可带 `preferred_coverage`） |
-| `POST /api/config-agent/fill-tbd` | 智能填写 TBD 域 |
+| `POST /api/config-agent/fill-tbd` | 按确认来源复核 TBD；来源不足时保持 TBD |
+| `GET /api/jd-tree/slice` | 按 A×L 能力加载有界 JD Version2 子树 |
+| `POST /api/jd-tree/selection/build` | 生成并校验 `jd_tree_selection` |
 | `POST /api/task-template/generate` | 单个 Seed → 特定任务模版 |
 | `POST /api/task-template/batch` | 批量 Seed |
 | `POST /api/task-template/traverse` | 域遍历 |
@@ -69,7 +71,9 @@ docs/                         使用、设计与工程文档
 
 第一阶段由 `NarrativeAgent` 执行，只输出业务文案。第二阶段由 `ConfigAgent` 分类和提取，其中 coverage 与 JD/dependency extraction 是两个独立的结构化请求；服务端用人工确认稿作为正式正文。
 
-STEP 2 在扩充前由人选择目标 A×L（可按 Seed 随机）；分类时优先对齐该 Coverage。未知 JD 保持 TBD，可在 STEP 4 智能填写。
+STEP 2 由人选择目标 A×L；没有确认资料时不写死默认等级。STEP 3 先让人确认
+JD Version2 变量选择，再把 canonical 允许范围交给 Agent。未知 JD 保持 TBD，
+可在 STEP 4 按来源复核或人工补充。
 
 当前知识目录：17 个 A、68 个 A×L、66 个 JD。
 

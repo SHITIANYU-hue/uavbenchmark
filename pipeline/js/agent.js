@@ -78,6 +78,12 @@ function adoptCoverageResult(result) {
   state.extractionStatus = "idle";
   state.extractionError = null;
   state.extractionProgress = null;
+  state.jdTreeStatus = "idle";
+  state.jdTreeSlice = null;
+  state.jdTreeSelectedNodeIds = [];
+  state.jdTreeSelection = null;
+  state.domainEdits = {};
+  state.domainEditHistory = [];
   state.maxUnlocked = Math.max(state.maxUnlocked, 2);
   render();
 }
@@ -193,6 +199,12 @@ async function runCoverage() {
     state.extractionStatus = "idle";
     state.extractionError = null;
     state.extractionProgress = null;
+    state.jdTreeStatus = "idle";
+    state.jdTreeSlice = null;
+    state.jdTreeSelectedNodeIds = [];
+    state.jdTreeSelection = null;
+    state.domainEdits = {};
+    state.domainEditHistory = [];
     state.maxUnlocked = Math.max(state.maxUnlocked, 2);
   } catch(e) {
     // If the status poll already recovered a completed result (connection lost
@@ -216,6 +228,11 @@ async function runExtraction() {
     render();
     return;
   }
+  if (!state.jdTreeSelection) {
+    state.extractionError = "请先在 STEP 3 确认 JD Version2 变量并生成选择清单。";
+    render();
+    return;
+  }
   state.extractionStatus = "running";
   state.extractionError = null;
   state.extractionProgress = null;
@@ -236,6 +253,7 @@ async function runExtraction() {
         task_title: c.task_title,
         scenario_summary: c.scenario_summary,
         responsibility_boundaries: c.responsibility_boundaries || [],
+        jd_tree_selection: state.jdTreeSelection,
       })});
     const d = await r.json();
     if (!r.ok) throw new Error(d.message || d.error);
@@ -272,15 +290,21 @@ function resetNarrativeForCoverage() {
   state.extractionStatus = "idle";
   state.extractionError = null;
   state.extractionProgress = null;
+  state.jdTreeStatus = "idle";
+  state.jdTreeSlice = null;
+  state.jdTreeSelectedNodeIds = [];
+  state.jdTreeSelection = null;
+  state.domainEdits = {};
+  state.domainEditHistory = [];
   render();
 }
 
 async function fillTbdDomains() {
   const tbds = tbdEdits();
-  if (!tbds.length) { state.fillTbdNotice = "没有 TBD 项需要填写"; render(); return; }
+  if (!tbds.length) { state.fillTbdNotice = "没有 TBD 项需要复核"; render(); return; }
   const narrative = state.narrativeDraft || state.taskPrompt;
   if (!narrative || narrative.trim().length < 20) {
-    state.fillTbdError = "缺少确认文案，无法智能填写";
+    state.fillTbdError = "缺少确认文案，无法按来源复核";
     render();
     return;
   }
@@ -309,15 +333,15 @@ async function fillTbdDomains() {
     filled.forEach(j => {
       if (!j || !j.slot_id) return;
       if ((j.binding_mode || "TBD") === "TBD") {
-        if (j.source_note) setEdit(j.slot_id, "binding_mode", "TBD");
+        if (j.source_note) setEdit(j.slot_id, "binding_mode", "TBD", "agent_tbd_review");
         return;
       }
-      setEdit(j.slot_id, "binding_mode", j.binding_mode);
-      if (j.binding_mode === "fixed") setEdit(j.slot_id, "value", j.value || "");
-      if (j.binding_mode === "enum") setEdit(j.slot_id, "allowed_values", (j.allowed_values || []).join(", "));
+      setEdit(j.slot_id, "binding_mode", j.binding_mode, "agent_tbd_review");
+      if (j.binding_mode === "fixed") setEdit(j.slot_id, "value", j.value || "", "agent_tbd_review");
+      if (j.binding_mode === "enum") setEdit(j.slot_id, "allowed_values", (j.allowed_values || []).join(", "), "agent_tbd_review");
       if (j.binding_mode === "range") {
-        setEdit(j.slot_id, "minimum", j.minimum);
-        setEdit(j.slot_id, "maximum", j.maximum);
+        setEdit(j.slot_id, "minimum", j.minimum, "agent_tbd_review");
+        setEdit(j.slot_id, "maximum", j.maximum, "agent_tbd_review");
       }
       if (state.agentResult && state.agentResult.candidate && state.agentResult.candidate.jd_candidates) {
         const idx = state.agentResult.candidate.jd_candidates.findIndex(x => x.slot_id === j.slot_id);
@@ -325,7 +349,7 @@ async function fillTbdDomains() {
       }
       applied += 1;
     });
-    state.fillTbdNotice = "已智能填写 " + applied + " / " + tbds.length + " 个 TBD 域";
+    state.fillTbdNotice = "按来源复核后，" + applied + " / " + tbds.length + " 个 TBD 有明确依据可更新；其余保持 TBD";
   } catch (e) {
     state.fillTbdError = String(e.message || e);
   }
@@ -336,7 +360,9 @@ async function fillTbdDomains() {
 async function loadTreeDomains() {
   state.fillTbdLoading = true; state.fillTbdError = null; state.fillTbdNotice = null; render();
   try {
-    const r = await fetch("/api/jd-tree/domains", {cache: "no-store"});
+    const selected = (state.jdTreeSelectedNodeIds || []).map(encodeURIComponent);
+    const query = selected.length ? ("?" + selected.map(id => "node_id=" + id).join("&")) : "";
+    const r = await fetch("/api/jd-tree/domains" + query, {cache: "no-store"});
     if (!r.ok) throw new Error("变量树数据不可用");
     const d = await r.json();
     const treeSlots = d.slots || {};
@@ -346,16 +372,16 @@ async function loadTreeDomains() {
       const tree = treeSlots[e.slot_id];
       if (!tree) { skipped++; return; }
       if (tree.options && tree.options.length > 0) {
-        setEdit(e.slot_id, "binding_mode", "enum");
-        setEdit(e.slot_id, "allowed_values", tree.options.join(", "));
-        if (!e.value && tree.options[0]) setEdit(e.slot_id, "value", tree.options[0]);
+        setEdit(e.slot_id, "binding_mode", "enum", "jd_v2_domain_projection");
+        setEdit(e.slot_id, "allowed_values", tree.options.join(", "), "jd_v2_domain_projection");
         applied++;
       } else if (tree.value_type && tree.value_type.includes("number")) {
-        setEdit(e.slot_id, "binding_mode", "range");
+        setEdit(e.slot_id, "binding_mode", "range", "jd_v2_domain_projection");
         applied++;
       }
     });
-    state.fillTbdNotice = "从变量树加载了 " + applied + " 个域" + (skipped ? "（" + skipped + " 个无树数据）" : "");
+    state.fillTbdNotice = "从已选 V2 变量加载了 " + applied + " 个候选域；未自动选择默认值"
+      + (skipped ? "（" + skipped + " 个无树数据）" : "");
   } catch (e) {
     state.fillTbdError = String(e.message || e);
   }
