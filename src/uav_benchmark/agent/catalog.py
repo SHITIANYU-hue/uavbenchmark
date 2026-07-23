@@ -34,7 +34,28 @@ def _file_hash(path: Path) -> str:
 
 @lru_cache(maxsize=1)
 def load_reference_catalog() -> dict[str, Any]:
-    return json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
+    """Return the A×L catalog with the canonical 66-slot JD directory.
+
+    The checked-in Agent catalog contains the current 17-A/68-cell definitions
+    but its embedded ``jd_fields`` section is an inconsistent 78-row snapshot.
+    ``jd_dictionary.json`` is the reviewed canonical 66-slot source.  Overlay it
+    at read time so Agent extraction, tree tracing, delivery validation and UI
+    counts all use one canonical set without rewriting the team-delivered tree.
+    """
+
+    catalog = json.loads(CATALOG_PATH.read_text(encoding="utf-8"))
+    dictionary = json.loads(JD_DICTIONARY_PATH.read_text(encoding="utf-8"))
+    fields = list(dictionary.get("variables") or [])
+    counts = dict(catalog.get("counts") or {})
+    dictionary_counts = dictionary.get("counts") or {}
+    counts.update({
+        "jd_fields": len(fields),
+        "global_jd": int(dictionary_counts.get("global", 0)),
+        "local_jd": int(dictionary_counts.get("local", 0)),
+    })
+    catalog["jd_fields"] = fields
+    catalog["counts"] = counts
+    return catalog
 
 
 @lru_cache(maxsize=1)

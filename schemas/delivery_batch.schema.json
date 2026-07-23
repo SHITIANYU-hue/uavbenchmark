@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uav-benchmark.local/schemas/delivery_batch.schema.json",
+  "title": "Benchmark Delivery Batch",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact_type",
+    "batch_id",
+    "batch_seed",
+    "case_count",
+    "cases",
+    "summary",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1.0"},
+    "artifact_type": {"const": "benchmark_delivery_batch"},
+    "batch_id": {"type": "string", "pattern": "^batch-[a-f0-9]{16}$"},
+    "batch_seed": {"type": "integer", "minimum": 0},
+    "case_count": {"type": "integer", "minimum": 1},
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "case_id",
+          "case_index",
+          "seed",
+          "task_template",
+          "world_config",
+          "user_config",
+          "validation",
+          "run_plan"
+        ],
+        "properties": {
+          "case_id": {"type": "string", "minLength": 1},
+          "case_index": {"type": "integer", "minimum": 1},
+          "seed": {"type": "integer", "minimum": 0},
+          "task_template": {"$ref": "task_template_output.schema.json"},
+          "world_config": {"$ref": "world_config.schema.json"},
+          "user_config": {"$ref": "user_config.schema.json"},
+          "validation": {
+            "type": "object",
+            "required": ["status", "checks"],
+            "properties": {
+              "status": {"enum": ["pass", "needs_review", "fail"]},
+              "checks": {"type": "array", "items": {"type": "object"}}
+            }
+          },
+          "run_plan": {"type": "object"}
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pass", "needs_review", "fail", "tbd_items"],
+      "properties": {
+        "pass": {"type": "integer", "minimum": 0},
+        "needs_review": {"type": "integer", "minimum": 0},
+        "fail": {"type": "integer", "minimum": 0},
+        "tbd_items": {"type": "integer", "minimum": 0}
+      }
+    },
+    "provenance": {"type": "array", "minItems": 1, "items": {"type": "object"}}
+  }
+}

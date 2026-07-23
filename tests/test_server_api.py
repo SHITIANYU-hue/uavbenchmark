@@ -199,3 +199,57 @@ def test_legacy_template_payload_uses_same_task_contract_without_defaults() -> N
     assert payload["task"] == payload["task_template"]
     assert payload["task"]["slot_bindings"][0]["value"] == "RGB"
     assert "scoring" not in payload["task"]
+
+
+def test_delivery_batch_endpoint_returns_ten_three_part_case_packages() -> None:
+    domain = build_domain_template(
+        task_title="高速巡检交付",
+        scenario_summary="沿指定高速路段持续识别和记录道路异常。",
+        coverage=[{
+            "cell": "A6×L2",
+            "role": "primary",
+            "responsibilities": ["持续识别并更新结果"],
+            "out_of_scope": ["真实飞行控制"],
+        }],
+        jd_edits=[{
+            "slot_id": "jd-6.1",
+            "name": "本体目录",
+            "binding_mode": "fixed",
+            "value": "道路异常目标",
+            "status": "given",
+        }],
+    )
+    domain["natural_language_template"] = "无人机沿指定高速路段持续识别和记录道路异常。"
+
+    with _pipeline_server() as base_url:
+        selection_status, selection_payload = _post_json(
+            f"{base_url}/api/jd-tree/selection/build",
+            {
+                "abilities": ["A6"],
+                "coverage_cells": ["A6×L2"],
+                "selected_node_ids": ["jd-6.1.1"],
+            },
+        )
+        assert selection_status == 200
+        status, payload = _post_json(
+            f"{base_url}/api/delivery/batch",
+            {
+                "domain_template": domain,
+                "case_count": 10,
+                "batch_seed": 100,
+                "source_task": "生成十个高速巡检案例。",
+                "base_narrative": domain["natural_language_template"],
+                "jd_tree_selection": selection_payload["jd_tree_selection"],
+            },
+        )
+
+    assert status == 200
+    batch = payload["delivery_batch"]
+    assert batch["artifact_type"] == "benchmark_delivery_batch"
+    assert batch["case_count"] == 10
+    assert len(batch["cases"]) == 10
+    first = batch["cases"][0]
+    assert first["task_template"]["artifact_type"] == "task_template"
+    assert first["world_config"]["artifact_type"] == "world_config"
+    assert first["user_config"]["artifact_type"] == "user_config"
+    assert first["user_config"]["hidden_ground_truth"] == []

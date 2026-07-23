@@ -1,0 +1,210 @@
+{
+  "demo_id": "highway_inspection_delivery",
+  "source_task": "让无人机巡查指定高速路段，持续识别和记录违法停车车辆；同一辆车短时遮挡后再次出现时不得重复上报。遇到定位异常时先进入允许的安全保持状态，并向调度人员输出异常事件。",
+  "base_narrative": "无人机沿指定高速巡检路段执行连续道路异常巡检。系统持续识别、关联和更新违法停车车辆记录。若发生定位退化，系统停止依赖不可信位姿进行高风险推进，并请求外部执行器执行已授权的保护动作。正式完成条件、动作边界和接口参数未确认的部分保持 TBD。",
+  "selection_request": {
+    "abilities": [
+      "A6",
+      "A7",
+      "A17"
+    ],
+    "coverage_cells": [
+      "A6×L2",
+      "A7×L2",
+      "A17×L2"
+    ],
+    "selected_node_ids": [
+      "PROPOSED-jd-0.2.1",
+      "PROPOSED-jd-0.3.5.1",
+      "PROPOSED-jd-0.4.1",
+      "PROPOSED-jd-0.7.3",
+      "PROPOSED-jd-0.9.1",
+      "jd-6.1.1"
+    ]
+  },
+  "domain_template": {
+    "template_id": "highway_inspection_delivery",
+    "template_version": "0.1.0",
+    "title": "高速道路异常巡检",
+    "scenario_summary": "沿指定高速路段持续识别、关联并记录违法停车车辆，在定位异常时进入允许的保护流程。",
+    "natural_language_template": "无人机沿指定高速巡检路段执行连续道路异常巡检。系统持续识别、关联和更新违法停车车辆记录。若发生定位退化，系统停止依赖不可信位姿进行高风险推进，并请求外部执行器执行已授权的保护动作。正式完成条件、动作边界和接口参数未确认的部分保持 TBD。",
+    "coverage": [
+      {
+        "cell": "A6×L2",
+        "role": "primary",
+        "responsibilities": [
+          "持续识别道路异常目标",
+          "维护跨帧关联并更新结果"
+        ],
+        "out_of_scope": [
+          "真实飞行控制"
+        ]
+      },
+      {
+        "cell": "A7×L2",
+        "role": "auxiliary",
+        "responsibilities": [
+          "维护自身定位状态并报告定位质量"
+        ],
+        "out_of_scope": [
+          "自行编造定位可信阈值"
+        ]
+      },
+      {
+        "cell": "A17×L2",
+        "role": "auxiliary",
+        "responsibilities": [
+          "在已确认的安全边界内报告风险状态"
+        ],
+        "out_of_scope": [
+          "未经授权执行保护动作"
+        ]
+      }
+    ],
+    "runtime_dependencies": [
+      {
+        "dependency_id": "external_waypoint_executor",
+        "provider": "executor",
+        "responsibilities": [
+          "执行固定巡检航段",
+          "执行已授权的保护动作"
+        ],
+        "scored": false,
+        "status": "proposed"
+      }
+    ],
+    "jd_slots": [
+      {
+        "slot_id": "jd-0.2",
+        "description": "工作空间结构",
+        "binding": {
+          "mode": "fixed",
+          "value": "指定高速巡检路段",
+          "status": "verified"
+        },
+        "provenance": [
+          {
+            "source_id": "user_requirement",
+            "locator": "source_task",
+            "status": "verified",
+            "notes": "用户明确要求指定高速路段"
+          }
+        ]
+      },
+      {
+        "slot_id": "jd-0.3",
+        "description": "扰动谱",
+        "binding": {
+          "mode": "fixed",
+          "value": true,
+          "status": "proposed"
+        },
+        "provenance": [
+          {
+            "source_id": "scenario_design",
+            "locator": "base_narrative",
+            "status": "proposed",
+            "notes": "定位退化事件会发生，但具体类型、窗口和阈值仍为 TBD"
+          }
+        ]
+      },
+      {
+        "slot_id": "jd-0.4",
+        "description": "在场人角色",
+        "binding": {
+          "mode": "fixed",
+          "value": "调度人员",
+          "status": "verified"
+        },
+        "provenance": [
+          {
+            "source_id": "user_requirement",
+            "locator": "source_task",
+            "status": "verified",
+            "notes": "用户要求向调度人员输出异常事件"
+          }
+        ]
+      },
+      {
+        "slot_id": "jd-0.7",
+        "description": "任务完成判据",
+        "binding": {
+          "mode": "TBD",
+          "status": "TBD"
+        },
+        "provenance": [
+          {
+            "source_id": "user_requirement",
+            "locator": "source_task",
+            "status": "TBD",
+            "notes": "正式完成谓词和聚合逻辑尚未确认"
+          }
+        ]
+      },
+      {
+        "slot_id": "jd-0.9",
+        "description": "载荷集",
+        "binding": {
+          "mode": "fixed",
+          "value": "RGB 相机",
+          "status": "proposed"
+        },
+        "provenance": [
+          {
+            "source_id": "scenario_design",
+            "locator": "base_narrative",
+            "status": "proposed",
+            "notes": "演示候选，需由实际任务数据确认"
+          }
+        ]
+      },
+      {
+        "slot_id": "jd-6.1",
+        "description": "本体目录",
+        "binding": {
+          "mode": "fixed",
+          "value": "违法停车车辆",
+          "status": "verified"
+        },
+        "provenance": [
+          {
+            "source_id": "user_requirement",
+            "locator": "source_task",
+            "status": "verified",
+            "notes": "用户明确要求识别违法停车车辆"
+          }
+        ]
+      }
+    ],
+    "phases": [
+      {
+        "phase_id": "phase_default",
+        "order": 1,
+        "entry_conditions": [],
+        "exit_conditions": [],
+        "minimum_duration": {
+          "value": null,
+          "unit": "TBD",
+          "status": "TBD"
+        }
+      }
+    ],
+    "disturbances": [],
+    "interfaces": {
+      "executor_responsibilities": [
+        "执行固定巡检航段",
+        "执行已授权的保护动作"
+      ]
+    },
+    "provenance": [
+      {
+        "source_id": "example:highway_inspection_delivery",
+        "locator": "examples/delivery/highway_inspection_demo_input.json",
+        "status": "proposed",
+        "notes": "用于回归测试和页面演示，不代表已批准业务阈值或平台接口"
+      }
+    ]
+  },
+  "case_count": 10,
+  "batch_seed": 20260724
+}

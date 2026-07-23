@@ -4,7 +4,8 @@ const STAGES = [
   ["STEP 2", "文案与 A×L",  "Coverage · 文案 · 分类"],
   ["STEP 3", "JD业务变量树选变量", "确认子树后再提取变量域"],
   ["STEP 4", "任务域模版",   "域编辑器(每行选模式)"],
-  ["STEP 5", "特定任务模版", "Seed→具体 JD 值"],
+  ["STEP 5", "Task Template", "批量案例 · JD 标注叙事"],
+  ["STEP 6", "配置与交付", "世界侧 · 用户侧 · 校验 · 导出"],
 ];
 
 const SCENARIO_TASK_EXAMPLES = {
@@ -43,14 +44,3 @@ const ISSUE_ZH = {
   INTERNAL_LABEL_IN_NARRATIVE: { title: "文案含内部标识", msg: "文案/模版不得出现 A×L、GAL、JD 标识。" },
   INCOMPLETE_TEMPLATE_STRUCTURE: { title: "结构不完整", msg: "文案/模版段落结构不完整。" },
 };
-
-const WORLD_SIDE_JD = new Set([
-  "jd-0.2", "jd-0.3", "jd-0.4", "jd-0.8", "jd-0.9",
-  "jd-2.2",
-  "jd-6.1", "jd-6.2", "jd-6.3",
-  "jd-7.1", "jd-7.2", "jd-8.1", "jd-8.2",
-  "jd-10.2", "jd-11.1", "jd-11.2",
-  "jd-14.1", "jd-14.2", "jd-9.1",
-  "jd-15.1", "jd-15.2", "jd-15.3",
-  "jd-17.1",
-]);

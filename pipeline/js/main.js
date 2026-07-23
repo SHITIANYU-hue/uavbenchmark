@@ -1,5 +1,5 @@
 /* pipeline/js/main.js */
-function render() { renderStageRail(); renderContext(); [renderStep1, renderStep2a, renderStep2b, renderStep3, renderStep4][state.currentStage](); persistState(); }
+function render() { renderStageRail(); renderContext(); [renderStep1, renderStep2a, renderStep2b, renderStep3, renderStep4, renderStep5][state.currentStage](); persistState(); }
 
 // Stable delegation on #stageRail: rail innerHTML is rewritten on render, but the
 // nav element itself is not. pointerdown fires before click and survives better

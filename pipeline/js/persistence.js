@@ -18,11 +18,11 @@ async function savePipeline() {
         domainEdits: state.domainEdits, domainEditHistory: state.domainEditHistory,
         jdTreeSlice: state.jdTreeSlice, jdTreeSelectedNodeIds: state.jdTreeSelectedNodeIds,
         jdTreeSelection: state.jdTreeSelection,
-        instanceMode: state.instanceMode, instanceSeed: state.instanceSeed, instanceBatchSeeds: state.instanceBatchSeeds,
-        instanceRandomCount: state.instanceRandomCount, instanceRandomSeeds: state.instanceRandomSeeds,
-        instanceResult: state.instanceResult, instanceResults: state.instanceResults,
+        deliveryCaseCount: state.deliveryCaseCount, deliveryBatchSeed: state.deliveryBatchSeed,
+        deliveryBatch: state.deliveryBatch, deliverySelectedCase: state.deliverySelectedCase,
+        deliveryOverrides: state.deliveryOverrides, deliveryHumanEdits: state.deliveryHumanEdits,
         currentStage: state.currentStage, maxUnlocked: state.maxUnlocked,
-        completedSteps: Array.from(state.completed), stageSchema: 5,
+        completedSteps: Array.from(state.completed), stageSchema: 6,
         abilityIdScheme: ABILITY_ID_SCHEME, savedAt: new Date().toISOString(),
       })});
     state.saveNotice = r.ok ? "已保存检查点 ✓" : "保存失败";
@@ -71,13 +71,12 @@ async function loadPipeline() {
     }
     if (Array.isArray(d.jdTreeSelectedNodeIds)) state.jdTreeSelectedNodeIds = d.jdTreeSelectedNodeIds;
     if (d.jdTreeSelection) state.jdTreeSelection = d.jdTreeSelection;
-    if (d.instanceMode) state.instanceMode = d.instanceMode;
-    if (d.instanceSeed !== undefined) state.instanceSeed = d.instanceSeed;
-    if (d.instanceBatchSeeds) state.instanceBatchSeeds = d.instanceBatchSeeds;
-    if (d.instanceRandomCount) state.instanceRandomCount = d.instanceRandomCount;
-    if (Array.isArray(d.instanceRandomSeeds)) state.instanceRandomSeeds = d.instanceRandomSeeds;
-    if (d.instanceResult) state.instanceResult = d.instanceResult;
-    if (d.instanceResults) state.instanceResults = d.instanceResults;
+    if (d.deliveryCaseCount) state.deliveryCaseCount = d.deliveryCaseCount;
+    if (d.deliveryBatchSeed !== undefined) state.deliveryBatchSeed = d.deliveryBatchSeed;
+    if (d.deliveryBatch) state.deliveryBatch = d.deliveryBatch;
+    if (d.deliverySelectedCase !== undefined) state.deliverySelectedCase = d.deliverySelectedCase;
+    if (d.deliveryOverrides && typeof d.deliveryOverrides === "object") state.deliveryOverrides = d.deliveryOverrides;
+    if (d.deliveryHumanEdits && typeof d.deliveryHumanEdits === "object") state.deliveryHumanEdits = d.deliveryHumanEdits;
     state.completed = migrateCompletedSteps(d.completedSteps || [], d.stageSchema, !!d.agentResult);
     const completedArr = Array.from(state.completed);
     const computedUnlocked = completedArr.length ? Math.min(Math.max.apply(null, completedArr) + 1, STAGES.length - 1) : 0;

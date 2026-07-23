@@ -2,7 +2,11 @@
 
 当前 JSON Schema 使用 Draft 2020-12：
 
-- `jd_tree_selection.schema.json`：一次经人工确认的 JD Version2 细粒度变量选择、canonical 追溯和 Agent 允许范围。
+- `jd_tree_selection.schema.json`：一次经人工确认的 JD业务变量树细粒度变量选择、canonical 追溯和 Agent 允许范围。
+- `task_template_output.schema.json`：STEP 5/6 的完整审阅正文、SUT 可见正文和机器 Manifest。
+- `world_config.schema.json`：面向 Simulator / Fixture / Harness 的世界侧配置与 Hidden GT。
+- `user_config.schema.json`：面向 SUT 与任务接口的可见输入、要求、动作、输出和运行约束；Hidden GT 必须为空。
+- `delivery_batch.schema.json`：一个或多个案例的三类产物、校验结果与复现信息。
 - `task_template.schema.json`：可实例化任务、coverage、JD slot、阶段、接口和 metric 规格。
 - `task_instance.schema.json`：template + seed 的确定性编译结果。
 - `ground_truth.schema.json`：仅供 grader 使用的 hidden GT。

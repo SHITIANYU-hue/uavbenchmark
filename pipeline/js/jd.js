@@ -126,6 +126,7 @@ function setEdit(id, f, v, source) {
   const before = state.domainEdits[id][f];
   if (JSON.stringify(before) === JSON.stringify(next)) return;
   state.domainEdits[id][f] = next;
+  clearDeliveryArtifacts();
   state.domainEditHistory.push({
     slot_id: id,
     field: f,
@@ -163,30 +164,6 @@ function narrativeReferencePanel(opts) {
     + '<div class="hint-fold-body"><div class="narrative-body">' + escapeHtml(text) + '</div></div></details>';
 }
 
-function jdSide(slotId) {
-  return WORLD_SIDE_JD.has(slotId) ? "world" : "user";
-}
-
-function jdSideLabel(side) {
-  return side === "world" ? "世界侧" : "用户侧";
-}
-
-function jdDomainSummary(slotId) {
-  const e = (getEdits() || []).find(x => x.slot_id === slotId);
-  if (!e) return "—";
-  if (e.binding_mode === "fixed") return "固定 = " + (e.value != null && e.value !== "" ? e.value : "—");
-  if (e.binding_mode === "enum") return "枚举 { " + ((e.allowed_values || []).join(" | ") || "—") + " }";
-  if (e.binding_mode === "range") return "区间 [" + (e.minimum != null ? e.minimum : "?") + " ~ " + (e.maximum != null ? e.maximum : "?") + "]";
-  return "TBD（待定）";
-}
-
-function coverageLevelChips() {
-  const cov = (state.agentResult && state.agentResult.candidate && state.agentResult.candidate.coverage_candidates) || [];
-  if (!cov.length) return "";
-  return '<div class="coverage-chips" style="margin-top:6px">'
-    + cov.map(x => '<span class="lvl-pill ' + cellLevelClass(x.cell) + '">' + escapeHtml(x.cell) + "</span>").join("")
-    + '</div>';
-}
 
 function formatJdValue(value) {
   if (value == null) return "—";

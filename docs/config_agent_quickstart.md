@@ -1,8 +1,8 @@
 # Config Agent Pipeline 操作说明
 
-完整的五步说明见 [Pipeline UI 操作流程](pipeline_ui_walkthrough.md)。
+完整的六步说明见 [Pipeline UI 操作流程](pipeline_ui_walkthrough.md)。
 
-当前页面入口：`pipeline.html`（样式/脚本在 `pipeline/`）。五步流程：
+当前页面入口：`pipeline.html`（样式/脚本在 `pipeline/`）。六步流程：
 
 当前目录采用 `ability-id-v3-2026-07-20`，能力使用连续编号 A1–A17。旧编号检查点不会自动迁移，以免同一 A/JD ID 被解释成新能力；需要在新版本中重新运行任务。
 
@@ -11,11 +11,13 @@ STEP 1  任务域选择      任务描述 + 可选场景示例
 STEP 2  文案与 A×L      Coverage → 文案扩充 → A×L 分类
 STEP 3  JD业务变量树    加载子树 → 勾选 → 生成清单 → 提取
 STEP 4  任务域模版      fixed / enum / range / TBD
-STEP 5  特定任务模版    Seed → 具体 JD 值
+STEP 5  Task Template   输入案例数量 → 生成完整自然语言案例
+STEP 6  配置与交付       world_config / user_config → 校验 → 导出
 ```
 
 - **任务域模版**：每个 JD 的取值范围  
-- **特定任务模版**：同一域模版 + Seed 抽出的一组具体值（可复现）
+- **Task Template**：把一组具体 JD 值写入顺畅、可审阅的任务正文，同时保留机器 Manifest
+- **配置交付**：同一案例对应的世界侧配置和用户侧配置；Hidden GT 只允许在世界侧
 
 页面不跑真实 SUT / simulator / GT / Grader。
 
@@ -50,7 +52,7 @@ Pipeline 标题旁的“JD业务变量树”会在当前标签页打开完整变
 若 Gemini 的结构化提取因输出上限被截断，服务会保留原始响应，并只重试
 当前失败批次一次；已经确认的 A×L 与 JD 选择不会丢失。
 
-## 五步怎么用
+## 六步怎么用
 
 ### STEP 1 · 任务域选择
 
@@ -88,16 +90,25 @@ Pipeline 标题旁的“JD业务变量树”会在当前标签页打开完整变
 
 确认 → STEP 5。
 
-### STEP 5 · 特定任务模版
+### STEP 5 · Task Template
 
-1. 选生成方式：单个 Seed / 随机一批 / 批量范围 / 全遍历  
-2. **生成特定任务模版**  
-3. 卡片说明域模版与本实例的关系；JD 分**用户侧 / 世界侧**，并对照「取值域 → 具体值」  
+1. 在“生成数量”中填写案例数；默认是 10，也可以填写 8、9 或其他正整数
+2. 点 **生成 Task Template**
+3. 用案例标签切换查看；重点审阅两段文字：
+   - **审阅正文**：使用 `【canonical JD＝本案例实际取值】` 标注变量
+   - **SUT 可见正文**：去掉 Hidden GT 和世界侧私有信息，可直接交给任务接口
+4. 需要复现时再展开“高级选项”查看批次 Seed；“换一批案例”会使用新 Seed
+5. 确认这一批案例后进入 STEP 6
 
-同一 Seed + 同一域模版结果可复现。
+### STEP 6 · 配置与交付
 
-> 当前 STEP 5 的两侧卡片仍是过渡展示，不是最终三类交付包。`task_template`、
-> `world_config`、`user_config` 的独立 schema、隔离校验和整包导出属于下一批实现。
+1. 左侧查看 `world_config`：场景资产、布置、扰动、事件、时间线、世界变量和 Hidden GT
+2. 右侧查看 `user_config`：SUT 可见输入、任务要求、允许动作、输出合同、外部 Executor 和运行约束
+3. 查看确定性校验：Hidden GT 不泄漏、共享引用一致、canonical JD 有效、TBD 未被填成默认值
+4. 在统一 TBD 区补充已确认值；必须同时填写来源，修改会写入 provenance 和 edit history
+5. 分别复制或下载三类 JSON，也可以下载完整批次 JSON
+
+没有确认的阈值、业务规则、允许动作和 simulator API 会继续显示为 TBD，不会自动编造。
 
 ## 常见问题
 
@@ -105,6 +116,7 @@ Pipeline 标题旁的“JD业务变量树”会在当前标签页打开完整变
 |---|---|
 | Connection checking / no key | 确认 `.env` 有 Key，并重启 `start_agent_demo.sh`，再硬刷新页面 |
 | API 调不通 | 用 `http://127.0.0.1:8765`，不要用 file:// |
-| STEP 5 schema 错误 | 检查 STEP 4 的 enum/range 是否填全 |
+| STEP 5 生成失败 | 检查 STEP 4 的 enum/range 是否填全，并确认本地服务仍在运行 |
+| STEP 6 显示 needs_review | 查看 TBD 与“配置归属元数据”项；这是待确认，不等于系统擅自报错 |
 
 UI 文件结构见 [pipeline/README.md](../pipeline/README.md)。

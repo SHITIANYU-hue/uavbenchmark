@@ -151,16 +151,20 @@ def _ui_blob() -> str:
 
 
 def test_ui_keeps_team_flow_and_provider_checkpoint_controls() -> None:
-    """Our 5-step UX is primary; keep ZYY provider select + checkpoint semantics."""
+    """The six-step delivery UX keeps provider and checkpoint semantics."""
     blob = _ui_blob()
     html = (ROOT / "pipeline.html").read_text(encoding="utf-8")
     assert 'href="pipeline/css/app.css"' in html
     assert 'src="pipeline/js/main.js"' in html
-    assert "特定任务模版" in blob
+    assert "Task Template" in blob
     assert "文案与 A×L" in blob
-    assert "随机一批" in blob
-    assert "用户侧配置需求" in blob
-    assert "世界侧配置需求" in blob
+    assert "生成案例数量" in blob
+    assert "单个 Seed" not in blob
+    assert "全遍历" not in blob
+    assert "用户侧 user_config" in blob
+    assert "世界侧 world_config" in blob
+    assert "/api/delivery/batch" in blob
+    assert "下载完整交付包" in blob
     assert 'id="providerSelect"' in blob
     assert 'id="openJdTreeLink"' in html
     assert 'href="/jd-tree"' in html

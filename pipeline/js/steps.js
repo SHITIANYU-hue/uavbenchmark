@@ -328,6 +328,10 @@ function buildDomainTemplate() {
         extensions: {
           jd_v2_node_ids: selectedNodes.map(node => node.node_id),
           configuration_sides: [...new Set(selectedNodes.map(node => node.configuration_side))],
+          variable_roles: [...new Set(selectedNodes.map(node => node.variable_role))],
+          projection_targets: [...new Set(selectedNodes.flatMap(node => node.projection_targets || []))],
+          visibility: [...new Set(selectedNodes.flatMap(node => node.visibility || []))],
+          observation_channels: [...new Set(selectedNodes.flatMap(node => node.observation_channel || []))],
           edit_history: (state.domainEditHistory || []).filter(item => item.slot_id === e.slot_id),
         },
       };
@@ -335,202 +339,340 @@ function buildDomainTemplate() {
   };
 }
 
-function randomizeSeeds(n) {
-  const count = Math.max(1, Math.min(50, parseInt(n) || 5));
-  const pool = new Set();
-  while (pool.size < count) pool.add(Math.floor(Math.random() * 100000));
-  state.instanceRandomSeeds = Array.from(pool);
-  return state.instanceRandomSeeds;
+function selectedDeliveryCase() {
+  const cases = (state.deliveryBatch && state.deliveryBatch.cases) || [];
+  if (!cases.length) return null;
+  const index = Math.max(0, Math.min(cases.length - 1, state.deliverySelectedCase || 0));
+  return cases[index];
 }
 
-function rerollSeeds() {
-  randomizeSeeds(state.instanceRandomCount);
-  persistState();
+function selectDeliveryCase(index) {
+  const cases = (state.deliveryBatch && state.deliveryBatch.cases) || [];
+  const parsed = Number(index);
+  if (!Number.isInteger(parsed) || parsed < 0 || parsed >= cases.length) return;
+  state.deliverySelectedCase = parsed;
   render();
 }
 
-async function genTaskTemplate() {
+function nextBatchSeed() {
+  if (window.crypto && window.crypto.getRandomValues) {
+    const values = new Uint32Array(1);
+    window.crypto.getRandomValues(values);
+    return Number(values[0]);
+  }
+  return Math.floor(Math.random() * 1000000000);
+}
+
+async function generateDeliveryBatch(options) {
   const domain = buildDomainTemplate();
-  if (!domain) { state.instanceError = "缺少任务域模版（请先完成 STEP 2–4）"; render(); return; }
-  if (state.instanceMode === "random" && !(state.instanceRandomSeeds || []).length) {
-    randomizeSeeds(state.instanceRandomCount);
+  if (!domain) {
+    state.deliveryError = "缺少已确认的任务域模板，请先完成 STEP 2–4。";
+    render();
+    return;
   }
-  state.instanceLoading = true; state.instanceError = null; state.instanceResult = null; state.instanceResults = null; render();
+  const count = Math.max(1, parseInt(state.deliveryCaseCount, 10) || 10);
+  state.deliveryCaseCount = count;
+  state.deliveryLoading = true;
+  state.deliveryError = null;
+  state.deliveryNotice = null;
+  render();
   try {
-    const ep = (state.instanceMode === "traverse") ? "/api/task-template/traverse"
-      : (state.instanceMode === "batch" || state.instanceMode === "random") ? "/api/task-template/batch"
-      : "/api/task-template/generate";
-    const body = state.instanceMode === "single"
-      ? {domain_template: domain, seed: parseInt(state.instanceSeed) || 0}
-      : state.instanceMode === "batch"
-        ? {domain_template: domain, seeds: state.instanceBatchSeeds}
-        : state.instanceMode === "random"
-          ? {domain_template: domain, seeds: state.instanceRandomSeeds}
-          : {domain_template: domain, steps_per_range: 3};
-    const r = await fetch(ep, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)});
-    const d = await r.json(); if (!r.ok) throw new Error(d.message || d.error || JSON.stringify(d));
-    if (state.instanceMode === "single") state.instanceResult = d.task_template || d.instance;
-    else state.instanceResults = d.task_templates || d.instances || [];
-  } catch(e) { state.instanceError = String(e.message || e); }
-  state.instanceLoading = false; render();
-}
-
-function buildSpecificTemplateDescription(tpl) {
-  const c = state.agentResult && state.agentResult.candidate;
-  const title = (c && c.task_title) || (tpl.template_ref && tpl.template_ref.template_id) || "特定任务模版";
-  const summary = (c && c.scenario_summary) || "";
-  const narrative = (c && c.natural_language_template) || state.narrativeDraft || "";
-  const firstPara = narrative.split(/\n\s*\n/).map(s => s.trim()).filter(Boolean)[0] || "";
-  const bindings = (tpl.slot_bindings || []).filter(s => s.status !== "TBD" && s.value != null && s.value !== "");
-  const cov = (c && c.coverage_candidates) || [];
-  const priorityIds = ["jd-0.1", "jd-0.2", "jd-0.3", "jd-0.4", "jd-0.7", "jd-0.9", "jd-6.1", "jd-2.2", "jd-9.1"];
-  function bulletsFor(side) {
-    const rows = bindings.filter(s => jdSide(s.slot_id) === side);
-    rows.sort((a, b) => {
-      const ia = priorityIds.indexOf(a.slot_id), ib = priorityIds.indexOf(b.slot_id);
-      return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+    const r = await fetch("/api/delivery/batch", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        domain_template: domain,
+        case_count: count,
+        batch_seed: Math.max(0, parseInt(state.deliveryBatchSeed, 10) || 0),
+        source_task: state.taskPrompt,
+        base_narrative: narrativeText(),
+        jd_tree_selection: state.jdTreeSelection,
+        case_overrides: state.deliveryOverrides || {},
+        human_edits: state.deliveryHumanEdits || {},
+      }),
     });
-    return rows.slice(0, 8).map(s => "- " + jdNameOf(s.slot_id) + "：" + formatJdValue(s.value));
+    const d = await r.json();
+    if (!r.ok) throw new Error(d.message || d.error || JSON.stringify(d));
+    state.deliveryBatch = d.delivery_batch;
+    if (!(options && options.keepSelected)) state.deliverySelectedCase = 0;
+    state.deliveryNotice = (options && options.notice) || (
+      "已生成 " + state.deliveryBatch.case_count
+      + " 个可复现案例；每个案例都有 Task Template 和两侧配置。"
+    );
+  } catch (e) {
+    state.deliveryError = String(e.message || e);
   }
-  const userBullets = bulletsFor("user");
-  const worldBullets = bulletsFor("world");
-  const lines = [];
-  lines.push("【" + title + " · Seed " + tpl.seed + "】");
-  if (summary) lines.push(summary);
-  else if (firstPara) lines.push(firstPara);
-  lines.push("");
-  if (cov.length) lines.push("能力等级（A×L）：" + cov.map(x => x.cell).join("、"));
-  lines.push("");
-  lines.push("① 用户侧配置需求（交给 SUT 的任务与接口）：");
-  lines.push(userBullets.length ? userBullets.join("\n") : "- 暂无已赋值 JD");
-  lines.push("");
-  lines.push("② 世界侧配置需求（仿真/环境/平台需实例化）：");
-  lines.push(worldBullets.length ? worldBullets.join("\n") : "- 暂无已赋值 JD");
-  const tbdCount = (tpl.slot_bindings || []).filter(s => s.status === "TBD").length;
-  if (tbdCount) lines.push("\n另有 " + tbdCount + " 个 JD 仍为 TBD，需补齐后整套配置才能跑起来。");
-  return lines.join("\n");
+  state.deliveryLoading = false;
+  render();
 }
 
-function renderSpecificTemplateCard(tpl, opts) {
-  const open = !!(opts && opts.open);
-  const bindings = tpl.slot_bindings || [];
-  const resolved = bindings.filter(s => s.status !== "TBD").length;
-  const desc = buildSpecificTemplateDescription(tpl);
-  let h = '<details class="spec-tpl-card"' + (open ? " open" : "") + '>';
-  h += '<summary><div><div class="spec-tpl-title">特定任务模版 · Seed '
-    + escapeHtml(String(tpl.seed)) + '</div><div class="spec-tpl-meta mono">'
-    + escapeHtml(tpl.instance_id || "") + ' · 已赋值 ' + resolved + '/' + bindings.length
-    + '</div></div><span class="spec-tpl-toggle"></span></summary>';
-  const domainTitle = (state.agentResult && state.agentResult.candidate && state.agentResult.candidate.task_title) || "任务域模版";
-  h += '<div class="spec-tpl-body">';
-  h += '<div class="rel-note">这张卡是<b>「' + escapeHtml(domainTitle) + '」任务域模版</b>在 <b>Seed ' + escapeHtml(String(tpl.seed))
-    + '</b> 下采样出的<b>一个具体实例</b>。域模版规定每个 JD 的<b>取值范围</b>（fixed / enum / range / TBD），本卡在范围内<b>取定一组具体值</b>；同一 Seed 结果可复现。完整取值域见页面底部「参考：STEP 4 任务域模版」。</div>';
-  h += '<div class="spec-desc"><b>模版文字说明</b>' + escapeHtml(desc) + coverageLevelChips() + '</div>';
-  h += '<div class="field-label" style="margin-top:12px"><label>JD 取值域 → 具体值（按配置侧分组）</label><span>左：域模版范围 · 右：本实例取值</span></div>';
-  [
-    { side: "user", title: "① 用户侧配置需求", note: "交给 SUT 的任务与接口契约" },
-    { side: "world", title: "② 世界侧配置需求", note: "仿真/环境/平台需实例化，含隐藏真值来源" },
-  ].forEach(sec => {
-    const sideItems = bindings.filter(s => jdSide(s.slot_id) === sec.side);
-    if (!sideItems.length) return;
-    const sideTbd = sideItems.filter(s => s.status === "TBD").length;
-    h += '<div class="side-block side-' + sec.side + '" style="margin-top:12px">';
-    h += '<div class="side-block-head">' + escapeHtml(sec.title) + ' · ' + sideItems.length + ' 个'
-      + (sideTbd ? (' · TBD ' + sideTbd) : "") + '<span>' + escapeHtml(sec.note) + '</span></div>';
-    groupJdItems(sideItems, s => s.slot_id).forEach(g => {
-      h += '<details class="hint-fold compact" style="margin-top:8px">';
-      h += '<summary>' + escapeHtml(g.title) + ' · ' + g.items.length + ' 个具体值</summary>';
-      h += '<div class="hint-fold-body"><table class="data-table"><thead><tr><th>JD</th><th>名称</th><th>取值域(域模版)</th><th>具体值(本实例)</th><th>Status</th></tr></thead><tbody>';
-      h += g.items.map(s => {
-        const rowCls = s.status === "TBD" ? "row-tbd" : "";
-        return "<tr class='" + rowCls + "'><td class='mono'>" + escapeHtml(s.slot_id)
-          + "</td><td>" + escapeHtml(jdNameOf(s.slot_id))
-          + "</td><td class='dom-cell'>" + escapeHtml(jdDomainSummary(s.slot_id))
-          + "</td><td><b>" + escapeHtml(formatJdValue(s.value)) + "</b></td><td>"
-          + pill(s.status) + "</td></tr>";
-      }).join("");
-      h += '</tbody></table></div></details>';
-    });
-    h += '</div>';
+function rerollDeliveryBatch() {
+  state.deliveryBatchSeed = nextBatchSeed();
+  state.deliveryOverrides = {};
+  state.deliveryHumanEdits = {};
+  generateDeliveryBatch();
+}
+
+function parseHumanValue(raw) {
+  const text = String(raw || "").trim();
+  if (!text) return null;
+  try { return JSON.parse(text); } catch (_) { return text; }
+}
+
+async function applyDeliveryTbd(slotId) {
+  const current = selectedDeliveryCase();
+  if (!current || !slotId) return;
+  const key = String(current.seed);
+  const valueEl = document.getElementById("tbdValue-" + slotId);
+  const sourceEl = document.getElementById("tbdSource-" + slotId);
+  const value = parseHumanValue(valueEl && valueEl.value);
+  const sourceNote = String((sourceEl && sourceEl.value) || "").trim();
+  if (value == null || !sourceNote) {
+    state.deliveryError = "人工补充必须同时填写具体值和来源说明。";
+    render();
+    return;
+  }
+  if (!state.deliveryOverrides[key]) state.deliveryOverrides[key] = {};
+  if (!state.deliveryHumanEdits[key]) state.deliveryHumanEdits[key] = {};
+  state.deliveryOverrides[key][slotId] = value;
+  state.deliveryHumanEdits[key][slotId] = {
+    value,
+    source_note: sourceNote,
+    changed_at: new Date().toISOString(),
+  };
+  await generateDeliveryBatch({
+    keepSelected: true,
+    notice: "已记录人工补充：" + slotId + "，并保留了来源与人工修改记录。",
   });
-  h += '</div></details>';
-  return h;
+}
+
+function deliveryDownload(filename, value) {
+  const blob = new Blob([JSON.stringify(value, null, 2)], {type: "application/json;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
+async function deliveryCopy(value, label) {
+  try {
+    await navigator.clipboard.writeText(JSON.stringify(value, null, 2));
+    state.deliveryNotice = "已复制 " + label + "。";
+    state.deliveryError = null;
+  } catch (_) {
+    state.deliveryError = "浏览器未允许复制，请使用下载 JSON。";
+  }
+  render();
+}
+
+function renderDeliveryCaseTabs() {
+  const batch = state.deliveryBatch;
+  if (!batch) return "";
+  return '<div class="delivery-case-tabs" aria-label="案例切换">'
+    + batch.cases.map((item, index) => {
+      const status = item.validation.status;
+      const tbd = (item.task_template.manifest.tbd_items || []).length;
+      return '<button type="button" class="delivery-case-tab'
+        + (index === state.deliverySelectedCase ? " selected" : "")
+        + '" onclick="selectDeliveryCase(' + index + ')"><b>案例 '
+        + String(index + 1).padStart(2, "0") + '</b><span>Seed '
+        + escapeHtml(String(item.seed)) + ' · ' + escapeHtml(status)
+        + (tbd ? " · TBD " + tbd : "") + '</span></button>';
+    }).join("") + '</div>';
+}
+
+function renderBindingTable(items) {
+  if (!items || !items.length) return '<p class="empty-copy">本侧暂无已分配的 JD 配置项。</p>';
+  return '<div class="delivery-binding-list">' + items.map(item => {
+    const source = (item.provenance && item.provenance[0]) || {};
+    return '<div class="delivery-binding' + (item.status === "TBD" ? " is-tbd" : "") + '">'
+      + '<div class="delivery-binding-head"><b class="mono">' + escapeHtml(item.canonical_jd)
+      + '</b><span>' + escapeHtml(item.configuration_assignment) + '</span></div>'
+      + '<strong>' + escapeHtml(item.name) + '</strong>'
+      + '<div class="delivery-binding-value">' + escapeHtml(formatJdValue(item.value)) + '</div>'
+      + '<div class="delivery-binding-meta">' + pill(item.status)
+      + ' <span>来源：' + escapeHtml(source.source_id || "TBD") + '</span>'
+      + ' <span>细粒度节点：' + escapeHtml((item.selected_node_ids || []).join(", ") || "TBD") + '</span></div>'
+      + '</div>';
+  }).join("") + '</div>';
+}
+
+function renderTaskTemplateDelivery(item) {
+  if (!item) return "";
+  const task = item.task_template;
+  const bindings = task.manifest.jd_bindings || [];
+  const tbd = task.manifest.tbd_items || [];
+  return '<div class="task-delivery-card">'
+    + '<div class="task-delivery-head"><div><span>案例 ' + String(item.case_index).padStart(2, "0")
+    + ' · Seed ' + escapeHtml(String(item.seed)) + '</span><h2>' + escapeHtml(task.title)
+    + '</h2></div>' + pill(item.validation.status, item.validation.status === "pass" ? "given" : "tbd") + '</div>'
+    + '<div class="field-label"><label>JD 标注版任务叙事</label><span>给评审者阅读，可逐句追溯</span></div>'
+    + '<div class="annotated-narrative">' + escapeHtml(task.narratives.review_annotated) + '</div>'
+    + '<details class="hint-fold" style="margin-top:12px"><summary>SUT 可见任务正文</summary><div class="hint-fold-body">'
+    + '<div class="clean-narrative">' + escapeHtml(task.narratives.sut_visible) + '</div></div></details>'
+    + '<details class="hint-fold" style="margin-top:10px"><summary>机器 Manifest · JD '
+    + bindings.length + ' · TBD ' + tbd.length + '</summary><div class="hint-fold-body">'
+    + renderBindingTable(bindings)
+    + '<pre class="code-preview">' + escapeHtml(JSON.stringify(task.manifest, null, 2)) + '</pre></div></details>'
+    + '</div>';
 }
 
 function renderStep4() {
-  const hasOne = !!state.instanceResult;
-  const hasMany = !!(state.instanceResults && state.instanceResults.length);
-  setHeader(4, hasOne || hasMany ? "已生成" : "等待 Seed");
+  const batch = state.deliveryBatch;
   const domain = buildDomainTemplate();
-  let h = saveBar() + '<p class="intro">STEP 5 重点是<strong>特定任务模版</strong>：每个 Seed 下各 JD 取到的具体值。同一 Seed 结果可复现。</p>';
-  h += narrativeReferencePanel({ open: false, title: "自然语言任务描述（所有特定模版共同的来源）" });
-
-  h += '<div class="field-label" style="margin-top:8px"><label>生成控制</label></div>';
-  h += '<div class="control" style="margin-bottom:8px"><select id="im">'
-    + [["single","单个 Seed"],["random","随机一批"],["batch","批量范围"],["traverse","全遍历"]].map(m =>
-      "<option value='" + m[0] + "'" + (m[0] === state.instanceMode ? " selected" : "") + ">" + m[1] + "</option>"
-    ).join("") + "</select></div>";
-  if (state.instanceMode === "single") {
-    h += '<input type="number" min="0" value="' + state.instanceSeed + '" id="is" style="padding:4px 8px;width:100px;border:1px solid var(--line-strong);border-radius:6px">';
-  } else if (state.instanceMode === "random") {
-    h += '<div class="control" style="gap:8px;align-items:center;flex-wrap:wrap">'
-      + '<span class="action-note">随机</span>'
-      + '<input type="number" min="1" max="50" value="' + (state.instanceRandomCount || 5) + '" id="irc" style="padding:4px 8px;width:70px;border:1px solid var(--line-strong);border-radius:6px">'
-      + '<span class="action-note">个不同 Seed</span>'
-      + '<button class="btn" type="button" onclick="rerollSeeds()">换一批</button></div>';
-    const seeds = state.instanceRandomSeeds || [];
-    if (seeds.length) {
-      h += '<div class="coverage-chips" style="margin-top:8px">'
-        + seeds.map(s => '<span class="lvl-pill lv-L2 mono">' + escapeHtml(String(s)) + '</span>').join("")
-        + '</div>';
-    } else {
-      h += '<p class="intro" style="margin-top:6px">点「换一批」或直接生成，会随机抽取一组互不相同的 Seed。</p>';
-    }
-  } else if (state.instanceMode === "batch") {
-    h += '<input type="text" value="' + escapeHtml(state.instanceBatchSeeds) + '" id="ib" style="padding:4px 8px;width:200px;border:1px solid var(--line-strong);border-radius:6px" placeholder="如 0-4">';
+  setHeader(4, batch ? ("已生成 " + batch.case_count + " 个案例") : "等待生成");
+  let h = saveBar()
+    + '<p class="intro">STEP 5 专门生成可审阅的 <strong>Task Template</strong>。每个案例同时包含你要求的'
+    + '<strong>【canonical JD＝实际值】标注叙事</strong>、SUT 可见正文和机器 Manifest。</p>';
+  h += '<div class="batch-generator">'
+    + '<div><div class="field-label"><label for="deliveryCaseCount">生成案例数量</label><span>团队演示默认 10，可直接修改</span></div>'
+    + '<input id="deliveryCaseCount" class="batch-count-input" type="number" min="1" value="'
+    + escapeHtml(String(state.deliveryCaseCount || 10)) + '"></div>'
+    + '<div class="batch-generator-action"><button class="btn primary" type="button" onclick="generateDeliveryBatch()"'
+    + (state.deliveryLoading || !domain ? " disabled" : "") + '>'
+    + (state.deliveryLoading ? "生成中…" : "生成 Task Template 案例") + '</button></div></div>';
+  h += '<details class="hint-fold compact"><summary>高级设置 · 批次复现信息</summary><div class="hint-fold-body">'
+    + '<div class="field-label"><label for="deliveryBatchSeed">批次 Seed</label><span>无需理解；同一 Seed 可重现同一批案例</span></div>'
+    + '<div class="control"><input id="deliveryBatchSeed" class="batch-seed-input" type="number" min="0" value="'
+    + escapeHtml(String(state.deliveryBatchSeed)) + '"> '
+    + '<button class="btn" type="button" onclick="rerollDeliveryBatch()"'
+    + (state.deliveryLoading || !domain ? " disabled" : "") + '>换一批案例</button></div></div></details>';
+  if (state.deliveryError) {
+    h += '<div class="choice-card dependency selected" style="margin-top:12px"><b>生成失败</b><p>'
+      + escapeHtml(state.deliveryError) + '</p></div>';
   }
-  h += '<div class="action-row" style="margin-top:10px"><span class="action-note">基于 STEP 4 已确认的任务域模版</span><div>'
-    + '<button class="btn primary" onclick="genTaskTemplate()"' + (state.instanceLoading || !domain ? " disabled" : "") + ">"
-    + (state.instanceLoading ? "生成中..." : "生成特定任务模版") + "</button> "
-    + '<button class="btn" onclick="generateFullTaskTemplate()"' + (state.instanceLoading || !domain ? " disabled" : "") + ">"
-    + "按统一合同生成并校验</button></div></div>";
-
-  if (state.instanceError) {
-    h += '<div class="choice-card dependency selected" style="margin-top:10px"><b>错误</b><p>' + escapeHtml(state.instanceError) + "</p></div>";
-  } else if (state.instanceResult) {
-    h += '<div class="field-label" style="margin-top:18px"><label>特定任务模版（具体 JD 值）</label></div>';
-    h += renderSpecificTemplateCard(state.instanceResult, { open: true });
-  } else if (hasMany) {
-    h += '<div class="field-label" style="margin-top:18px"><label>特定任务模版列表 · ' + state.instanceResults.length + '</label></div>';
-    h += '<p class="intro" style="margin-top:4px">点开每个 Seed 查看该模版下 JD 的具体取值。</p>';
-    state.instanceResults.forEach((tpl, idx) => {
-      h += renderSpecificTemplateCard(tpl, { open: idx === 0 });
-    });
+  if (state.deliveryNotice) {
+    h += '<div class="choice-card selected" style="margin-top:12px"><b>'
+      + escapeHtml(state.deliveryNotice) + '</b></div>';
+  }
+  if (batch) {
+    h += '<div class="delivery-summary"><div><b>' + batch.case_count + '</b><span>案例</span></div>'
+      + '<div><b>' + batch.summary.pass + '</b><span>校验通过</span></div>'
+      + '<div><b>' + batch.summary.needs_review + '</b><span>需复核</span></div>'
+      + '<div><b>' + batch.summary.tbd_items + '</b><span>TBD</span></div></div>';
+    h += renderDeliveryCaseTabs();
+    h += renderTaskTemplateDelivery(selectedDeliveryCase());
+    h += '<div class="action-row" style="margin-top:16px"><span class="action-note">确认 Task Template 后，下一步查看世界侧与用户侧配置。</span>'
+      + '<button class="btn primary" type="button" onclick="completeStage(4)">确认 → STEP 6</button></div>';
   } else {
-    h += '<div class="choice-card" style="margin-top:14px"><b>尚未生成</b><p>选好 Seed 后点「生成特定任务模版」，这里会列出每个模版的具体 JD 值。</p></div>';
+    h += '<div class="choice-card" style="margin-top:14px"><b>尚未生成案例</b>'
+      + '<p>输入数量后点击生成。系统只从 STEP 4 已确认的 fixed / enum / range 中取值，TBD 保持 TBD。</p></div>';
   }
-
-  if (domain) {
-    const slotCount = (domain.jd_slots || []).length;
-    h += '<details class="hint-fold" style="margin-top:18px"><summary>参考：STEP 4 任务域模版（上面所有特定模版的共同来源 · 取值域 · ' + slotCount + '）</summary><div class="hint-fold-body">';
-    groupJdItems(domain.jd_slots, s => s.slot_id).forEach(g => {
-      h += '<div class="group-label" style="margin-top:8px">' + escapeHtml(g.title) + ' · ' + g.items.length + '</div>';
-      h += '<table class="data-table"><thead><tr><th>Slot</th><th>Mode</th><th>Domain</th></tr></thead><tbody>'
-        + g.items.map(s => {
-            let v = "—";
-            if (s.binding.mode === "fixed") v = escapeHtml(String(s.binding.value));
-            else if (s.binding.mode === "enum") v = escapeHtml((s.binding.allowed_values || []).join(" | "));
-            else if (s.binding.mode === "range") v = "[" + s.binding.minimum + "~" + s.binding.maximum + "]";
-            return "<tr><td class='mono'>" + escapeHtml(s.slot_id) + "</td><td>" + pill(s.binding.mode) + "</td><td>" + v + "</td></tr>";
-          }).join("")
-        + '</tbody></table>';
-    });
-    h += '</div></details>';
-  }
-
   document.getElementById("workspaceBody").innerHTML = h;
-  const im = document.getElementById("im"); if (im) im.addEventListener("change", () => { state.instanceMode = im.value; render(); });
-  const is = document.getElementById("is"); if (is) is.addEventListener("change", () => { state.instanceSeed = parseInt(is.value) || 0; });
-  const ib = document.getElementById("ib"); if (ib) ib.addEventListener("change", () => { state.instanceBatchSeeds = ib.value; });
-  const irc = document.getElementById("irc"); if (irc) irc.addEventListener("change", () => { state.instanceRandomCount = Math.max(1, Math.min(50, parseInt(irc.value) || 5)); persistState(); });
+  const countInput = document.getElementById("deliveryCaseCount");
+  if (countInput) countInput.addEventListener("change", () => {
+    state.deliveryCaseCount = Math.max(1, parseInt(countInput.value, 10) || 10);
+    countInput.value = state.deliveryCaseCount;
+    persistState();
+  });
+  const seedInput = document.getElementById("deliveryBatchSeed");
+  if (seedInput) seedInput.addEventListener("change", () => {
+    state.deliveryBatchSeed = Math.max(0, parseInt(seedInput.value, 10) || 0);
+    persistState();
+  });
+}
+
+function renderValidationChecks(validation) {
+  const checks = (validation && validation.checks) || [];
+  return '<div class="validation-list">' + checks.map(check =>
+    '<div class="validation-check ' + escapeHtml(check.status) + '"><span>'
+      + (check.status === "pass" ? "✓" : check.status === "fail" ? "×" : "!")
+      + '</span><div><b>' + escapeHtml(check.message) + '</b>'
+      + ((check.evidence || []).length
+        ? '<small>' + escapeHtml(check.evidence.join(", ")) + '</small>' : "")
+      + '</div></div>'
+  ).join("") + '</div>';
+}
+
+function renderTbdWorkbench(item) {
+  const taskTbds = (item.task_template.manifest.tbd_items || []);
+  const worldTbds = (item.world_config.tbd_items || []);
+  const userTbds = (item.user_config.tbd_items || []);
+  const seen = new Set();
+  const all = taskTbds.concat(worldTbds, userTbds).filter(tbd => {
+    if (seen.has(tbd.tbd_id)) return false;
+    seen.add(tbd.tbd_id);
+    return true;
+  });
+  if (!all.length) return '<div class="choice-card selected"><b>本案例没有待补充项</b></div>';
+  return '<div class="tbd-workbench">' + all.map(tbd => {
+    const canEdit = !!tbd.canonical_jd && (tbd.missing || []).includes("value");
+    return '<div class="tbd-work-item"><div><b>' + escapeHtml(tbd.canonical_jd || "交付依赖")
+      + ' · ' + escapeHtml(tbd.name) + '</b><span>待补充：'
+      + escapeHtml((tbd.missing || []).join("、")) + '</span></div>'
+      + (canEdit
+        ? '<div class="tbd-edit-row"><input id="tbdValue-' + escapeHtml(tbd.canonical_jd)
+          + '" placeholder="填写已确认值，可填写 JSON"><input id="tbdSource-' + escapeHtml(tbd.canonical_jd)
+          + '" placeholder="来源说明（必填）"><button class="btn small" type="button" onclick="applyDeliveryTbd(\''
+          + escapeHtml(tbd.canonical_jd) + '\')">保存并重新生成</button></div>'
+        : '<small>该项需要补充元数据或外部接口信息，Pipeline 不会猜测。</small>')
+      + '</div>';
+  }).join("") + '</div>';
+}
+
+function renderStep5() {
+  const batch = state.deliveryBatch;
+  const item = selectedDeliveryCase();
+  setHeader(5, batch ? "可导出" : "等待 STEP 5");
+  let h = saveBar()
+    + '<p class="intro">STEP 6 将当前案例拆成 <strong>world_config</strong> 与 <strong>user_config</strong>，'
+    + '并用确定性规则检查 Hidden GT、canonical JD、TBD 和两侧共享引用。</p>';
+  if (!batch || !item) {
+    h += '<div class="choice-card dependency selected"><b>尚未生成 Task Template</b>'
+      + '<p>请先在 STEP 5 生成并确认案例。</p></div>'
+      + '<div class="action-row"><button class="btn" type="button" onclick="goToStage(4)">← 回 STEP 5</button></div>';
+    document.getElementById("workspaceBody").innerHTML = h;
+    return;
+  }
+  h += renderDeliveryCaseTabs();
+  h += '<div class="delivery-export-bar"><div><b>案例 ' + String(item.case_index).padStart(2, "0")
+    + '</b><span class="mono">' + escapeHtml(item.case_id) + '</span></div><div>'
+    + '<button class="btn small" type="button" onclick="deliveryCopy(selectedDeliveryCase().task_template,\'task_template JSON\')">复制 Task Template</button> '
+    + '<button class="btn small" type="button" onclick="deliveryDownload(\'task_template.json\',selectedDeliveryCase().task_template)">下载 Task Template</button> '
+    + '<button class="btn small" type="button" onclick="deliveryDownload(\'delivery_batch.json\',state.deliveryBatch)">下载完整交付包</button></div></div>';
+  h += '<div class="config-columns">';
+  [
+    {key: "world_config", title: "世界侧 world_config", note: "Simulator / Fixture / Harness 使用"},
+    {key: "user_config", title: "用户侧 user_config", note: "SUT / 用户侧 Config Agent 使用"},
+  ].forEach(section => {
+    const config = item[section.key];
+    const bindings = section.key === "world_config"
+      ? (config.adjustable_variables || []).concat(config.hidden_ground_truth || [])
+      : (config.runtime_constraints || []);
+    h += '<section class="config-panel ' + (section.key === "world_config" ? "world" : "user") + '">'
+      + '<div class="config-panel-head"><div><b>' + escapeHtml(section.title) + '</b><span>'
+      + escapeHtml(section.note) + '</span></div><div>'
+      + '<button class="btn small" type="button" onclick="deliveryCopy(selectedDeliveryCase().'
+      + section.key + ',\'' + section.key + '\')">复制</button> '
+      + '<button class="btn small" type="button" onclick="deliveryDownload(\'' + section.key
+      + '.json\',selectedDeliveryCase().' + section.key + ')">下载 JSON</button></div></div>'
+      + renderBindingTable(bindings)
+      + '<details class="hint-fold compact"><summary>查看完整 JSON</summary><div class="hint-fold-body"><pre class="code-preview">'
+      + escapeHtml(JSON.stringify(config, null, 2)) + '</pre></div></details></section>';
+  });
+  h += '</div>';
+  const hiddenCount = (item.world_config.hidden_ground_truth || []).length;
+  h += '<div class="hidden-summary"><b>Hidden GT：' + hiddenCount + ' 项</b><span>'
+    + (hiddenCount ? "仅存在于 world_config；user_config 中为 0。" : "本案例没有已绑定的 Hidden GT。")
+    + '</span></div>';
+  h += '<div class="field-label" style="margin-top:16px"><label>确定性校验</label><span>'
+    + escapeHtml(item.validation.status) + '</span></div>' + renderValidationChecks(item.validation);
+  h += '<div class="field-label" style="margin-top:16px"><label>统一 TBD 补充</label>'
+    + '<span>只接受人工确认值和来源；补充后重新生成本批案例</span></div>'
+    + renderTbdWorkbench(item);
+  h += '<details class="hint-fold" style="margin-top:16px"><summary>批次 Manifest · '
+    + batch.case_count + ' 个案例</summary><div class="hint-fold-body"><pre class="code-preview">'
+    + escapeHtml(JSON.stringify({
+      batch_id: batch.batch_id,
+      batch_seed: batch.batch_seed,
+      case_count: batch.case_count,
+      cases: batch.cases.map(c => ({case_id: c.case_id, case_index: c.case_index, seed: c.seed, validation: c.validation.status})),
+      summary: batch.summary,
+      provenance: batch.provenance,
+    }, null, 2)) + '</pre></div></details>';
+  h += '<div class="action-row" style="margin-top:16px"><span class="action-note">三类产物、校验结果和 TBD 已生成；可继续修改后重新导出。</span>'
+    + '<button class="btn primary" type="button" onclick="completeStage(5)">标记本次交付完成</button></div>';
+  document.getElementById("workspaceBody").innerHTML = h;
 }

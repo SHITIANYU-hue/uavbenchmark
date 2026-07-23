@@ -18,6 +18,10 @@ SCHEMA_FILES = {
     "ground_truth": "ground_truth.schema.json",
     "sut_trace": "sut_trace.schema.json",
     "grader_result": "grader_result.schema.json",
+    "task_template_output": "task_template_output.schema.json",
+    "world_config": "world_config.schema.json",
+    "user_config": "user_config.schema.json",
+    "delivery_batch": "delivery_batch.schema.json",
 }
 
 

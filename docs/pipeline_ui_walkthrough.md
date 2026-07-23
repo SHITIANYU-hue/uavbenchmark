@@ -1,9 +1,10 @@
-# UAV Benchmark Factory：五步 Pipeline 操作流程
+# UAV Benchmark Factory：六步 Pipeline 操作流程
 
 入口：`http://127.0.0.1:8765`（`pipeline.html`）。  
 启动：`./scripts/start_agent_demo.sh`，并在 `.env` 配置 API Key。
 
-本页不跑真实 SUT / 仿真 / GT / Grader，只把**任务描述**收成可复现的 **特定任务模版**（具体 JD 取值）。
+本页不跑真实 SUT / 仿真 / GT / Grader，而是把**任务描述**收成可审阅、可复现、
+可分别交给世界侧与用户侧的配置交付包。
 
 当前代码采用 `ability-id-v3-2026-07-20`，能力使用连续编号 A1–A17。
 
@@ -20,7 +21,9 @@ JD业务变量树子树（A×L 限定）→ 人工变量选择清单 → canonic
     ↓ STEP 4
 任务域模版（fixed / enum / range / TBD）
     ↓ STEP 5
-特定任务模版（Seed → 一组具体 JD 值）
+Task Template 批次（案例数量 → 具体 JD 值 → 完整自然语言正文）
+    ↓ STEP 6
+world_config + user_config + 隔离校验 + 导出
 ```
 
 两个模版别混：
@@ -28,7 +31,8 @@ JD业务变量树子树（A×L 限定）→ 人工变量选择清单 → canonic
 | 概念 | 含义 |
 | --- | --- |
 | **任务域模版**（STEP 4） | 每个 JD 允许怎么取值（固定值 / 枚举 / 区间 / TBD） |
-| **特定任务模版**（STEP 5） | 同一域模版 + Seed 抽出的一组具体值；同 Seed 可复现 |
+| **Task Template**（STEP 5） | 同一域模版生成的一组具体案例；正文用 canonical JD 和实际取值作审阅标注 |
+| **配置交付**（STEP 6） | 每个案例的 `task_template`、`world_config`、`user_config` 和校验结果 |
 
 侧栏「本次运行」可看 Provider、进度、Coverage（按 G 分组）等；阶段轨可在已解锁步骤间跳转。
 顶部“JD业务变量树”用于整页查看完整变量树；树页面的“返回 Pipeline”会恢复
@@ -91,14 +95,30 @@ Agent 自由探索完整 444 节点。
 
 这里定的是**取值范围**，还不是某一趟任务的具体采样值。
 
-## STEP 5 · 特定任务模版
+## STEP 5 · Task Template
 
-重点是每个 Seed 下 JD 取到的**具体值**。
+输入要生成的案例数量，默认 10。页面不再要求先选择“单个 / 随机 / 遍历”等模式。
+Seed 被收进高级选项，仅用于复现；同一任务域模版和同一批次 Seed 会得到同一批案例。
 
-- 模式：单个 Seed / 随机一批 / 批量范围 / 全遍历
-- 同 Seed 结果可复现；可「换一批」再生成
-- 卡片可收起；内含文字说明（任务叙述 + 关键 JD）
-- STEP 4 域模版折叠在底部作参考（Domain → Value）
+每个案例同时显示：
+
+- **审阅正文**：例如 `【jd-0.2 工作空间结构＝城市高楼峡谷】`，方便核对每个实际取值；
+- **SUT 可见正文**：不含 Hidden GT 和世界侧私有数据；
+- **机器 Manifest**：任务目标、A×L 能力边界、完成条件、异常流程、外部依赖、JD 绑定与 TBD。
+
+## STEP 6 · 配置与交付
+
+每个案例均有三类可独立下载的产物：
+
+| 产物 | 谁使用 | 主要内容 |
+| --- | --- | --- |
+| `task_template` | 人工评审、编排系统 | 完整正文、SUT 正文和机器 Manifest |
+| `world_config` | Simulator / Fixture / Harness / 世界侧 Config Agent | 世界资产、布置、扰动、事件、时间线、可调变量和 Hidden GT |
+| `user_config` | SUT / 用户侧 Config Agent / 任务接口 | 可见输入、任务要求、允许动作、输出合同、Executor 依赖和运行约束 |
+
+页面会确定性检查 Hidden GT 隔离、共享引用、canonical JD、TBD 默认值和未确认阈值。
+统一 TBD 区只接受“具体值 + 来源”；没有来源的内容继续保留 TBD。可分别复制/下载
+三个 JSON，或下载包含全部案例的完整批次。
 
 ## 保存 / 加载 / 重新开始
 

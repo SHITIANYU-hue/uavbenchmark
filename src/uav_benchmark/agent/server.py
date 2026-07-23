@@ -35,6 +35,7 @@ from .service import (
 from ..instance.generator import generate_instance, validate_instance
 from ..instance.domain_template import build_domain_template, normalize_domain_template
 from ..instance.batch import generate_batch, traverse_domain
+from ..instance.delivery import build_delivery_batch, validate_artifact
 
 
 MAX_REQUEST_BYTES = 1_000_000
@@ -343,6 +344,7 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
             "/api/task-template/generate",
             "/api/task-template/batch",
             "/api/task-template/traverse",
+            "/api/delivery/batch",
             "/api/domain-template/build",
             "/api/jd-tree/selection/build",
             "/api/pipeline/save",
@@ -408,6 +410,59 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                     jd_edits=jd_edits,
                 )
                 self._json(HTTPStatus.OK, {"domain_template": domain})
+                return
+
+            if self.path == "/api/delivery/batch":
+                template = payload.get("domain_template")
+                if not isinstance(template, dict):
+                    raise ValueError("Missing Domain Template ('domain_template').")
+                domain = normalize_domain_template(template)
+                case_count = int(payload.get("case_count", 10))
+                batch_seed = int(payload.get("batch_seed", 0))
+                selection = payload.get("jd_tree_selection")
+                if selection is not None and not isinstance(selection, dict):
+                    raise ValueError("jd_tree_selection must be an object")
+                case_overrides = payload.get("case_overrides") or {}
+                human_edits = payload.get("human_edits") or {}
+                if not isinstance(case_overrides, dict):
+                    raise ValueError("case_overrides must be an object keyed by seed")
+                if not isinstance(human_edits, dict):
+                    raise ValueError("human_edits must be an object keyed by seed")
+                canonical_fields = {
+                    item["id"]: item
+                    for item in load_reference_catalog().get("jd_fields", [])
+                    if item.get("id")
+                }
+                delivery = build_delivery_batch(
+                    domain_template=domain,
+                    case_count=case_count,
+                    batch_seed=batch_seed,
+                    source_task=str(payload.get("source_task") or ""),
+                    base_narrative=str(payload.get("base_narrative") or ""),
+                    jd_tree_selection=selection,
+                    canonical_fields=canonical_fields,
+                    case_overrides=case_overrides,
+                    human_edits=human_edits,
+                )
+                schema_root = ROOT / "schemas"
+                for case in delivery["cases"]:
+                    validate_artifact(
+                        case["task_template"],
+                        schema_root / "task_template_output.schema.json",
+                    )
+                    validate_artifact(
+                        case["world_config"],
+                        schema_root / "world_config.schema.json",
+                    )
+                    validate_artifact(
+                        case["user_config"],
+                        schema_root / "user_config.schema.json",
+                    )
+                validate_artifact(
+                    delivery,
+                    schema_root / "delivery_batch.schema.json",
+                )
+                self._json(HTTPStatus.OK, {"delivery_batch": delivery})
                 return
 
             if self.path in {

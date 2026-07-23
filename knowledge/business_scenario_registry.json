@@ -43,7 +43,7 @@
         {"slot_id": "jd-10.1", "name": "航路拓扑", "binding_mode": "task_derived", "value_or_domain": "高速路段、起终点、巡检航段和应急航线；具体拓扑 TBD"},
         {"slot_id": "jd-12.1", "name": "载荷动作目录", "binding_mode": "fixed_domain", "value_or_domain": "拍照、喊话、灯光警示及其他已授权载荷动作"},
         {"slot_id": "jd-13.1", "name": "成果格式", "binding_mode": "fixed_domain", "value_or_domain": "按路段/时间归档、巡查报告和统计报表；具体格式 TBD"},
-        {"slot_id": "jd-17.2", "name": "证据格式规格", "binding_mode": "fixed_domain", "value_or_domain": "检测告警、图像或热成像证据和处置记录；字段 TBD"}
+        {"slot_id": "jd-15.2", "name": "证据格式规格", "binding_mode": "fixed_domain", "value_or_domain": "检测告警、图像或热成像证据和处置记录；字段 TBD"}
       ],
       "runtime_dependencies": [
         {"dependency_id": "route_and_dispatch_service", "provider": "external_system", "responsibility": "提供受审路网、计划和多架次调度执行能力；接口 TBD"},
@@ -88,7 +88,7 @@
         {"slot_id": "jd-12.1", "name": "载荷动作目录", "binding_mode": "fixed_domain", "value_or_domain": "拍照、喊话、灯光警示及其他已授权动作"},
         {"slot_id": "jd-13.1", "name": "成果格式", "binding_mode": "fixed_domain", "value_or_domain": "按路段/时间归档、巡查报告和统计报表；具体格式 TBD"},
         {"slot_id": "jd-9.1", "name": "资源消耗包络", "binding_mode": "task_derived", "value_or_domain": "超长管道和设备巡检的续航、载荷与资源预算；具体数值 TBD"},
-        {"slot_id": "jd-17.2", "name": "证据格式规格", "binding_mode": "fixed_domain", "value_or_domain": "检测告警、图像/热成像证据和处置记录；字段 TBD"}
+        {"slot_id": "jd-15.2", "name": "证据格式规格", "binding_mode": "fixed_domain", "value_or_domain": "检测告警、图像/热成像证据和处置记录；字段 TBD"}
       ],
       "runtime_dependencies": [
         {"dependency_id": "route_and_dispatch_service", "provider": "external_system", "responsibility": "提供管道/设备路线、计划和多架次调度执行能力；接口 TBD"},
@@ -134,7 +134,7 @@
         {"slot_id": "jd-10.1", "name": "航路拓扑", "binding_mode": "fixed_domain", "value_or_domain": "桥面、桥底和结构件层级航路；具体起终点和航点 TBD"},
         {"slot_id": "jd-13.1", "name": "成果格式", "binding_mode": "fixed_domain", "value_or_domain": "巡检数据、报告、统计报表、三维模型和数字孪生标记；具体格式 TBD"},
         {"slot_id": "jd-13.2", "name": "覆盖完整度判据", "binding_mode": "task_derived", "value_or_domain": "桥面、桥底、结构件或模型覆盖要求；具体判据 TBD"},
-        {"slot_id": "jd-17.2", "name": "证据格式规格", "binding_mode": "fixed_domain", "value_or_domain": "检测告警、病害证据、模型位置和人工标记记录；字段 TBD"}
+        {"slot_id": "jd-15.2", "name": "证据格式规格", "binding_mode": "fixed_domain", "value_or_domain": "检测告警、病害证据、模型位置和人工标记记录；字段 TBD"}
       ],
       "runtime_dependencies": [
         {"dependency_id": "bridge_model_and_twin_service", "provider": "external_system", "responsibility": "存储桥梁模型、数字孪生结果和人工标记；接口 TBD"},
@@ -179,7 +179,7 @@
         {"slot_id": "jd-10.1", "name": "航路拓扑", "binding_mode": "task_derived", "value_or_domain": "园区巡检航路、起终点和允许区域；具体拓扑 TBD"},
         {"slot_id": "jd-12.1", "name": "载荷动作目录", "binding_mode": "fixed_domain", "value_or_domain": "拍照、喊话驱离、车牌识别及其他已授权动作"},
         {"slot_id": "jd-13.1", "name": "成果格式", "binding_mode": "fixed_domain", "value_or_domain": "巡检数据、报告、统计报表和三维可视化结果；具体格式 TBD"},
-        {"slot_id": "jd-17.2", "name": "证据格式规格", "binding_mode": "fixed_domain", "value_or_domain": "检测告警、图像证据、处置和协同记录；字段 TBD"}
+        {"slot_id": "jd-15.2", "name": "证据格式规格", "binding_mode": "fixed_domain", "value_or_domain": "检测告警、图像证据、处置和协同记录；字段 TBD"}
       ],
       "runtime_dependencies": [
         {"dependency_id": "campus_model_service", "provider": "external_system", "responsibility": "提供园区三维模型和可视化存储；接口 TBD"},
@@ -219,7 +219,7 @@
         {"slot_id": "jd-6.1", "name": "业务对象类目", "binding_mode": "task_derived", "value_or_domain": "随河道、矿山、海事或其他子场景确定；当前为 TBD"},
         {"slot_id": "jd-6.3", "name": "感知模态集", "binding_mode": "task_derived", "value_or_domain": "随具体检测任务确定；当前为 TBD"},
         {"slot_id": "jd-10.1", "name": "航路拓扑", "binding_mode": "task_derived", "value_or_domain": "随具体子场景确定；当前为 TBD"},
-        {"slot_id": "jd-17.2", "name": "证据格式规格", "binding_mode": "task_derived", "value_or_domain": "随检测对象和告警要求确定；当前为 TBD"}
+        {"slot_id": "jd-15.2", "name": "证据格式规格", "binding_mode": "task_derived", "value_or_domain": "随检测对象和告警要求确定；当前为 TBD"}
       ],
       "runtime_dependencies": [
         {"dependency_id": "route_and_dispatch_service", "provider": "external_system", "responsibility": "提供具体子场景的路线、计划和多架次调度执行能力；接口 TBD"},

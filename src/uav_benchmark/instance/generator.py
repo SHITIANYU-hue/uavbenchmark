@@ -82,15 +82,24 @@ def _resolve_binding(
     """
 
     mode = binding.get("mode", "TBD")
+    source_status = binding.get("status")
+    if source_status == "TBD":
+        return None, "TBD"
+    resolved_status = (
+        source_status
+        if source_status in {"verified", "proposed"}
+        else "verified"
+    )
 
     if mode == "fixed":
-        return deepcopy(binding.get("value")), "verified"
+        value = deepcopy(binding.get("value"))
+        return (value, resolved_status) if value is not None else (None, "TBD")
 
     if mode == "enum":
         values = binding.get("allowed_values") or []
         if not values:
             return None, "TBD"
-        return deepcopy(rng.choice(values)), "verified"
+        return deepcopy(rng.choice(values)), resolved_status
 
     if mode == "range":
         lo = binding.get("minimum")
@@ -98,8 +107,8 @@ def _resolve_binding(
         if lo is None or hi is None:
             return None, "TBD"
         if isinstance(lo, int) and isinstance(hi, int):
-            return rng.randint(lo, hi), "verified"
-        return round(rng.uniform(lo, hi), 4), "verified"
+            return rng.randint(lo, hi), resolved_status
+        return round(rng.uniform(lo, hi), 4), resolved_status
 
     return None, "TBD"
 

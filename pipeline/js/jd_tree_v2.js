@@ -55,6 +55,7 @@ function suggestedV2VariableIds() {
 }
 
 function clearStaleJdExtraction() {
+  clearDeliveryArtifacts();
   state.extractionStatus = "idle";
   state.extractionError = null;
   state.extractionProgress = null;

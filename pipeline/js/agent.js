@@ -6,6 +6,7 @@ async function runNarrative() {
     render();
     return;
   }
+  clearDeliveryArtifacts();
   state.narrativeStatus = "running"; state.narrativeError = null; state.narrativeRunId = uid("agent-"); render();
   try {
     const r = await fetch("/api/config-agent/expand", {method: "POST", headers: {"Content-Type": "application/json"},
@@ -69,6 +70,7 @@ function patchRunningProgressUi() {
 // normally or the result was recovered from the status poll after a lost connection.
 function adoptCoverageResult(result) {
   if (!result || state.agentStatus === "done") return;
+  clearDeliveryArtifacts();
   stopAgentPoll();
   state.agentStatus = "done";
   state.agentPhase = "done";
@@ -172,6 +174,7 @@ async function resumeInterruptedRuns() {
 
 // STEP 2: A×L coverage classification only (no JD extraction here).
 async function runCoverage() {
+  clearDeliveryArtifacts();
   state.agentStatus = "running";
   state.agentPhase = "coverage";
   state.agentError = null;
@@ -277,6 +280,7 @@ async function runExtraction() {
 function confirmNar() { state.narrativeStatus = "done"; runCoverage(); }
 
 function resetNarrativeForCoverage() {
+  clearDeliveryArtifacts();
   state.narrativeStatus = "idle";
   state.narrativeDraft = "";
   state.narrativeOriginal = "";
@@ -410,29 +414,5 @@ async function loadMetricsForStep3() {
     state.fillTbdError = String(e.message || e);
   }
   state.fillTbdLoading = false;
-  render();
-}
-
-async function generateFullTaskTemplate() {
-  const seed = state.instanceSeed || 0;
-  state.instanceLoading = true; state.instanceError = null; render();
-  try {
-    const tpl = buildDomainTemplate();
-    const body = { domain_template: tpl, seed };
-    const r = await fetch("/api/task-template/generate", {
-      method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body),
-    });
-    const d = await r.json();
-    if (!r.ok) throw new Error(d.message || d.error);
-    state.instanceResult = d.task_template || d.instance || d.task;
-    const bindings = state.instanceResult && state.instanceResult.slot_bindings || [];
-    const unresolved = bindings.filter(item => item.status === "TBD").length;
-    state.fillTbdNotice = "已按统一合同生成确定性实例："
-      + bindings.length + " 个 JD 绑定，"
-      + unresolved + " 个 TBD";
-  } catch(e) {
-    state.instanceError = String(e.message || e);
-  }
-  state.instanceLoading = false;
   render();
 }

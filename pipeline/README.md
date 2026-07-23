@@ -6,7 +6,7 @@
 pipeline/
   css/app.css
   js/
-    constants.js      # 五步标签、能力编号与基础常量
+    constants.js      # 六步标签、能力编号与基础常量
     utils.js
     state.js          # 进度与阶段跳转
     scenarios.js
@@ -15,7 +15,7 @@ pipeline/
     jd_tree_v2.js     # A×L 子树加载、业务变量选择与清单导出
     agent.js          # 扩充 / 分类 / 变量范围约束提取 / TBD 来源复核
     persistence.js    # 保存·加载检查点
-    steps.js          # STEP 1–5 界面
+    steps.js          # STEP 1–6 界面（含批量 Task Template 与三类交付）
     shell.js          # 侧栏 Provider / 进度
     main.js           # render / init
 ```

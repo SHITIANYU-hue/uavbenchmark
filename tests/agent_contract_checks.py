@@ -157,9 +157,9 @@ class AgentContractChecks(unittest.TestCase):
                 "A11a": "A12",
                 "A11b": "A13",
                 "A12": "A14",
-                "A13": "A15",
-                "A14": "A16",
-                "A15": "A17",
+                "A13": "A16",
+                "A14": "A17",
+                "A16": "A15",
             },
         )
         self.assertEqual(
@@ -173,9 +173,9 @@ class AgentContractChecks(unittest.TestCase):
                 "jd-11a": "jd-12",
                 "jd-11b": "jd-13",
                 "jd-12": "jd-14",
-                "jd-13": "jd-15",
-                "jd-14": "jd-16",
-                "jd-15": "jd-17",
+                "jd-13": "jd-16",
+                "jd-14": "jd-17",
+                "jd-16": "jd-15",
             },
         )
         self.assertEqual(len({item["cell"] for item in catalog["gal_cells"]}), 68)

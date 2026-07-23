@@ -19,9 +19,15 @@ function initialState() {
     treeMetrics: {}, treeSlice: null,
     jdTreeStatus: "idle", jdTreeError: null, jdTreeNotice: null,
     jdTreeSlice: null, jdTreeSelectedNodeIds: [], jdTreeSelection: null,
-    instanceMode: "single", instanceSeed: 0, instanceBatchSeeds: "0-4",
-    instanceRandomCount: 5, instanceRandomSeeds: [],
-    instanceResult: null, instanceResults: null, instanceError: null, instanceLoading: false,
+    deliveryCaseCount: 10,
+    deliveryBatchSeed: Math.floor(Date.now() % 1000000000),
+    deliveryBatch: null,
+    deliverySelectedCase: 0,
+    deliveryOverrides: {},
+    deliveryHumanEdits: {},
+    deliveryLoading: false,
+    deliveryError: null,
+    deliveryNotice: null,
     saveNotice: null,
     contextCollapsed: false,
   };
@@ -45,7 +51,7 @@ function loadState() {
     // 恢复后清掉「进行中」的瞬时标记，避免刷新后卡在 loading/disabled
     s.fillTbdLoading = false;
     if (s.jdTreeStatus === "loading" || s.jdTreeStatus === "building") s.jdTreeStatus = "idle";
-    s.instanceLoading = false;
+    s.deliveryLoading = false;
     if (s.narrativeStatus === "running") s.narrativeStatus = s.narrativeDraft ? "done" : "idle";
     if (s.agentStatus === "running") s.agentStatus = s.agentResult ? "done" : "idle";
     if (s.agentPhase === "running") s.agentPhase = s.agentResult ? "done" : "idle";
@@ -76,6 +82,9 @@ function migrateCompletedSteps(steps, stageSchema, hasAgent) {
     }
     return new Set(migrated);
   }
+  // Five-step checkpoints remain valid; STEP 6 is intentionally appended and
+  // stays locked until the new delivery batch is generated.
+  if (stageSchema === 5) return new Set(arr.filter(s => s >= 0 && s <= 4));
   return new Set(arr);
 }
 
@@ -87,6 +96,18 @@ function furthestUnlocked() {
 function stageReachable(i) { return i <= furthestUnlocked() || state.completed.has(i); }
 
 function completeStage(i) { state.completed.add(i); state.maxUnlocked = Math.max(state.maxUnlocked, Math.min(i + 1, STAGES.length - 1)); state.currentStage = Math.min(i + 1, STAGES.length - 1); render(); }
+
+function clearDeliveryArtifacts() {
+  state.deliveryBatch = null;
+  state.deliverySelectedCase = 0;
+  state.deliveryOverrides = {};
+  state.deliveryHumanEdits = {};
+  state.deliveryError = null;
+  state.deliveryNotice = null;
+  state.completed.delete(4);
+  state.completed.delete(5);
+  state.maxUnlocked = Math.min(state.maxUnlocked, 4);
+}
 
 function goToStage(i) {
   const idx = Number(i);

@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://uav-benchmark.local/schemas/world_config.schema.json",
+  "title": "Adapter-neutral World Config",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact_type",
+    "config_id",
+    "task_ref",
+    "adapter_contract",
+    "world_assets",
+    "scene_layout",
+    "disturbances",
+    "event_injections",
+    "timeline",
+    "adjustable_variables",
+    "hidden_ground_truth",
+    "tbd_items",
+    "provenance"
+  ],
+  "properties": {
+    "schema_version": {"const": "0.1.0"},
+    "artifact_type": {"const": "world_config"},
+    "config_id": {"type": "string", "minLength": 1},
+    "task_ref": {"type": "string", "minLength": 1},
+    "adapter_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["adapter", "simulator_api", "status", "note"],
+      "properties": {
+        "adapter": {"type": ["string", "null"]},
+        "simulator_api": {"type": ["string", "null"]},
+        "status": {"const": "TBD"},
+        "note": {"type": "string", "minLength": 1}
+      }
+    },
+    "world_assets": {"type": "array", "items": {"type": "string"}},
+    "scene_layout": {"type": "array", "items": {"type": "string"}},
+    "disturbances": {"type": "array", "items": {"type": "string"}},
+    "event_injections": {"type": "array", "items": {"type": "string"}},
+    "timeline": {"type": "array", "items": {"type": "object"}},
+    "adjustable_variables": {
+      "type": "array",
+      "items": {"$ref": "task_template_output.schema.json#/$defs/jd_binding"}
+    },
+    "hidden_ground_truth": {
+      "type": "array",
+      "items": {
+        "allOf": [
+          {"$ref": "task_template_output.schema.json#/$defs/jd_binding"},
+          {
+            "properties": {
+              "configuration_assignment": {"const": "hidden_gt"}
+            }
+          }
+        ]
+      }
+    },
+    "tbd_items": {"type": "array", "items": {"type": "object"}},
+    "provenance": {"type": "array", "minItems": 1, "items": {"type": "object"}}
+  }
+}
