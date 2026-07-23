@@ -63,10 +63,27 @@ function modelOptions() {
   const hi = selectedProviderInfo() || {};
   const models = hi.models || {};
   const legacy = state.healthInfo || {};
+  const ids = {
+    flash: models.flash || legacy.flash_model || "未配置",
+    lite: models.lite || legacy.lite_model || "未配置",
+    pro: models.pro || legacy.pro_model || "未配置",
+  };
+  if (state.llmProvider === "gemini") {
+    const labels = {
+      "gemini-3.6-flash": "Gemini 3.6 Flash（默认）",
+      "gemini-3.5-flash": "Gemini 3.5 Flash",
+      "gemini-3.5-flash-lite": "Gemini 3.5 Flash Lite",
+    };
+    return ["flash", "pro", "lite"].map(tier => ({
+      tier: tier,
+      label: labels[ids[tier]] || "Gemini 自定义模型",
+      id: ids[tier],
+    }));
+  }
   return [
-    { tier: "flash", label: "Flash", id: models.flash || legacy.flash_model || "未配置" },
-    { tier: "lite", label: "Lite", id: models.lite || legacy.lite_model || "未配置" },
-    { tier: "pro", label: "Pro", id: models.pro || legacy.pro_model || "未配置" },
+    { tier: "flash", label: "Flash", id: ids.flash },
+    { tier: "lite", label: "Lite", id: ids.lite },
+    { tier: "pro", label: "Pro", id: ids.pro },
   ];
 }
 

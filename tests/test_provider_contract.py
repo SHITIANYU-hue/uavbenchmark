@@ -6,7 +6,11 @@ import re
 from pathlib import Path
 
 from uav_benchmark.agent.models import CoverageResult
-from uav_benchmark.agent.providers import proxy_client_args, response_schema
+from uav_benchmark.agent.providers import (
+    gemini_accepts_temperature,
+    proxy_client_args,
+    response_schema,
+)
 from uav_benchmark.agent.server import _default_provider, _provider_health
 
 
@@ -20,10 +24,18 @@ def test_transport_schema_is_accepted_by_gemini_subset() -> None:
 def test_health_reports_deepseek_and_gemini(monkeypatch) -> None:
     monkeypatch.setenv("DEEPSEEK_API_KEY", "local-test-key")
     monkeypatch.delenv("GEMINI_API_KEY", raising=False)
+    monkeypatch.delenv("GEMINI_FLASH_MODEL", raising=False)
+    monkeypatch.delenv("GEMINI_LITE_MODEL", raising=False)
+    monkeypatch.delenv("GEMINI_PRO_MODEL", raising=False)
     health = _provider_health()
     assert set(health) == {"deepseek", "gemini"}
     assert health["deepseek"]["ready"] is True
     assert health["gemini"]["ready"] is False
+    assert health["gemini"]["models"] == {
+        "flash": "gemini-3.6-flash",
+        "lite": "gemini-3.5-flash-lite",
+        "pro": "gemini-3.5-flash",
+    }
     assert _default_provider(health) == "deepseek"
 
 
@@ -39,6 +51,12 @@ def test_explicit_socks_proxy_wins_over_mixed_environment(monkeypatch) -> None:
     monkeypatch.setenv("HTTPS_PROXY", "http://127.0.0.1:7890")
     monkeypatch.setenv("ALL_PROXY", "socks5://127.0.0.1:7890")
     assert proxy_client_args() == {"proxy": "socks5://127.0.0.1:7890", "trust_env": False}
+
+
+def test_new_gemini_models_omit_deprecated_temperature() -> None:
+    assert gemini_accepts_temperature("gemini-3.6-flash") is False
+    assert gemini_accepts_temperature("gemini-3.5-flash-lite") is False
+    assert gemini_accepts_temperature("gemini-3.5-flash") is True
 
 
 def _ui_blob() -> str:
@@ -62,6 +80,8 @@ def test_ui_keeps_team_flow_and_provider_checkpoint_controls() -> None:
     assert "世界侧配置需求" in blob
     assert 'id="providerSelect"' in blob
     assert "provider: state.llmProvider" in blob
+    assert "Gemini 3.6 Flash（默认）" in blob
+    assert "Gemini 3.5 Flash Lite" in blob
     assert "let state = loadState();" in blob or "state = loadState();" in blob
     assert "已开始新任务；手动检查点仍可加载" in blob
     assert "已加载检查点 ✓" in blob

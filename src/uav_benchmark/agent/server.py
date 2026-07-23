@@ -87,9 +87,11 @@ PROVIDER_CONFIG = {
         "label": "Gemini",
         "key_env": "GEMINI_API_KEY",
         "models": {
-            "flash": ("GEMINI_FLASH_MODEL", "gemini-3.5-flash"),
-            "lite": ("GEMINI_LITE_MODEL", "gemini-3.1-flash-lite"),
-            "pro": ("GEMINI_PRO_MODEL", "gemini-2.5-pro"),
+            # Keep the existing tier keys for saved checkpoints and API
+            # compatibility.  The UI presents the concrete model names.
+            "flash": ("GEMINI_FLASH_MODEL", "gemini-3.6-flash"),
+            "lite": ("GEMINI_LITE_MODEL", "gemini-3.5-flash-lite"),
+            "pro": ("GEMINI_PRO_MODEL", "gemini-3.5-flash"),
         },
     },
 }

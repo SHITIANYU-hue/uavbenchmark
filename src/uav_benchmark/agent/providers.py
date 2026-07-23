@@ -31,6 +31,18 @@ class StructuredResponse:
     usage: dict[str, int | float | str | None]
 
 
+def gemini_accepts_temperature(model: str) -> bool:
+    """Whether a Gemini model still accepts the legacy sampling parameter.
+
+    Gemini 3.6 Flash and Gemini 3.5 Flash-Lite deprecate ``temperature``.
+    Omitting it keeps generateContent requests compatible with those models
+    while older configured models can retain the existing behavior.
+    """
+
+    normalized = model.strip().lower()
+    return not normalized.startswith(("gemini-3.6-flash", "gemini-3.5-flash-lite"))
+
+
 def proxy_client_args() -> dict[str, Any]:
     """Prefer one explicit SOCKS proxy when the environment declares several.
 
@@ -202,16 +214,18 @@ class GeminiProvider:
         response = None
         for attempt in range(2):
             try:
+                config_args: dict[str, Any] = {
+                    "system_instruction": system_instruction,
+                    "max_output_tokens": max_output_tokens,
+                    "response_mime_type": "application/json",
+                    "response_schema": response_schema(response_model),
+                }
+                if gemini_accepts_temperature(self.model):
+                    config_args["temperature"] = temperature
                 response = self.client.models.generate_content(
                     model=self.model,
                     contents=user_content,
-                    config=self._types.GenerateContentConfig(
-                        system_instruction=system_instruction,
-                        temperature=temperature,
-                        max_output_tokens=max_output_tokens,
-                        response_mime_type="application/json",
-                        response_schema=response_schema(response_model),
-                    ),
+                    config=self._types.GenerateContentConfig(**config_args),
                 )
                 break
             except Exception as exc:
