@@ -147,12 +147,17 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, directory=str(ROOT), **kwargs)
 
+    def end_headers(self) -> None:
+        # The local review UI changes frequently; a refresh must not retain old
+        # JS/CSS such as an earlier model menu.
+        self.send_header("Cache-Control", "no-store")
+        super().end_headers()
+
     def _json(self, status: int, payload: dict[str, Any]) -> None:
         encoded = json.dumps(payload, ensure_ascii=False).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(encoded)))
-        self.send_header("Cache-Control", "no-store")
         self.end_headers()
         try:
             self.wfile.write(encoded)

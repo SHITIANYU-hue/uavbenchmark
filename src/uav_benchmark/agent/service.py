@@ -354,7 +354,8 @@ def _parse_model_json(
         snippet = raw_text[:300].replace("\n", "\\n")
         detail = str(exc)[:500]
         label = "Gemini" if provider_name == "gemini" else "DeepSeek" if provider_name == "deepseek" else "模型"
-        if finish_reason and "length" in str(finish_reason).lower():
+        finish_marker = str(finish_reason or "").upper()
+        if "LENGTH" in finish_marker or "MAX_TOKENS" in finish_marker:
             raise ConfigAgentError(
                 f"{label} 返回被截断，JSON 不完整。"
                 f"原始响应已保存到 {debug_path.name}。"
@@ -458,6 +459,24 @@ def _chunk_preferred_coverage(
     if not preferred:
         return [[]]
     return [preferred[i:i + max_cells_per_chunk] for i in range(0, len(preferred), max_cells_per_chunk)]
+
+
+def _extraction_token_budgets(provider: str, model: str) -> tuple[int, ...]:
+    """Return output budgets, including one retry for current Gemini models."""
+
+    normalized = model.strip().lower()
+    if provider == "gemini" and normalized.startswith((
+        "gemini-3.6-flash",
+        "gemini-3.5-flash-lite",
+        "gemini-3.5-flash",
+    )):
+        return (16_384, 32_768)
+    return (8_192,)
+
+
+def _response_was_truncated(response: StructuredResponse) -> bool:
+    reason = str(response.finish_reason or "").upper()
+    return "MAX_TOKENS" in reason or "LENGTH" in reason
 
 
 def _resolve_target_coverage(cells: list[str] | None) -> list[dict[str, Any]]:
@@ -1078,6 +1097,7 @@ class ConfigAgent:
         merged_questions: dict[str, OpenQuestion] = {}
         merged_warnings: list[str] = []
         usage: dict[str, Any] = {}
+        extraction_budgets = _extraction_token_budgets(self.provider, self.model)
 
         for idx, chunk in enumerate(chunks):
             operation = "extraction" if total_chunks == 1 else f"extraction_{idx + 1}of{total_chunks}"
@@ -1102,34 +1122,56 @@ class ConfigAgent:
                 {"role": "user", "content": extraction_input},
             ]
             _save_raw_request(run_id, operation, ext_messages)
-            emit("model_request_started", {
-                "model": self.model, "operation": "extraction", "timeout_seconds": 90,
-                "chunk": idx + 1, "chunk_total": total_chunks,
-            })
-            try:
-                ext_response = self.transport.generate(
-                    system_instruction=EXTRACTION_INSTRUCTION,
-                    user_content=extraction_input,
-                    response_model=ExtractionResult,
-                    temperature=0.15,
-                    max_output_tokens=8192,
+            part: ExtractionResult | None = None
+            for attempt, output_budget in enumerate(extraction_budgets, start=1):
+                emit("model_request_started", {
+                    "model": self.model, "operation": "extraction", "timeout_seconds": 90,
+                    "chunk": idx + 1, "chunk_total": total_chunks,
+                    "attempt": attempt, "max_output_tokens": output_budget,
+                })
+                try:
+                    ext_response = self.transport.generate(
+                        system_instruction=EXTRACTION_INSTRUCTION,
+                        user_content=extraction_input,
+                        response_model=ExtractionResult,
+                        temperature=0.15,
+                        max_output_tokens=output_budget,
+                    )
+                except ProviderError as exc:
+                    emit("model_request_failed", {"error": str(exc)[:500]})
+                    raise ConfigAgentError(str(exc)) from exc
+                emit("model_response_received", {
+                    "provider": self.provider, "model": self.model, "operation": "extraction",
+                    "chunk": idx + 1, "chunk_total": total_chunks,
+                    "attempt": attempt, "finish_reason": ext_response.finish_reason,
+                })
+                usage = _merge_usage(usage, ext_response.usage)
+                if _response_was_truncated(ext_response) and attempt < len(extraction_budgets):
+                    debug_path = _save_debug_response(
+                        run_id,
+                        f"{operation}_truncated_attempt{attempt}",
+                        ext_response.raw_text,
+                        ext_response.finish_reason,
+                        ext_response.reasoning,
+                    )
+                    emit("model_response_truncated", {
+                        "provider": self.provider, "model": self.model, "operation": "extraction",
+                        "chunk": idx + 1, "chunk_total": total_chunks,
+                        "attempt": attempt, "retrying": True,
+                        "debug_file": debug_path.name,
+                    })
+                    continue
+                part = _validated_response(
+                    ext_response,
+                    ExtractionResult,
+                    run_id=run_id,
+                    operation=operation,
+                    provider_name=self.provider,
+                    emit=emit,
                 )
-            except ProviderError as exc:
-                emit("model_request_failed", {"error": str(exc)[:500]})
-                raise ConfigAgentError(str(exc)) from exc
-            emit("model_response_received", {
-                "provider": self.provider, "model": self.model, "operation": "extraction",
-                "chunk": idx + 1, "chunk_total": total_chunks,
-            })
-            usage = _merge_usage(usage, ext_response.usage)
-            part = _validated_response(
-                ext_response,
-                ExtractionResult,
-                run_id=run_id,
-                operation=operation,
-                provider_name=self.provider,
-                emit=emit,
-            )
+                break
+            if part is None:  # pragma: no cover - defensive guard
+                raise ConfigAgentError("JD 域提取未返回可用结果。")
             for jd in part.jd_candidates:
                 # Drop slots the confirmed coverage does not require.
                 if jd.slot_id not in required_slots:

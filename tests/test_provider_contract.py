@@ -5,13 +5,22 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from uav_benchmark.agent.models import CoverageResult
+from uav_benchmark.agent import service as agent_service
+from uav_benchmark.agent.models import (
+    CoverageCandidate,
+    CoverageResult,
+    ExtractionResult,
+    NarrativeDraft,
+)
 from uav_benchmark.agent.providers import (
+    StructuredResponse,
     gemini_accepts_temperature,
+    gemini_structured_thinking_level,
     proxy_client_args,
     response_schema,
 )
 from uav_benchmark.agent.server import _default_provider, _provider_health
+from uav_benchmark.agent.service import ConfigAgent, _extraction_token_budgets
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -59,6 +68,80 @@ def test_new_gemini_models_omit_deprecated_temperature() -> None:
     assert gemini_accepts_temperature("gemini-3.5-flash") is True
 
 
+def test_gemini_uses_minimal_thinking_only_for_structured_extraction() -> None:
+    assert gemini_structured_thinking_level("gemini-3.6-flash", ExtractionResult) == "minimal"
+    assert gemini_structured_thinking_level("gemini-3.5-flash-lite", ExtractionResult) == "minimal"
+    assert gemini_structured_thinking_level("gemini-3.6-flash", NarrativeDraft) is None
+
+
+def test_gemini_extraction_retries_only_truncated_chunk(monkeypatch, tmp_path) -> None:
+    complete = ExtractionResult.model_validate({
+        "jd_candidates": [{
+            "slot_id": "jd-6.1",
+            "name": "感知对象目录",
+            "value": None,
+            "binding_mode": "TBD",
+            "status": "TBD",
+            "evidence_quote": "",
+            "source_note": "对象类型待确认",
+        }],
+        "runtime_dependencies": [],
+        "open_questions": [],
+        "warnings": [],
+    })
+    responses = [
+        StructuredResponse(
+            raw_text='{"jd_candidates":[',
+            parsed=None,
+            finish_reason="FinishReason.MAX_TOKENS",
+            reasoning=None,
+            usage={"completion_tokens": 8192},
+        ),
+        StructuredResponse(
+            raw_text=complete.model_dump_json(),
+            parsed=complete,
+            finish_reason="FinishReason.STOP",
+            reasoning=None,
+            usage={"completion_tokens": 100},
+        ),
+    ]
+    calls: list[int] = []
+
+    class SequenceTransport:
+        def generate(self, **kwargs):
+            calls.append(kwargs["max_output_tokens"])
+            return responses.pop(0)
+
+    monkeypatch.setattr(agent_service, "ROOT", tmp_path)
+    agent = ConfigAgent(
+        api_key="unused",
+        model="gemini-3.6-flash",
+        provider="gemini",
+        transport=SequenceTransport(),
+    )
+    events: list[str] = []
+    result, _usage = agent._run_extraction(
+        task_description="高速公路巡检任务。",
+        fixed_scenario={},
+        coverage_cells=[CoverageCandidate(
+            cell="A6×L1",
+            role="primary",
+            responsibilities=["识别任务对象"],
+            evidence_quote="",
+        )],
+        gal_catalog={"cells": [{"cell": "A6×L1", "required_jd_ids": ["jd-6.1"]}]},
+        jd_catalog={"jd_fields": [{"id": "jd-6.1", "name": "感知对象目录"}]},
+        allowed_jd_slot_ids={"jd-6.1"},
+        run_id="agent-test-retry",
+        emit=lambda event, _details: events.append(event),
+    )
+
+    assert calls == [16384, 32768]
+    assert [item.slot_id for item in result.jd_candidates] == ["jd-6.1"]
+    assert "model_response_truncated" in events
+    assert _extraction_token_budgets("gemini", "gemini-3.6-flash") == (16384, 32768)
+
+
 def _ui_blob() -> str:
     html = (ROOT / "pipeline.html").read_text(encoding="utf-8")
     js_dir = ROOT / "pipeline" / "js"
@@ -82,6 +165,8 @@ def test_ui_keeps_team_flow_and_provider_checkpoint_controls() -> None:
     assert "provider: state.llmProvider" in blob
     assert "Gemini 3.6 Flash（默认）" in blob
     assert "Gemini 3.5 Flash Lite" in blob
+    assert 'return ["flash", "pro", "lite"].map' in blob
+    assert 'state.llmProvider === "gemini"' in blob
     assert "let state = loadState();" in blob or "state = loadState();" in blob
     assert "已开始新任务；手动检查点仍可加载" in blob
     assert "已加载检查点 ✓" in blob

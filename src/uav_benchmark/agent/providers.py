@@ -43,6 +43,23 @@ def gemini_accepts_temperature(model: str) -> bool:
     return not normalized.startswith(("gemini-3.6-flash", "gemini-3.5-flash-lite"))
 
 
+def gemini_structured_thinking_level(model: str, response_model: type[Any]) -> str | None:
+    """Use minimal thinking for high-throughput structured extraction."""
+
+    normalized = model.strip().lower()
+    supports_minimal = normalized.startswith((
+        "gemini-3.6-flash",
+        "gemini-3.5-flash-lite",
+        "gemini-3.5-flash",
+    ))
+    structured_task = response_model.__name__ in {
+        "CoverageResult",
+        "ExtractionResult",
+        "FillTbdResult",
+    }
+    return "minimal" if supports_minimal and structured_task else None
+
+
 def proxy_client_args() -> dict[str, Any]:
     """Prefer one explicit SOCKS proxy when the environment declares several.
 
@@ -222,6 +239,11 @@ class GeminiProvider:
                 }
                 if gemini_accepts_temperature(self.model):
                     config_args["temperature"] = temperature
+                thinking_level = gemini_structured_thinking_level(self.model, response_model)
+                if thinking_level:
+                    config_args["thinking_config"] = self._types.ThinkingConfig(
+                        thinking_level=thinking_level
+                    )
                 response = self.client.models.generate_content(
                     model=self.model,
                     contents=user_content,

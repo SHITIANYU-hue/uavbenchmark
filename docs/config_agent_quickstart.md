@@ -44,6 +44,8 @@ http://127.0.0.1:8765
 侧栏可选 Provider（DeepSeek / Gemini）和模型。Gemini 默认使用
 `Gemini 3.6 Flash`，也可切换到 `Gemini 3.5 Flash` 或
 `Gemini 3.5 Flash Lite`；页面显示的用量与限额仍以当前 API 账号为准。
+若 Gemini 的结构化提取因输出上限被截断，服务会保留原始响应，并只重试
+当前失败批次一次；已经确认的 A×L 与 JD 选择不会丢失。
 
 ## 五步怎么用
 

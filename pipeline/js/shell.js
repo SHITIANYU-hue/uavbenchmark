@@ -134,8 +134,11 @@ function renderContext() {
   h += '<select id="modelTierSelect" class="case-select" style="width:100%;max-width:none;min-height:34px;font-size:11px"' +
     (busy || !providerReady() ? " disabled" : "") + ">";
   modelOptions().forEach(m => {
+    const optionLabel = state.llmProvider === "gemini"
+      ? m.label
+      : (m.label + " · " + m.id);
     h += '<option value="' + m.tier + '"' + (m.tier === state.modelTier ? " selected" : "") + ">" +
-      escapeHtml(m.label + " · " + m.id) + "</option>";
+      escapeHtml(optionLabel) + "</option>";
   });
   h += "</select>";
   if (lastModel) h += '<div class="action-note" style="margin-top:4px">上次实际调用 · <span class="mono">' + escapeHtml((lastProvider || state.llmProvider) + " / " + lastModel) + "</span></div>";
