@@ -13,7 +13,15 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from typing import Any
 from urllib.parse import parse_qs, urlparse
 
-from .catalog import ROOT, load_fixed_scenario, load_reference_catalog, load_scenario_registry
+from .catalog import (
+    ROOT,
+    load_fixed_scenario,
+    load_jd_tree_domains,
+    load_jd_tree_slice,
+    load_reference_catalog,
+    load_scenario_registry,
+    lookup_jd_tree_metadata,
+)
 from .models import AgentCandidate
 from .service import (
     ConfigAgentError,
@@ -113,6 +121,23 @@ def _default_provider(providers: dict[str, dict[str, Any]] | None = None) -> str
     return requested if requested in PROVIDER_CONFIG else "deepseek"
 
 
+def _query_list(query: str, name: str) -> list[str]:
+    values: list[str] = []
+    for raw in parse_qs(query).get(name, []):
+        for value in raw.split(","):
+            cleaned = value.strip()
+            if cleaned and cleaned not in values:
+                values.append(cleaned)
+    return values
+
+
+def _query_bool(query: str, name: str, *, default: bool) -> bool:
+    raw = (parse_qs(query).get(name) or [None])[0]
+    if raw is None:
+        return default
+    return str(raw).strip().lower() not in {"0", "false", "no", "off"}
+
+
 class PipelineRequestHandler(SimpleHTTPRequestHandler):
     server_version = "UAVBenchmarkAgent/0.1"
 
@@ -135,6 +160,7 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
         parsed = urlparse(self.path)
         if parsed.path == "/api/health":
             catalog = load_reference_catalog()
+            jd_tree = lookup_jd_tree_metadata()
             providers = _provider_health()
             default_provider = _default_provider(providers)
             self._json(HTTPStatus.OK, {
@@ -150,6 +176,7 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                 "catalog_scope": catalog["scope"],
                 "catalog_counts": catalog["counts"],
                 "catalog_source_versions": catalog["source_versions"],
+                "jd_tree": jd_tree,
             })
             return
         if parsed.path == "/api/catalog":
@@ -160,6 +187,7 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                 "scope": catalog["scope"],
                 "source_versions": catalog["source_versions"],
                 "counts": catalog["counts"],
+                "jd_tree": lookup_jd_tree_metadata(),
                 "level_policy": catalog["level_policy"],
                 "abilities": catalog["abilities"],
                 "gal_cells": [{
@@ -190,51 +218,61 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
             self._json(HTTPStatus.OK, load_scenario_registry())
             return
         if parsed.path == "/api/jd-tree/domains":
-            tree_path = ROOT / "knowledge" / "jd_variable_tree_version2.json"
-            if not tree_path.exists():
-                self._json(HTTPStatus.NOT_FOUND, {"error": "jd_tree_not_found"})
+            requested_nodes = _query_list(parsed.query, "node_id")
+            try:
+                result = load_jd_tree_domains(requested_nodes or None)
+            except KeyError as exc:
+                self._json(HTTPStatus.BAD_REQUEST, {
+                    "error": "invalid_jd_tree_node",
+                    "message": str(exc),
+                })
                 return
-            tree = json.loads(tree_path.read_text(encoding="utf-8"))
-            domains: dict[str, Any] = {}
-            for node in tree.get("nodes", []):
-                if node.get("node_kind") != "variable":
-                    continue
-                nid = node.get("node_id", "")
-                vtype = node.get("value_type", "")
-                raw_domain = node.get("value_domain") or []
-                labels = []
-                if isinstance(raw_domain, list):
-                    for item in raw_domain:
-                        if isinstance(item, dict):
-                            labels.append(item.get("label_zh") or item.get("value") or "")
-                        elif item is not None:
-                            labels.append(str(item))
-                labels = [l for l in labels if l]
-                if labels or vtype in ("number", "number_or_range", "integer", "integer_or_range"):
-                    domains[nid] = {"value_type": vtype, "name": node.get("name",""), "options": labels}
-            self._json(HTTPStatus.OK, {"slots": domains})
+            self._json(HTTPStatus.OK, result)
             return
         if parsed.path == "/api/jd-tree/slice":
-            ability = (parse_qs(parsed.query).get("ability") or [""])[0]
-            tree_path = ROOT / "knowledge" / "jd_variable_tree_version2.json"
-            if not tree_path.exists() or not ability:
-                self._json(HTTPStatus.NOT_FOUND, {"error": "need ?ability=A11"})
+            abilities = _query_list(parsed.query, "ability")
+            selected_nodes = _query_list(parsed.query, "node_id")
+            include_global = _query_bool(parsed.query, "include_global", default=True)
+            if not abilities:
+                self._json(HTTPStatus.BAD_REQUEST, {
+                    "error": "missing_ability",
+                    "message": "Use ?ability=A6 or repeated/comma-separated ability values.",
+                })
                 return
-            tree = json.loads(tree_path.read_text(encoding="utf-8"))
-            # Collect all nodes for this ability + MULTI/global
-            slice_nodes = [n for n in tree["nodes"] if n.get("owner_a") == ability or n.get("owner_a") == "MULTI"]
-            # Load metric set if exists
-            metric_path = ROOT / "knowledge" / f"metric_set_{ability.lower()}_default.json"
-            metrics = {}
-            if metric_path.exists():
-                ms = json.loads(metric_path.read_text(encoding="utf-8"))
-                metrics = ms.get("values", {})
-            self._json(HTTPStatus.OK, {
-                "ability": ability,
-                "nodes": slice_nodes,
-                "metrics": metrics,
-                "metric_scope": ms.get("scope", []) if metric_path.exists() else [],
-            })
+            try:
+                result = load_jd_tree_slice(
+                    abilities,
+                    include_global=include_global,
+                    selected_node_ids=selected_nodes or None,
+                )
+            except (KeyError, ValueError) as exc:
+                self._json(HTTPStatus.BAD_REQUEST, {
+                    "error": "invalid_jd_tree_slice",
+                    "message": str(exc),
+                })
+                return
+
+            metric_sets: dict[str, Any] = {}
+            for ability in abilities:
+                metric_path = ROOT / "knowledge" / f"metric_set_{ability.lower()}_default.json"
+                if not metric_path.exists():
+                    continue
+                metric_set = json.loads(metric_path.read_text(encoding="utf-8"))
+                metric_sets[ability] = {
+                    "status": "candidate",
+                    "applies_by_default": False,
+                    "scope": metric_set.get("scope", []),
+                    "values": metric_set.get("values", {}),
+                }
+            result["metric_sets"] = metric_sets
+            if len(abilities) == 1:
+                metric_set = metric_sets.get(abilities[0], {})
+                result["ability"] = abilities[0]
+                result["metrics"] = metric_set.get("values", {})
+                result["metric_scope"] = metric_set.get("scope", [])
+                result["metric_status"] = "candidate"
+                result["metrics_apply_by_default"] = False
+            self._json(HTTPStatus.OK, result)
             return
         if parsed.path == "/api/metric-set":
             ability = (parse_qs(parsed.query).get("ability") or [""])[0]
@@ -243,7 +281,6 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                 self._json(HTTPStatus.NOT_FOUND, {"error": "no_metric_set"})
                 return
             self._json(HTTPStatus.OK, json.loads(metric_path.read_text(encoding="utf-8")))
-            return
             return
         if parsed.path == "/api/config-agent/status":
             run_id = (parse_qs(parsed.query).get("run_id") or [""])[0]
@@ -315,50 +352,6 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                 self._json(HTTPStatus.OK, {"status": "saved", "savedAt": record["savedAt"]})
                 return
 
-            if self.path == "/api/task-template/generate":
-                # Full 4-layer task template from domain values + metric set
-                ability = payload.get("ability", "A11")
-                seed = int(payload.get("seed", 0))
-                domain_values = payload.get("domain_values", {})
-                scoring = payload.get("scoring", {"SR": True, "CR": True, "SPL": True})
-
-                # Load metric set
-                metric_path = ROOT / "knowledge" / f"metric_set_{ability.lower()}_default.json"
-                quality = {}
-                protocols = {}
-                if metric_path.exists():
-                    ms = json.loads(metric_path.read_text(encoding="utf-8"))
-                    for node_id, m in ms.get("values", {}).items():
-                        layer = ".3" if ".3." in node_id else ".4" if ".4." in node_id else None
-                        if layer == ".3":
-                            quality[node_id] = m
-                        elif layer == ".4":
-                            protocols[node_id] = m
-
-                task = {
-                    "task_id": f"{ability}_seed{seed}",
-                    "ability": ability,
-                    "seed": seed,
-                    "scenario": {},   # .1/.2 concrete values (from domain_values after seed)
-                    "quality": quality,    # .3 thresholds from metric_set
-                    "protocols": protocols, # .4 fallback from metric_set
-                    "scoring": scoring,
-                }
-
-                # Run seed instantiation for .1/.2 if template provided
-                tpl = payload.get("template")
-                if tpl:
-                    from ..instance.generator import generate_instance
-                    inst = generate_instance(tpl, seed)
-                    task["scenario"] = {
-                        s["slot_id"]: s["value"]
-                        for s in inst.get("slot_bindings", [])
-                    }
-                    task["seed_detail"] = inst
-
-                self._json(HTTPStatus.OK, {"task": task})
-                return
-
             if self.path == "/api/domain-template/build":
                 candidate = payload.get("candidate") or {}
                 jd_edits = payload.get("jd_edits") or payload.get("domain_edits") or []
@@ -412,6 +405,10 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                         "task_template": artifact,
                         "domain_template": domain,
                         "instance": artifact,
+                        # Temporary compatibility alias for the old secondary
+                        # Step-5 button. It now points to the same deterministic
+                        # artifact and never injects metric defaults.
+                        "task": artifact,
                     })
                 elif path.endswith("/batch"):
                     seeds = payload.get("seeds", [0])

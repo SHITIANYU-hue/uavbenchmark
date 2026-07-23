@@ -446,7 +446,7 @@ function renderStep4() {
     + '<button class="btn primary" onclick="genTaskTemplate()"' + (state.instanceLoading || !domain ? " disabled" : "") + ">"
     + (state.instanceLoading ? "生成中..." : "生成特定任务模版") + "</button> "
     + '<button class="btn" onclick="generateFullTaskTemplate()"' + (state.instanceLoading || !domain ? " disabled" : "") + ">"
-    + "生成完整包(含质量标准+兜底协议)</button></div></div>";
+    + "按统一合同生成并校验</button></div></div>";
 
   if (state.instanceError) {
     h += '<div class="choice-card dependency selected" style="margin-top:10px"><b>错误</b><p>' + escapeHtml(state.instanceError) + "</p></div>";

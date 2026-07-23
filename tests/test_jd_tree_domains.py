@@ -1,13 +1,39 @@
 from __future__ import annotations
 
-from uav_benchmark.agent.catalog import build_jd_tree_domains, load_jd_tree_domains
+import pytest
+
+from uav_benchmark.agent.catalog import (
+    build_jd_tree_domains,
+    build_jd_tree_slice,
+    load_jd_tree_domains,
+    load_jd_tree_slice,
+)
 
 
-def test_version2_domain_projection_merges_and_filters_nodes() -> None:
-    tree = {
+def _sample_tree() -> dict:
+    return {
+        "schema_version": "2.3",
+        "catalog_version": "test-v2",
         "nodes": [
             {
+                "node_id": "A6",
+                "parent_id": None,
+                "owner_a": "A6",
+                "name": "环境感知",
+                "node_kind": "capability_root",
+            },
+            {
+                "node_id": "jd-6.1",
+                "parent_id": "A6",
+                "owner_a": "A6",
+                "name": "本体目录",
+                "node_kind": "group",
+            },
+            {
                 "node_id": "jd-6.1.1",
+                "parent_id": "jd-6.1",
+                "owner_a": "A6",
+                "name": "目标类型集",
                 "node_kind": "variable",
                 "variable_role": "configuration_input",
                 "value_type": "enum",
@@ -16,14 +42,19 @@ def test_version2_domain_projection_merges_and_filters_nodes() -> None:
             },
             {
                 "node_id": "jd-6.1.2",
+                "parent_id": "jd-6.1",
+                "owner_a": "A6",
+                "name": "场景特征",
                 "node_kind": "variable",
-                "variable_role": "TBD",
                 "value_type": "enum",
                 "value_domain": [{"label_zh": "车辆"}, {"label_zh": "路障"}],
                 "configuration_side": "shared",
             },
             {
                 "node_id": "jd-6.1.3",
+                "parent_id": "jd-6.1",
+                "owner_a": "A6",
+                "name": "真实标签",
                 "node_kind": "variable",
                 "variable_role": "hidden_ground_truth",
                 "value_type": "enum",
@@ -31,41 +62,102 @@ def test_version2_domain_projection_merges_and_filters_nodes() -> None:
                 "visibility": ["hidden_gt"],
             },
             {
-                "node_id": "jd-7.2.1",
-                "node_kind": "variable",
-                "variable_role": "configuration_input",
-                "value_type": "number_or_range",
-                "value_domain": [],
+                "node_id": "PROPOSED-jd-tree-global",
+                "parent_id": None,
+                "owner_a": "MULTI",
+                "name": "共享业务变量",
+                "node_kind": "global_root",
             },
             {
-                "node_id": "PROPOSED-jd-7.4.1",
-                "node_kind": "variable",
-                "variable_role": "configuration_input",
-                "value_type": "enum",
-                "value_domain": [{"label_zh": "非 canonical 值"}],
+                "node_id": "jd-0.2",
+                "parent_id": "PROPOSED-jd-tree-global",
+                "owner_a": "MULTI",
+                "name": "工作空间结构",
+                "node_kind": "group",
             },
-        ]
+        ],
     }
 
-    result = build_jd_tree_domains(tree, {"jd-6.1", "jd-7.2"})
 
-    assert result["jd-6.1"]["options"] == ["车辆", "行人", "路障"]
-    assert "真实标签" not in result["jd-6.1"]["options"]
-    assert result["jd-7.2"]["value_type"] == "number_or_range"
-    assert result["jd-7.2"]["options"] == []
-    assert "jd-7.4" not in result
+def test_version2_domain_projection_uses_parent_paths_and_filters_hidden_gt() -> None:
+    result = build_jd_tree_domains(_sample_tree(), {"jd-6.1"})
+
+    slot = result["slots"]["jd-6.1"]
+    assert slot["options"] == ["车辆", "行人", "路障"]
+    assert [node["node_id"] for node in slot["nodes"]] == [
+        "jd-6.1.1",
+        "jd-6.1.2",
+    ]
+    assert slot["nodes"][0]["node_path"] == ["A6", "jd-6.1", "jd-6.1.1"]
+    assert "真实标签" not in slot["options"]
+    assert result["selected_node_ids"] == ["jd-6.1"]
 
 
-def test_real_domain_endpoint_uses_version2_without_hidden_gt() -> None:
+def test_version2_slice_is_bounded_and_can_include_selected_ancestors() -> None:
+    tree = _sample_tree()
+
+    ability_only = build_jd_tree_slice(tree, {"A6"}, include_global=False)
+    assert {node["owner_a"] for node in ability_only["nodes"]} == {"A6"}
+    assert ability_only["selected_node_count"] == 5
+
+    selected = build_jd_tree_slice(
+        tree,
+        {"A6"},
+        include_global=False,
+        selected_node_ids={"jd-6.1.1"},
+    )
+    assert [node["node_id"] for node in selected["nodes"]] == [
+        "A6",
+        "jd-6.1",
+        "jd-6.1.1",
+    ]
+
+
+def test_version2_slice_rejects_nodes_outside_requested_ability() -> None:
+    with pytest.raises(ValueError, match="outside requested abilities"):
+        build_jd_tree_slice(
+            _sample_tree(),
+            {"A6"},
+            include_global=False,
+            selected_node_ids={"jd-0.2"},
+        )
+
+
+def test_real_domain_loader_uses_team_delivered_version2() -> None:
     result = load_jd_tree_domains()
 
     assert result["source_tree"] == "jd_variable_tree_version2.json"
-    assert result["catalog_version"] == "2.4.0-audited-merge"
-    # Version2 currently supplies directly loadable enum/numeric domains for
-    # 52 canonical slots; the remaining canonical JDs stay on the Agent/TBD
-    # path instead of receiving invented defaults.
-    assert len(result["slots"]) == 52
+    assert result["schema_version"] == "2.3"
+    assert result["catalog_version"] == "2.4.0-merged"
+    assert result["node_count"] == 444
+    assert len(result["tree_sha256"]) == 64
+    assert "jd-6.1" in result["slots"]
+    assert any(
+        node["node_id"] == "jd-6.1.1"
+        for node in result["slots"]["jd-6.1"]["nodes"]
+    )
     assert all(
         "hidden_ground_truth" not in slot["roles"]
         for slot in result["slots"].values()
     )
+
+
+def test_real_domain_loader_can_filter_without_changing_source_identity() -> None:
+    full = load_jd_tree_domains()
+    selected = load_jd_tree_domains({"jd-6.1"})
+
+    assert selected["tree_sha256"] == full["tree_sha256"]
+    assert selected["selected_node_ids"] == ["jd-6.1"]
+    assert set(selected["slots"]) == {"jd-6.1"}
+
+
+def test_real_a6_slice_preserves_native_v2_identity() -> None:
+    result = load_jd_tree_slice({"A6"}, include_global=False)
+
+    assert result["schema_version"] == "2.3"
+    assert result["catalog_version"] == "2.4.0-merged"
+    assert result["selected_node_count"] == 17
+    assert {node["owner_a"] for node in result["nodes"]} == {"A6"}
+    leaf = next(node for node in result["nodes"] if node["node_id"] == "jd-6.2.1")
+    assert leaf["name"] == "感知模态集"
+    assert leaf["node_path"] == ["A6", "jd-6.2", "jd-6.2.1"]
