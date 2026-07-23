@@ -81,6 +81,8 @@ def test_ui_splits_coverage_step2_from_jd_extraction_step3() -> None:
     assert "jd_tree_selection" in blob
     assert "tree.options[0]" not in blob
     assert "const DEFAULT_TARGET_LEVELS = {}" in blob
+    assert "按 Seed 随机草案" in blob
+    assert "随机结果只是草案" in blob
 
 
 def test_server_exposes_classify_and_extract_endpoints() -> None:
