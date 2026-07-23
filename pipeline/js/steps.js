@@ -499,6 +499,67 @@ function renderBindingTable(items) {
   }).join("") + '</div>';
 }
 
+function renderCaseJdComparison(items) {
+  if (!items || !items.length) return "";
+  return '<details class="hint-fold" style="margin-top:12px"><summary>任务域 → 本案例具体值 · JD '
+    + items.length + '</summary><div class="hint-fold-body"><table class="data-table"><thead><tr>'
+    + '<th>Canonical JD</th><th>名称</th><th>STEP 4 已确认取值域</th><th>本案例取值</th><th>状态</th>'
+    + '</tr></thead><tbody>' + items.map(item => '<tr'
+      + (item.status === "TBD" ? ' class="row-tbd"' : "") + '><td class="mono">'
+      + escapeHtml(item.canonical_jd) + '</td><td>' + escapeHtml(item.name)
+      + '</td><td>' + escapeHtml(jdDomainSummary(item.canonical_jd))
+      + '</td><td><b>' + escapeHtml(formatJdValue(item.value)) + '</b></td><td>'
+      + pill(item.status) + '</td></tr>').join("")
+    + '</tbody></table></div></details>';
+}
+
+function deliveryVariationSummary(batch) {
+  const cases = (batch && batch.cases) || [];
+  const configured = batch && batch.summary && batch.summary.unique_configurations;
+  const configuredVarying = batch && batch.summary && batch.summary.varying_jd;
+  if (Number.isInteger(configured) && Array.isArray(configuredVarying)) {
+    return {unique: configured, varyingJd: configuredVarying};
+  }
+  const signatures = new Set();
+  const values = {};
+  cases.forEach(item => {
+    const bindings = (((item || {}).task_template || {}).manifest || {}).jd_bindings || [];
+    const signature = bindings.map(binding => [
+      binding.canonical_jd,
+      binding.status,
+      binding.value,
+    ]).sort((a, b) => String(a[0]).localeCompare(String(b[0])));
+    signatures.add(JSON.stringify(signature));
+    bindings.forEach(binding => {
+      const slotId = binding.canonical_jd;
+      if (!values[slotId]) values[slotId] = new Set();
+      values[slotId].add(JSON.stringify([binding.status, binding.value]));
+    });
+  });
+  return {
+    unique: signatures.size,
+    varyingJd: Object.keys(values).filter(slotId => values[slotId].size > 1).sort(),
+  };
+}
+
+function renderDeliveryVariationNotice(batch) {
+  const variation = deliveryVariationSummary(batch);
+  const total = (batch && batch.case_count) || 0;
+  const varyingText = variation.varyingJd.length
+    ? variation.varyingJd.map(slotId => slotId + " " + jdNameOf(slotId)).join("、")
+    : "无";
+  if (variation.unique < total) {
+    return '<div class="choice-card dependency selected" style="margin-top:12px"><b>'
+      + total + ' 个案例中只有 ' + variation.unique + ' 种不同 JD 配置</b><p>当前发生变化的 JD：'
+      + escapeHtml(varyingText)
+      + '。其余案例仅 Seed 不同，任务事实相同。若需要 ' + total
+      + ' 个实质不同案例，需要先在 STEP 4 为更多 JD 确认多个可选值；系统不会自行编造取值。</p></div>';
+  }
+  return '<div class="choice-card selected" style="margin-top:12px"><b>'
+    + total + ' 个案例对应 ' + variation.unique + ' 种不同 JD 配置</b><p>发生变化的 JD：'
+    + escapeHtml(varyingText) + '。</p></div>';
+}
+
 function renderTaskTemplateDelivery(item) {
   if (!item) return "";
   const task = item.task_template;
@@ -510,6 +571,7 @@ function renderTaskTemplateDelivery(item) {
     + '</h2></div>' + pill(item.validation.status, item.validation.status === "pass" ? "given" : "tbd") + '</div>'
     + '<div class="field-label"><label>JD 标注版任务叙事</label><span>给评审者阅读，可逐句追溯</span></div>'
     + '<div class="annotated-narrative">' + escapeHtml(task.narratives.review_annotated) + '</div>'
+    + renderCaseJdComparison(bindings)
     + '<details class="hint-fold" style="margin-top:12px"><summary>SUT 可见任务正文</summary><div class="hint-fold-body">'
     + '<div class="clean-narrative">' + escapeHtml(task.narratives.sut_visible) + '</div></div></details>'
     + '<details class="hint-fold" style="margin-top:10px"><summary>机器 Manifest · JD '
@@ -552,6 +614,7 @@ function renderStep4() {
       + '<div><b>' + batch.summary.pass + '</b><span>校验通过</span></div>'
       + '<div><b>' + batch.summary.needs_review + '</b><span>需复核</span></div>'
       + '<div><b>' + batch.summary.tbd_items + '</b><span>TBD</span></div></div>';
+    h += renderDeliveryVariationNotice(batch);
     h += renderDeliveryCaseTabs();
     h += renderTaskTemplateDelivery(selectedDeliveryCase());
     h += '<div class="action-row" style="margin-top:16px"><span class="action-note">确认 Task Template 后，下一步查看世界侧与用户侧配置。</span>'
@@ -617,11 +680,11 @@ function tbdResolutionInfo(tbd) {
   const canEdit = !!tbd.canonical_jd
     && (tbd.missing || []).includes("value")
     && rawOwners.includes("business_task_owner");
-  let action = "你不需要猜，保持 TBD，并交给对应负责人确认。";
+  let action = "保持 TBD，并由标注责任方确认。";
   if (canEdit) {
-    action = "只有拿到明确业务来源时才填写；不知道就保持 TBD。";
+    action = "取得明确业务来源后填写；来源未确认时保持 TBD。";
   } else if (rawOwners.includes("jd_tree_maintainer")) {
-    action = "这是变量树元数据缺口，不是让任务使用者填写。";
+    action = "该项属于变量树元数据缺口，由 JD 变量树维护方补充。";
   } else if (rawOwners.includes("simulator_adapter_owner")) {
     action = "当前没有确认的 Simulator API，等平台接入方提供合同。";
   } else if (rawOwners.includes("task_interface_or_safety_owner")) {
@@ -670,8 +733,8 @@ function renderTbdWorkbench(item) {
       || owner === "simulator_adapter_owner"
     )
   ).length;
-  return '<div class="tbd-explainer"><div><b>TBD 不是让你一个人全部填写</b>'
-    + '<p>没有权威来源时请保留 TBD。当前交付包仍可作为草案下载；对应负责人确认后再补值。</p></div>'
+  return '<div class="tbd-explainer"><div><b>TBD 处理说明</b>'
+    + '<p>没有权威来源的项目保持 TBD。当前交付包可作为草案下载，并由对应负责人在所需阶段前确认。</p></div>'
     + '<div class="tbd-owner-summary"><span><b>' + businessCount
     + '</b> 业务负责人</span><span><b>' + treeCount
     + '</b> JD 树维护方</span><span><b>' + externalCount
@@ -691,7 +754,7 @@ function renderTbdWorkbench(item) {
           + '" placeholder="填写已确认值，可填写 JSON"><input id="tbdSource-' + escapeHtml(tbd.canonical_jd)
           + '" placeholder="来源说明（必填）"><button class="btn small" type="button" onclick="applyDeliveryTbd(\''
           + escapeHtml(tbd.canonical_jd) + '\')">保存并重新生成</button></div>'
-        : '<small>该项不能由 Pipeline 自动补值，也不要求你凭经验填写。</small>')
+        : '<small>该项不能由 Pipeline 自动补值，由标注责任方确认。</small>')
       + '</div>';
   }).join("") + '</div>';
 }

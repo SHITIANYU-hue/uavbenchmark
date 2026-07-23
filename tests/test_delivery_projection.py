@@ -145,6 +145,11 @@ def test_batch_generates_ten_reviewable_case_packages() -> None:
     assert batch["case_count"] == 10
     assert len(batch["cases"]) == 10
     assert batch["summary"]["tbd_items"] == 30
+    assert 1 <= batch["summary"]["unique_configurations"] <= 2
+    assert batch["summary"]["duplicate_cases"] == (
+        10 - batch["summary"]["unique_configurations"]
+    )
+    assert batch["summary"]["varying_jd"] == ["jd-0.3"]
     assert [case["seed"] for case in batch["cases"]] == list(
         range(20260724, 20260734)
     )
@@ -153,6 +158,49 @@ def test_batch_generates_ten_reviewable_case_packages() -> None:
         first["task_template"]["narratives"]["review_annotated"]
     )
     assert first["task_template"]["narratives"]["sut_visible"]
+
+
+def test_review_narrative_routes_every_canonical_jd_into_semantic_paragraphs() -> None:
+    canonical = jd_field_index()
+    domain = _domain()
+    domain["jd_slots"] = [
+        {
+            "slot_id": slot_id,
+            "description": item["name"],
+            "binding": {
+                "mode": "fixed",
+                "value": f"示例值-{slot_id}",
+                "status": "verified",
+            },
+            "provenance": [{
+                "source_id": "test_fixture",
+                "locator": slot_id,
+                "status": "verified",
+                "notes": None,
+            }],
+        }
+        for slot_id, item in canonical.items()
+    ]
+    batch = build_delivery_batch(
+        domain_template=domain,
+        case_count=1,
+        batch_seed=1,
+        source_task="高速巡检",
+        base_narrative="无人机沿指定高速路段执行巡检任务。",
+        jd_tree_selection={"selected_nodes": []},
+        canonical_fields=canonical,
+    )
+    narrative = batch["cases"][0]["task_template"]["narratives"][
+        "review_annotated"
+    ]
+
+    assert "本案例还使用以下已审阅变量" not in narrative
+    for slot_id in canonical:
+        assert narrative.count(f"【{slot_id} ") == 1
+    assert "任务对象的指称与业务术语" in narrative
+    assert "航路执行、轨迹重规划和航迹处置" in narrative
+    assert "安全包络、分相位阈值和安全处置" in narrative
+    assert "审计事件、证据格式与留存" in narrative
 
 
 def test_delivery_uses_the_canonical_66_slot_directory() -> None:

@@ -166,7 +166,10 @@ def test_ui_keeps_team_flow_and_provider_checkpoint_controls() -> None:
     assert "世界侧 world_config" in blob
     assert "/api/delivery/batch" in blob
     assert "下载完整交付包" in blob
-    assert "TBD 不是让你一个人全部填写" in blob
+    assert "TBD 处理说明" in blob
+    assert "TBD 不是让你一个人全部填写" not in blob
+    assert "任务域 → 本案例具体值" in blob
+    assert "种不同 JD 配置" in blob
     assert "JD 变量树维护方" in blob
     assert "不确定时保持 TBD，仍可导出草案" in blob
     assert 'id="providerSelect"' in blob

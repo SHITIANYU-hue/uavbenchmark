@@ -164,6 +164,25 @@ function narrativeReferencePanel(opts) {
     + '<div class="hint-fold-body"><div class="narrative-body">' + escapeHtml(text) + '</div></div></details>';
 }
 
+function jdDomainSummary(slotId) {
+  const edit = (getEdits() || []).find(item => item.slot_id === slotId);
+  if (!edit) return "—";
+  if (edit.binding_mode === "fixed") {
+    return "固定 = " + (
+      edit.value != null && edit.value !== "" ? formatJdValue(edit.value) : "—"
+    );
+  }
+  if (edit.binding_mode === "enum") {
+    return "枚举 { " + (
+      (edit.allowed_values || []).map(formatJdValue).join(" | ") || "—"
+    ) + " }";
+  }
+  if (edit.binding_mode === "range") {
+    return "区间 [" + (edit.minimum != null ? edit.minimum : "?")
+      + " ~ " + (edit.maximum != null ? edit.maximum : "?") + "]";
+  }
+  return "TBD（待定）";
+}
 
 function formatJdValue(value) {
   if (value == null) return "—";
