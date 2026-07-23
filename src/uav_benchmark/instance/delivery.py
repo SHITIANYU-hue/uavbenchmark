@@ -402,6 +402,34 @@ def _tbd_items(
     *,
     include_delivery_requirements: bool = True,
 ) -> list[dict[str, Any]]:
+    def make_item(
+        *,
+        tbd_id: str,
+        canonical_jd: str | None,
+        name: str,
+        missing: Sequence[str],
+    ) -> dict[str, Any]:
+        missing_values = _unique([str(value) for value in missing])
+        owners: list[str] = []
+        if "value" in missing_values:
+            owners.append("business_task_owner")
+        if any(value != "value" for value in missing_values):
+            owners.append("jd_tree_maintainer")
+        return {
+            "tbd_id": tbd_id,
+            "canonical_jd": canonical_jd,
+            "name": name,
+            "missing": missing_values,
+            "status": "TBD",
+            "resolution_owners": owners or ["business_task_owner"],
+            "required_before": (
+                "benchmark_run"
+                if "value" in missing_values
+                else "config_agent_handoff"
+            ),
+            "can_remain_tbd_in_draft": True,
+        }
+
     items: list[dict[str, Any]] = []
     for binding in bindings:
         reasons: list[str] = []
@@ -411,22 +439,20 @@ def _tbd_items(
             reasons.append("projection")
         reasons.extend(str(gap) for gap in binding.get("metadata_gaps") or [])
         if reasons:
-            items.append({
-                "tbd_id": f"tbd:{binding['binding_id']}",
-                "canonical_jd": binding["canonical_jd"],
-                "name": binding["name"],
-                "missing": _unique(reasons),
-                "status": "TBD",
-            })
+            items.append(make_item(
+                tbd_id=f"tbd:{binding['binding_id']}",
+                canonical_jd=binding["canonical_jd"],
+                name=binding["name"],
+                missing=reasons,
+            ))
     if include_delivery_requirements:
         if not any(binding["canonical_jd"] == "jd-0.7" for binding in bindings):
-            items.append({
-                "tbd_id": "tbd:completion_conditions",
-                "canonical_jd": "jd-0.7",
-                "name": "任务完成判据",
-                "missing": ["value"],
-                "status": "TBD",
-            })
+            items.append(make_item(
+                tbd_id="tbd:completion_conditions",
+                canonical_jd="jd-0.7",
+                name="任务完成判据",
+                missing=["value"],
+            ))
     return items
 
 
@@ -567,6 +593,9 @@ def _world_config(
             "name": "Simulator / Fixture adapter",
             "missing": ["adapter", "simulator_api"],
             "status": "TBD",
+            "resolution_owners": ["simulator_adapter_owner"],
+            "required_before": "simulator_integration",
+            "can_remain_tbd_in_draft": True,
         }],
         "provenance": [{
             "source_id": "pipeline_delivery_projection",
@@ -623,6 +652,9 @@ def _user_config(
             "name": "允许动作",
             "missing": ["value"],
             "status": "TBD",
+            "resolution_owners": ["task_interface_or_safety_owner"],
+            "required_before": "benchmark_run",
+            "can_remain_tbd_in_draft": True,
         }],
         "provenance": [{
             "source_id": "pipeline_delivery_projection",
@@ -871,7 +903,15 @@ def build_delivery_batch(
             human_edits=edits,
         ))
     tbd_total = sum(
-        len(case["task_template"]["manifest"]["tbd_items"])
+        len({
+            item["tbd_id"]
+            for config_items in (
+                case["task_template"]["manifest"]["tbd_items"],
+                case["world_config"]["tbd_items"],
+                case["user_config"]["tbd_items"],
+            )
+            for item in config_items
+        })
         for case in cases
     )
     failed = sum(case["validation"]["status"] == "fail" for case in cases)

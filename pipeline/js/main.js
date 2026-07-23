@@ -1,5 +1,22 @@
 /* pipeline/js/main.js */
-function render() { renderStageRail(); renderContext(); [renderStep1, renderStep2a, renderStep2b, renderStep3, renderStep4, renderStep5][state.currentStage](); persistState(); }
+function render() {
+  renderStageRail();
+  renderContext();
+  const renderers = [renderStep1, renderStep2a, renderStep2b, renderStep3, renderStep4, renderStep5];
+  const renderer = renderers[Number(state.currentStage)];
+  if (typeof renderer !== "function") {
+    document.getElementById("workspaceEyebrow").textContent = "页面版本不一致";
+    document.getElementById("workspaceTitle").textContent = "请刷新 Pipeline";
+    document.getElementById("workspaceState").textContent = "需要刷新";
+    document.getElementById("workspaceBody").innerHTML =
+      '<div class="choice-card dependency selected"><b>前端文件没有同时更新</b>'
+      + '<p>请按 Command + Shift + R 强制刷新；当前任务进度保存在浏览器中，不会因为刷新丢失。</p></div>';
+    persistState();
+    return;
+  }
+  renderer();
+  persistState();
+}
 
 // Stable delegation on #stageRail: rail innerHTML is rewritten on render, but the
 // nav element itself is not. pointerdown fires before click and survives better

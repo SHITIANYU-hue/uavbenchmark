@@ -586,6 +586,66 @@ function renderValidationChecks(validation) {
   ).join("") + '</div>';
 }
 
+function tbdResolutionInfo(tbd) {
+  const ownerLabels = {
+    business_task_owner: "业务 / 任务负责人",
+    jd_tree_maintainer: "JD 变量树维护方",
+    task_interface_or_safety_owner: "任务接口 / 安全负责人",
+    simulator_adapter_owner: "Simulator / Fixture 适配方",
+  };
+  const stageLabels = {
+    config_agent_handoff: "交给 Config Agent 前",
+    simulator_integration: "接入 Simulator 时",
+    benchmark_run: "正式运行 benchmark 前",
+  };
+  let rawOwners = [...(tbd.resolution_owners || [])];
+  if (!rawOwners.length) {
+    if (tbd.tbd_id === "tbd:simulator_adapter") {
+      rawOwners = ["simulator_adapter_owner"];
+    } else if (tbd.tbd_id === "tbd:allowed_actions") {
+      rawOwners = ["task_interface_or_safety_owner"];
+    } else {
+      if ((tbd.missing || []).includes("value")) {
+        rawOwners.push("business_task_owner");
+      }
+      if ((tbd.missing || []).some(value => value !== "value")) {
+        rawOwners.push("jd_tree_maintainer");
+      }
+    }
+  }
+  const owners = rawOwners.map(owner => ownerLabels[owner] || owner);
+  const canEdit = !!tbd.canonical_jd
+    && (tbd.missing || []).includes("value")
+    && rawOwners.includes("business_task_owner");
+  let action = "你不需要猜，保持 TBD，并交给对应负责人确认。";
+  if (canEdit) {
+    action = "只有拿到明确业务来源时才填写；不知道就保持 TBD。";
+  } else if (rawOwners.includes("jd_tree_maintainer")) {
+    action = "这是变量树元数据缺口，不是让任务使用者填写。";
+  } else if (rawOwners.includes("simulator_adapter_owner")) {
+    action = "当前没有确认的 Simulator API，等平台接入方提供合同。";
+  } else if (rawOwners.includes("task_interface_or_safety_owner")) {
+    action = "允许动作涉及权限和安全边界，应由接口或安全负责人确认。";
+  }
+  let requiredBefore = tbd.required_before;
+  if (!requiredBefore) {
+    requiredBefore = rawOwners.includes("simulator_adapter_owner")
+      ? "simulator_integration"
+      : (
+          rawOwners.length === 1 && rawOwners.includes("jd_tree_maintainer")
+            ? "config_agent_handoff"
+            : "benchmark_run"
+        );
+  }
+  return {
+    owners,
+    ownerIds: rawOwners,
+    canEdit,
+    requiredBefore: stageLabels[requiredBefore] || "正式运行前",
+    action,
+  };
+}
+
 function renderTbdWorkbench(item) {
   const taskTbds = (item.task_template.manifest.tbd_items || []);
   const worldTbds = (item.world_config.tbd_items || []);
@@ -597,17 +657,41 @@ function renderTbdWorkbench(item) {
     return true;
   });
   if (!all.length) return '<div class="choice-card selected"><b>本案例没有待补充项</b></div>';
-  return '<div class="tbd-workbench">' + all.map(tbd => {
-    const canEdit = !!tbd.canonical_jd && (tbd.missing || []).includes("value");
-    return '<div class="tbd-work-item"><div><b>' + escapeHtml(tbd.canonical_jd || "交付依赖")
-      + ' · ' + escapeHtml(tbd.name) + '</b><span>待补充：'
-      + escapeHtml((tbd.missing || []).join("、")) + '</span></div>'
-      + (canEdit
+  const tbdWithInfo = all.map(tbd => ({tbd, info: tbdResolutionInfo(tbd)}));
+  const businessCount = tbdWithInfo.filter(entry =>
+    entry.info.ownerIds.includes("business_task_owner")
+  ).length;
+  const treeCount = tbdWithInfo.filter(entry =>
+    entry.info.ownerIds.includes("jd_tree_maintainer")
+  ).length;
+  const externalCount = tbdWithInfo.filter(entry =>
+    entry.info.ownerIds.some(owner =>
+      owner === "task_interface_or_safety_owner"
+      || owner === "simulator_adapter_owner"
+    )
+  ).length;
+  return '<div class="tbd-explainer"><div><b>TBD 不是让你一个人全部填写</b>'
+    + '<p>没有权威来源时请保留 TBD。当前交付包仍可作为草案下载；对应负责人确认后再补值。</p></div>'
+    + '<div class="tbd-owner-summary"><span><b>' + businessCount
+    + '</b> 业务负责人</span><span><b>' + treeCount
+    + '</b> JD 树维护方</span><span><b>' + externalCount
+    + '</b> 接口 / 适配方</span></div></div>'
+    + '<div class="tbd-workbench">' + tbdWithInfo.map(entry => {
+    const tbd = entry.tbd;
+    const info = entry.info;
+    return '<div class="tbd-work-item"><div class="tbd-work-head"><div><b>'
+      + escapeHtml(tbd.canonical_jd || "交付依赖")
+      + ' · ' + escapeHtml(tbd.name) + '</b><span>缺少：'
+      + escapeHtml((tbd.missing || []).join("、")) + '</span></div><div class="tbd-owner-badges">'
+      + info.owners.map(owner => '<span>' + escapeHtml(owner) + '</span>').join("")
+      + '</div></div><p class="tbd-action-hint">' + escapeHtml(info.action)
+      + ' 最晚确认时间：' + escapeHtml(info.requiredBefore) + '。</p>'
+      + (info.canEdit
         ? '<div class="tbd-edit-row"><input id="tbdValue-' + escapeHtml(tbd.canonical_jd)
           + '" placeholder="填写已确认值，可填写 JSON"><input id="tbdSource-' + escapeHtml(tbd.canonical_jd)
           + '" placeholder="来源说明（必填）"><button class="btn small" type="button" onclick="applyDeliveryTbd(\''
           + escapeHtml(tbd.canonical_jd) + '\')">保存并重新生成</button></div>'
-        : '<small>该项需要补充元数据或外部接口信息，Pipeline 不会猜测。</small>')
+        : '<small>该项不能由 Pipeline 自动补值，也不要求你凭经验填写。</small>')
       + '</div>';
   }).join("") + '</div>';
 }
@@ -659,8 +743,8 @@ function renderStep5() {
     + '</span></div>';
   h += '<div class="field-label" style="margin-top:16px"><label>确定性校验</label><span>'
     + escapeHtml(item.validation.status) + '</span></div>' + renderValidationChecks(item.validation);
-  h += '<div class="field-label" style="margin-top:16px"><label>统一 TBD 补充</label>'
-    + '<span>只接受人工确认值和来源；补充后重新生成本批案例</span></div>'
+  h += '<div class="field-label" style="margin-top:16px"><label>统一 TBD 待确认清单</label>'
+    + '<span>按责任方分流；不确定时保持 TBD，仍可导出草案</span></div>'
     + renderTbdWorkbench(item);
   h += '<details class="hint-fold" style="margin-top:16px"><summary>批次 Manifest · '
     + batch.case_count + ' 个案例</summary><div class="hint-fold-body"><pre class="code-preview">'

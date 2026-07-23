@@ -144,6 +144,7 @@ def test_batch_generates_ten_reviewable_case_packages() -> None:
 
     assert batch["case_count"] == 10
     assert len(batch["cases"]) == 10
+    assert batch["summary"]["tbd_items"] == 30
     assert [case["seed"] for case in batch["cases"]] == list(
         range(20260724, 20260734)
     )
@@ -227,6 +228,20 @@ def test_tbd_value_remains_null_and_is_not_sampled() -> None:
         item["tbd_id"] == "tbd:allowed_actions"
         for item in first["user_config"]["tbd_items"]
     )
+    completion_tbd = next(
+        item for item in first["task_template"]["manifest"]["tbd_items"]
+        if item["canonical_jd"] == "jd-0.7"
+    )
+    assert completion_tbd["resolution_owners"] == ["business_task_owner"]
+    assert completion_tbd["required_before"] == "benchmark_run"
+    assert completion_tbd["can_remain_tbd_in_draft"] is True
+    allowed_actions_tbd = next(
+        item for item in first["user_config"]["tbd_items"]
+        if item["tbd_id"] == "tbd:allowed_actions"
+    )
+    assert allowed_actions_tbd["resolution_owners"] == [
+        "task_interface_or_safety_owner"
+    ]
 
 
 def test_human_tbd_override_requires_explicit_source_in_artifact() -> None:
