@@ -388,23 +388,22 @@ async function loadMetricsForStep3() {
 }
 
 async function generateFullTaskTemplate() {
-  const c = state.agentResult && state.agentResult.candidate;
-  const ability = c && c.coverage_candidates ? c.coverage_candidates[0].cell.split("×")[0] : "A11";
   const seed = state.instanceSeed || 0;
   state.instanceLoading = true; state.instanceError = null; render();
   try {
     const tpl = buildDomainTemplate();
-    const body = { ability, seed, template: tpl, domain_values: {}, scoring: {SR: true, CR: true, SPL: true} };
+    const body = { domain_template: tpl, seed };
     const r = await fetch("/api/task-template/generate", {
       method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body),
     });
     const d = await r.json();
     if (!r.ok) throw new Error(d.message || d.error);
-    state.instanceResult = d.task;
-    state.fillTbdNotice = "生成完整 Task Template："
-      + Object.keys(d.task.scenario||{}).length + " 场景值 + "
-      + Object.keys(d.task.quality||{}).length + " 质量标准 + "
-      + Object.keys(d.task.protocols||{}).length + " 兜底协议";
+    state.instanceResult = d.task_template || d.instance || d.task;
+    const bindings = state.instanceResult && state.instanceResult.slot_bindings || [];
+    const unresolved = bindings.filter(item => item.status === "TBD").length;
+    state.fillTbdNotice = "已按统一合同生成确定性实例："
+      + bindings.length + " 个 JD 绑定，"
+      + unresolved + " 个 TBD";
   } catch(e) {
     state.instanceError = String(e.message || e);
   }
