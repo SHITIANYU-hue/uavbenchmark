@@ -20,6 +20,7 @@ from .generator import generate_instance, hash_template
 
 
 SCHEMA_VERSION = "0.1.0"
+DELIVERY_CONTRACT_VERSION = "2026-07-24.2"
 _HIDDEN_ROLES = {"hidden_ground_truth"}
 _HIDDEN_VISIBILITY = {"hidden_gt"}
 _HIDDEN_CHANNELS = {"hidden_gt"}

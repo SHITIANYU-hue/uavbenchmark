@@ -71,6 +71,8 @@ Mandatory rules:
 - Write seven substantive paragraphs: context/objective; nominal behavior;
   observations and variables; responsibility boundary; anomaly/event behavior;
   outputs/external loop; completion and TBD.
+- Put one blank line between every two paragraphs. Do not merge the seven
+  paragraphs into one continuous block even if paragraph labels are used.
 - Return Chinese content except unavoidable technical names.
 """.strip()
 
@@ -232,9 +234,28 @@ def structured_output_schema(model: type = AgentCandidate) -> dict[str, Any]:
 
 
 def _normalize_narrative_linebreaks(value: str) -> str:
-    """Convert model-emitted literal newline escapes into real paragraphs."""
+    """Normalise literal escapes and model-emitted inline paragraph labels."""
 
-    return value.replace("\\r\\n", "\n").replace("\\n", "\n")
+    text = value.replace("\\r\\n", "\n").replace("\\n", "\n")
+    paragraphs = [
+        item.strip()
+        for item in re.split(r"\n\s*\n", text)
+        if item.strip()
+    ]
+    if len(paragraphs) >= 7:
+        return text
+
+    # Some models return all seven requested sections in one JSON string as
+    # "第一段（…）：... 第二段（…）：..." without actual paragraph breaks.
+    # The content is complete, but the structural validator cannot recognise
+    # it.  Split only explicit paragraph labels; do not manufacture content.
+    marker = re.compile(
+        r"\s*(第(?:[一二三四五六七]|[1-7])段"
+        r"(?:\s*[（(][^）)\n]{0,80}[）)])?\s*[：:])"
+    )
+    if len(marker.findall(text)) >= 2:
+        text = marker.sub(r"\n\n\1", text).strip()
+    return text
 
 
 def _strip_json_fences(text: str) -> str:

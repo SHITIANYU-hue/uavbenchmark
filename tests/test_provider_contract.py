@@ -170,6 +170,8 @@ def test_ui_keeps_team_flow_and_provider_checkpoint_controls() -> None:
     assert "TBD 不是让你一个人全部填写" not in blob
     assert "任务域 → 本案例具体值" in blob
     assert "种不同 JD 配置" in blob
+    assert "Pipeline 服务仍在运行旧版后端" in blob
+    assert 'const DELIVERY_CONTRACT_VERSION = "2026-07-24.2"' in blob
     assert "JD 变量树维护方" in blob
     assert "不确定时保持 TBD，仍可导出草案" in blob
     assert 'id="providerSelect"' in blob

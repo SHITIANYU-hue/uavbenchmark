@@ -129,6 +129,31 @@ class AgentContractChecks(unittest.TestCase):
         self.assertEqual(result.draft.expanded_narrative, prose)
         self.assertNotRegex(result.draft.expanded_narrative, r"A\d+[a-z]?×L[1-4]|jd-")
 
+    def test_first_call_splits_inline_seven_paragraph_labels(self) -> None:
+        labels = ["一", "二", "三", "四", "五", "六", "七"]
+        inline = " ".join(
+            f"第{label}段（任务结构）："
+            + "本段完整描述任务事实、职责边界、外部依赖和待确认内容。"
+            + "所有未确认条件保持待定，不补写数值或接口。"
+            for label in labels
+        )
+        draft_obj = NarrativeDraft(
+            task_title="高速公路车辆巡检",
+            expanded_narrative=inline,
+        )
+        agent = NarrativeAgent(
+            api_key="unused",
+            model="fake-deepseek",
+            provider="deepseek",
+            transport=FakeTransport([draft_obj]),
+        )
+
+        result = agent.expand("巡查高速路，持续记录病害，遇到异常先通知调度。")
+
+        self.assertEqual(result.validation_status, "pass")
+        self.assertEqual(len(result.draft.expanded_narrative.split("\n\n")), 7)
+        self.assertIn("\n\n第二段", result.draft.expanded_narrative)
+
     def test_reviewed_catalog_is_full_and_contains_no_case_templates(self) -> None:
         catalog = load_reference_catalog()
         self.assertEqual(catalog["scope"], "full_17A_L1_L4_66JD_catalog")

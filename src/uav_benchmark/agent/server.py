@@ -35,7 +35,11 @@ from .service import (
 from ..instance.generator import generate_instance, validate_instance
 from ..instance.domain_template import build_domain_template, normalize_domain_template
 from ..instance.batch import generate_batch, traverse_domain
-from ..instance.delivery import build_delivery_batch, validate_artifact
+from ..instance.delivery import (
+    DELIVERY_CONTRACT_VERSION,
+    build_delivery_batch,
+    validate_artifact,
+)
 
 
 MAX_REQUEST_BYTES = 1_000_000
@@ -192,6 +196,7 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                 "catalog_counts": catalog["counts"],
                 "catalog_source_versions": catalog["source_versions"],
                 "jd_tree": jd_tree,
+                "delivery_contract_version": DELIVERY_CONTRACT_VERSION,
             })
             return
         if parsed.path == "/api/catalog":

@@ -370,6 +370,13 @@ async function generateDeliveryBatch(options) {
     render();
     return;
   }
+  const serverContract = state.healthInfo && state.healthInfo.delivery_contract_version;
+  if (serverContract !== DELIVERY_CONTRACT_VERSION) {
+    state.deliveryError = "Pipeline 服务仍在运行旧版后端。请在启动服务的终端按 Control + C，"
+      + "重新运行 ./scripts/start_agent_demo.sh，然后刷新页面再生成；STEP 1–4 的浏览器进度会保留。";
+    render();
+    return;
+  }
   const count = Math.max(1, parseInt(state.deliveryCaseCount, 10) || 10);
   state.deliveryCaseCount = count;
   state.deliveryLoading = true;
