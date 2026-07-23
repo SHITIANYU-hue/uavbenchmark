@@ -25,6 +25,33 @@ document.getElementById("contextToggle").addEventListener("click", () => {
   state.contextCollapsed = !state.contextCollapsed;
   render();
 });
+document.getElementById("openJdTreeLink").addEventListener("click", (e) => {
+  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+  persistState();
+  try {
+    sessionStorage.setItem("uav_pipeline_jd_tree_return", JSON.stringify({
+      stage: state.currentStage,
+      scrollY: window.scrollY,
+    }));
+  } catch (_) { /* navigation still works when session storage is unavailable */ }
+});
+
+function restoreJdTreeReturnPosition() {
+  let raw = null;
+  try { raw = sessionStorage.getItem("uav_pipeline_jd_tree_return"); } catch (_) { return; }
+  if (!raw) return;
+  try { sessionStorage.removeItem("uav_pipeline_jd_tree_return"); } catch (_) { /* no-op */ }
+  try {
+    const saved = JSON.parse(raw);
+    const stage = Number(saved.stage);
+    if (Number.isInteger(stage) && stageReachable(stage) && stage !== state.currentStage) {
+      state.currentStage = stage;
+      render();
+    }
+    const scrollY = Number(saved.scrollY);
+    requestAnimationFrame(() => window.scrollTo(0, Number.isFinite(scrollY) ? scrollY : 0));
+  } catch (_) { /* invalid return state: keep the normal Pipeline position */ }
+}
 
 async function init() {
   try {
@@ -42,5 +69,6 @@ async function init() {
     await resumeInterruptedRuns();
   } catch(e) { state.serverStatus = "offline"; }
   render();
+  restoreJdTreeReturnPosition();
 }
 render(); init();

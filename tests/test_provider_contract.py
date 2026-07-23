@@ -162,6 +162,11 @@ def test_ui_keeps_team_flow_and_provider_checkpoint_controls() -> None:
     assert "用户侧配置需求" in blob
     assert "世界侧配置需求" in blob
     assert 'id="providerSelect"' in blob
+    assert 'id="openJdTreeLink"' in html
+    assert 'href="/jd-tree"' in html
+    assert "JD业务变量树选变量" in blob
+    assert '"JD V2 选变量"' not in blob
+    assert "JD Version2 子树" not in blob
     assert "provider: state.llmProvider" in blob
     assert "Gemini 3.6 Flash（默认）" in blob
     assert "Gemini 3.5 Flash Lite" in blob

@@ -12,8 +12,8 @@ pipeline/
     scenarios.js
     coverage.js       # A×L 人工选择
     jd.js             # JD 分组、用户侧·世界侧
-    jd_tree_v2.js     # A×L 子树加载、V2 变量选择与清单导出
-    agent.js          # 扩充 / 分类 / V2 约束提取 / TBD 来源复核
+    jd_tree_v2.js     # A×L 子树加载、业务变量选择与清单导出
+    agent.js          # 扩充 / 分类 / 变量范围约束提取 / TBD 来源复核
     persistence.js    # 保存·加载检查点
     steps.js          # STEP 1–5 界面
     shell.js          # 侧栏 Provider / 进度

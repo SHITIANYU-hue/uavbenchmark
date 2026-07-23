@@ -95,8 +95,8 @@ function renderStep2a() {
     if (issueIdx.other.length) {
       h += renderInlineHints(issueIdx.other.slice(0, 8), { title: "其他校验 · " + issueIdx.other.length + " 条" });
     }
-    h += '<div class="action-row" style="margin-top:14px"><span class="action-note">确认 A×L 后，系统只加载对应能力的 JD Version2 子树</span>'
-      + '<button class="btn primary" onclick="confirmCoverageAndLoadV2()">确认 A×L → 加载 V2 子树</button></div>';
+    h += '<div class="action-row" style="margin-top:14px"><span class="action-note">确认 A×L 后，系统只加载 JD业务变量树中对应能力的范围</span>'
+      + '<button class="btn primary" onclick="confirmCoverageAndLoadV2()">确认 A×L → 加载变量树</button></div>';
   }
   if (state.agentError) h += '<div class="choice-card dependency selected" style="margin-top:8px"><b>分类错误</b><p>' + escapeHtml(state.agentError) + "</p></div>";
   document.getElementById("workspaceBody").innerHTML = h;
@@ -109,8 +109,8 @@ function renderStep2b() {
   const hasCoverage = state.agentResult && state.agentResult.candidate && (state.agentResult.candidate.coverage_candidates || []).length;
   const hasJd = state.extractionStatus === "done" && state.agentResult && state.agentResult.candidate && (state.agentResult.candidate.jd_candidates || []).length;
   const hasSelection = !!state.jdTreeSelection;
-  setHeader(2, state.completed.has(2) ? "已完成" : hasJd ? "JD 域待确认" : state.extractionStatus === "running" ? "提取中" : hasSelection ? "V2 清单已确认" : hasCoverage ? "选择 V2 变量" : "等待 STEP 2");
-  let h = saveBar() + '<p class="intro">STEP 3：A×L 先限定 JD Version2 子树；你再勾选本题需要的细粒度变量。确认后生成 <span class="mono">jd_tree_selection.json</span>，Agent 只能在其映射的 canonical JD 范围内提取。</p>';
+  setHeader(2, state.completed.has(2) ? "已完成" : hasJd ? "JD 域待确认" : state.extractionStatus === "running" ? "提取中" : hasSelection ? "变量清单已确认" : hasCoverage ? "选择业务变量" : "等待 STEP 2");
+  let h = saveBar() + '<p class="intro">STEP 3：A×L 先限定 JD业务变量树范围；你再勾选本题需要的细粒度变量。确认后生成 <span class="mono">jd_tree_selection.json</span>，Agent 只能在其映射的 canonical JD 范围内提取。</p>';
   if (!hasCoverage) {
     h += '<div class="choice-card dependency selected"><b>尚未完成 STEP 2</b><p>请先在 STEP 2 完成文案确认与 A×L 分类。</p></div>';
     h += '<div class="action-row" style="margin-top:12px"><button class="btn" type="button" onclick="goToStage(1)">← 回 STEP 2</button></div>';
@@ -122,7 +122,7 @@ function renderStep2b() {
   h += '<div class="coverage-chips">' + cov.map(x => '<span class="lvl-pill ' + cellLevelClass(x.cell) + '">' + escapeHtml(x.cell) + "</span>").join("") + '</div>';
   h += renderJdTreeSelectionHtml();
   if (state.jdTreeError) {
-    h += '<div class="choice-card dependency selected" style="margin-top:10px"><b>V2 选择错误</b><p>' + escapeHtml(state.jdTreeError) + '</p></div>';
+    h += '<div class="choice-card dependency selected" style="margin-top:10px"><b>变量选择错误</b><p>' + escapeHtml(state.jdTreeError) + '</p></div>';
   }
   if (state.jdTreeNotice) {
     h += '<div class="choice-card selected" style="margin-top:10px"><b>' + escapeHtml(state.jdTreeNotice) + '</b></div>';
@@ -155,7 +155,7 @@ function renderStep2b() {
     const c = state.agentResult.candidate;
     const issueIdx = indexValidationIssues();
     const tbdSlots = (c.jd_candidates || []).filter(j => (j.binding_mode || "") === "TBD");
-    h += '<div class="action-row" style="margin-top:10px"><span class="action-note">已在 V2 选择范围内提取 ' + (c.jd_candidates || []).length + ' 个 canonical JD 域</span>'
+    h += '<div class="action-row" style="margin-top:10px"><span class="action-note">已在变量选择范围内提取 ' + (c.jd_candidates || []).length + ' 个 canonical JD 域</span>'
       + '<button class="btn" type="button" onclick="runExtraction()"' + (providerReady() ? "" : " disabled") + ">重跑提取</button></div>";
     h += '<div class="field-label"><label>结果 · JD 变量域（' + (c.jd_candidates || []).length + ' 个，按 A 分类）</label></div>';
     if (tbdSlots.length) {

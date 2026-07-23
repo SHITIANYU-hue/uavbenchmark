@@ -166,6 +166,12 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
 
     def do_GET(self) -> None:  # noqa: N802
         parsed = urlparse(self.path)
+        if parsed.path in {"/jd-tree", "/jd-tree/"}:
+            # Clean user-facing route; the versioned filename remains an
+            # internal provenance detail for the team-delivered source.
+            self.path = "/JD业务变量树_version2.html"
+            super().do_GET()
+            return
         if parsed.path == "/api/health":
             catalog = load_reference_catalog()
             jd_tree = lookup_jd_tree_metadata()

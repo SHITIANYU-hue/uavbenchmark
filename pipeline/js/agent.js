@@ -229,7 +229,7 @@ async function runExtraction() {
     return;
   }
   if (!state.jdTreeSelection) {
-    state.extractionError = "请先在 STEP 3 确认 JD Version2 变量并生成选择清单。";
+    state.extractionError = "请先在 STEP 3 确认 JD业务变量树中的变量并生成选择清单。";
     render();
     return;
   }
@@ -380,7 +380,7 @@ async function loadTreeDomains() {
         applied++;
       }
     });
-    state.fillTbdNotice = "从已选 V2 变量加载了 " + applied + " 个候选域；未自动选择默认值"
+    state.fillTbdNotice = "从已选业务变量加载了 " + applied + " 个候选域；未自动选择默认值"
       + (skipped ? "（" + skipped + " 个无树数据）" : "");
   } catch (e) {
     state.fillTbdError = String(e.message || e);

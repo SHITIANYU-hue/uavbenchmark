@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   <link rel="icon" href="data:,">
-  <title>JD 业务变量树｜version2</title>
+  <title>JD业务变量树｜UAV Benchmark Factory</title>
   <style>
 :root {
   color-scheme: light;
@@ -390,6 +390,16 @@ pre {
 .review-action:hover {
   border-color: var(--primary);
   background: var(--primary-soft);
+}
+
+.pipeline-return {
+  display: inline-flex;
+  align-items: center;
+  min-height: 34px;
+  color: var(--primary);
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
 }
 
 #totalCommentCount {
@@ -1420,10 +1430,11 @@ pre {
   <header class="app-header">
     <div class="brand">
       <span class="brand-kicker">UAV BENCHMARK</span>
-      <strong>JD 业务变量树</strong>
+      <strong>JD业务变量树</strong>
       <span>A1 · A2 · A3 · A4 · A5 · A6 · A7 · A8 · A9 · A10 · A11 · A12 · A13 · A14 · A15 · A16 · A17</span>
     </div>
     <div class="header-actions">
+      <a class="review-action pipeline-return" id="returnPipelineLink" href="/">← 返回 Pipeline</a>
       <div class="case-toolbar" id="caseToolbar" data-active="false">
         <label class="case-field" for="metricSetSummary">
           <span class="case-field-icon" aria-hidden="true">
@@ -1433,24 +1444,11 @@ pre {
             </svg>
           </span>
           <span class="case-field-body">
-            <span>Metric set</span>
-            <details class="metric-set-picker" id="metricSetPicker">
-              <summary id="metricSetSummary">未加载</summary>
-              <div class="metric-set-menu" id="metricSetMenu">
-                <label>
-                  <input type="checkbox" data-metric-set="knowledge/metric_set_a11_default.json" />
-                  A11 默认 metric <span>metric→jd-11.3/4 节点</span>
-                </label>
-                <label>
-                  <input type="checkbox" data-metric-set="knowledge/metric_set_a11_strict.json" />
-                  A11 严标准 <span>同槽更严 · 可叠加载</span>
-                </label>
-                <label>
-                  <input type="checkbox" data-metric-set="knowledge/metric_set_default.json" />
-                  其他 A 默认阈值 <span>metric_set_default · 不含 A11</span>
-                </label>
-              </div>
-            </details>
+              <span>Metric set</span>
+              <details class="metric-set-picker" id="metricSetPicker">
+                <summary id="metricSetSummary">未加载</summary>
+                <div class="metric-set-menu" id="metricSetMenu"></div>
+              </details>
           </span>
         </label>
         <label class="case-field" for="caseSelector">
@@ -2810,6 +2808,13 @@ pre {
     const caseToolbar = document.getElementById("caseToolbar");
     const metricSetMenu = document.getElementById("metricSetMenu");
     if (metricSetMenu) {
+      metricSetMenu.innerHTML = Object.entries(abilities).map(([ability, name]) => `
+        <label>
+          <input type="checkbox" data-metric-set="knowledge/metric_set_${ability.toLowerCase()}_default.json" />
+          ${escapeHtml(ability)} · ${escapeHtml(name)}
+          <span>候选 metric set · 默认不启用</span>
+        </label>
+      `).join("");
       metricSetMenu.addEventListener("change", async (event) => {
         const input = event.target;
         if (!(input instanceof HTMLInputElement) || !input.dataset.metricSet) {

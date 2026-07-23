@@ -79,7 +79,7 @@ async function loadJdV2Slice(options) {
   const abilities = confirmedAbilityIds();
   if (!abilities.length) {
     state.jdTreeStatus = "error";
-    state.jdTreeError = "没有已确认的 A×L，无法加载 JD Version2 子树。";
+    state.jdTreeError = "没有已确认的 A×L，无法加载 JD业务变量树。";
     render();
     return;
   }
@@ -93,7 +93,7 @@ async function loadJdV2Slice(options) {
     query.set("include_global", "true");
     const r = await fetch("/api/jd-tree/slice?" + query.toString(), {cache: "no-store"});
     const d = await r.json();
-    if (!r.ok) throw new Error(d.message || d.error || "JD Version2 子树加载失败");
+    if (!r.ok) throw new Error(d.message || d.error || "JD业务变量树加载失败");
     state.jdTreeSlice = d;
     const existing = new Set(state.jdTreeSelectedNodeIds || []);
     const available = new Set(
@@ -106,7 +106,7 @@ async function loadJdV2Slice(options) {
     state.jdTreeSelection = null;
     clearStaleJdExtraction();
     state.jdTreeStatus = "ready";
-    state.jdTreeNotice = "已按 A×L 加载 V2 子树；勾选是建议范围，需人工确认。";
+    state.jdTreeNotice = "已按 A×L 加载 JD业务变量树；勾选是建议范围，需人工确认。";
   } catch (e) {
     state.jdTreeStatus = "error";
     state.jdTreeError = String(e.message || e);
@@ -158,7 +158,7 @@ function clearJdV2Selection() {
 async function buildJdTreeSelectionArtifact() {
   const selected = state.jdTreeSelectedNodeIds || [];
   if (!selected.length) {
-    state.jdTreeError = "请至少勾选一个 V2 变量。";
+    state.jdTreeError = "请至少勾选一个业务变量。";
     render();
     return null;
   }
@@ -179,7 +179,7 @@ async function buildJdTreeSelectionArtifact() {
     if (!r.ok) throw new Error(d.message || d.error || "选择清单生成失败");
     state.jdTreeSelection = d.jd_tree_selection;
     state.jdTreeStatus = "ready";
-    state.jdTreeNotice = "V2 变量选择已确认；Agent 将只能使用清单映射到的 canonical JD。";
+    state.jdTreeNotice = "业务变量选择已确认；Agent 将只能使用清单映射到的 canonical JD。";
     render();
     return state.jdTreeSelection;
   } catch (e) {
@@ -217,14 +217,14 @@ async function copyJdTreeSelection() {
 
 function renderJdTreeSelectionHtml() {
   if (state.jdTreeStatus === "loading") {
-    return '<div class="choice-card selected" style="margin-top:12px"><b>正在加载 JD Version2 子树…</b>'
+    return '<div class="choice-card selected" style="margin-top:12px"><b>正在加载 JD业务变量树…</b>'
       + '<p>仅加载已确认 A×L 对应能力和全局变量，不展开完整 444 节点。</p></div>';
   }
   if (!state.jdTreeSlice) {
-    return '<div class="choice-card dependency selected" style="margin-top:12px"><b>尚未加载 V2 子树</b>'
+    return '<div class="choice-card dependency selected" style="margin-top:12px"><b>尚未加载 JD业务变量树</b>'
       + '<p>点击下方按钮，按本轮 A×L 加载。</p></div>'
-      + '<div class="action-row"><span class="action-note">数据源固定为团队交付的 jd_variable_tree_version2.json</span>'
-      + '<button class="btn primary" type="button" onclick="loadJdV2Slice({preserveSelection:false})">加载 V2 子树</button></div>';
+      + '<div class="action-row"><span class="action-note">数据源固定为团队当前交付的 JD业务变量树</span>'
+      + '<button class="btn primary" type="button" onclick="loadJdV2Slice({preserveSelection:false})">加载变量树</button></div>';
   }
 
   const slice = state.jdTreeSlice;
@@ -255,15 +255,15 @@ function renderJdTreeSelectionHtml() {
     || !(node.observation_channel || []).length
   ).length;
   let h = '<div class="jd-v2-summary">'
-    + '<div><b>JD Version2 · ' + escapeHtml(slice.catalog_version || "") + '</b>'
-    + '<span>源树 ' + escapeHtml(slice.source_tree || "") + ' · 本次加载 ' + variables.length + ' 个变量</span></div>'
+    + '<div><b>JD业务变量树</b>'
+    + '<span>团队当前交付树 · 本次加载 ' + variables.length + ' 个变量</span></div>'
     + '<div class="jd-v2-count"><b>' + selected.size + '</b><span>已勾选</span></div></div>';
-  h += '<div class="action-row" style="margin-top:10px"><span class="action-note">建议勾选来自 A×L→canonical JD 映射；细粒度节点仍标记为 V2 proposed，不冒充 canonical。</span><div>'
+  h += '<div class="action-row" style="margin-top:10px"><span class="action-note">建议勾选来自 A×L→canonical JD 映射；候选细粒度节点不冒充 canonical。</span><div>'
     + '<button class="btn" type="button" onclick="restoreSuggestedJdV2Selection()">恢复 A×L 建议</button> '
     + '<button class="btn" type="button" onclick="clearJdV2Selection()">全部清空</button> '
-    + '<button class="btn" type="button" onclick="loadJdV2Slice({preserveSelection:true})">刷新 V2</button></div></div>';
+    + '<button class="btn" type="button" onclick="loadJdV2Slice({preserveSelection:true})">刷新变量树</button></div></div>';
   if (tbdMetadata) {
-    h += '<div class="tbd-banner"><b>V2 元数据仍有 TBD</b><p>本次子树中有 ' + tbdMetadata
+    h += '<div class="tbd-banner"><b>变量树元数据仍有 TBD</b><p>本次子树中有 ' + tbdMetadata
       + ' 个变量缺少 role / projection / visibility 等字段。页面原样显示，不推断配置侧。</p></div>';
   }
   ordered.forEach((group, groupIndex) => {
@@ -295,7 +295,7 @@ function renderJdTreeSelectionHtml() {
         + '<em>side: ' + escapeHtml(side) + '</em><em>role: ' + escapeHtml(role) + '</em>'
         + (hidden ? '<em class="danger">Hidden GT</em>' : '')
         + (gaps.length ? '<em class="warn">TBD: ' + escapeHtml(gaps.join(", ")) + '</em>' : '')
-        + '<em>V2 proposed detail</em></span></span></label>';
+        + '<em>候选细粒度节点</em></span></span></label>';
     });
     h += '</div></details>';
   });

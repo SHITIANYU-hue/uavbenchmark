@@ -9,7 +9,7 @@
 ```text
 STEP 1  任务域选择      任务描述 + 可选场景示例
 STEP 2  文案与 A×L      Coverage → 文案扩充 → A×L 分类
-STEP 3  JD V2 选变量    加载子树 → 勾选 → 生成清单 → 提取
+STEP 3  JD业务变量树    加载子树 → 勾选 → 生成清单 → 提取
 STEP 4  任务域模版      fixed / enum / range / TBD
 STEP 5  特定任务模版    Seed → 具体 JD 值
 ```
@@ -41,6 +41,9 @@ http://127.0.0.1:8765
 
 不要用 `file://` 打开 HTML。改代码或 Key 后请重启服务再刷新。
 
+Pipeline 标题旁的“JD业务变量树”会在当前标签页打开完整变量树；点击变量树
+顶部“返回 Pipeline”可回到原来的步骤和页面位置。
+
 侧栏可选 Provider（DeepSeek / Gemini）和模型。Gemini 默认使用
 `Gemini 3.6 Flash`，也可切换到 `Gemini 3.5 Flash` 或
 `Gemini 3.5 Flash Lite`；页面显示的用量与限额仍以当前 API 账号为准。
@@ -64,7 +67,7 @@ http://127.0.0.1:8765
 
 自然语言文案是后续模版的来源，STEP 3/5 也可折叠查看。
 
-### STEP 3 · JD Version2 选变量与域提取
+### STEP 3 · JD业务变量树选变量与域提取
 
 1. 页面按 STEP 2 的 A×L 加载对应能力子树和全局变量，不展开完整 444 节点
 2. 检查每个变量的 canonical JD、配置侧、role、visibility、Hidden GT 和 TBD

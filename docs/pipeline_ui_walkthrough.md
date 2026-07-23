@@ -16,7 +16,7 @@
     ↓ STEP 2
 目标 Coverage → 扩充文案 → A×L 分类
     ↓ STEP 3
-JD Version2 子树（A×L 限定）→ 人工变量选择清单 → canonical JD 域
+JD业务变量树子树（A×L 限定）→ 人工变量选择清单 → canonical JD 域
     ↓ STEP 4
 任务域模版（fixed / enum / range / TBD）
     ↓ STEP 5
@@ -31,6 +31,8 @@ JD Version2 子树（A×L 限定）→ 人工变量选择清单 → canonical JD
 | **特定任务模版**（STEP 5） | 同一域模版 + Seed 抽出的一组具体值；同 Seed 可复现 |
 
 侧栏「本次运行」可看 Provider、进度、Coverage（按 G 分组）等；阶段轨可在已解锁步骤间跳转。
+顶部“JD业务变量树”用于整页查看完整变量树；树页面的“返回 Pipeline”会恢复
+离开前的步骤和页面位置。
 
 ## STEP 1 · 任务域选择
 
@@ -56,18 +58,18 @@ JD 域提取不在这一步，放到 STEP 3。
 
 分类完成后可看到结果 chips，确认 A×L 再进 STEP 3。
 
-## STEP 3 · JD Version2 选变量与域提取
+## STEP 3 · JD业务变量树选变量与域提取
 
 根据 STEP 2 已确认的 A×L，页面只加载相关能力子树和全局变量。它不会让
 Agent 自由探索完整 444 节点。
 
 每个细粒度变量会显示：
 
-- V2 原始 node ID 和名称；
+- 变量树原始 node ID 和名称；
 - 可追溯的 canonical JD（细粒度节点仍是 `proposed`，不会冒充 canonical）；
 - `configuration_side`、`variable_role`、`visibility`、`observation_channel`；
 - Hidden GT 标记；
-- V2 中缺失的元数据，原样显示为 TBD。
+- 变量树中缺失的元数据，原样显示为 TBD。
 
 操作顺序：
 

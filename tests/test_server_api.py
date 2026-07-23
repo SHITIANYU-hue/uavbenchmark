@@ -47,6 +47,17 @@ def _get_json(url: str) -> tuple[int, dict]:
     return _request_json(url, "GET")
 
 
+def _get_text(url: str) -> tuple[int, str]:
+    parsed = urlsplit(url)
+    connection = HTTPConnection(parsed.hostname, parsed.port, timeout=3)
+    try:
+        connection.request("GET", parsed.path + (f"?{parsed.query}" if parsed.query else ""))
+        response = connection.getresponse()
+        return response.status, response.read().decode("utf-8")
+    finally:
+        connection.close()
+
+
 def _post_json(url: str, payload: dict) -> tuple[int, dict]:
     return _request_json(url, "POST", payload)
 
@@ -75,6 +86,17 @@ def test_health_reports_the_team_delivered_v2_identity() -> None:
     assert payload["jd_tree"]["schema_version"] == "2.3"
     assert payload["jd_tree"]["catalog_version"] == "2.4.0-merged"
     assert payload["jd_tree"]["node_count"] == 444
+
+
+def test_jd_tree_clean_route_has_pipeline_return_without_versioned_title() -> None:
+    with _pipeline_server() as base_url:
+        status, body = _get_text(f"{base_url}/jd-tree")
+
+    assert status == 200
+    assert "<title>JD业务变量树｜UAV Benchmark Factory</title>" in body
+    assert 'id="returnPipelineLink"' in body
+    assert 'href="/"' in body
+    assert "<strong>JD业务变量树</strong>" in body
 
 
 def test_jd_tree_slice_endpoint_rejects_unknown_ability() -> None:
