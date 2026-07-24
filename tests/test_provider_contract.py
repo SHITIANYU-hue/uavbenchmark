@@ -169,6 +169,13 @@ def test_ui_keeps_team_flow_and_provider_checkpoint_controls() -> None:
     assert "TBD 处理说明" in blob
     assert "TBD 不是让你一个人全部填写" not in blob
     assert "任务域 → 本案例具体值" in blob
+    assert '<details class="spec-tpl-card" open>' in blob
+    assert "本案例具体化明细" in blob
+    assert "用户侧配置项" in blob
+    assert "世界侧配置项" in blob
+    assert "双侧共享引用" in blob
+    assert "配置归属待确认" in blob
+    assert "Seed 运行计划 JSON" in blob
     assert "种不同 JD 配置" in blob
     assert "Pipeline 服务仍在运行旧版后端" in blob
     assert 'const DELIVERY_CONTRACT_VERSION = "2026-07-24.2"' in blob

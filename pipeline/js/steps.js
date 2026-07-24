@@ -506,18 +506,92 @@ function renderBindingTable(items) {
   }).join("") + '</div>';
 }
 
-function renderCaseJdComparison(items) {
-  if (!items || !items.length) return "";
-  return '<details class="hint-fold" style="margin-top:12px"><summary>任务域 → 本案例具体值 · JD '
-    + items.length + '</summary><div class="hint-fold-body"><table class="data-table"><thead><tr>'
-    + '<th>Canonical JD</th><th>名称</th><th>STEP 4 已确认取值域</th><th>本案例取值</th><th>状态</th>'
-    + '</tr></thead><tbody>' + items.map(item => '<tr'
-      + (item.status === "TBD" ? ' class="row-tbd"' : "") + '><td class="mono">'
-      + escapeHtml(item.canonical_jd) + '</td><td>' + escapeHtml(item.name)
-      + '</td><td>' + escapeHtml(jdDomainSummary(item.canonical_jd))
-      + '</td><td><b>' + escapeHtml(formatJdValue(item.value)) + '</b></td><td>'
-      + pill(item.status) + '</td></tr>').join("")
-    + '</tbody></table></div></details>';
+function deliveryBindingValue(item) {
+  return item && item.status === "TBD" ? "TBD" : formatJdValue(item && item.value);
+}
+
+function renderInstantiationTable(items) {
+  if (!items.length) return '<p class="empty-copy">本组暂无 JD。</p>';
+  return '<table class="data-table"><thead><tr><th>Canonical JD</th><th>名称</th>'
+    + '<th>STEP 4 取值域</th><th>本案例具体值</th><th>状态 / 来源</th></tr></thead><tbody>'
+    + items.map(item => {
+      const source = (item.provenance && item.provenance[0]) || {};
+      return '<tr' + (item.status === "TBD" ? ' class="row-tbd"' : "")
+        + '><td class="mono">' + escapeHtml(item.canonical_jd)
+        + '</td><td>' + escapeHtml(item.name)
+        + '</td><td class="dom-cell">' + escapeHtml(jdDomainSummary(item.canonical_jd))
+        + '</td><td><b>' + escapeHtml(deliveryBindingValue(item))
+        + '</b></td><td>' + pill(item.status) + '<div class="dom-cell">'
+        + escapeHtml(source.source_id || "TBD") + '</div></td></tr>';
+    }).join("") + '</tbody></table>';
+}
+
+function renderInstantiationGroup(title, note, items, className) {
+  if (!items.length) return "";
+  const tbdCount = items.filter(item => item.status === "TBD").length;
+  let html = '<section class="side-block ' + escapeHtml(className || "")
+    + '"><div class="side-block-head">' + escapeHtml(title) + ' · ' + items.length
+    + (tbdCount ? " · TBD " + tbdCount : "") + '<span>' + escapeHtml(note) + '</span></div>';
+  groupJdItems(items, item => item.canonical_jd).forEach(group => {
+    html += '<div class="group-label instantiation-group-label">' + escapeHtml(group.title)
+      + ' · ' + group.items.length + '</div>' + renderInstantiationTable(group.items);
+  });
+  return html + '</section>';
+}
+
+function renderCaseJdComparison(item) {
+  if (!item || !item.task_template) return "";
+  const task = item.task_template;
+  const items = task.manifest.jd_bindings || [];
+  if (!items.length) return "";
+  const resolved = items.filter(binding =>
+    binding.status !== "TBD" && binding.value != null
+  ).length;
+  const coverage = (task.manifest.coverage || []).map(entry =>
+    entry.cell || entry.coverage_id
+  ).filter(Boolean);
+  const byAssignment = assignment => items.filter(binding =>
+    binding.configuration_assignment === assignment
+  );
+  const user = byAssignment("user");
+  const world = byAssignment("world");
+  const shared = byAssignment("shared");
+  const hidden = byAssignment("hidden_gt");
+  const pending = byAssignment("TBD");
+  let html = '<details class="spec-tpl-card" open><summary><div><div class="spec-tpl-title">'
+    + '本案例具体化明细 · 任务域 → 本案例具体值</div><div class="spec-tpl-meta mono">Seed '
+    + escapeHtml(String(item.seed)) + ' · 已赋值 ' + resolved + "/" + items.length
+    + ' · TBD ' + (items.length - resolved) + '</div></div><span class="spec-tpl-toggle"></span></summary>'
+    + '<div class="spec-tpl-body"><div class="rel-note">本案例由 <b>STEP 4 任务域模版</b>'
+    + '在 <b>Seed ' + escapeHtml(String(item.seed)) + '</b> 下具体化得到。任务域规定'
+    + ' fixed / enum / range / TBD，下面保留“取值域 → 本案例值”的完整对应；同一任务域与'
+    + '同一 Seed 可复现同一结果。</div>';
+  if (coverage.length) {
+    html += '<div class="instantiation-coverage"><b>A×L：</b>'
+      + coverage.map(cell => '<span class="lvl-pill ' + cellLevelClass(cell) + '">'
+        + escapeHtml(cell) + '</span>').join("") + '</div>';
+  }
+  html += '<div class="instantiation-sides">'
+    + renderInstantiationGroup(
+      "用户侧配置项", "交给 SUT / 用户侧 Config Agent", user, "side-user",
+    )
+    + renderInstantiationGroup(
+      "世界侧配置项", "由 Simulator / Fixture / Harness 实例化", world, "side-world",
+    )
+    + renderInstantiationGroup(
+      "双侧共享引用", "两侧使用相同 binding_id，分别交付", shared, "side-shared",
+    )
+    + renderInstantiationGroup(
+      "Hidden GT", "仅进入世界侧，不进入 SUT 输入", hidden, "side-hidden",
+    )
+    + renderInstantiationGroup(
+      "配置归属待确认", "保持 TBD，不自动分配到任一侧", pending, "side-pending",
+    )
+    + '</div><details class="hint-fold compact" style="margin-top:10px"><summary>'
+    + 'Seed 运行计划 JSON</summary><div class="hint-fold-body"><pre class="code-preview">'
+    + escapeHtml(JSON.stringify(item.run_plan || {}, null, 2))
+    + '</pre></div></details></div></details>';
+  return html;
 }
 
 function deliveryVariationSummary(batch) {
@@ -578,7 +652,7 @@ function renderTaskTemplateDelivery(item) {
     + '</h2></div>' + pill(item.validation.status, item.validation.status === "pass" ? "given" : "tbd") + '</div>'
     + '<div class="field-label"><label>JD 标注版任务叙事</label><span>给评审者阅读，可逐句追溯</span></div>'
     + '<div class="annotated-narrative">' + escapeHtml(task.narratives.review_annotated) + '</div>'
-    + renderCaseJdComparison(bindings)
+    + renderCaseJdComparison(item)
     + '<details class="hint-fold" style="margin-top:12px"><summary>SUT 可见任务正文</summary><div class="hint-fold-body">'
     + '<div class="clean-narrative">' + escapeHtml(task.narratives.sut_visible) + '</div></div></details>'
     + '<details class="hint-fold" style="margin-top:10px"><summary>机器 Manifest · JD '
