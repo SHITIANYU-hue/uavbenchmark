@@ -1391,7 +1391,7 @@ class ConfigAgent:
         run_id: str | None = None,
         progress: Callable[[str, dict[str, Any]], None] | None = None,
     ) -> FillTbdResult:
-        """Ask the model to propose domains for previously TBD JD slots only."""
+        """Review previously TBD JD slots without inventing missing domains."""
 
         if not tbd_slots:
             return FillTbdResult(jd_candidates=[], warnings=["no_tbd_slots"])
@@ -1400,6 +1400,22 @@ class ConfigAgent:
 
         fixed_scenario = fixed_scenario or load_fixed_scenario()
         emit = progress or (lambda _event, _details: None)
+        canonical_fields = jd_field_index()
+        requested_slots: list[tuple[str, str, str | None]] = []
+        requested_ids: set[str] = set()
+        for item in tbd_slots:
+            slot_id = str(item.get("slot_id") or "").strip()
+            if slot_id not in canonical_fields:
+                raise ConfigAgentError(f"{slot_id or '空 JD ID'} 不是当前 canonical JD。")
+            if slot_id in requested_ids:
+                raise ConfigAgentError(f"TBD 复核请求中包含重复 JD：{slot_id}。")
+            requested_ids.add(slot_id)
+            requested_slots.append((
+                slot_id,
+                str(canonical_fields[slot_id]["name"]),
+                str(item.get("source_note") or "").strip() or None,
+            ))
+
         payload = {
             "fixed_scenario": {
                 "scenario_id": fixed_scenario.get("scenario_id"),
@@ -1410,41 +1426,121 @@ class ConfigAgent:
             "resolved_jd_domains": resolved_slots or [],
             "tbd_slots": tbd_slots,
         }
+        agent_input = json.dumps(payload, ensure_ascii=False)
         messages = [
-            {"role": "system", "content": FILL_TBD_INSTRUCTION + _schema_instruction(FillTbdResult)},
-            {"role": "user", "content": json.dumps(payload, ensure_ascii=False)},
+            {"role": "system", "content": FILL_TBD_INSTRUCTION},
+            {"role": "user", "content": agent_input},
         ]
         rid = run_id or f"agent-fill-{uuid.uuid4().hex[:10]}"
         _save_raw_request(rid, "fill_tbd", messages)
         emit("model_request_started", {"model": self.model, "operation": "fill_tbd", "tbd_count": len(tbd_slots)})
         try:
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=messages,
+            response = self.transport.generate(
+                system_instruction=FILL_TBD_INSTRUCTION,
+                user_content=agent_input,
+                response_model=FillTbdResult,
                 temperature=0.2,
-                max_tokens=4096,
-                response_format={"type": "json_object"},
+                max_output_tokens=8192,
             )
-        except Exception as exc:
+        except ProviderError as exc:
             emit("model_request_failed", {"error": str(exc)[:500]})
-            raise _model_error(exc) from exc
-        emit("model_response_received", {"model": self.model, "operation": "fill_tbd"})
-        raw = response.choices[0].message.content or ""
-        finish = getattr(response.choices[0], "finish_reason", None) if response.choices else None
-        reasoning = getattr(response.choices[0].message, "reasoning_content", None) or ""
-        result = _parse_model_json(
-            raw, FillTbdResult,
+            raise ConfigAgentError(str(exc)) from exc
+        emit("model_response_received", {
+            "provider": self.provider,
+            "model": self.model,
+            "operation": "fill_tbd",
+            "finish_reason": response.finish_reason,
+        })
+        result = _validated_response(
+            response,
+            FillTbdResult,
             run_id=rid,
             operation="fill_tbd",
-            finish_reason=finish,
-            reasoning=reasoning,
+            provider_name=self.provider,
             emit=emit,
         )
-        allowed = {str(item.get("slot_id")) for item in tbd_slots if item.get("slot_id")}
-        filtered: list[JDCandidate] = [
-            item for item in result.jd_candidates if item.slot_id in allowed
-        ]
-        return FillTbdResult(jd_candidates=filtered, warnings=result.warnings)
+
+        returned = {
+            item.slot_id: item
+            for item in result.jd_candidates
+            if item.slot_id in requested_ids
+        }
+        source_task = task_description
+        source_scenario = json.dumps(payload["fixed_scenario"], ensure_ascii=False)
+        warnings = list(result.warnings)
+
+        def keep_tbd(
+            slot_id: str,
+            name: str,
+            source_note: str | None,
+            *,
+            reason: str | None = None,
+        ) -> JDCandidate:
+            note = source_note if source_note and source_note != "TBD" else None
+            return JDCandidate(
+                slot_id=slot_id,
+                name=name,
+                value=None,
+                binding_mode="TBD",
+                allowed_values=[],
+                minimum=None,
+                maximum=None,
+                status="TBD",
+                evidence_quote="",
+                provenance="agent_extracted",
+                source_note=reason or note or "已确认来源未提供完整取值或取值域，保持 TBD。",
+            )
+
+        reviewed: list[JDCandidate] = []
+        for slot_id, canonical_name, input_note in requested_slots:
+            item = returned.get(slot_id)
+            if item is None:
+                warnings.append(f"{slot_id} 未返回复核结果，已保持 TBD。")
+                reviewed.append(keep_tbd(slot_id, canonical_name, input_note))
+                continue
+
+            evidence = item.evidence_quote.strip()
+            evidence_in_task = bool(evidence and evidence in source_task)
+            evidence_in_scenario = bool(evidence and evidence in source_scenario)
+            has_exact_source = evidence_in_task or evidence_in_scenario
+            has_complete_domain = (
+                item.binding_mode == "fixed"
+                and item.value is not None
+                and str(item.value).strip() != ""
+            ) or (
+                item.binding_mode == "enum"
+                and bool(item.allowed_values)
+                and (item.value is None or item.value in item.allowed_values)
+            ) or (
+                item.binding_mode == "range"
+                and item.minimum is not None
+                and item.maximum is not None
+                and item.minimum <= item.maximum
+            )
+
+            if item.status != "given" or not has_exact_source or not has_complete_domain:
+                reviewed.append(keep_tbd(
+                    slot_id,
+                    canonical_name,
+                    input_note,
+                    reason=item.source_note,
+                ))
+                continue
+
+            updates: dict[str, Any] = {
+                "name": canonical_name,
+                "status": "given",
+                "provenance": "agent_extracted" if evidence_in_task else "scenario_fixed",
+            }
+            if item.binding_mode == "fixed":
+                updates.update(allowed_values=[], minimum=None, maximum=None)
+            elif item.binding_mode == "enum":
+                updates.update(minimum=None, maximum=None)
+            else:
+                updates.update(value=None, allowed_values=[])
+            reviewed.append(item.model_copy(update=updates))
+
+        return FillTbdResult(jd_candidates=reviewed, warnings=warnings)
 
 
 def save_narrative_run(

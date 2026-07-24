@@ -10,6 +10,7 @@ from uav_benchmark.agent.models import (
     CoverageCandidate,
     CoverageResult,
     ExtractionResult,
+    FillTbdResult,
     NarrativeDraft,
 )
 from uav_benchmark.agent.providers import (
@@ -71,6 +72,9 @@ def test_new_gemini_models_omit_deprecated_temperature() -> None:
 def test_gemini_uses_minimal_thinking_only_for_structured_extraction() -> None:
     assert gemini_structured_thinking_level("gemini-3.6-flash", ExtractionResult) == "minimal"
     assert gemini_structured_thinking_level("gemini-3.5-flash-lite", ExtractionResult) == "minimal"
+    assert gemini_structured_thinking_level("gemini-3.6-flash", FillTbdResult) == "minimal"
+    assert gemini_structured_thinking_level("gemini-3.5-flash", FillTbdResult) == "minimal"
+    assert gemini_structured_thinking_level("gemini-3.5-flash-lite", FillTbdResult) == "minimal"
     assert gemini_structured_thinking_level("gemini-3.6-flash", NarrativeDraft) is None
 
 

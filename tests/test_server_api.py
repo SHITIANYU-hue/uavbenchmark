@@ -7,6 +7,8 @@ from http.client import HTTPConnection
 from http.server import ThreadingHTTPServer
 from urllib.parse import urlsplit
 
+from uav_benchmark.agent.models import FillTbdResult
+from uav_benchmark.agent import server as agent_server
 from uav_benchmark.agent.server import PipelineRequestHandler
 from uav_benchmark.instance.domain_template import build_domain_template
 
@@ -200,6 +202,47 @@ def test_legacy_template_payload_uses_same_task_contract_without_defaults() -> N
     assert payload["task"] == payload["task_template"]
     assert payload["task"]["slot_bindings"][0]["value"] == "RGB"
     assert "scoring" not in payload["task"]
+
+
+def test_fill_tbd_endpoint_returns_reviewed_slots_without_external_call(monkeypatch) -> None:
+    class FakeConfigAgent:
+        def __init__(self, **_kwargs) -> None:
+            pass
+
+        def fill_tbd_domains(self, _task_description, *, tbd_slots, **_kwargs) -> FillTbdResult:
+            assert [item["slot_id"] for item in tbd_slots] == ["jd-2.2"]
+            return FillTbdResult.model_validate({
+                "jd_candidates": [{
+                    "slot_id": "jd-2.2",
+                    "name": "平台参数表",
+                    "value": None,
+                    "binding_mode": "TBD",
+                    "status": "TBD",
+                    "evidence_quote": "",
+                    "source_note": "已确认来源未提供平台参数。",
+                }],
+                "warnings": [],
+            })
+
+    monkeypatch.setenv("GEMINI_API_KEY", "local-test-key")
+    monkeypatch.setattr(agent_server, "ConfigAgent", FakeConfigAgent)
+    with _pipeline_server() as base_url:
+        status, payload = _post_json(
+            f"{base_url}/api/config-agent/fill-tbd",
+            {
+                "task_description": "这是一段足够长的已确认任务文案，但没有给出平台参数的具体内容。",
+                "provider": "gemini",
+                "model_tier": "flash",
+                "run_id": "agent-fill-endpoint-test",
+                "tbd_slots": [{"slot_id": "jd-2.2", "name": "平台参数表"}],
+                "resolved_slots": [],
+            },
+        )
+
+    assert status == 200
+    assert payload["model"] == "gemini-3.6-flash"
+    assert payload["filled"]["jd_candidates"][0]["slot_id"] == "jd-2.2"
+    assert payload["filled"]["jd_candidates"][0]["binding_mode"] == "TBD"
 
 
 def test_delivery_batch_endpoint_returns_ten_three_part_case_packages() -> None:

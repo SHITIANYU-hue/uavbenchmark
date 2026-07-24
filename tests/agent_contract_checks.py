@@ -10,8 +10,8 @@ import json
 import unittest
 from types import SimpleNamespace
 from uav_benchmark.agent.catalog import load_fixed_scenario, load_reference_catalog, load_scenario_registry
-from uav_benchmark.agent.models import AgentCandidate, CoverageResult, ExtractionResult, NarrativeDraft
-from uav_benchmark.agent.providers import StructuredResponse
+from uav_benchmark.agent.models import AgentCandidate, CoverageResult, ExtractionResult, FillTbdResult, NarrativeDraft
+from uav_benchmark.agent.providers import ProviderError, StructuredResponse
 from uav_benchmark.agent.service import (
     ConfigAgentError,
     ConfigAgent,
@@ -448,6 +448,87 @@ class AgentContractChecks(unittest.TestCase):
                 coverage_candidates=[],
                 task_title="t",
                 scenario_summary="s",
+            )
+
+    def test_fill_tbd_uses_provider_transport_and_preserves_unverified_slots(self) -> None:
+        task = "任务要求在定位质量降低时，由现场调度人员确认后重规划；其他参数均未确认。"
+        model_result = FillTbdResult.model_validate({
+            "jd_candidates": [
+                {
+                    "slot_id": "jd-10.3",
+                    "name": "模型返回的错误名称",
+                    "value": "由现场调度人员确认后重规划",
+                    "binding_mode": "fixed",
+                    "status": "given",
+                    "evidence_quote": "由现场调度人员确认后重规划",
+                    "source_note": "任务原文明确给出",
+                },
+                {
+                    "slot_id": "jd-2.2",
+                    "name": "平台参数表",
+                    "value": "通用平台参数",
+                    "binding_mode": "fixed",
+                    "status": "proposed",
+                    "evidence_quote": "",
+                    "source_note": "没有原文依据",
+                },
+                {
+                    "slot_id": "jd-999",
+                    "name": "非 canonical 槽位",
+                    "value": "错误值",
+                    "binding_mode": "fixed",
+                    "status": "given",
+                    "evidence_quote": "错误值",
+                },
+            ],
+            "warnings": [],
+        })
+        calls: list[str] = []
+        agent = ConfigAgent(
+            api_key="unused",
+            model="gemini-3.6-flash",
+            provider="gemini",
+            transport=FakeTransport([model_result], calls),
+        )
+
+        result = agent.fill_tbd_domains(
+            task,
+            tbd_slots=[
+                {"slot_id": "jd-10.3", "name": "轨迹重规划判据"},
+                {"slot_id": "jd-2.2", "name": "平台参数表"},
+                {"slot_id": "jd-1.3", "name": "业务术语表"},
+            ],
+            fixed_scenario={"scenario_id": "test", "title": "测试场景", "summary": "无额外参数"},
+        )
+
+        self.assertEqual(calls, ["FillTbdResult"])
+        self.assertEqual(
+            [item.slot_id for item in result.jd_candidates],
+            ["jd-10.3", "jd-2.2", "jd-1.3"],
+        )
+        self.assertEqual(result.jd_candidates[0].name, "轨迹重规划判据")
+        self.assertEqual(result.jd_candidates[0].binding_mode, "fixed")
+        self.assertEqual(result.jd_candidates[0].status, "given")
+        self.assertEqual(result.jd_candidates[1].binding_mode, "TBD")
+        self.assertIsNone(result.jd_candidates[1].value)
+        self.assertEqual(result.jd_candidates[2].binding_mode, "TBD")
+        self.assertNotIn("jd-999", {item.slot_id for item in result.jd_candidates})
+
+    def test_fill_tbd_converts_provider_errors_to_user_safe_agent_errors(self) -> None:
+        class FailingTransport:
+            def generate(self, **_kwargs: object) -> StructuredResponse:
+                raise ProviderError("Gemini 请求频率已达到当前额度（429）。")
+
+        agent = ConfigAgent(
+            api_key="unused",
+            model="gemini-3.6-flash",
+            provider="gemini",
+            transport=FailingTransport(),
+        )
+        with self.assertRaisesRegex(ConfigAgentError, "429"):
+            agent.fill_tbd_domains(
+                "这是一段足够长的已确认任务文案，但没有给出平台参数的具体内容。",
+                tbd_slots=[{"slot_id": "jd-2.2", "name": "平台参数表"}],
             )
 
     def test_chunking_splits_large_coverage_but_keeps_single_cell_whole(self) -> None:
