@@ -193,14 +193,76 @@ def test_review_narrative_routes_every_canonical_jd_into_semantic_paragraphs() -
     narrative = batch["cases"][0]["task_template"]["narratives"][
         "review_annotated"
     ]
+    paragraphs = narrative.split("\n\n")
 
     assert "本案例还使用以下已审阅变量" not in narrative
+    assert len(paragraphs) == 7
     for slot_id in canonical:
         assert narrative.count(f"【{slot_id} ") == 1
-    assert "任务对象的指称与业务术语" in narrative
-    assert "航路执行、轨迹重规划和航迹处置" in narrative
-    assert "安全包络、分相位阈值和安全处置" in narrative
-    assert "审计事件、证据格式与留存" in narrative
+    assert "【jd-0.2 " in paragraphs[0]
+    assert "【jd-0.9 " in paragraphs[1]
+    assert "【jd-7.1 " in paragraphs[2]
+    assert "【jd-0.4 " in paragraphs[3]
+    assert "【jd-0.3 " in paragraphs[4]
+    assert "【jd-13.1 " in paragraphs[5]
+    assert "【jd-0.7 " in paragraphs[6]
+
+
+def test_review_narrative_annotates_matching_values_inside_original_sections() -> None:
+    canonical = jd_field_index()
+    domain = _domain()
+    values = {
+        "jd-0.2": "高速公路及沿线路段",
+        "jd-0.4": "在场调度人员",
+        "jd-17.2": "安全的空中保持",
+    }
+    domain["jd_slots"] = [
+        {
+            "slot_id": slot_id,
+            "description": canonical[slot_id]["name"],
+            "binding": {
+                "mode": "fixed",
+                "value": value,
+                "status": "verified",
+            },
+            "provenance": [{
+                "source_id": "test_fixture",
+                "locator": slot_id,
+                "status": "verified",
+                "notes": None,
+            }],
+        }
+        for slot_id, value in values.items()
+    ]
+    base = "\n\n".join([
+        "第一段（任务上下文与业务目标）：面向高速公路及沿线路段执行巡检。",
+        "第二段（标称行为与持续性）：系统持续执行标称巡航。",
+        "第三段（观测与变量）：系统持续观测运行状态。",
+        "第四段（职责边界划分）：在场调度人员负责确认任务。",
+        "第五段（异常与事件处置）：异常时进入安全的空中保持。",
+        "第六段（输出与外部闭环）：系统输出任务结果。",
+        "第七段（完成判据与待定项）：完成判据保持待确认。",
+    ])
+    batch = build_delivery_batch(
+        domain_template=domain,
+        case_count=1,
+        batch_seed=1,
+        source_task="高速巡检",
+        base_narrative=base,
+        jd_tree_selection={"selected_nodes": []},
+        canonical_fields=canonical,
+    )
+    narrative = batch["cases"][0]["task_template"]["narratives"][
+        "review_annotated"
+    ]
+    paragraphs = narrative.split("\n\n")
+
+    assert len(paragraphs) == 7
+    assert "面向【jd-0.2 工作空间结构＝高速公路及沿线路段】执行巡检" in paragraphs[0]
+    assert "【jd-0.4 在场人角色＝在场调度人员】负责确认任务" in paragraphs[3]
+    assert "进入【jd-17.2 安全处置策略适用集＝安全的空中保持】" in paragraphs[4]
+    for slot_id in values:
+        assert narrative.count(f"【{slot_id} ") == 1
 
 
 def test_delivery_uses_the_canonical_66_slot_directory() -> None:

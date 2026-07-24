@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 from copy import deepcopy
 from pathlib import Path
 from typing import Any, Mapping, Sequence
@@ -255,188 +256,145 @@ def _annotated_narrative(
     boundaries: Sequence[Mapping[str, Any]],
     dependencies: Sequence[Mapping[str, Any]],
 ) -> str:
-    index = {item["canonical_jd"]: item for item in bindings}
+    section_slots = (
+        (
+            "jd-0.1", "jd-0.2", "jd-1.1", "jd-1.2", "jd-1.3",
+            "jd-2.1", "jd-2.3", "jd-6.1", "jd-6.2", "jd-10.1",
+        ),
+        (
+            "jd-0.9", "jd-3.1", "jd-4.1", "jd-10.2",
+            "jd-11.2", "jd-12.1", "jd-12.2",
+        ),
+        (
+            "jd-0.8", "jd-2.2", "jd-6.3", "jd-6.4", "jd-7.1",
+            "jd-7.2", "jd-8.1", "jd-8.2", "jd-9.1", "jd-11.1",
+            "jd-14.1", "jd-14.2",
+        ),
+        ("jd-0.4", "jd-0.5", "jd-4.2", "jd-5.1", "jd-5.2"),
+        (
+            "jd-0.3", "jd-0.6", "jd-0.10", "jd-4.3", "jd-4.4",
+            "jd-7.3", "jd-8.3", "jd-9.2", "jd-9.3", "jd-10.3",
+            "jd-10.4", "jd-11.3", "jd-12.3", "jd-14.3", "jd-16.1",
+            "jd-16.2", "jd-16.3", "jd-16.4", "jd-16.5", "jd-17.1",
+            "jd-17.2", "jd-17.3",
+        ),
+        (
+            "jd-4.5", "jd-5.3", "jd-13.1", "jd-13.3",
+            "jd-15.1", "jd-15.2", "jd-15.3",
+        ),
+        ("jd-0.7", "jd-3.2", "jd-13.2"),
+    )
+    section_leads = (
+        "本段所述任务上下文、业务对象与任务参数由{}共同限定。",
+        "标称执行所需的任务技能、导航、控制与载荷动作按照{}配置。",
+        "运行时观测、定位、资源与通信状态依据{}提供或判定。",
+        "系统、外部执行器与在场人员的职责和交接按照{}划分。",
+        "扰动、异常、重规划、合规与安全处置按照{}执行。",
+        "任务输出、通知、证据、审计与外部闭环按照{}交付。",
+        "任务完成、覆盖判定与其余待确认项按照{}判断。",
+    )
+    fallback_paragraphs = (
+        f"第一段（任务上下文与业务目标）：执行“{title}”任务。",
+        "第二段（标称行为与持续性）：标称行为以已确认的任务要求为准。",
+        "第三段（观测与变量）：观测与运行变量以已确认配置为准。",
+        "第四段（职责边界划分）：职责边界以已确认的任务合同为准。",
+        "第五段（异常与事件处置）：未确认的异常处置条件保持 TBD。",
+        "第六段（输出与外部闭环）：输出与外部闭环以已确认合同为准。",
+        "第七段（完成判据与待定项）：未确认的完成判据保持 TBD。",
+    )
+
+    text = base_narrative.replace("\\r\\n", "\n").replace("\\n", "\n").strip()
+    paragraphs = [
+        item.strip()
+        for item in re.split(r"\n\s*\n", text)
+        if item.strip()
+    ]
+    marker = re.compile(
+        r"\s*(第(?:[一二三四五六七]|[1-7])段"
+        r"(?:\s*[（(][^）)\n]{0,80}[）)])?\s*[：:])"
+    )
+    if len(paragraphs) < 7 and len(marker.findall(text)) >= 2:
+        text = marker.sub(r"\n\n\1", text).strip()
+        paragraphs = [
+            item.strip()
+            for item in re.split(r"\n\s*\n", text)
+            if item.strip()
+        ]
+    if len(paragraphs) > 7:
+        paragraphs = paragraphs[:6] + [" ".join(paragraphs[6:])]
+    paragraphs.extend(fallback_paragraphs[len(paragraphs):])
+
+    index = {
+        item["canonical_jd"]: item
+        for item in bindings
+        if item.get("configuration_assignment") != "hidden_gt"
+    }
     placed: set[str] = set()
 
-    def tag(slot_id: str) -> str | None:
-        item = index.get(slot_id)
-        if not item or item.get("configuration_assignment") == "hidden_gt":
-            return None
-        placed.add(slot_id)
+    def annotation(item: Mapping[str, Any]) -> str:
         return (
-            f"【{slot_id} {item['name']}＝"
+            f"【{item['canonical_jd']} {item['name']}＝"
             f"{_format_value(item.get('value'))}】"
         )
 
-    def tags(*slot_ids: str) -> list[str]:
-        return [
-            value
-            for slot_id in slot_ids
-            if (value := tag(slot_id)) is not None
-        ]
+    for section_index, slot_ids in enumerate(section_slots):
+        paragraph = paragraphs[section_index]
+        placeholders: dict[str, str] = {}
+        remaining: list[str] = []
+        for slot_id in slot_ids:
+            item = index.get(slot_id)
+            if not item:
+                continue
+            tagged = annotation(item)
+            value = item.get("value")
+            token = value.strip() if isinstance(value, str) else ""
+            if (
+                item.get("status") != "TBD"
+                and len(token) >= 2
+                and token in paragraph
+            ):
+                placeholder = f"\uFFF0{section_index}-{len(placeholders)}\uFFF1"
+                paragraph = paragraph.replace(token, placeholder, 1)
+                placeholders[placeholder] = tagged
+            else:
+                remaining.append(tagged)
+            placed.add(slot_id)
+        for placeholder, tagged in placeholders.items():
+            paragraph = paragraph.replace(placeholder, tagged)
+        if remaining:
+            paragraph = paragraph.rstrip() + " " + section_leads[section_index].format(
+                "、".join(remaining)
+            )
+        paragraphs[section_index] = paragraph
 
-    context = tags("jd-0.2")
-    duration = tags("jd-0.1")
-    route = tags("jd-10.1")
-    opening = f"在{context[0]}中，" if context else ""
-    opening += "无人机"
-    if route:
-        opening += f"沿{route[0]}"
-    opening += f"执行“{title}”任务"
-    if duration:
-        opening += f"，任务时长遵循{duration[0]}"
-    paragraphs = [opening + "。"]
-
-    if base_narrative.strip():
-        paragraphs.append(base_narrative.strip())
-
-    participants = tags("jd-0.4", "jd-0.5")
-    language = tags("jd-1.1", "jd-1.2", "jd-1.3")
-    parameters = tags("jd-2.1", "jd-2.2", "jd-2.3")
-    task_context: list[str] = []
-    if participants:
-        task_context.append(
-            "现场参与和人机确认按照" + "、".join(participants) + "组织"
-        )
-    if language:
-        task_context.append(
-            "任务对象的指称与业务术语由" + "、".join(language) + "解释"
-        )
-    if parameters:
-        task_context.append(
-            "任务及平台参数依据" + "、".join(parameters) + "配置"
-        )
-    if task_context:
-        paragraphs.append("；".join(task_context) + "。")
-
-    objects = tags("jd-6.1", "jd-6.2")
-    observations = tags("jd-0.9", "jd-6.3", "jd-6.4")
-    perception: list[str] = []
-    if objects:
-        perception.append(
-            "需要处理的业务对象与典型场景由" + "、".join(objects) + "限定"
-        )
-    if observations:
-        perception.append(
-            "无人机使用" + "、".join(observations) + "完成观测、识别和作业"
-        )
-    if perception:
-        paragraphs.append("；".join(perception) + "。")
-
-    task_semantics = tags("jd-3.1", "jd-3.2")
-    orchestration = tags("jd-4.1", "jd-4.2", "jd-4.3", "jd-4.4", "jd-4.5")
-    handoff = tags("jd-5.1", "jd-5.2", "jd-5.3")
-    execution: list[str] = []
-    if task_semantics:
-        execution.append(
-            "任务技能与完成语义依据" + "、".join(task_semantics)
-        )
-    if orchestration:
-        execution.append(
-            "任务组织、交接点、重编排和编排输出按照"
-            + "、".join(orchestration)
-            + "执行"
-        )
-    if handoff:
-        execution.append(
-            "需要人工介入时遵循" + "、".join(handoff)
-        )
-    if execution:
-        paragraphs.append("；".join(execution) + "。")
-
-    positioning = tags("jd-7.1", "jd-7.2", "jd-7.3")
-    relative_geometry = tags("jd-8.1", "jd-8.2", "jd-8.3")
-    navigation = tags("jd-10.2", "jd-10.3", "jd-10.4")
-    control = tags("jd-11.1", "jd-11.2", "jd-11.3")
-    payload_actions = tags("jd-12.1", "jd-12.2", "jd-12.3")
-    motion: list[str] = []
-    if positioning:
-        motion.append("定位输入、质量判断与处置依据" + "、".join(positioning))
-    if relative_geometry:
-        motion.append("相对几何感知与定位依据" + "、".join(relative_geometry))
-    if navigation:
-        motion.append(
-            "航路执行、轨迹重规划和航迹处置遵循" + "、".join(navigation)
-        )
-    if control:
-        motion.append("控制质量、工作机制和处置遵循" + "、".join(control))
-    if payload_actions:
-        motion.append("载荷动作及其时序、异常处置遵循" + "、".join(payload_actions))
-    if motion:
-        paragraphs.append("；".join(motion) + "。")
-
-    resources = tags("jd-9.1", "jd-9.2", "jd-9.3")
-    communication = tags("jd-0.8", "jd-14.1", "jd-14.2", "jd-14.3")
-    runtime: list[str] = []
-    if resources:
-        runtime.append("资源消耗、预警与处置受" + "、".join(resources) + "约束")
-    if communication:
-        runtime.append("通信基建、链路质量和地面站协同遵循" + "、".join(communication))
-    if runtime:
-        paragraphs.append("；".join(runtime) + "。")
-
-    disturbances = tags("jd-0.3")
-    compliance = tags(
-        "jd-0.6", "jd-16.1", "jd-16.2", "jd-16.3", "jd-16.4", "jd-16.5",
-    )
-    safety = tags("jd-0.10", "jd-17.1", "jd-17.2", "jd-17.3")
-    protection: list[str] = []
-    if disturbances:
-        protection.append(
-            "任务中的环境变化与异常暴露由" + "、".join(disturbances) + "定义"
-        )
-    if compliance:
-        protection.append("空域、围栏、授权及合规处置遵循" + "、".join(compliance))
-    if safety:
-        protection.append("安全包络、分相位阈值和安全处置遵循" + "、".join(safety))
-    if protection:
-        paragraphs.append(
-            "；".join(protection)
-            + "；其中未确认的条件保持 TBD，不作为默认判据。"
-        )
-
-    results = tags("jd-13.1", "jd-13.2", "jd-13.3")
-    audit = tags("jd-15.1", "jd-15.2", "jd-15.3")
-    delivery: list[str] = []
-    if results:
-        delivery.append("任务成果、覆盖判定和结果处置按照" + "、".join(results))
-    if audit:
-        delivery.append("审计事件、证据格式与留存按照" + "、".join(audit))
-    if delivery:
-        paragraphs.append("；".join(delivery) + "。")
-
-    completion = tag("jd-0.7")
-
-    # Canonical JD currently has 66 slots and all are routed above.  Keep a
-    # semantic fallback for forward-compatible catalog additions instead of
-    # recreating the old end-of-document variable dump.
+    # Canonical JD currently has 66 slots and all are routed above.  A future
+    # catalog addition stays inside the observations/variables paragraph
+    # rather than creating a new appendix after the seven-section narrative.
     unplaced = [
         item
-        for item in bindings
-        if item["canonical_jd"] not in placed
-        and item.get("configuration_assignment") != "hidden_gt"
+        for slot_id, item in index.items()
+        if slot_id not in placed
     ]
     if unplaced:
-        paragraphs.append(
-            "其他经审阅的任务约束由"
-            + "、".join(
-                f"【{item['canonical_jd']} {item['name']}＝"
-                f"{_format_value(item.get('value'))}】"
-                for item in unplaced
-            )
+        paragraphs[2] += (
+            " 其他经审阅的运行变量由"
+            + "、".join(annotation(item) for item in unplaced)
             + "共同限定。"
         )
 
     if boundaries:
         boundary_lines = []
         for item in boundaries:
-            scope = "；不负责：" + "、".join(item["out_of_scope"]) if item["out_of_scope"] else ""
+            scope = (
+                "；不负责：" + "、".join(item["out_of_scope"])
+                if item["out_of_scope"] else ""
+            )
             boundary_lines.append(
                 f"{item['coverage']}："
                 + "、".join(item["responsible_for"])
                 + scope
             )
-        paragraphs.append("能力边界：" + "；".join(boundary_lines) + "。")
+        paragraphs[3] += " 结构化能力边界为：" + "；".join(boundary_lines) + "。"
     if dependencies:
         dep_lines = [
             str(item.get("dependency_id") or "外部依赖")
@@ -444,12 +402,15 @@ def _annotated_narrative(
             + "、".join(item.get("responsibilities") or ["TBD"])
             for item in dependencies
         ]
-        paragraphs.append("外部依赖：" + "；".join(dep_lines) + "。")
-    if completion:
-        paragraphs.append(f"任务完成与终止按照{completion}判断；其中未确认的判据不得自动补值。")
-    else:
-        paragraphs.append("任务完成条件：【jd-0.7 任务完成判据＝TBD】，需人工确认后方可作为正式判据。")
-    return "\n\n".join(paragraphs)
+        paragraphs[5] += " 外部闭环依赖为：" + "；".join(dep_lines) + "。"
+    if "jd-0.7" not in index:
+        paragraphs[6] += (
+            " 任务完成条件：【jd-0.7 任务完成判据＝TBD】，"
+            "需确认后方可作为正式判据。"
+        )
+    if any(item.get("status") == "TBD" for item in index.values()):
+        paragraphs[6] += " 所有未确认项保持 TBD，不得自动填成默认值。"
+    return "\n\n".join(paragraphs[:7])
 
 
 def _sut_narrative(
