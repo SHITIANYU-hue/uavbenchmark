@@ -28,6 +28,10 @@ function initialState() {
     deliveryLoading: false,
     deliveryError: null,
     deliveryNotice: null,
+    deliveryStale: false,
+    factoryRunStatus: "idle",
+    factoryRunStep: "",
+    factoryRunError: null,
     saveNotice: null,
     contextCollapsed: false,
   };
@@ -50,6 +54,8 @@ function loadState() {
     if (!s.targetLevels || !Object.keys(s.targetLevels).length) s.targetLevels = defaultTargetLevels();
     // 恢复后清掉「进行中」的瞬时标记，避免刷新后卡在 loading/disabled
     s.fillTbdLoading = false;
+    s.factoryRunStatus = "idle";
+    s.factoryRunStep = "";
     if (s.jdTreeStatus === "loading" || s.jdTreeStatus === "building") s.jdTreeStatus = "idle";
     s.deliveryLoading = false;
     if (s.narrativeStatus === "running") s.narrativeStatus = s.narrativeDraft ? "done" : "idle";
@@ -59,6 +65,32 @@ function loadState() {
     if (s.extractionStatus === "running") s.extractionStatus = hasJd ? "done" : "idle";
     s.extractionProgress = null;
     s.coverageProgress = null;
+    const selectionBasis = (s.jdTreeSelection && s.jdTreeSelection.selection_basis) || {};
+    const oldGlobalSelection = !!(
+      s.jdTreeSelection
+      && selectionBasis.global_variables_included !== false
+      && (s.jdTreeSelection.selected_nodes || []).some(node => node.owner_a === "MULTI")
+    );
+    if (oldGlobalSelection) {
+      if (s.agentResult && s.agentResult.candidate) {
+        s.agentResult.candidate.jd_candidates = [];
+        s.agentResult.candidate.runtime_dependencies = [];
+      }
+      s.extractionStatus = "idle";
+      s.extractionRunId = null;
+      s.jdTreeStatus = "idle";
+      s.jdTreeSlice = null;
+      s.jdTreeSelectedNodeIds = [];
+      s.jdTreeSelection = null;
+      s.domainEdits = {};
+      s.domainEditHistory = [];
+      s.deliveryBatch = null;
+      s.deliveryStale = false;
+      s.completed = new Set(Array.from(s.completed).filter(step => step <= 1));
+      s.maxUnlocked = Math.min(s.maxUnlocked || 2, 2);
+      s.currentStage = Math.min(Number(s.currentStage) || 0, 2);
+      s.saveNotice = "已保留 STEP 1–2；旧全局变量结果需从 STEP 3 按新规则重新生成";
+    }
     // 已解锁的步数至少覆盖所有已完成的步骤，保证已保存的步骤都能跳转
     const comp = Array.from(s.completed);
     s.maxUnlocked = Math.max(s.maxUnlocked || 0, comp.length ? Math.max.apply(null, comp) : 0);
@@ -98,12 +130,22 @@ function stageReachable(i) { return i <= furthestUnlocked() || state.completed.h
 function completeStage(i) { state.completed.add(i); state.maxUnlocked = Math.max(state.maxUnlocked, Math.min(i + 1, STAGES.length - 1)); state.currentStage = Math.min(i + 1, STAGES.length - 1); render(); }
 
 function clearDeliveryArtifacts() {
+  if (state.deliveryBatch) {
+    state.deliveryStale = true;
+    state.deliveryError = null;
+    state.deliveryNotice = "上游内容已修改；当前交付物需要按复核结果重新生成。";
+    state.completed.delete(4);
+    state.completed.delete(5);
+    state.maxUnlocked = Math.max(state.maxUnlocked, 5);
+    return;
+  }
   state.deliveryBatch = null;
   state.deliverySelectedCase = 0;
   state.deliveryOverrides = {};
   state.deliveryHumanEdits = {};
   state.deliveryError = null;
   state.deliveryNotice = null;
+  state.deliveryStale = false;
   state.completed.delete(4);
   state.completed.delete(5);
   state.maxUnlocked = Math.min(state.maxUnlocked, 4);

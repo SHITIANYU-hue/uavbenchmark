@@ -4,7 +4,7 @@ async function runNarrative() {
   if (!cells.length) {
     state.narrativeError = "请先至少选择 1 个目标 A×L coverage，再运行文案扩充。";
     render();
-    return;
+    return false;
   }
   clearDeliveryArtifacts();
   state.narrativeStatus = "running"; state.narrativeError = null; state.narrativeRunId = uid("agent-"); render();
@@ -23,6 +23,7 @@ async function runNarrative() {
     state.narrativeStatus = "done"; state.narrativeDraft = d.result.draft.expanded_narrative; state.narrativeOriginal = state.narrativeDraft;
   } catch(e) { state.narrativeStatus = "idle"; state.narrativeError = String(e.message || e); }
   render();
+  return state.narrativeStatus === "done";
 }
 
 function stopAgentPoll() {
@@ -221,6 +222,7 @@ async function runCoverage() {
   }
   stopAgentPoll();
   render();
+  return state.agentStatus === "done";
 }
 
 // STEP 3: JD variable-domain extraction, chunked server-side (retriable).
@@ -229,12 +231,12 @@ async function runExtraction() {
   if (!c || !((c.coverage_candidates || []).length)) {
     state.extractionError = "缺少已确认的 A×L 覆盖，请先在 STEP 2 完成分类。";
     render();
-    return;
+    return false;
   }
   if (!state.jdTreeSelection) {
     state.extractionError = "请先在 STEP 3 确认 JD业务变量树中的变量并生成选择清单。";
     render();
-    return;
+    return false;
   }
   state.extractionStatus = "running";
   state.extractionError = null;
@@ -274,6 +276,7 @@ async function runExtraction() {
   }
   stopAgentPoll();
   render();
+  return state.extractionStatus === "done";
 }
 
 // STEP 2: confirm the expanded narrative, then run coverage classification.
@@ -391,12 +394,13 @@ async function loadTreeDomains() {
   }
   state.fillTbdLoading = false;
   render();
+  return !state.fillTbdError;
 }
 
 async function loadMetricsForStep3() {
   const c = state.agentResult && state.agentResult.candidate;
   const abilities = c && c.coverage_candidates ? [...new Set(c.coverage_candidates.map(x => x.cell.split("×")[0]))] : [];
-  if (!abilities.length) { state.fillTbdError = "没有选中的能力"; render(); return; }
+  if (!abilities.length) { state.fillTbdError = "没有选中的能力"; render(); return false; }
   state.fillTbdLoading = true; state.fillTbdError = null; state.fillTbdNotice = null; render();
   try {
     const all = {};
@@ -415,4 +419,5 @@ async function loadMetricsForStep3() {
   }
   state.fillTbdLoading = false;
   render();
+  return !state.fillTbdError;
 }

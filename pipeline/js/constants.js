@@ -20,7 +20,7 @@ const SCENARIO_TASK_EXAMPLES = {
 // browser drafts produced under the legacy numbering scheme.
 const STORAGE_KEY = "uav_pipeline_v10";
 const ABILITY_ID_SCHEME = "ability-id-v3-2026-07-20";
-const DELIVERY_CONTRACT_VERSION = "2026-07-24.2";
+const DELIVERY_CONTRACT_VERSION = "2026-07-24.3";
 const SCENARIO_NONE = "";
 const SCENARIO_FALLBACK_ID = "other_inspection";
 // 没有经场景资料确认的“主测能力”时不预填等级。A×L 由人在 STEP 2 定靶。

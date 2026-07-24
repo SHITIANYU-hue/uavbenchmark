@@ -467,6 +467,7 @@ def build_jd_tree_selection(
     selected_node_ids: Iterable[str],
     *,
     coverage_cells: Iterable[str] | None = None,
+    include_global: bool = True,
     source_hash: str | None = None,
 ) -> dict[str, Any]:
     """Build the reviewable artifact that freezes one human V2 selection.
@@ -485,7 +486,7 @@ def build_jd_tree_selection(
     build_jd_tree_slice(
         tree,
         abilities,
-        include_global=True,
+        include_global=include_global,
         selected_node_ids=selected,
         source_hash=source_hash,
     )
@@ -585,6 +586,7 @@ def build_jd_tree_selection(
     selection_basis = {
         "coverage_cells": coverage,
         "abilities": sorted(abilities, key=lambda value: int(value[1:])),
+        "global_variables_included": include_global,
     }
     identity_payload = {
         "tree_sha256": source_hash or _json_hash(tree),
@@ -617,6 +619,7 @@ def load_jd_tree_selection(
     selected_node_ids: Iterable[str],
     *,
     coverage_cells: Iterable[str] | None = None,
+    include_global: bool = True,
 ) -> dict[str, Any]:
     """Build a selection from the immutable team-delivered Version2 file."""
 
@@ -625,5 +628,6 @@ def load_jd_tree_selection(
         ability_ids,
         selected_node_ids,
         coverage_cells=coverage_cells,
+        include_global=include_global,
         source_hash=_file_hash(JD_TREE_V2_PATH),
     )

@@ -388,6 +388,7 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                     [str(value) for value in abilities],
                     [str(value) for value in selected_nodes],
                     coverage_cells=[str(value) for value in coverage_cells],
+                    include_global=bool(payload.get("include_global", False)),
                 )
                 self._json(HTTPStatus.OK, {"jd_tree_selection": selection})
                 return
@@ -700,6 +701,9 @@ class PipelineRequestHandler(SimpleHTTPRequestHandler):
                             for item in coverage_candidates
                             if isinstance(item, dict) and item.get("cell")
                         ],
+                        include_global=bool(
+                            basis.get("global_variables_included", True)
+                        ),
                     )
                     if (
                         raw_selection.get("selection_id")

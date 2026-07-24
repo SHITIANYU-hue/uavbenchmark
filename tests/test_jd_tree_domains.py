@@ -7,6 +7,7 @@ from uav_benchmark.agent.catalog import (
     build_jd_tree_selection,
     build_jd_tree_slice,
     load_jd_tree_domains,
+    load_jd_tree_selection,
     load_jd_tree_slice,
 )
 
@@ -195,4 +196,24 @@ def test_v2_selection_rejects_group_nodes() -> None:
             {"A6"},
             {"jd-6.1"},
             coverage_cells={"A6×L2"},
+        )
+
+
+def test_real_selection_can_exclude_global_variables_without_deleting_source() -> None:
+    result = load_jd_tree_selection(
+        {"A6"},
+        {"jd-6.1.1"},
+        coverage_cells={"A6×L2"},
+        include_global=False,
+    )
+
+    assert result["selection_basis"]["global_variables_included"] is False
+    assert {node["owner_a"] for node in result["selected_nodes"]} == {"A6"}
+
+    with pytest.raises(ValueError, match="outside requested abilities"):
+        load_jd_tree_selection(
+            {"A6"},
+            {"PROPOSED-jd-0.1.1"},
+            coverage_cells={"A6×L2"},
+            include_global=False,
         )

@@ -182,7 +182,7 @@ def test_ui_keeps_team_flow_and_provider_checkpoint_controls() -> None:
     assert "Seed 运行计划 JSON" in blob
     assert "种不同 JD 配置" in blob
     assert "Pipeline 服务仍在运行旧版后端" in blob
-    assert 'const DELIVERY_CONTRACT_VERSION = "2026-07-24.2"' in blob
+    assert 'const DELIVERY_CONTRACT_VERSION = "2026-07-24.3"' in blob
     assert "JD 变量树维护方" in blob
     assert "不确定时保持 TBD，仍可导出草案" in blob
     assert 'id="providerSelect"' in blob
@@ -200,6 +200,12 @@ def test_ui_keeps_team_flow_and_provider_checkpoint_controls() -> None:
     assert "已开始新任务；手动检查点仍可加载" in blob
     assert "已加载检查点 ✓" in blob
     assert "target_coverage" in blob
+    assert "一键生成草案到 STEP 6" in blob
+    assert "按复核结果重新生成" in blob
+    assert "本步操作" in blob
+    assert 'query.set("include_global", "false")' in blob
+    assert "恢复 L 累计建议" in blob
+    assert "v2NodeMatchesCumulativeLevel" in blob
 
 
 def test_ui_splits_coverage_step2_from_jd_extraction_step3() -> None:
@@ -229,7 +235,8 @@ def test_pipeline_ui_is_split_into_modules() -> None:
     js_dir = ROOT / "pipeline" / "js"
     expected = {
         "constants.js", "utils.js", "state.js", "scenarios.js", "coverage.js",
-        "jd.js", "jd_tree_v2.js", "agent.js", "persistence.js", "steps.js", "shell.js", "main.js",
+        "jd.js", "jd_tree_v2.js", "agent.js", "persistence.js", "steps.js",
+        "factory_run.js", "shell.js", "main.js",
     }
     assert expected <= {p.name for p in js_dir.glob("*.js")}
     assert (ROOT / "pipeline" / "css" / "app.css").is_file()

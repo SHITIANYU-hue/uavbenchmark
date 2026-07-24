@@ -418,6 +418,76 @@ def test_all_delivery_artifacts_match_schemas() -> None:
     validate_artifact(batch, ROOT / "schemas" / "delivery_batch.schema.json")
 
 
+def test_current_v2_projection_does_not_reuse_legacy_global_categories() -> None:
+    selection = load_jd_tree_selection(
+        {"A11"},
+        {"jd-11.1.3.1.1"},
+        coverage_cells={"A11×L2"},
+        include_global=False,
+    )
+    domain = {
+        **_domain(),
+        "coverage": [{
+            "cell": "A11×L2",
+            "role": "primary",
+            "responsibilities": ["执行受约束控制"],
+            "out_of_scope": [],
+        }],
+        "jd_slots": [{
+            "slot_id": "jd-11.1",
+            "description": jd_field_index()["jd-11.1"]["name"],
+            "binding": {
+                "mode": "fixed",
+                "value": "位置保持",
+                "status": "verified",
+            },
+            "provenance": [{
+                "source_id": "test_requirement",
+                "locator": "task",
+                "status": "verified",
+                "notes": None,
+            }],
+        }],
+    }
+    batch = build_delivery_batch(
+        domain_template=domain,
+        case_count=1,
+        batch_seed=11,
+        source_task="在受约束环境中执行位置保持。",
+        base_narrative=domain["natural_language_template"],
+        jd_tree_selection=selection,
+        canonical_fields=jd_field_index(),
+    )
+    first = batch["cases"][0]
+    world = first["world_config"]
+
+    assert selection["selection_basis"]["global_variables_included"] is False
+    assert [item["canonical_jd"] for item in world["adjustable_variables"]] == [
+        "jd-11.1"
+    ]
+    assert world["world_assets"] == []
+    assert world["scene_layout"] == []
+    assert world["disturbances"] == []
+    assert any(
+        item["tbd_id"] == "tbd:world_semantic_categories"
+        for item in world["tbd_items"]
+    )
+    assert world["provenance"][0]["source_id"] == (
+        "jd_variable_tree_version2.json"
+    )
+    assert first["user_config"]["provenance"][0]["locator"] == (
+        selection["selection_id"]
+    )
+    assert "jd-0.7" not in first["task_template"]["narratives"][
+        "review_annotated"
+    ]
+    assert all(
+        item.get("canonical_jd") != "jd-0.7"
+        for item in first["task_template"]["manifest"]["tbd_items"]
+    )
+    validate_artifact(batch, ROOT / "schemas" / "delivery_batch.schema.json")
+
+
 def test_highway_demo_fixture_uses_real_tree_and_generates_delivery() -> None:
     fixture = json.loads(
         (

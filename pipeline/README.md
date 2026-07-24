@@ -16,6 +16,7 @@ pipeline/
     agent.js          # 扩充 / 分类 / 变量范围约束提取 / TBD 来源复核
     persistence.js    # 保存·加载检查点
     steps.js          # STEP 1–6 界面（含批量 Task Template 与三类交付）
+    factory_run.js    # STEP 1 一键草案编排；保留各步复核点
     shell.js          # 侧栏 Provider / 进度
     main.js           # render / init
 ```

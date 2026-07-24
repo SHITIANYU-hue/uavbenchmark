@@ -47,10 +47,35 @@ function requiredCanonicalJdsForCoverage() {
   return wanted;
 }
 
+function confirmedLevelByAbility() {
+  const result = {};
+  confirmedCoverageCells().forEach(cell => {
+    const match = String(cell).match(/^(A\d+)×L([1-4])$/);
+    if (match) result[match[1]] = parseInt(match[2], 10);
+  });
+  return result;
+}
+
+function v2NodeMatchesCumulativeLevel(node, selectedLevels) {
+  const declared = node.used_by_axl || [];
+  if (!declared.length) return true;
+  return declared.some(cell => {
+    const match = String(cell).match(/^(A\d+)×L([1-4])$/);
+    if (!match || selectedLevels[match[1]] == null) return false;
+    return parseInt(match[2], 10) <= selectedLevels[match[1]];
+  });
+}
+
 function suggestedV2VariableIds() {
   const required = requiredCanonicalJdsForCoverage();
+  const selectedLevels = confirmedLevelByAbility();
   return ((state.jdTreeSlice && state.jdTreeSlice.nodes) || [])
-    .filter(node => node.node_kind === "variable" && required.has(v2CanonicalAnchor(node)))
+    .filter(node =>
+      node.node_kind === "variable"
+      && node.owner_a !== "MULTI"
+      && required.has(v2CanonicalAnchor(node))
+      && v2NodeMatchesCumulativeLevel(node, selectedLevels)
+    )
     .map(node => node.node_id);
 }
 
@@ -82,7 +107,7 @@ async function loadJdV2Slice(options) {
     state.jdTreeStatus = "error";
     state.jdTreeError = "没有已确认的 A×L，无法加载 JD业务变量树。";
     render();
-    return;
+    return false;
   }
   state.jdTreeStatus = "loading";
   state.jdTreeError = null;
@@ -91,7 +116,7 @@ async function loadJdV2Slice(options) {
   try {
     const query = new URLSearchParams();
     query.set("ability", abilities.join(","));
-    query.set("include_global", "true");
+    query.set("include_global", "false");
     const r = await fetch("/api/jd-tree/slice?" + query.toString(), {cache: "no-store"});
     const d = await r.json();
     if (!r.ok) throw new Error(d.message || d.error || "JD业务变量树加载失败");
@@ -107,12 +132,13 @@ async function loadJdV2Slice(options) {
     state.jdTreeSelection = null;
     clearStaleJdExtraction();
     state.jdTreeStatus = "ready";
-    state.jdTreeNotice = "已按 A×L 加载 JD业务变量树；勾选是建议范围，需人工确认。";
+    state.jdTreeNotice = "已按 A×L 累计等级加载能力变量；全局变量已退出当前 Pipeline，勾选仍需人工确认。";
   } catch (e) {
     state.jdTreeStatus = "error";
     state.jdTreeError = String(e.message || e);
   }
   render();
+  return state.jdTreeStatus === "ready";
 }
 
 async function confirmCoverageAndLoadV2() {
@@ -174,6 +200,7 @@ async function buildJdTreeSelectionArtifact() {
         abilities: confirmedAbilityIds(),
         coverage_cells: confirmedCoverageCells(),
         selected_node_ids: selected,
+        include_global: false,
       }),
     });
     const d = await r.json();
@@ -219,13 +246,11 @@ async function copyJdTreeSelection() {
 function renderJdTreeSelectionHtml() {
   if (state.jdTreeStatus === "loading") {
     return '<div class="choice-card selected" style="margin-top:12px"><b>正在加载 JD业务变量树…</b>'
-      + '<p>仅加载已确认 A×L 对应能力和全局变量，不展开完整 444 节点。</p></div>';
+      + '<p>仅加载已确认 A×L 对应的能力变量，不加载全局变量，也不展开完整 444 节点。</p></div>';
   }
   if (!state.jdTreeSlice) {
     return '<div class="choice-card dependency selected" style="margin-top:12px"><b>尚未加载 JD业务变量树</b>'
-      + '<p>点击下方按钮，按本轮 A×L 加载。</p></div>'
-      + '<div class="action-row"><span class="action-note">数据源固定为团队当前交付的 JD业务变量树</span>'
-      + '<button class="btn primary" type="button" onclick="loadJdV2Slice({preserveSelection:false})">加载变量树</button></div>';
+      + '<p>请在顶部“本步操作”按本轮 A×L 加载能力变量。</p></div>';
   }
 
   const slice = state.jdTreeSlice;
@@ -244,7 +269,7 @@ function renderJdTreeSelectionHtml() {
     };
     groups[key].nodes.push(node);
   });
-  const ownerOrder = ["MULTI"].concat(confirmedAbilityIds());
+  const ownerOrder = confirmedAbilityIds();
   const ordered = Object.values(groups).sort((a, b) => {
     const ai = ownerOrder.indexOf(a.owner), bi = ownerOrder.indexOf(b.owner);
     return (ai < 0 ? 99 : ai) - (bi < 0 ? 99 : bi) || a.anchor.localeCompare(b.anchor);
@@ -257,12 +282,9 @@ function renderJdTreeSelectionHtml() {
   ).length;
   let h = '<div class="jd-v2-summary">'
     + '<div><b>JD业务变量树</b>'
-    + '<span>团队当前交付树 · 本次加载 ' + variables.length + ' 个变量</span></div>'
+    + '<span>团队当前交付树 · 仅能力变量 · 本次加载 ' + variables.length + ' 个</span></div>'
     + '<div class="jd-v2-count"><b>' + selected.size + '</b><span>已勾选</span></div></div>';
-  h += '<div class="action-row" style="margin-top:10px"><span class="action-note">建议勾选来自 A×L→canonical JD 映射；候选细粒度节点不冒充 canonical。</span><div>'
-    + '<button class="btn" type="button" onclick="restoreSuggestedJdV2Selection()">恢复 A×L 建议</button> '
-    + '<button class="btn" type="button" onclick="clearJdV2Selection()">全部清空</button> '
-    + '<button class="btn" type="button" onclick="loadJdV2Slice({preserveSelection:true})">刷新变量树</button></div></div>';
+  h += '<div class="action-row" style="margin-top:10px"><span class="action-note">默认勾选按 L 累计：L2 含 L1–L2，L3 含 L1–L3，L4 含 L1–L4；无等级标注的结构变量随对应 canonical JD 保留。主要操作位于顶部。</span></div>';
   if (tbdMetadata) {
     h += '<div class="tbd-banner"><b>变量树元数据仍有 TBD</b><p>本次子树中有 ' + tbdMetadata
       + ' 个变量缺少 role / projection / visibility 等字段。页面原样显示，不推断配置侧。</p></div>';
@@ -287,6 +309,7 @@ function renderJdTreeSelectionHtml() {
       if (!(node.projection_targets || []).length) gaps.push("projection");
       if (!(node.visibility || []).length) gaps.push("visibility");
       if (!(node.observation_channel || []).length) gaps.push("channel");
+      const usedBy = node.used_by_axl || [];
       h += '<label class="jd-v2-node' + (selected.has(node.node_id) ? " selected" : "") + '">'
         + '<input type="checkbox" onchange="toggleJdV2Node(\'' + escapeHtml(node.node_id)
         + '\',this.checked)"' + (selected.has(node.node_id) ? " checked" : "") + '>'
@@ -296,23 +319,18 @@ function renderJdTreeSelectionHtml() {
         + '<em>side: ' + escapeHtml(side) + '</em><em>role: ' + escapeHtml(role) + '</em>'
         + (hidden ? '<em class="danger">Hidden GT</em>' : '')
         + (gaps.length ? '<em class="warn">TBD: ' + escapeHtml(gaps.join(", ")) + '</em>' : '')
+        + (usedBy.length ? '<em>等级: ' + escapeHtml(usedBy.join(", ")) + '</em>' : '<em>结构变量</em>')
         + '<em>候选细粒度节点</em></span></span></label>';
     });
     h += '</div></details>';
   });
-  h += '<div class="action-row"><span class="action-note">先生成可审阅的选择清单，再让 Agent 提取变量域。</span>'
-    + '<button class="btn primary" type="button" onclick="buildJdTreeSelectionArtifact()"'
-    + (!selected.size || state.jdTreeStatus === "building" ? " disabled" : "") + '>'
-    + (state.jdTreeStatus === "building" ? "生成中…" : "确认选择并生成清单") + '</button></div>';
+  h += '<div class="action-row"><span class="action-note">在顶部“本步操作”确认选择并生成清单，再让 Agent 提取变量域。</span></div>';
   if (state.jdTreeSelection) {
     const selection = state.jdTreeSelection;
     h += '<div class="choice-card selected" style="margin-top:12px"><b>选择清单已生成 · '
       + escapeHtml(selection.selection_id) + '</b><p>细粒度变量 ' + selection.selected_nodes.length
       + ' 个；允许 Agent 使用的 canonical JD ' + selection.allowed_agent_slot_ids.length
-      + ' 个；元数据 TBD ' + selection.unresolved_nodes.length + ' 个。</p></div>'
-      + '<div class="action-row"><span class="action-note">该 JSON 可单独交付、审阅或回放。</span><div>'
-      + '<button class="btn" type="button" onclick="copyJdTreeSelection()">复制 JSON</button> '
-      + '<button class="btn" type="button" onclick="downloadJdTreeSelection()">下载 JSON</button></div></div>'
+      + ' 个；元数据 TBD ' + selection.unresolved_nodes.length + ' 个。复制与下载入口位于顶部。</p></div>'
       + '<details class="hint-fold"><summary>查看 jd_tree_selection JSON</summary><div class="hint-fold-body">'
       + '<pre class="code-preview">' + escapeHtml(JSON.stringify(selection, null, 2)) + '</pre></div></details>';
   }

@@ -2,7 +2,7 @@
 
 > 设计输入：`docs/pipeline_delivery_audit.md`
 >
-> 状态：总体方向已确认；第一批 V2 foundation 已实现，其余阶段待分批实施
+> 状态：总体方向已确认；V2 foundation、三类交付、L 累计选变量、一键草案与复核重生成已实现
 > 约束：以 `knowledge/jd_variable_tree_version2.json` 实物为当前 JD 主数据；canonical 66 仅作追溯/兼容索引；未知为 TBD；不编造阈值、规则、默认数值、安全判据和 simulator API；不让 Agent 自由探索完整 444 节点。
 
 ## 1. 目标形态

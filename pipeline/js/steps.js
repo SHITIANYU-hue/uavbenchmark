@@ -13,19 +13,28 @@ function renderStep1() {
       '<option value="' + s.scenario_id + '"' + (s.scenario_id === state.selectedScenarioId ? " selected" : "") + ">" +
       escapeHtml(s.title) + "</option>"
     )).join("");
-  let h = saveBar()
+  const factoryRunning = state.factoryRunStatus === "running";
+  const step1Actions = '<button class="btn primary" type="button" id="confirmStep1Btn" onclick="confirmStep1()"'
+    + (promptOk && !factoryRunning ? "" : " disabled") + '>'
+    + (alreadyDone ? "进入 STEP 2" : "确认任务") + '</button>'
+    + '<button class="btn" type="button" id="factoryRunBtn" onclick="runFactoryDraftToStep6()"'
+    + (state.taskPrompt.trim().length >= 10 && providerReady() && !factoryRunning ? "" : " disabled") + '>'
+    + (factoryRunning ? "生成中…" : "一键生成草案到 STEP 6") + '</button>';
+  let h = workflowActionBar({
+      note: "先确认任务；也可一键生成草案，之后仍能逐步检查和修改。",
+      actions: step1Actions,
+    })
     + '<p class="intro">写清任务即可。需要示例时，从下拉选一个场景，内容会直接填进文本框，可再改。</p>'
     + '<div class="field-label"><label>加载示例（可选）</label><span>选中即写入文本框</span></div>'
     + '<div class="control" style="margin-bottom:14px"><select id="scenarioSelect">' + opts + "</select></div>"
     + '<div class="field-label"><label>任务描述</label><span>必填 · 至少 5 个字</span></div>'
     + '<textarea class="task-input" id="taskPrompt" style="min-height:220px" placeholder="用几句话说明让无人机做什么、关注什么异常、希望得到什么结果。">' +
       escapeHtml(state.taskPrompt) + "</textarea>";
-  const note = promptOk
-    ? (alreadyDone ? "可修改后再次确认，或直接进入下一步" : "确认后进入下一步")
-    : "请先输入至少 5 个字的任务描述";
-  h += '<div class="action-row"><span class="action-note" id="step1Note">' + note + '</span>'
-    + '<button class="btn primary" type="button" id="confirmStep1Btn" onclick="confirmStep1()"' +
-    (promptOk ? "" : " disabled") + ">" + (alreadyDone ? "进入下一步 →" : "确认 →") + "</button></div>";
+  if (state.factoryRunStatus !== "idle") {
+    h += '<div class="factory-progress' + (state.factoryRunStatus === "error" ? " error" : "") + '"><b>'
+      + escapeHtml(state.factoryRunStatus === "done" ? "一键草案已生成" : state.factoryRunStatus === "error" ? "一键生成中断" : "正在生成")
+      + '</b> · ' + escapeHtml(state.factoryRunError || state.factoryRunStep || "准备中") + '</div>';
+  }
   document.getElementById("workspaceBody").innerHTML = h;
   const sel = document.getElementById("scenarioSelect");
   if (sel) sel.addEventListener("change", () => {
@@ -37,11 +46,9 @@ function renderStep1() {
     state.taskPrompt = ta.value;
     const ok = state.taskPrompt.trim().length >= 5;
     const btn = document.getElementById("confirmStep1Btn");
-    const tip = document.getElementById("step1Note");
+    const factoryBtn = document.getElementById("factoryRunBtn");
     if (btn) btn.disabled = !ok;
-    if (tip) tip.textContent = ok
-      ? (state.completed.has(0) ? "可修改后再次确认，或直接进入下一步" : "确认后进入下一步")
-      : "请先输入至少 5 个字的任务描述";
+    if (factoryBtn) factoryBtn.disabled = state.taskPrompt.trim().length < 10 || !providerReady();
   });
 }
 
@@ -54,26 +61,41 @@ function renderStep2a() {
   setHeader(1, state.completed.has(1) ? "已完成" : state.agentStatus === "done" ? "A×L 待确认" : state.narrativeStatus === "done" ? "文案待确认" : "等待运行");
   const hasN = state.narrativeStatus === "done", hasA = state.agentStatus === "done";
   const canEditCov = !hasN && state.narrativeStatus !== "running";
-  let h = saveBar() + '<p class="intro">STEP 2：选目标 Coverage 并确认 → 扩充文案（自动保存）→ 确认文案后只跑 A×L 分类（按已选 A×L 分批进行，可看进度）。JD 域提取放到 STEP 3 单独运行。</p>';
+  const cells = selectedCoverageCells();
+  let step2Actions = "";
+  let step2Note = "先确定 A×L，再依次扩充文案和运行分类。";
+  if (!hasN) {
+    const ready = providerReady() && cells.length > 0 && state.narrativeStatus !== "running";
+    step2Actions = '<button class="btn primary" type="button" onclick="runNarrative()"'
+      + (ready ? "" : " disabled") + '>'
+      + (state.narrativeStatus === "running" ? "文案扩充中…" : "确认 A×L → 扩充文案") + '</button>';
+  } else if (!hasA) {
+    step2Actions = '<button class="btn" type="button" onclick="resetNarrativeForCoverage()">重选 A×L</button>'
+      + '<button class="btn primary" type="button" onclick="confirmNar()"'
+      + (state.agentStatus === "running" ? " disabled" : "") + '>'
+      + (state.agentStatus === "running" ? "分类中…" : "确认文案 → 跑分类") + '</button>';
+  } else {
+    step2Note = "A×L 已生成；确认后按这些能力和等级加载变量树。";
+    step2Actions = '<button class="btn" type="button" onclick="resetNarrativeForCoverage()">重选 A×L</button>'
+      + '<button class="btn primary" type="button" onclick="confirmCoverageAndLoadV2()">确认 A×L → STEP 3</button>';
+  }
+  let h = workflowActionBar({note: step2Note, actions: step2Actions})
+    + '<p class="intro">STEP 2：选目标 Coverage 并确认 → 扩充文案（自动保存）→ 确认文案后只跑 A×L 分类（按已选 A×L 分批进行，可看进度）。JD 域提取放到 STEP 3 单独运行。</p>';
   h += renderCoveragePickerHtml({ editable: canEditCov });
   h += '<div class="field-label" style="margin-top:10px"><label>① 文案扩充</label></div>';
   if (state.narrativeStatus === "running") h += '<div class="choice-card selected"><b>调用中...</b></div>';
   else if (hasN) {
     h += '<textarea class="task-input" id="narEdit" style="min-height:180px">' + escapeHtml(state.narrativeDraft) + '</textarea>';
-    h += '<div class="action-row"><span class="action-note">可直接修改文案；若要改 coverage，请点「重选 coverage 再扩充」</span>'
-      + '<button class="btn" type="button" onclick="resetNarrativeForCoverage()">重选 coverage 再扩充</button>'
-      + '<button class="btn primary" onclick="confirmNar()"'+ (state.agentStatus === "running" ? " disabled" : "") + '>确认文案 → 跑分类</button></div>';
+    h += '<div class="action-row"><span class="action-note">可直接修改文案；确认与重选入口位于顶部“本步操作”。</span></div>';
   } else {
-    const cells = selectedCoverageCells();
     const ready = providerReady() && cells.length > 0;
     const note = !providerReady()
       ? "请先在侧栏选好可用的 Provider / Key"
       : (!cells.length
         ? "请先在上方选择至少一个 A×L（可改等级或恢复默认）"
         : "已选 " + cells.length + " 个 A×L，确认后开始扩充文案");
-    h += '<div class="action-row" style="margin-top:8px"><span class="action-note">' + escapeHtml(note) + '</span>'
-      + '<button class="btn primary" type="button" onclick="runNarrative()"' + (ready ? "" : " disabled") + ">"
-      + "确认 Coverage → 运行文案扩充</button></div>";
+    h += '<div class="action-row" style="margin-top:8px"><span class="action-note">' + escapeHtml(note)
+      + '；运行入口位于顶部“本步操作”。</span></div>';
     if (state.narrativeError) h += '<div class="choice-card dependency selected" style="margin-top:8px"><b>错误</b><p>' + escapeHtml(state.narrativeError) + "</p></div>";
   }
   if (state.agentStatus === "running") {
@@ -95,8 +117,7 @@ function renderStep2a() {
     if (issueIdx.other.length) {
       h += renderInlineHints(issueIdx.other.slice(0, 8), { title: "其他校验 · " + issueIdx.other.length + " 条" });
     }
-    h += '<div class="action-row" style="margin-top:14px"><span class="action-note">确认 A×L 后，系统只加载 JD业务变量树中对应能力的范围</span>'
-      + '<button class="btn primary" onclick="confirmCoverageAndLoadV2()">确认 A×L → 加载变量树</button></div>';
+    h += '<div class="action-row" style="margin-top:14px"><span class="action-note">确认入口位于顶部；系统只加载 JD业务变量树中对应能力和累计等级的范围。</span></div>';
   }
   if (state.agentError) h += '<div class="choice-card dependency selected" style="margin-top:8px"><b>分类错误</b><p>' + escapeHtml(state.agentError) + "</p></div>";
   document.getElementById("workspaceBody").innerHTML = h;
@@ -110,10 +131,38 @@ function renderStep2b() {
   const hasJd = state.extractionStatus === "done" && state.agentResult && state.agentResult.candidate && (state.agentResult.candidate.jd_candidates || []).length;
   const hasSelection = !!state.jdTreeSelection;
   setHeader(2, state.completed.has(2) ? "已完成" : hasJd ? "JD 域待确认" : state.extractionStatus === "running" ? "提取中" : hasSelection ? "变量清单已确认" : hasCoverage ? "选择业务变量" : "等待 STEP 2");
-  let h = saveBar() + '<p class="intro">STEP 3：A×L 先限定 JD业务变量树范围；你再勾选本题需要的细粒度变量。确认后生成 <span class="mono">jd_tree_selection.json</span>，Agent 只能在其映射的 canonical JD 范围内提取。</p>';
+  let step3Actions = "";
+  let step3Note = "按 A×L 和累计等级选择能力变量；全局变量不进入本流程。";
+  if (!hasCoverage) {
+    step3Actions = '<button class="btn" type="button" onclick="goToStage(1)">返回 STEP 2</button>';
+  } else if (!state.jdTreeSlice) {
+    step3Actions = '<button class="btn primary" type="button" onclick="loadJdV2Slice({preserveSelection:false})"'
+      + (state.jdTreeStatus === "loading" ? " disabled" : "") + '>'
+      + (state.jdTreeStatus === "loading" ? "加载中…" : "加载能力变量") + '</button>';
+  } else {
+    step3Actions = '<button class="btn" type="button" onclick="restoreSuggestedJdV2Selection()">恢复 L 累计建议</button>'
+      + '<button class="btn" type="button" onclick="clearJdV2Selection()">全部清空</button>'
+      + '<button class="btn" type="button" onclick="loadJdV2Slice({preserveSelection:true})">刷新变量树</button>';
+    if (!hasSelection) {
+      step3Actions += '<button class="btn primary" type="button" onclick="buildJdTreeSelectionArtifact()"'
+        + (!(state.jdTreeSelectedNodeIds || []).length || state.jdTreeStatus === "building" ? " disabled" : "") + '>'
+        + (state.jdTreeStatus === "building" ? "生成中…" : "确认选择并生成清单") + '</button>';
+    } else {
+      step3Actions += '<button class="btn" type="button" onclick="copyJdTreeSelection()">复制选择清单</button>'
+        + '<button class="btn" type="button" onclick="downloadJdTreeSelection()">下载选择清单</button>';
+      if (!hasJd) {
+        step3Actions += '<button class="btn primary" type="button" onclick="runExtraction()"'
+          + (state.extractionStatus === "running" || !providerReady() ? " disabled" : "") + '>'
+          + (state.extractionStatus === "running" ? "提取中…" : "运行 JD 域提取") + '</button>';
+      } else {
+        step3Actions += '<button class="btn primary" type="button" onclick="completeStage(2)">确认 JD 域 → STEP 4</button>';
+      }
+    }
+  }
+  let h = workflowActionBar({note: step3Note, actions: step3Actions})
+    + '<p class="intro">STEP 3：A×L 先限定 JD业务变量树范围；你再勾选本题需要的细粒度变量。确认后生成 <span class="mono">jd_tree_selection.json</span>，Agent 只能在其映射的 canonical JD 范围内提取。</p>';
   if (!hasCoverage) {
     h += '<div class="choice-card dependency selected"><b>尚未完成 STEP 2</b><p>请先在 STEP 2 完成文案确认与 A×L 分类。</p></div>';
-    h += '<div class="action-row" style="margin-top:12px"><button class="btn" type="button" onclick="goToStage(1)">← 回 STEP 2</button></div>';
     document.getElementById("workspaceBody").innerHTML = h;
     return;
   }
@@ -145,8 +194,7 @@ function renderStep2b() {
       h += '<div class="choice-card dependency selected" style="margin-top:12px"><b>提取失败</b><p>' + escapeHtml(state.extractionError) + "</p></div>";
     }
     h += '<div class="action-row" style="margin-top:12px"><span class="action-note">' + escapeHtml(note)
-      + (providerReady() ? "" : "；当前未配置可用 API Key") + '</span>'
-      + '<button class="btn primary" type="button" onclick="runExtraction()"' + (providerReady() ? "" : " disabled") + ">" + escapeHtml(label) + "</button></div>";
+      + (providerReady() ? "" : "；当前未配置可用 API Key") + '；运行入口位于顶部“本步操作”。</span></div>';
     document.getElementById("workspaceBody").innerHTML = h;
     return;
   }
@@ -155,8 +203,8 @@ function renderStep2b() {
     const c = state.agentResult.candidate;
     const issueIdx = indexValidationIssues();
     const tbdSlots = (c.jd_candidates || []).filter(j => (j.binding_mode || "") === "TBD");
-    h += '<div class="action-row" style="margin-top:10px"><span class="action-note">已在变量选择范围内提取 ' + (c.jd_candidates || []).length + ' 个 canonical JD 域</span>'
-      + '<button class="btn" type="button" onclick="runExtraction()"' + (providerReady() ? "" : " disabled") + ">重跑提取</button></div>";
+    h += '<div class="action-row" style="margin-top:10px"><span class="action-note">已在变量选择范围内提取 '
+      + (c.jd_candidates || []).length + ' 个 canonical JD 域；如需重跑，可先刷新或重新确认选择清单。</span></div>';
     h += '<div class="field-label"><label>结果 · JD 变量域（' + (c.jd_candidates || []).length + ' 个，按 A 分类）</label></div>';
     if (tbdSlots.length) {
       h += '<div class="tbd-banner"><b>待补全 TBD · ' + tbdSlots.length + ' 个</b>'
@@ -184,8 +232,7 @@ function renderStep2b() {
               + "</td><td>" + pill(bm) + "</td></tr>";
           }).join("") + '</tbody></table>';
     });
-    h += '<div class="action-row" style="margin-top:14px"><span class="action-note">确认后进入 STEP 4 编辑任务域模版</span>'
-      + '<button class="btn primary" onclick="completeStage(2)">确认 → STEP 4</button></div>';
+    h += '<div class="action-row" style="margin-top:14px"><span class="action-note">确认入口位于顶部“本步操作”。</span></div>';
   }
   document.getElementById("workspaceBody").innerHTML = h;
 }
@@ -194,7 +241,19 @@ function renderStep3() {
   setHeader(3, state.completed.has(3) ? "已确认" : "编辑取值域");
   const edits = getEdits();
   const tbdCount = edits.filter(e => e.binding_mode === "TBD").length;
-  let h = saveBar() + '<p class="intro">域编辑器：fixed=已确认固定值；enum=已确认离散选项；range=已确认数值区间；TBD=仍待确认。系统不会从枚举中偷偷挑默认值。</p>';
+  const step4Actions = '<button class="btn" type="button" onclick="loadTreeDomains()"'
+    + (state.fillTbdLoading ? " disabled" : "") + '>从变量树加载域</button>'
+    + '<button class="btn" type="button" onclick="loadMetricsForStep3()"'
+    + (state.fillTbdLoading ? " disabled" : "") + '>加载质量标准</button>'
+    + '<button class="btn" type="button" onclick="fillTbdDomains()"'
+    + (state.fillTbdLoading || tbdCount === 0 || !providerReady() ? " disabled" : "") + ">"
+    + (state.fillTbdLoading ? "复核中…" : "按来源复核 TBD") + "</button>"
+    + '<button class="btn primary" type="button" onclick="completeStage(3)">确认任务域 → STEP 5</button>';
+  let h = workflowActionBar({
+      note: "三个辅助按钮可按需分别使用，不是三选一；确认后进入 STEP 5。",
+      actions: step4Actions,
+    })
+    + '<p class="intro">域编辑器：fixed=已确认固定值；enum=已确认离散选项；range=已确认数值区间；TBD=仍待确认。系统不会从枚举中偷偷挑默认值。</p>';
   h += narrativeReferencePanel({ open: false });
   const c = state.agentResult ? state.agentResult.candidate : null;
   if (c && c.coverage_candidates) {
@@ -210,14 +269,6 @@ function renderStep3() {
         '<span class="lvl-pill lv-L3">' + escapeHtml(e.slot_id) + '</span>'
       ).join("") + '</div></div>';
   }
-  h += '<div class="action-row" style="margin:0 0 12px"><span class="action-note">当前 TBD ' + tbdCount + ' 个</span><div>'
-    + '<button class="btn" type="button" onclick="loadTreeDomains()"' +
-    (state.fillTbdLoading ? " disabled" : "") + '>从变量树加载域</button> '
-    + '<button class="btn" type="button" onclick="loadMetricsForStep3()"' +
-    (state.fillTbdLoading ? " disabled" : "") + '>加载质量标准</button> '
-    + '<button class="btn" type="button" onclick="fillTbdDomains()"' +
-    (state.fillTbdLoading || tbdCount === 0 || !providerReady() ? " disabled" : "") + ">" +
-    (state.fillTbdLoading ? "复核中..." : "按来源复核 TBD") + "</button></div></div>";
   if (state.fillTbdError) h += '<div class="choice-card dependency selected" style="margin-bottom:10px"><b>TBD 复核失败</b><p>' + escapeHtml(state.fillTbdError) + "</p></div>";
   if (state.fillTbdNotice) h += '<div class="choice-card selected" style="margin-bottom:10px"><b>' + escapeHtml(state.fillTbdNotice) + "</b></div>";
   const styleSelect = "padding:4px 8px;border:1px solid var(--line-strong);border-radius:6px;font-size:10px";
@@ -274,7 +325,8 @@ function renderStep3() {
         + escapeHtml(item.source) + '</td><td class="mono">' + escapeHtml(item.changed_at)
         + '</td></tr>').join("") + '</tbody></table></div></details>';
   }
-  h += '<div class="action-row" style="margin-top:14px"><span class="action-note">' + variable + ' 个可变域 · TBD ' + tbdCount + '</span><button class="btn primary" onclick="completeStage(3)">确认 → STEP 5</button></div>';
+  h += '<div class="action-row" style="margin-top:14px"><span class="action-note">' + variable
+    + ' 个可变域 · TBD ' + tbdCount + '；所有未确认项都会原样进入交付清单。</span></div>';
   document.getElementById("workspaceBody").innerHTML = h;
   document.querySelectorAll(".domain-edit").forEach(el => {
     const apply = () => {
@@ -368,14 +420,14 @@ async function generateDeliveryBatch(options) {
   if (!domain) {
     state.deliveryError = "缺少已确认的任务域模板，请先完成 STEP 2–4。";
     render();
-    return;
+    return false;
   }
   const serverContract = state.healthInfo && state.healthInfo.delivery_contract_version;
   if (serverContract !== DELIVERY_CONTRACT_VERSION) {
     state.deliveryError = "Pipeline 服务仍在运行旧版后端。请在启动服务的终端按 Control + C，"
       + "重新运行 ./scripts/start_agent_demo.sh，然后刷新页面再生成；STEP 1–4 的浏览器进度会保留。";
     render();
-    return;
+    return false;
   }
   const count = Math.max(1, parseInt(state.deliveryCaseCount, 10) || 10);
   state.deliveryCaseCount = count;
@@ -401,6 +453,7 @@ async function generateDeliveryBatch(options) {
     const d = await r.json();
     if (!r.ok) throw new Error(d.message || d.error || JSON.stringify(d));
     state.deliveryBatch = d.delivery_batch;
+    state.deliveryStale = false;
     if (!(options && options.keepSelected)) state.deliverySelectedCase = 0;
     state.deliveryNotice = (options && options.notice) || (
       "已生成 " + state.deliveryBatch.case_count
@@ -411,6 +464,27 @@ async function generateDeliveryBatch(options) {
   }
   state.deliveryLoading = false;
   render();
+  return !!state.deliveryBatch && !state.deliveryError;
+}
+
+async function regenerateReviewedDelivery() {
+  const domain = buildDomainTemplate();
+  if (!domain || !state.jdTreeSelection || state.extractionStatus !== "done") {
+    state.deliveryError = "上游复核尚未完成：请先确认 A×L、变量选择和任务域，再重新生成。";
+    render();
+    return false;
+  }
+  const ok = await generateDeliveryBatch({
+    keepSelected: true,
+    notice: "已按当前复核结果重新生成 Task Template、world_config 和 user_config。",
+  });
+  if (ok) {
+    state.completed.add(4);
+    state.maxUnlocked = 5;
+    state.currentStage = 5;
+    render();
+  }
+  return ok;
 }
 
 function rerollDeliveryBatch() {
@@ -666,16 +740,22 @@ function renderStep4() {
   const batch = state.deliveryBatch;
   const domain = buildDomainTemplate();
   setHeader(4, batch ? ("已生成 " + batch.case_count + " 个案例") : "等待生成");
-  let h = saveBar()
+  const step5Actions = '<button class="btn primary" type="button" onclick="generateDeliveryBatch()"'
+    + (state.deliveryLoading || !domain ? " disabled" : "") + '>'
+    + (state.deliveryLoading ? "生成中…" : batch ? "重新生成案例" : "生成 Task Template 案例") + '</button>'
+    + (batch
+      ? '<button class="btn primary" type="button" onclick="completeStage(4)">确认 Task Template → STEP 6</button>'
+      : "");
+  let h = workflowActionBar({
+      note: batch ? "先审阅案例；如无修改，确认后查看两侧配置。" : "填写案例数量后，在这里生成 Task Template。",
+      actions: step5Actions,
+    })
     + '<p class="intro">STEP 5 专门生成可审阅的 <strong>Task Template</strong>。每个案例同时包含你要求的'
     + '<strong>【canonical JD＝实际值】标注叙事</strong>、SUT 可见正文和机器 Manifest。</p>';
   h += '<div class="batch-generator">'
     + '<div><div class="field-label"><label for="deliveryCaseCount">生成案例数量</label><span>团队演示默认 10，可直接修改</span></div>'
     + '<input id="deliveryCaseCount" class="batch-count-input" type="number" min="1" value="'
-    + escapeHtml(String(state.deliveryCaseCount || 10)) + '"></div>'
-    + '<div class="batch-generator-action"><button class="btn primary" type="button" onclick="generateDeliveryBatch()"'
-    + (state.deliveryLoading || !domain ? " disabled" : "") + '>'
-    + (state.deliveryLoading ? "生成中…" : "生成 Task Template 案例") + '</button></div></div>';
+    + escapeHtml(String(state.deliveryCaseCount || 10)) + '"></div></div>';
   h += '<details class="hint-fold compact"><summary>高级设置 · 批次复现信息</summary><div class="hint-fold-body">'
     + '<div class="field-label"><label for="deliveryBatchSeed">批次 Seed</label><span>无需理解；同一 Seed 可重现同一批案例</span></div>'
     + '<div class="control"><input id="deliveryBatchSeed" class="batch-seed-input" type="number" min="0" value="'
@@ -698,8 +778,7 @@ function renderStep4() {
     h += renderDeliveryVariationNotice(batch);
     h += renderDeliveryCaseTabs();
     h += renderTaskTemplateDelivery(selectedDeliveryCase());
-    h += '<div class="action-row" style="margin-top:16px"><span class="action-note">确认 Task Template 后，下一步查看世界侧与用户侧配置。</span>'
-      + '<button class="btn primary" type="button" onclick="completeStage(4)">确认 → STEP 6</button></div>';
+    h += '<div class="action-row" style="margin-top:16px"><span class="action-note">确认入口已集中在页面顶部的“本步操作”。</span></div>';
   } else {
     h += '<div class="choice-card" style="margin-top:14px"><b>尚未生成案例</b>'
       + '<p>输入数量后点击生成。系统只从 STEP 4 已确认的 fixed / enum / range 中取值，TBD 保持 TBD。</p></div>';
@@ -844,7 +923,25 @@ function renderStep5() {
   const batch = state.deliveryBatch;
   const item = selectedDeliveryCase();
   setHeader(5, batch ? "可导出" : "等待 STEP 5");
-  let h = saveBar()
+  const step6Actions = item
+    ? '<button class="btn primary" type="button" onclick="regenerateReviewedDelivery()"'
+      + (state.deliveryLoading ? " disabled" : "") + '>'
+      + (state.deliveryLoading ? "重新生成中…" : "按复核结果重新生成") + '</button>'
+      + '<button class="btn" type="button" onclick="deliveryCopy(selectedDeliveryCase().task_template,\'task_template JSON\')">复制 Task Template</button>'
+      + '<button class="btn" type="button" onclick="deliveryDownload(\'task_template.json\',selectedDeliveryCase().task_template)">下载 Task Template</button>'
+      + '<button class="btn" type="button" onclick="deliveryCopy(selectedDeliveryCase().world_config,\'world_config\')">复制 world_config</button>'
+      + '<button class="btn" type="button" onclick="deliveryDownload(\'world_config.json\',selectedDeliveryCase().world_config)">下载 world_config</button>'
+      + '<button class="btn" type="button" onclick="deliveryCopy(selectedDeliveryCase().user_config,\'user_config\')">复制 user_config</button>'
+      + '<button class="btn" type="button" onclick="deliveryDownload(\'user_config.json\',selectedDeliveryCase().user_config)">下载 user_config</button>'
+      + '<button class="btn" type="button" onclick="deliveryDownload(\'delivery_batch.json\',state.deliveryBatch)">下载完整交付包</button>'
+      + '<button class="btn" type="button" onclick="completeStage(5)">标记交付完成</button>'
+    : '<button class="btn" type="button" onclick="goToStage(4)">返回 STEP 5</button>';
+  let h = workflowActionBar({
+      note: state.deliveryStale
+        ? "上游已经修改，请先按复核结果重新生成，再导出。"
+        : "重生成、三类产物导出和完成操作都集中在这里。",
+      actions: step6Actions,
+    })
     + '<p class="intro">STEP 6 将当前案例拆成 <strong>world_config</strong> 与 <strong>user_config</strong>，'
     + '并用确定性规则检查 Hidden GT、canonical JD、TBD 和两侧共享引用。</p>';
   if (!batch || !item) {
@@ -854,12 +951,14 @@ function renderStep5() {
     document.getElementById("workspaceBody").innerHTML = h;
     return;
   }
+  if (state.deliveryStale) {
+    h += '<div class="tbd-banner"><b>交付物需要更新</b>'
+      + '<p>你修改了前面的 A×L、变量或任务域。顶部点击“按复核结果重新生成”，即可刷新 Task Template 和两侧配置。</p></div>';
+  }
   h += renderDeliveryCaseTabs();
   h += '<div class="delivery-export-bar"><div><b>案例 ' + String(item.case_index).padStart(2, "0")
-    + '</b><span class="mono">' + escapeHtml(item.case_id) + '</span></div><div>'
-    + '<button class="btn small" type="button" onclick="deliveryCopy(selectedDeliveryCase().task_template,\'task_template JSON\')">复制 Task Template</button> '
-    + '<button class="btn small" type="button" onclick="deliveryDownload(\'task_template.json\',selectedDeliveryCase().task_template)">下载 Task Template</button> '
-    + '<button class="btn small" type="button" onclick="deliveryDownload(\'delivery_batch.json\',state.deliveryBatch)">下载完整交付包</button></div></div>';
+    + '</b><span class="mono">' + escapeHtml(item.case_id)
+    + '</span></div><span class="action-note">复制和下载入口位于顶部“本步操作”</span></div>';
   h += '<div class="config-columns">';
   [
     {key: "world_config", title: "世界侧 world_config", note: "Simulator / Fixture / Harness 使用"},
@@ -871,11 +970,7 @@ function renderStep5() {
       : (config.runtime_constraints || []);
     h += '<section class="config-panel ' + (section.key === "world_config" ? "world" : "user") + '">'
       + '<div class="config-panel-head"><div><b>' + escapeHtml(section.title) + '</b><span>'
-      + escapeHtml(section.note) + '</span></div><div>'
-      + '<button class="btn small" type="button" onclick="deliveryCopy(selectedDeliveryCase().'
-      + section.key + ',\'' + section.key + '\')">复制</button> '
-      + '<button class="btn small" type="button" onclick="deliveryDownload(\'' + section.key
-      + '.json\',selectedDeliveryCase().' + section.key + ')">下载 JSON</button></div></div>'
+      + escapeHtml(section.note) + '</span></div></div>'
       + renderBindingTable(bindings)
       + '<details class="hint-fold compact"><summary>查看完整 JSON</summary><div class="hint-fold-body"><pre class="code-preview">'
       + escapeHtml(JSON.stringify(config, null, 2)) + '</pre></div></details></section>';
@@ -900,7 +995,6 @@ function renderStep5() {
       summary: batch.summary,
       provenance: batch.provenance,
     }, null, 2)) + '</pre></div></details>';
-  h += '<div class="action-row" style="margin-top:16px"><span class="action-note">三类产物、校验结果和 TBD 已生成；可继续修改后重新导出。</span>'
-    + '<button class="btn primary" type="button" onclick="completeStage(5)">标记本次交付完成</button></div>';
+  h += '<div class="action-row" style="margin-top:16px"><span class="action-note">三类产物、校验结果和 TBD 已生成；所有主操作均位于页面顶部。</span></div>';
   document.getElementById("workspaceBody").innerHTML = h;
 }

@@ -21,6 +21,7 @@ async function savePipeline() {
         deliveryCaseCount: state.deliveryCaseCount, deliveryBatchSeed: state.deliveryBatchSeed,
         deliveryBatch: state.deliveryBatch, deliverySelectedCase: state.deliverySelectedCase,
         deliveryOverrides: state.deliveryOverrides, deliveryHumanEdits: state.deliveryHumanEdits,
+        deliveryStale: state.deliveryStale,
         currentStage: state.currentStage, maxUnlocked: state.maxUnlocked,
         completedSteps: Array.from(state.completed), stageSchema: 6,
         abilityIdScheme: ABILITY_ID_SCHEME, savedAt: new Date().toISOString(),
@@ -77,19 +78,57 @@ async function loadPipeline() {
     if (d.deliverySelectedCase !== undefined) state.deliverySelectedCase = d.deliverySelectedCase;
     if (d.deliveryOverrides && typeof d.deliveryOverrides === "object") state.deliveryOverrides = d.deliveryOverrides;
     if (d.deliveryHumanEdits && typeof d.deliveryHumanEdits === "object") state.deliveryHumanEdits = d.deliveryHumanEdits;
+    state.deliveryStale = !!d.deliveryStale;
+    const loadedBasis = (state.jdTreeSelection && state.jdTreeSelection.selection_basis) || {};
+    const discardedLegacyGlobalSelection = !!(
+      state.jdTreeSelection
+      && loadedBasis.global_variables_included !== false
+      && (state.jdTreeSelection.selected_nodes || []).some(node => node.owner_a === "MULTI")
+    );
+    if (discardedLegacyGlobalSelection) {
+      if (state.agentResult && state.agentResult.candidate) {
+        state.agentResult.candidate.jd_candidates = [];
+        state.agentResult.candidate.runtime_dependencies = [];
+      }
+      state.extractionStatus = "idle";
+      state.jdTreeSlice = null;
+      state.jdTreeSelectedNodeIds = [];
+      state.jdTreeSelection = null;
+      state.domainEdits = {};
+      state.domainEditHistory = [];
+      state.deliveryBatch = null;
+      state.deliveryStale = false;
+    }
     state.completed = migrateCompletedSteps(d.completedSteps || [], d.stageSchema, !!d.agentResult);
     const completedArr = Array.from(state.completed);
     const computedUnlocked = completedArr.length ? Math.min(Math.max.apply(null, completedArr) + 1, STAGES.length - 1) : 0;
     state.maxUnlocked = Number.isInteger(d.maxUnlocked) ? Math.min(Math.max(d.maxUnlocked, computedUnlocked), STAGES.length - 1) : computedUnlocked;
     if (state.agentStatus === "done") state.maxUnlocked = Math.max(state.maxUnlocked, 2);
     state.currentStage = Number.isInteger(d.currentStage) ? Math.min(Math.max(d.currentStage, 0), state.maxUnlocked) : state.maxUnlocked;
-    state.saveNotice = "已加载检查点 ✓";
+    if (discardedLegacyGlobalSelection) {
+      state.completed = new Set(Array.from(state.completed).filter(step => step <= 1));
+      state.maxUnlocked = Math.min(state.maxUnlocked, 2);
+      state.currentStage = Math.min(state.currentStage, 2);
+      state.saveNotice = "检查点的 STEP 1–2 已加载；旧全局变量结果未带入新流程";
+    } else {
+      state.saveNotice = "已加载检查点 ✓";
+    }
   } catch(e) { state.saveNotice = "加载失败: " + e; }
   render();
 }
 
+function workflowActionBar(options) {
+  const opts = options || {};
+  const actions = opts.actions || "";
+  const note = opts.note || state.saveNotice || "浏览器自动暂存；保存可建立手动检查点";
+  return '<section class="workflow-action-bar" aria-label="本步操作">'
+    + '<div class="workflow-action-copy"><b>本步操作</b><span>' + escapeHtml(note) + '</span></div>'
+    + '<div class="workflow-action-buttons">' + actions
+    + '<button class="btn" type="button" onclick="loadPipeline()">加载进度</button>'
+    + '<button class="btn" type="button" onclick="savePipeline()">保存进度</button>'
+    + '</div></section>';
+}
+
 function saveBar() {
-  return '<div class="action-row" style="margin-bottom:16px"><span class="action-note">' + escapeHtml(state.saveNotice || "浏览器自动暂存；保存可建立手动检查点") + '</span>'
-    + '<div><button class="btn" type="button" onclick="loadPipeline()">加载</button> '
-    + '<button class="btn primary" type="button" onclick="savePipeline()">保存</button></div></div>';
+  return workflowActionBar();
 }

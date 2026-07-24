@@ -21,7 +21,7 @@ from .generator import generate_instance, hash_template
 
 
 SCHEMA_VERSION = "0.1.0"
-DELIVERY_CONTRACT_VERSION = "2026-07-24.2"
+DELIVERY_CONTRACT_VERSION = "2026-07-24.3"
 _HIDDEN_ROLES = {"hidden_ground_truth"}
 _HIDDEN_VISIBILITY = {"hidden_gt"}
 _HIDDEN_CHANNELS = {"hidden_gt"}
@@ -255,6 +255,7 @@ def _annotated_narrative(
     bindings: Sequence[Mapping[str, Any]],
     boundaries: Sequence[Mapping[str, Any]],
     dependencies: Sequence[Mapping[str, Any]],
+    include_legacy_completion: bool,
 ) -> str:
     section_slots = (
         (
@@ -403,7 +404,7 @@ def _annotated_narrative(
             for item in dependencies
         ]
         paragraphs[5] += " 外部闭环依赖为：" + "；".join(dep_lines) + "。"
-    if "jd-0.7" not in index:
+    if include_legacy_completion and "jd-0.7" not in index:
         paragraphs[6] += (
             " 任务完成条件：【jd-0.7 任务完成判据＝TBD】，"
             "需确认后方可作为正式判据。"
@@ -546,10 +547,18 @@ def _task_template(
     instance: Mapping[str, Any],
     bindings: Sequence[Mapping[str, Any]],
     domain_template: Mapping[str, Any],
+    selection: Mapping[str, Any] | None,
 ) -> dict[str, Any]:
     boundaries = _coverage_boundaries(domain_template.get("coverage") or [])
     dependencies = list(domain_template.get("runtime_dependencies") or [])
-    tbd_items = _tbd_items(bindings)
+    selection_basis = dict((selection or {}).get("selection_basis") or {})
+    include_legacy_completion = (
+        selection_basis.get("global_variables_included", True) is not False
+    )
+    tbd_items = _tbd_items(
+        bindings,
+        include_delivery_requirements=include_legacy_completion,
+    )
     hidden_count = sum(
         1 for item in bindings
         if item.get("configuration_assignment") == "hidden_gt"
@@ -565,6 +574,7 @@ def _task_template(
         "narratives": {
             "review_annotated": _annotated_narrative(
                 title, base_narrative, bindings, boundaries, dependencies,
+                include_legacy_completion,
             ),
             "sut_visible": _sut_narrative(
                 title, base_narrative, bindings, boundaries,
@@ -582,27 +592,22 @@ def _task_template(
             },
             "coverage": list(domain_template.get("coverage") or []),
             "capability_boundaries": boundaries,
-            "completion_conditions": [
-                {
-                    "canonical_jd": "jd-0.7",
-                    "value": next(
-                        (
-                            deepcopy(item.get("value"))
-                            for item in bindings
-                            if item["canonical_jd"] == "jd-0.7"
-                        ),
-                        None,
-                    ),
-                    "status": next(
-                        (
-                            item["status"]
-                            for item in bindings
-                            if item["canonical_jd"] == "jd-0.7"
-                        ),
-                        "TBD",
-                    ),
-                }
-            ],
+            "completion_conditions": (
+                [
+                    {
+                        "canonical_jd": "jd-0.7",
+                        "value": deepcopy(item.get("value")),
+                        "status": item["status"],
+                    }
+                    for item in bindings
+                    if item["canonical_jd"] == "jd-0.7"
+                ]
+                or [{
+                    "text": "以已确认任务正文中的完成条件为准。",
+                    "status": "proposed" if base_narrative.strip() else "TBD",
+                    "source": "confirmed_task_narrative",
+                }]
+            ),
             "exception_flow": {
                 "text": base_narrative if any(
                     word in base_narrative for word in ("异常", "故障", "退化", "中止")
@@ -629,6 +634,7 @@ def _world_config(
     task_template: Mapping[str, Any],
     instance: Mapping[str, Any],
     bindings: Sequence[Mapping[str, Any]],
+    selection: Mapping[str, Any] | None,
 ) -> dict[str, Any]:
     world = [
         dict(item) for item in bindings
@@ -639,6 +645,32 @@ def _world_config(
         if item.get("configuration_assignment") == "hidden_gt"
     ]
     ids = {item["canonical_jd"]: item["binding_id"] for item in world}
+    selection_basis = dict((selection or {}).get("selection_basis") or {})
+    legacy_global_categories = (
+        selection_basis.get("global_variables_included", True) is not False
+        and any(slot_id.startswith("jd-0.") for slot_id in ids)
+    )
+    tbd_items = _tbd_items(
+        world + hidden,
+        include_delivery_requirements=False,
+    )
+    if world and not legacy_global_categories:
+        tbd_items.append({
+            "tbd_id": "tbd:world_semantic_categories",
+            "canonical_jd": None,
+            "name": "世界侧语义分类",
+            "missing": [
+                "world_asset_category",
+                "scene_layout_category",
+                "disturbance_category",
+            ],
+            "status": "TBD",
+            "resolution_owners": ["jd_tree_maintainer"],
+            "required_before": "config_agent_handoff",
+            "can_remain_tbd_in_draft": True,
+        })
+    source_tree = dict((selection or {}).get("source_tree") or {})
+    selection_id = str((selection or {}).get("selection_id") or "TBD")
     return {
         "schema_version": SCHEMA_VERSION,
         "artifact_type": "world_config",
@@ -652,13 +684,13 @@ def _world_config(
         },
         "world_assets": [
             ids[slot] for slot in ("jd-0.4", "jd-0.9") if slot in ids
-        ],
+        ] if legacy_global_categories else [],
         "scene_layout": [
             ids[slot] for slot in ("jd-0.2",) if slot in ids
-        ],
+        ] if legacy_global_categories else [],
         "disturbances": [
             ids[slot] for slot in ("jd-0.3",) if slot in ids
-        ],
+        ] if legacy_global_categories else [],
         "event_injections": [
             item["binding_id"] for item in world + hidden
             if "harness" in item.get("projection_targets", [])
@@ -666,8 +698,7 @@ def _world_config(
         "timeline": list(instance.get("phase_schedule") or []),
         "adjustable_variables": world,
         "hidden_ground_truth": hidden,
-        "tbd_items": _tbd_items(world + hidden, include_delivery_requirements=False)
-        + [{
+        "tbd_items": tbd_items + [{
             "tbd_id": "tbd:simulator_adapter",
             "canonical_jd": None,
             "name": "Simulator / Fixture adapter",
@@ -678,10 +709,13 @@ def _world_config(
             "can_remain_tbd_in_draft": True,
         }],
         "provenance": [{
-            "source_id": "pipeline_delivery_projection",
-            "locator": str(task_template["task_id"]),
+            "source_id": source_tree.get("source_tree") or "jd_tree_selection",
+            "locator": selection_id,
             "status": "verified",
-            "notes": "Projected only from JD tree configuration metadata.",
+            "notes": (
+                "Deterministic projection from current JD business variable "
+                "tree metadata; no legacy jd-0 category inference is used."
+            ),
         }],
     }
 
@@ -691,6 +725,7 @@ def _user_config(
     task_template: Mapping[str, Any],
     bindings: Sequence[Mapping[str, Any]],
     domain_template: Mapping[str, Any],
+    selection: Mapping[str, Any] | None,
 ) -> dict[str, Any]:
     user = [
         dict(item) for item in bindings
@@ -710,6 +745,8 @@ def _user_config(
         if "contract_schema" in item.get("variable_roles", [])
     ]
     boundaries = task_template["manifest"]["capability_boundaries"]
+    source_tree = dict((selection or {}).get("source_tree") or {})
+    selection_id = str((selection or {}).get("selection_id") or "TBD")
     return {
         "schema_version": SCHEMA_VERSION,
         "artifact_type": "user_config",
@@ -737,10 +774,13 @@ def _user_config(
             "can_remain_tbd_in_draft": True,
         }],
         "provenance": [{
-            "source_id": "pipeline_delivery_projection",
-            "locator": str(task_template["task_id"]),
+            "source_id": source_tree.get("source_tree") or "jd_tree_selection",
+            "locator": selection_id,
             "status": "verified",
-            "notes": "Hidden GT is excluded by deterministic projection.",
+            "notes": (
+                "Deterministic projection from current JD business variable "
+                "tree metadata; Hidden GT is excluded."
+            ),
         }],
     }
 
@@ -889,16 +929,19 @@ def build_case_delivery(
         instance=instance,
         bindings=bindings,
         domain_template=domain_template,
+        selection=jd_tree_selection,
     )
     world_config = _world_config(
         task_template=task_template,
         instance=instance,
         bindings=bindings,
+        selection=jd_tree_selection,
     )
     user_config = _user_config(
         task_template=task_template,
         bindings=bindings,
         domain_template=domain_template,
+        selection=jd_tree_selection,
     )
     validation = _validation(
         bindings=bindings,

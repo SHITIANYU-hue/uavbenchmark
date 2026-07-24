@@ -88,7 +88,7 @@ def test_health_reports_the_team_delivered_v2_identity() -> None:
     assert payload["jd_tree"]["schema_version"] == "2.3"
     assert payload["jd_tree"]["catalog_version"] == "2.4.0-merged"
     assert payload["jd_tree"]["node_count"] == 444
-    assert payload["delivery_contract_version"] == "2026-07-24.2"
+    assert payload["delivery_contract_version"] == "2026-07-24.3"
 
 
 def test_jd_tree_clean_route_has_pipeline_return_without_versioned_title() -> None:
@@ -142,6 +142,7 @@ def test_jd_tree_selection_endpoint_builds_reviewable_v2_artifact() -> None:
     selection = payload["jd_tree_selection"]
     assert selection["artifact_type"] == "jd_tree_selection"
     assert selection["source_tree"]["catalog_version"] == "2.4.0-merged"
+    assert selection["selection_basis"]["global_variables_included"] is False
     assert selection["allowed_agent_slot_ids"] == ["jd-6.1", "jd-6.2"]
     assert all(
         node["authority_status"] == "proposed_v2_detail"
